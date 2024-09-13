@@ -1,0 +1,284 @@
+import React from 'react'
+import Navbar from '../Template/Navbar'
+import SidebarSettingPannel from '../Template/SidebarSettingPannel'
+import Sidebar from '../Template/Sidebar'
+
+const SchoolMaster = () => {
+    return (
+        <>
+            <div className="container-scroller">
+                {/*----- Navbar -----*/}
+                <Navbar />
+
+                <div className="container-fluid page-body-wrapper">
+                    <SidebarSettingPannel />
+
+                    {/* SideBar */}
+                    <Sidebar />
+
+                    <div className="main-panel">
+                        <div className="content-wrapper">
+                            <div className="row">
+                                <div className="col-12 col-md-6 mb-4 mb-xl-0">
+                                    <div className="d-flex align-items-center mb-3">
+                                        <h3 className="font-weight-bold mr-2">School Master</h3>
+                                        {/* <h6 className="text-primary font-weight-bold">NEW</h6> */}
+                                    </div>
+                                </div>
+                                <div className="col-12 col-md-6 mb-4 mb-xl-0">
+                                    <div className="d-flex align-items-center justify-content-end mb-3">
+                                        <div className="btn-group" role="group" aria-label="Basic example">
+                                            <button type="button" className="btn btn-primary">App</button>
+                                            <button type="button" className="btn btn-primary">List</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-12 grid-margin stretch-card">
+                                    <div className="card shadow-sm">
+                                        <div className="card-body">
+                                            <div className="d-flex align-items-center mb-3">
+                                                <h4 className="card-title mb-0 mr-2">School Entry Form</h4>
+                                                <p className="text-danger font-weight-bold mb-0">NEW</p>
+                                            </div>
+                                            <form className="forms-sample">
+                                                <h4 className="card-description text-primary font-weight-bolder">Primary Info</h4>
+                                                <div className="row">
+                                                    <div className="col-md-4 form-group">
+                                                        <label for="exampleInputName1">School Full Name <span className="text-danger">*</span></label>
+                                                        <input type="text" className="form-control" id="exampleInputName1" placeholder="Full Name" />
+                                                    </div>
+                                                    <div className="col-md-4 form-group">
+                                                        <label for="exampleInputName2">School Short Name <span className="text-danger">*</span></label>
+                                                        <input type="text" className="form-control" id="exampleInputName2" placeholder="Short Name" />
+                                                    </div>
+                                                    <div className="col-md-4 form-group">
+                                                        <label for="userType">Status</label><br />
+                                                        <div className="btn-group btn-group-toggle" data-toggle="buttons">
+                                                            <label className="btn btn-light py-2 active">
+                                                                <input type="radio" name="options" id="option1" autocomplete="off" checked /> Active
+                                                            </label>
+                                                            <label className="btn btn-light py-2">
+                                                                <input type="radio" name="options" id="option2" autocomplete="off" /> Inactive
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <hr />
+                                                <h4 className="card-description text-primary font-weight-bolder">Other Info</h4>
+                                                <div className="row">
+                                                    {/* <div className="col-md-4 form-group">
+                                                        <label for="exampleTextarea1">School Address</label>
+                                                        <textarea className="form-control" id="exampleTextarea1" rows="1"></textarea>
+                                                    </div> */}
+                                                    <div className="col-md-4 form-group">
+                                                        <label for="exampleInputName1">School Address</label>
+                                                        <input type="text" className="form-control" id="exampleInputName1" placeholder="School Address" />
+                                                    </div>
+                                                    <div className="col-md-4 form-group">
+                                                        <label for="exampleInputNumber">Contact Number</label>
+                                                        <input type="number" className="form-control" id="exampleInputNumber" placeholder="Enter Contact Number" />
+                                                    </div>
+                                                    <div className="col-md-4 form-group">
+                                                        <label for="exampleInputName1">School Website</label>
+                                                        <input type="text" className="form-control" id="exampleInputName1" placeholder="School Website" />
+                                                    </div>
+                                                    <div className="col-md-4 form-group">
+                                                        <label for="exampleInputEmail3">School Email Id</label>
+                                                        <input type="email" className="form-control" id="exampleInputEmail3" placeholder="School Email Id" />
+                                                    </div>
+                                                </div>
+                                                <hr />
+                                                <h4 className="card-description text-primary font-weight-bolder">App Top Scrolled News</h4>
+                                                <div className="row">
+                                                    <div className="col-md-6 form-group">
+                                                        <label for="exampleTextarea1">Scroll News</label>
+                                                        <textarea className="form-control" id="exampleTextarea1" rows="4"></textarea>
+                                                    </div>
+                                                </div>
+                                                <hr />
+                                                <h4 className="card-description text-primary font-weight-bolder">App Default Welcome Message IDs [ Comma(,) seprated ]</h4>
+                                                <div className="row">
+                                                    <div className="col-md-6 form-group">
+                                                        <label for="exampleInputName1">Scroll News</label>
+                                                        <input type="text" className="form-control" id="exampleInputName1" placeholder="Please Enter Msg IDs" />
+                                                    </div>
+                                                </div>
+                                                <hr />
+                                                <h4 className="card-description text-primary font-weight-bolder">Invoice Setting</h4>
+                                                <div className="row">
+                                                    <div className="col-md-4 form-group">
+                                                        <label for="exampleInputName1">Session Print on Invoice</label>
+                                                        <input type="text" className="form-control" id="exampleInputName1" placeholder="Please Enter Session Like 2023-2024" />
+                                                    </div>
+                                                    <div className="col-md-4 form-group">
+                                                        <label for="exampleInputName1">Season Print on Invoice</label>
+                                                        <input type="text" className="form-control" id="exampleInputName1" placeholder="Please Enter Session Like 2023" />
+                                                    </div>
+                                                    <div className="col-md-4 form-group">
+                                                        <label for="exampleInputEmail3">Invoice Send Email ID</label>
+                                                        <input type="email" className="form-control" id="exampleInputEmail3" placeholder="Invoice Send Email ID" />
+                                                    </div>
+                                                </div>
+                                                <hr />
+                                                <h4 className="card-description text-primary font-weight-bolder">Scholar Color</h4>
+                                                <div className="row">
+
+                                                </div>
+                                                <hr />
+                                                <h4 className="card-description text-primary font-weight-bolder">School Logo</h4>
+                                                <div className="row">
+
+                                                </div>
+
+                                                <button type="submit" className="btn btn-primary mr-2">Submit</button>
+                                                <button className="btn btn-light">Cancel</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="row">
+                                    <div className="col-md-12 grid-margin stretch-card">
+                                        <div className="card shadow-sm">
+                                            <div className="card-body">
+                                                <p className="card-title">School List</p>
+                                                <div className="row">
+                                                    <div className="col-12">
+                                                        <div className="table-responsive">
+                                                            <div id="example_wrapper" className="dataTables_wrapper dt-bootstrap4 no-footer"><div className="row"><div className="col-sm-12 col-md-6"></div><div className="col-sm-12 col-md-6"></div></div><div className="row"><div className="col-sm-12"><table id="example" className="display expandable-table dataTable no-footer" style={{ width: "100%" }} role="grid">
+                                                                <thead>
+                                                                    <tr role="row">
+                                                                        <th className="select-checkbox sorting_disabled" rowspan="1" colspan="1" aria-label="Quote#" style={{ width: "153px" }}>Quote#</th>
+                                                                        <th className="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Product: activate to sort column descending" aria-sort="ascending" style={{ width: '177px' }}>Product</th>
+                                                                        <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Business type: activate to sort column ascending" style={{ width: "210px" }}>Business type</th>
+                                                                        <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Policy holder: activate to sort column ascending" style={{ width: "200px" }}>Policy holder</th>
+                                                                        <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Premium: activate to sort column ascending" style={{ width: "149px" }}>Premium</th>
+                                                                        <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style={{ width: "149px" }}>Status</th>
+                                                                        <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Updated at: activate to sort column ascending" style={{ width: "177px" }}>Updated at</th>
+                                                                        <th className="details-control sorting_disabled" rowspan="1" colspan="1" aria-label="" style={{ width: "61px" }}></th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    <tr className="odd">
+                                                                        <td className=" select-checkbox">Incs234</td>
+                                                                        <td className="sorting_1">Car insurance</td>
+                                                                        <td>Business type 1</td><td>Jesse Thomas</td>
+                                                                        <td>$1200</td>
+                                                                        <td>In progress</td>
+                                                                        <td>25/04/2020</td>
+                                                                        <td className=" details-control"></td>
+                                                                    </tr>
+                                                                    <tr className="even">
+                                                                        <td className=" select-checkbox">Incs235</td>
+                                                                        <td className="sorting_1">Car insurance</td>
+                                                                        <td>Business type 2</td>
+                                                                        <td>Jesse Thomas</td>
+                                                                        <td>$1200</td>
+                                                                        <td>Active</td>
+                                                                        <td>25/04/2020</td>
+                                                                        <td className=" details-control"></td>
+                                                                    </tr>
+                                                                    <tr className="odd">
+                                                                        <td className=" select-checkbox">Incs235</td>
+                                                                        <td className="sorting_1">Car insurance</td>
+                                                                        <td>Business type 2</td>
+                                                                        <td>Jesse Thomas</td>
+                                                                        <td>$1200</td>
+                                                                        <td>Expired</td>
+                                                                        <td>25/04/2020</td>
+                                                                        <td className=" details-control"></td>
+                                                                    </tr>
+                                                                    <tr className="even">
+                                                                        <td className=" select-checkbox">Incs235</td>
+                                                                        <td className="sorting_1">Car insurance</td>
+                                                                        <td>Business type 2</td>
+                                                                        <td>Jesse Thomas</td>
+                                                                        <td>$1200</td>
+                                                                        <td>In progress</td>
+                                                                        <td>25/04/2020</td>
+                                                                        <td className=" details-control"></td>
+                                                                    </tr>
+                                                                    <tr className="odd">
+                                                                        <td className=" select-checkbox">Incs235</td>
+                                                                        <td className="sorting_1">Car insurance</td>
+                                                                        <td>Business type 2</td>
+                                                                        <td>Jesse Thomas</td>
+                                                                        <td>$1200</td>
+                                                                        <td>Active</td>
+                                                                        <td>25/04/2020</td>
+                                                                        <td className=" details-control"></td>
+                                                                    </tr>
+                                                                    <tr className="even">
+                                                                        <td className=" select-checkbox">Incs235</td>
+                                                                        <td className="sorting_1">Car insurance</td>
+                                                                        <td>Business type 2</td>
+                                                                        <td>Jesse Thomas</td>
+                                                                        <td>$1200</td>
+                                                                        <td>Active</td>
+                                                                        <td>25/04/2020</td>
+                                                                        <td className=" details-control"></td>
+                                                                    </tr>
+                                                                    <tr className="odd">
+                                                                        <td className=" select-checkbox">Incs235</td>
+                                                                        <td className="sorting_1">Car insurance</td>
+                                                                        <td>Business type 2</td>
+                                                                        <td>Jesse Thomas</td>
+                                                                        <td>$1200</td>
+                                                                        <td>Active</td>
+                                                                        <td>25/04/2020</td>
+                                                                        <td className=" details-control"></td>
+                                                                    </tr>
+                                                                    <tr className="even">
+                                                                        <td className=" select-checkbox">Incs235</td>
+                                                                        <td className="sorting_1">Car insurance</td>
+                                                                        <td>Business type 2</td>
+                                                                        <td>Jesse Thomas</td>
+                                                                        <td>$1200</td>
+                                                                        <td>Expired</td>
+                                                                        <td>25/04/2020</td>
+                                                                        <td className=" details-control"></td>
+                                                                    </tr>
+                                                                    <tr className="odd"><td className=" select-checkbox">Incs235</td>
+                                                                        <td className="sorting_1">Car insurance</td><td>Business type 2</td><td>Jesse Thomas</td><td>$1200</td>
+                                                                        <td>Active</td>
+                                                                        <td>25/04/2020</td>
+                                                                        <td className=" details-control"></td>
+                                                                    </tr>
+                                                                    <tr className="even"><td className=" select-checkbox">Incs235</td>
+                                                                        <td className="sorting_1">Car insurance</td>
+                                                                        <td>Business type 2</td>
+                                                                        <td>Jesse Thomas</td><td>$1200</td>
+                                                                        <td>In progress</td>
+                                                                        <td>25/04/2020</td>
+                                                                        <td className=" details-control"></td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            </div>
+                                                            </div>
+                                                                <div className="row">
+                                                                    <div className="col-sm-12 col-md-5">
+
+                                                                    </div>
+                                                                    <div className="col-sm-12 col-md-7">
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    )
+}
+
+export default SchoolMaster
