@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import Navbar from '../Template/Navbar'
 import SidebarSettingPannel from '../Template/SidebarSettingPannel'
 import Sidebar from '../Template/Sidebar'
@@ -27,21 +26,6 @@ const Dashboard = () => {
                                         <div className="col-12 col-xl-8 mb-4 mb-xl-0">
                                             <h3 className="font-weight-bold">Welcome Mayank</h3>
                                             <h6 className="font-weight-normal mb-0">All systems are running smoothly! You have <span className="text-primary">3 unread alerts!</span></h6>
-                                        </div>
-                                        <div className="col-12 col-xl-4">
-                                            <div className="justify-content-end d-flex">
-                                                <div className="dropdown flex-md-grow-1 flex-xl-grow-0">
-                                                    <button className="btn btn-sm btn-light bg-white dropdown-toggle" type="button" id="dropdownMenuDate2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                                                        <i className="mdi mdi-calendar"></i> Today (10 Jan 2021)
-                                                    </button>
-                                                    <div className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuDate2">
-                                                        <Link className="dropdown-item" to="#">January - March</Link>
-                                                        <Link className="dropdown-item" to="#">March - June</Link>
-                                                        <Link className="dropdown-item" to="#">June - August</Link>
-                                                        <Link className="dropdown-item" to="#">August - November</Link>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -303,7 +287,7 @@ const Dashboard = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row">
+                            {/* <div className="row">
                                 <div className="col-md-12 grid-margin stretch-card">
                                     <div className="card shadow-sm">
                                         <div className="card-body">
@@ -333,7 +317,7 @@ const Dashboard = () => {
 
 
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                         {/*content-wrapper ends */}
 

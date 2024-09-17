@@ -89,11 +89,11 @@ const UserManagement = () => {
                                                     </div>
                                                     <div className="col-md-6 form-group">
                                                         <label for="userType">Status</label><br />
-                                                        <div className="btn-group btn-group-toggle" data-toggle="buttons">
-                                                            <label className="btn btn-light active">
+                                                        <div className="btn-group btn-group-toggle mt-1" data-toggle="buttons">
+                                                            <label className="btn btn-light active py-2">
                                                                 <input type="radio" name="options" id="option1" autocomplete="off" checked /> Active
                                                             </label>
-                                                            <label className="btn btn-light">
+                                                            <label className="btn btn-light py-2">
                                                                 <input type="radio" name="options" id="option2" autocomplete="off" /> Inactive
                                                             </label>
                                                         </div>

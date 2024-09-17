@@ -13,6 +13,7 @@ import SchoolMaster from './Components/Pages/SchoolMaster.jsx'
 import ChangePassword from './Components/Pages/ChangePassword.jsx'
 import Login from './Components/Pages/Login.jsx';
 import Register from './Components/Pages/Register.jsx';
+import Messages from './Components/Pages/Messages.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 
@@ -21,6 +22,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <Route path="/" element={<App />}>
         <Route index path="/" element={<Dashboard />} />
         <Route path='/import-scholar' element={<ImportScholar />} />
+        <Route path='/messages' element={<Messages />} />
         <Route path='/message-draft' element={<MessageDraft />} />
         <Route path='/reply-received' element={<ReplyReceived />} />
         <Route path='/group-master' element={<GroupMaster />} />
