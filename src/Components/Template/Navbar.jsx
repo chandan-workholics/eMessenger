@@ -30,7 +30,7 @@ const Navbar = () => {
                         </li>
                     </ul>
                     <ul className="navbar-nav navbar-nav-right">
-                        <li className="nav-item dropdown">
+                        {/* <li className="nav-item dropdown">
                             <Link className="nav-link count-indicator dropdown-toggle" id="notificationDropdown" to="#" data-toggle="dropdown">
                                 <i className="icon-bell mx-0 text-white"></i>
                                 <span className="count"></span>
@@ -77,7 +77,7 @@ const Navbar = () => {
                                     </div>
                                 </Link>
                             </div>
-                        </li>
+                        </li> */}
                         <li className="nav-item nav-profile dropdown">
                             <Link className="nav-link dropdown-toggle" to="#" data-toggle="dropdown" id="profileDropdown">
                                 <img src="images/faces/face28.jpg" alt="profile" />
@@ -93,11 +93,11 @@ const Navbar = () => {
                                 </Link>
                             </div>
                         </li>
-                        <li className="nav-item nav-settings d-none d-lg-flex">
+                        {/* <li className="nav-item nav-settings d-none d-lg-flex">
                             <Link className="nav-link" to="#">
                                 <i className="icon-ellipsis text-white"></i>
                             </Link>
-                        </li>
+                        </li> */}
                     </ul>
                     <button className="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="offcanvas">
                         <span className="icon-menu"></span>

@@ -4,8 +4,61 @@
   box-sizing: border-box;
 }
 
+/* Background-Color */
+
+.bg-fff4de {
+  background-color: #fff4de;
+}
+
+.bg-e2fff6 {
+  background-color: #e2fff6;
+}
+
+.bg-ffe2e5 {
+  background-color: #ffe2e5;
+}
+
+.bg-e1f0ff {
+  background-color: #e1f0ff;
+}
+
+/* Text-Color */
+.text-ffad44 {
+  color: #ffad44;
+}
+
+.text-25c997 {
+  color: #25c997;
+}
+
+.text-f64e60 {
+  color: #f64e60;
+}
+
+.text-3699ff {
+  color: #3699ff;
+}
+
 .navbar-brand-wrapper,
 .navbar-menu-wrapper {
   /* background: url('assets/Images/navbar-bg.png') !important; */
-  background: #00394f !important;
+  background: #f7ae56 !important;
+}
+
+.dashboard-page {
+  .counter-card {
+    background-color: #eee5ff;
+    background-image: url(/public/images/counterCard-bg.svg);
+    background-size: cover;
+    background-position: top right;
+    background-repeat: no-repeat;
+  }
+}
+
+/* Calendar-Component */
+.calendar-component {
+  background-image: url(/public/images/calenderBg.png);
+  background-size: contain;
+  background-position: right;
+  background-repeat: no-repeat;
 }

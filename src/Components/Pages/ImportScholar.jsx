@@ -71,35 +71,43 @@ const ImportScholar = () => {
                                                         <table id="example" className="display expandable-table table-hover" style={{ width: '100%' }}>
                                                             <thead>
                                                                 <tr>
-                                                                    <th>#</th>
-                                                                    <th>Scholar Data Id</th>
+                                                                    <th>S.No</th>
                                                                     <th>Mobile Number</th>
-                                                                    <th>Scholar Short Name</th>
-                                                                    <th>Scholar Number</th>
+                                                                    <th>School Short Name</th>
+                                                                    <th>Student Name</th>
+                                                                    <th>Student Id</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
                                                                 <tr>
                                                                     <td>1</td>
-                                                                    <td>1</td>
                                                                     <td>1234567890</td>
                                                                     <td>AO</td>
+                                                                    <td className='text-capitalize'>test test</td>
                                                                     <td>12345678</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td>1</td>
-                                                                    <td>1</td>
+                                                                    <td>2</td>
                                                                     <td>1234567890</td>
                                                                     <td>AO</td>
+                                                                    <td className='text-capitalize'>test test</td>
                                                                     <td>12345678</td>
                                                                 </tr>
                                                                 <tr>
-                                                                    <td>1</td>
-                                                                    <td>1</td>
+                                                                    <td>3</td>
                                                                     <td>1234567890</td>
                                                                     <td>AO</td>
+                                                                    <td className='text-capitalize'>test test</td>
                                                                     <td>12345678</td>
                                                                 </tr>
+                                                                <tr>
+                                                                    <td>4</td>
+                                                                    <td>1234567890</td>
+                                                                    <td>AO</td>
+                                                                    <td className='text-capitalize'>test test</td>
+                                                                    <td>12345678</td>
+                                                                </tr>
+                                                                
                                                             </tbody>
                                                         </table>
                                                     </div>
