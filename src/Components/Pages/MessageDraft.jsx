@@ -131,10 +131,13 @@ const MessageDraft = () => {
                                                                     <option>e-Messenger</option>
                                                                 </select>
                                                             </div>
-                                                            <div className="col-md-3 d-flex align-items-center">
+                                                            <div className="col-md-6 d-flex align-items-center">
                                                                 <div className="">
                                                                     <button type="submit" className="btn btn-primary mr-2">Filter</button>
                                                                 </div>
+                                                            </div>
+                                                            <div className="col-md-3 d-flex align-items-center">
+                                                                <input type="search" class="form-control ds-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-owns="algolia-autocomplete-listbox-0" dir="auto" />
                                                             </div>
                                                         </div>
                                                     </form>

@@ -33,10 +33,19 @@ const ReplyReceived = () => {
                                                     <form className="forms-sample">
                                                         <div className="row">
                                                             <div className="col-md-3 form-group">
-                                                                <input type="search" className="form-control" id="exampleInputName1" placeholder="Full Name" />
+                                                                <select className="form-control" id="userType">
+                                                                    <option>All</option>
+                                                                    <option>APS</option>
+                                                                    <option>e-Messenger</option>
+                                                                </select>
                                                             </div>
-                                                            <div className="col-md-3 form-group">
-                                                                <button type="submit" className="btn btn-primary mr-2">search</button>
+                                                            <div className="col-md-6">
+                                                                <div className="">
+                                                                    <button type="submit" className="btn btn-primary mr-2">Filter</button>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-md-3">
+                                                                <input type="search" class="form-control ds-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-owns="algolia-autocomplete-listbox-0" dir="auto" />
                                                             </div>
                                                         </div>
                                                     </form>
@@ -46,110 +55,80 @@ const ReplyReceived = () => {
                                                         <div id="example_wrapper" className="dataTables_wrapper dt-bootstrap4 no-footer"><div className="row"><div className="col-sm-12 col-md-6"></div><div className="col-sm-12 col-md-6"></div></div><div className="row"><div className="col-sm-12"><table id="example" className="display expandable-table dataTable no-footer" style={{ width: "100%" }} role="grid">
                                                             <thead>
                                                                 <tr role="row">
-                                                                    <th className="select-checkbox sorting_disabled" rowspan="1" colspan="1" aria-label="Quote#" style={{ width: "153px" }}>Quote#</th>
-                                                                    <th className="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Product: activate to sort column descending" aria-sort="ascending" style={{ width: '177px' }}>Product</th>
-                                                                    <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Business type: activate to sort column ascending" style={{ width: "210px" }}>Business type</th>
-                                                                    <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Policy holder: activate to sort column ascending" style={{ width: "200px" }}>Policy holder</th>
-                                                                    <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Premium: activate to sort column ascending" style={{ width: "149px" }}>Premium</th>
-                                                                    <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style={{ width: "149px" }}>Status</th>
-                                                                    <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Updated at: activate to sort column ascending" style={{ width: "177px" }}>Updated at</th>
+                                                                    <th className="select-checkbox sorting_disabled" rowspan="1" colspan="1" aria-label="Quote#" style={{ width: "153px" }}>Req. Id</th>
+                                                                    <th className="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Recieved Info: activate to sort column descending" aria-sort="ascending" style={{ width: '177px' }}>Recieved Info</th>
+                                                                    <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Msg Id: activate to sort column ascending" style={{ width: "210px" }}>Msg Id</th>
+                                                                    <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Subject: activate to sort column ascending" style={{ width: "200px" }}>Subject</th>
+                                                                    <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Mobile No.: activate to sort column ascending" style={{ width: "149px" }}>Mobile No.</th>
+                                                                    <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="School: activate to sort column ascending" style={{ width: "149px" }}>School</th>
+                                                                    <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Scholar: activate to sort column ascending" style={{ width: "177px" }}>Scholar</th>
+                                                                    <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Sent Info: activate to sort column ascending" style={{ width: "177px" }}>Sent Info</th>
+                                                                    <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Recieved Data: activate to sort column ascending" style={{ width: "177px" }}>Recieved Data</th>
                                                                     <th className="details-control sorting_disabled" rowspan="1" colspan="1" aria-label="" style={{ width: "61px" }}></th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
                                                                 <tr className="odd">
-                                                                    <td className=" select-checkbox">Incs234</td>
-                                                                    <td className="sorting_1">Car insurance</td>
-                                                                    <td>Business type 1</td><td>Jesse Thomas</td>
-                                                                    <td>$1200</td>
-                                                                    <td>In progress</td>
-                                                                    <td>25/04/2020</td>
-                                                                    <td className=" details-control"></td>
-                                                                </tr>
-                                                                <tr className="even">
-                                                                    <td className=" select-checkbox">Incs235</td>
-                                                                    <td className="sorting_1">Car insurance</td>
-                                                                    <td>Business type 2</td>
-                                                                    <td>Jesse Thomas</td>
-                                                                    <td>$1200</td>
-                                                                    <td>Active</td>
-                                                                    <td>25/04/2020</td>
+                                                                    <td className=" select-checkbox">1234</td>
+                                                                    <td className="sorting_1">30-Apr-2021 <br /> 12:12PM</td>
+                                                                    <td>7856</td>
+                                                                    <td></td>
+                                                                    <td>1234567890</td>
+                                                                    <td className='text-uppercase'>TEST</td>
+                                                                    <td>11223344</td>
+                                                                    <td>01-Jan-1970 <br /> 05:30AM</td>
+                                                                    <td></td>
                                                                     <td className=" details-control"></td>
                                                                 </tr>
                                                                 <tr className="odd">
-                                                                    <td className=" select-checkbox">Incs235</td>
-                                                                    <td className="sorting_1">Car insurance</td>
-                                                                    <td>Business type 2</td>
-                                                                    <td>Jesse Thomas</td>
-                                                                    <td>$1200</td>
-                                                                    <td>Expired</td>
-                                                                    <td>25/04/2020</td>
-                                                                    <td className=" details-control"></td>
-                                                                </tr>
-                                                                <tr className="even">
-                                                                    <td className=" select-checkbox">Incs235</td>
-                                                                    <td className="sorting_1">Car insurance</td>
-                                                                    <td>Business type 2</td>
-                                                                    <td>Jesse Thomas</td>
-                                                                    <td>$1200</td>
-                                                                    <td>In progress</td>
-                                                                    <td>25/04/2020</td>
+                                                                    <td className=" select-checkbox">1234</td>
+                                                                    <td className="sorting_1">30-Apr-2021 <br /> 12:12PM</td>
+                                                                    <td>7856</td>
+                                                                    <td></td>
+                                                                    <td>1234567890</td>
+                                                                    <td className='text-uppercase'>TEST</td>
+                                                                    <td>11223344</td>
+                                                                    <td>01-Jan-1970 <br /> 05:30AM</td>
+                                                                    <td></td>
                                                                     <td className=" details-control"></td>
                                                                 </tr>
                                                                 <tr className="odd">
-                                                                    <td className=" select-checkbox">Incs235</td>
-                                                                    <td className="sorting_1">Car insurance</td>
-                                                                    <td>Business type 2</td>
-                                                                    <td>Jesse Thomas</td>
-                                                                    <td>$1200</td>
-                                                                    <td>Active</td>
-                                                                    <td>25/04/2020</td>
-                                                                    <td className=" details-control"></td>
-                                                                </tr>
-                                                                <tr className="even">
-                                                                    <td className=" select-checkbox">Incs235</td>
-                                                                    <td className="sorting_1">Car insurance</td>
-                                                                    <td>Business type 2</td>
-                                                                    <td>Jesse Thomas</td>
-                                                                    <td>$1200</td>
-                                                                    <td>Active</td>
-                                                                    <td>25/04/2020</td>
+                                                                    <td className=" select-checkbox">1234</td>
+                                                                    <td className="sorting_1">30-Apr-2021 <br /> 12:12PM</td>
+                                                                    <td>7856</td>
+                                                                    <td></td>
+                                                                    <td>1234567890</td>
+                                                                    <td className='text-uppercase'>TEST</td>
+                                                                    <td>11223344</td>
+                                                                    <td>01-Jan-1970 <br /> 05:30AM</td>
+                                                                    <td></td>
                                                                     <td className=" details-control"></td>
                                                                 </tr>
                                                                 <tr className="odd">
-                                                                    <td className=" select-checkbox">Incs235</td>
-                                                                    <td className="sorting_1">Car insurance</td>
-                                                                    <td>Business type 2</td>
-                                                                    <td>Jesse Thomas</td>
-                                                                    <td>$1200</td>
-                                                                    <td>Active</td>
-                                                                    <td>25/04/2020</td>
+                                                                    <td className=" select-checkbox">1234</td>
+                                                                    <td className="sorting_1">30-Apr-2021 <br /> 12:12PM</td>
+                                                                    <td>7856</td>
+                                                                    <td></td>
+                                                                    <td>1234567890</td>
+                                                                    <td className='text-uppercase'>TEST</td>
+                                                                    <td>11223344</td>
+                                                                    <td>01-Jan-1970 <br /> 05:30AM</td>
+                                                                    <td></td>
                                                                     <td className=" details-control"></td>
                                                                 </tr>
-                                                                <tr className="even">
-                                                                    <td className=" select-checkbox">Incs235</td>
-                                                                    <td className="sorting_1">Car insurance</td>
-                                                                    <td>Business type 2</td>
-                                                                    <td>Jesse Thomas</td>
-                                                                    <td>$1200</td>
-                                                                    <td>Expired</td>
-                                                                    <td>25/04/2020</td>
+                                                                <tr className="odd">
+                                                                    <td className=" select-checkbox">1234</td>
+                                                                    <td className="sorting_1">30-Apr-2021 <br /> 12:12PM</td>
+                                                                    <td>7856</td>
+                                                                    <td></td>
+                                                                    <td>1234567890</td>
+                                                                    <td className='text-uppercase'>TEST</td>
+                                                                    <td>11223344</td>
+                                                                    <td>01-Jan-1970 <br /> 05:30AM</td>
+                                                                    <td></td>
                                                                     <td className=" details-control"></td>
                                                                 </tr>
-                                                                <tr className="odd"><td className=" select-checkbox">Incs235</td>
-                                                                    <td className="sorting_1">Car insurance</td><td>Business type 2</td><td>Jesse Thomas</td><td>$1200</td>
-                                                                    <td>Active</td>
-                                                                    <td>25/04/2020</td>
-                                                                    <td className=" details-control"></td>
-                                                                </tr>
-                                                                <tr className="even"><td className=" select-checkbox">Incs235</td>
-                                                                    <td className="sorting_1">Car insurance</td>
-                                                                    <td>Business type 2</td>
-                                                                    <td>Jesse Thomas</td><td>$1200</td>
-                                                                    <td>In progress</td>
-                                                                    <td>25/04/2020</td>
-                                                                    <td className=" details-control"></td>
-                                                                </tr>
+
                                                             </tbody>
                                                         </table>
                                                         </div>

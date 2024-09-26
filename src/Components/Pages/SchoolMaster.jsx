@@ -104,22 +104,6 @@ const SchoolMaster = () => {
                                                     </div>
                                                 </div>
                                                 <hr />
-                                                <h4 className="card-description text-primary font-weight-bolder">Invoice Setting</h4>
-                                                <div className="row">
-                                                    <div className="col-md-4 form-group">
-                                                        <label for="exampleInputName1">Session Print on Invoice</label>
-                                                        <input type="text" className="form-control" id="exampleInputName1" placeholder="Please Enter Session Like 2023-2024" />
-                                                    </div>
-                                                    <div className="col-md-4 form-group">
-                                                        <label for="exampleInputName1">Season Print on Invoice</label>
-                                                        <input type="text" className="form-control" id="exampleInputName1" placeholder="Please Enter Session Like 2023" />
-                                                    </div>
-                                                    <div className="col-md-4 form-group">
-                                                        <label for="exampleInputEmail3">Invoice Send Email ID</label>
-                                                        <input type="email" className="form-control" id="exampleInputEmail3" placeholder="Invoice Send Email ID" />
-                                                    </div>
-                                                </div>
-                                                <hr />
                                                 <h4 className="card-description text-primary font-weight-bolder">Scholar Color</h4>
                                                 <div className="row">
 
