@@ -15305,9 +15305,9 @@ input[type="button"].btn-block {
 
 .nav-tabs .nav-link.active,
 .nav-tabs .nav-item.show .nav-link {
-  color: #1F1F1F;
-  background-color: #ffffff;
-  border-color: #ebedf2 #ebedf2 #ffffff;
+  color: #FFFFFF;
+  background-color: #f65365;
+  border-color: #f65365;
 }
 
 .nav-tabs .dropdown-menu {
@@ -22742,7 +22742,7 @@ code {
 
 /* Footer */
 .footer {
-  background: #ecfcff;
+  background: #fbf6f0;
   padding: 30px 2.45rem;
   transition: all 0.25s ease;
   -moz-transition: all 0.25s ease;
@@ -28695,7 +28695,7 @@ dl li {
   color: #000000;
   border-radius: 0;
   border: 1px solid #CED4DA;
-  padding: .75rem 1.5rem;
+  padding: 0.5rem 1.5rem;
 }
 
 @media (max-width: 767px) {
@@ -28705,11 +28705,11 @@ dl li {
 }
 
 .nav-tabs .nav-item:first-child .nav-link {
-  border-radius: 4px 0 0 0;
+  border-radius: 12px 0 0 12px;
 }
 
 .nav-tabs .nav-item:last-child .nav-link {
-  border-radius: 0 4px 0 0;
+  border-radius: 0 12px 12px 0;
 }
 
 .nav-tabs.nav-tabs-vertical,

@@ -87,7 +87,7 @@ const Navbar = () => {
                                     <i className="ti-settings text-primary"></i>
                                     Settings
                                 </Link>
-                                <Link className="dropdown-item" to="/login">
+                                <Link className="dropdown-item" to="/">
                                     <i className="ti-power-off text-primary"></i>
                                     Logout
                                 </Link>

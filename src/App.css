@@ -62,3 +62,52 @@
   background-position: right;
   background-repeat: no-repeat;
 }
+
+
+.loding-page {
+  .loader-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* Full-screen loader */
+    background-color: #fff;
+    /* Optional: add a background color */
+  }
+
+  .loader {
+    display: flex;
+    justify-content: space-between;
+    width: 80px;
+  }
+
+  .dot {
+    width: 16px;
+    height: 16px;
+    background-color: #f65365;
+    border-radius: 50%;
+    animation: pulse 1.2s infinite ease-in-out;
+  }
+
+  .dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .dot:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+
+  @keyframes pulse {
+
+    0%,
+    100% {
+      transform: scale(0.8);
+      opacity: 0.8;
+    }
+
+    50% {
+      transform: scale(1.5);
+      opacity: 1;
+    }
+  }
+}

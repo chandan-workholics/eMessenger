@@ -1,9 +1,37 @@
-import React from 'react'
-import Navbar from '../Template/Navbar'
+import React, { useState, useEffect } from 'react';
+import Navbar from '../Template/Navbar';
 import SidebarSettingPannel from '../Template/SidebarSettingPannel'
 import Sidebar from '../Template/Sidebar'
+import Loding from '../Template/Loding';
 
 const ImportScholar = () => {
+
+    const [importStudent, setImportStudent] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('http://206.189.130.102:3550/api/scholar/getScholarDetail')
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`)
+                }
+                const result = await response.json();
+                setImportStudent(result.data);
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    if (loading) return <Loding />;
+    if (error) return <p>Error: {error}</p>;
+
     return (
         <>
             <div className="container-scroller">
@@ -79,35 +107,19 @@ const ImportScholar = () => {
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <tr>
-                                                                    <td>1</td>
-                                                                    <td>1234567890</td>
-                                                                    <td>AO</td>
-                                                                    <td className='text-capitalize'>test test</td>
-                                                                    <td>12345678</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>2</td>
-                                                                    <td>1234567890</td>
-                                                                    <td>AO</td>
-                                                                    <td className='text-capitalize'>test test</td>
-                                                                    <td>12345678</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>3</td>
-                                                                    <td>1234567890</td>
-                                                                    <td>AO</td>
-                                                                    <td className='text-capitalize'>test test</td>
-                                                                    <td>12345678</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td>4</td>
-                                                                    <td>1234567890</td>
-                                                                    <td>AO</td>
-                                                                    <td className='text-capitalize'>test test</td>
-                                                                    <td>12345678</td>
-                                                                </tr>
-                                                                
+                                                                {importStudent && importStudent.length > 0 ? (
+                                                                    importStudent?.map((val, index) => (
+                                                                        <tr key={val.id}>
+                                                                            <td>{index + 1}</td>
+                                                                            <td>{val.mobile_no}</td>
+                                                                            <td>{val.sch_short_nm}</td>
+                                                                            <td></td>
+                                                                            <td>{val.scholar_no}</td>
+                                                                        </tr>
+                                                                    ))
+                                                                ) : (
+                                                                    <tr><td colSpan="5">No data available</td></tr>
+                                                                )}
                                                             </tbody>
                                                         </table>
                                                     </div>

@@ -20,7 +20,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<App />}>
-        <Route index path="/" element={<Dashboard />} />
+        <Route path='/' element={<Login />} />
+        <Route index path="/dashboard" element={<Dashboard />} />
         <Route path='/import-scholar' element={<ImportScholar />} />
         <Route path='/messages' element={<Messages />} />
         <Route path='/message-draft' element={<MessageDraft />} />
@@ -30,7 +31,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path='/user-management' element={<UserManagement />} />
         <Route path='/school-master' element={<SchoolMaster />} />
         <Route path='/change-password' element={<ChangePassword />} />
-        <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
       </Route>
     </Routes>

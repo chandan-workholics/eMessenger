@@ -7,7 +7,7 @@ const Sidebar = () => {
             <nav className="sidebar sidebar-offcanvas" id="sidebar">
                 <ul className="nav">
                     <li className="nav-item active">
-                        <Link className="nav-link" to="/">
+                        <Link className="nav-link" to="/dashboard">
                             <i className="icon-grid menu-icon"></i>
                             <span className="menu-title mr-3">Dashboard</span>
                         </Link>
@@ -15,12 +15,6 @@ const Sidebar = () => {
                     <p class="text-secondary menu-text mt-2 mb-0">
                         <span>CUSTOM MESSAGE</span> <i class="fas fa-ellipsis-h"></i>
                     </p>
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/import-scholar">
-                            <i class="fa-solid fa-file-import menu-icon"></i>
-                            <span className="menu-title mr-3">Import Student</span>
-                        </Link>
-                    </li>
                     <li className="nav-item">
                         <Link className="nav-link" to="/message-draft">
                             <i class="fa-solid fa-envelope menu-icon"></i>
@@ -31,18 +25,6 @@ const Sidebar = () => {
                         <Link className="nav-link" to="/reply-received">
                             <i class="fa-solid fa-inbox menu-icon"></i>
                             <span className="menu-title mr-3">Inbox</span>
-                        </Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/group-master">
-                            <i class="fa-solid fa-user-group menu-icon"></i>
-                            <span className="menu-title mr-3">Group</span>
-                        </Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/sub-group-master">
-                            <i class="fa-solid fa-users-line menu-icon"></i>
-                            <span className="menu-title mr-3">Sub Group</span>
                         </Link>
                     </li>
                     {/* <li className="nav-item">
@@ -74,6 +56,24 @@ const Sidebar = () => {
                     <p class="text-secondary menu-text mt-2 mb-0">
                         <span>MASTER</span> <i class="fas fa-ellipsis-h"></i>
                     </p>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/import-scholar">
+                            <i class="fa-solid fa-file-import menu-icon"></i>
+                            <span className="menu-title mr-3">Import Student</span>
+                        </Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/group-master">
+                            <i class="fa-solid fa-user-group menu-icon"></i>
+                            <span className="menu-title mr-3">Group</span>
+                        </Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/sub-group-master">
+                            <i class="fa-solid fa-users-line menu-icon"></i>
+                            <span className="menu-title mr-3">Sub Group</span>
+                        </Link>
+                    </li>
                     <li className="nav-item">
                         <Link className="nav-link" to="/user-management">
                             <i class="fa-solid fa-users-gear menu-icon"></i>
@@ -109,7 +109,7 @@ const Sidebar = () => {
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="/login">
+                        <Link className="nav-link" to="/">
                             <i class="fa-solid fa-arrow-right-from-bracket menu-icon"></i>
                             <span className="menu-title mr-3">Logout</span>
                         </Link>
