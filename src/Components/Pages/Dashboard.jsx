@@ -35,7 +35,7 @@ const Dashboard = () => {
                                 <div className="col-md-5 grid-margin stretch-card">
                                     <div className="card counter-card">
                                         <div className="card-body">
-                                            <p class="card-title mb-1">Counter Report</p>
+                                            <p className="card-title mb-1">Counter Report</p>
                                             <p className="font-weight-500">About Your Data Details</p>
                                             <div className="">
                                                 <img src="images/counterCard-img.svg" alt="people" />

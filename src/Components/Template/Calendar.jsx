@@ -86,13 +86,13 @@ const Calendar = () => {
                         className="btn btn-light rounded-circle p-2 mr-1"
                         onClick={handlePrevMonth}
                     >
-                        <i class="fa-solid fa-circle-arrow-left" style={{ fontSize: '25px' }}></i>
+                        <i className="fa-solid fa-circle-arrow-left" style={{ fontSize: '25px' }}></i>
                     </button>
                     <button
                         className="btn btn-light rounded-circle p-2 ml-1"
                         onClick={handleNextMonth}
                     >
-                        <i class="fa-solid fa-circle-arrow-right" style={{ fontSize: '25px' }}></i>
+                        <i className="fa-solid fa-circle-arrow-right" style={{ fontSize: '25px' }}></i>
                     </button>
                 </div>
             </div>

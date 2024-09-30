@@ -45,7 +45,7 @@ const ReplyReceived = () => {
                                                                 </div>
                                                             </div>
                                                             <div className="col-md-3">
-                                                                <input type="search" class="form-control ds-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-owns="algolia-autocomplete-listbox-0" dir="auto" />
+                                                                <input type="search" className="form-control ds-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-owns="algolia-autocomplete-listbox-0" dir="auto" />
                                                             </div>
                                                         </div>
                                                     </form>
@@ -56,14 +56,14 @@ const ReplyReceived = () => {
                                                             <thead>
                                                                 <tr role="row">
                                                                     <th className="select-checkbox sorting_disabled" rowspan="1" colspan="1" aria-label="Quote#" style={{ width: "153px" }}>Req. Id</th>
-                                                                    <th className="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Recieved Info: activate to sort column descending" aria-sort="ascending" style={{ width: '177px' }}>Recieved Info</th>
-                                                                    <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Msg Id: activate to sort column ascending" style={{ width: "210px" }}>Msg Id</th>
-                                                                    <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Subject: activate to sort column ascending" style={{ width: "200px" }}>Subject</th>
-                                                                    <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Mobile No.: activate to sort column ascending" style={{ width: "149px" }}>Mobile No.</th>
-                                                                    <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="School: activate to sort column ascending" style={{ width: "149px" }}>School</th>
-                                                                    <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Scholar: activate to sort column ascending" style={{ width: "177px" }}>Scholar</th>
-                                                                    <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Sent Info: activate to sort column ascending" style={{ width: "177px" }}>Sent Info</th>
-                                                                    <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Recieved Data: activate to sort column ascending" style={{ width: "177px" }}>Recieved Data</th>
+                                                                    <th className="sorting_asc" tabIndex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Recieved Info: activate to sort column descending" aria-sort="ascending" style={{ width: '177px' }}>Recieved Info</th>
+                                                                    <th className="sorting" tabIndex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Msg Id: activate to sort column ascending" style={{ width: "210px" }}>Msg Id</th>
+                                                                    <th className="sorting" tabIndex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Subject: activate to sort column ascending" style={{ width: "200px" }}>Subject</th>
+                                                                    <th className="sorting" tabIndex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Mobile No.: activate to sort column ascending" style={{ width: "149px" }}>Mobile No.</th>
+                                                                    <th className="sorting" tabIndex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="School: activate to sort column ascending" style={{ width: "149px" }}>School</th>
+                                                                    <th className="sorting" tabIndex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Scholar: activate to sort column ascending" style={{ width: "177px" }}>Scholar</th>
+                                                                    <th className="sorting" tabIndex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Sent Info: activate to sort column ascending" style={{ width: "177px" }}>Sent Info</th>
+                                                                    <th className="sorting" tabIndex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Recieved Data: activate to sort column ascending" style={{ width: "177px" }}>Recieved Data</th>
                                                                     <th className="details-control sorting_disabled" rowspan="1" colspan="1" aria-label="" style={{ width: "61px" }}></th>
                                                                 </tr>
                                                             </thead>

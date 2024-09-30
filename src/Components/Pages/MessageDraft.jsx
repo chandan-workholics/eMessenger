@@ -2,8 +2,83 @@ import React from 'react'
 import Navbar from '../Template/Navbar'
 import SidebarSettingPannel from '../Template/SidebarSettingPannel'
 import Sidebar from '../Template/Sidebar'
+import SortableTable from '../Template/SortableTable';
 
 const MessageDraft = () => {
+
+    // Table columns
+    const columns = [
+        { label: 'Msg ID', key: 'msgId' },
+        { label: 'Subject Line & Schools', key: 'subjectLineSchools' },
+        { label: 'Priority', key: 'priority' },
+        { label: 'Show Upto Date & Time', key: 'showUpto' },
+        { label: 'Last Posted Date', key: 'lastPosted' },
+        { label: 'Last Posted By', key: 'lastPostedBy' },
+        { label: 'No. of Recipients', key: 'recipients' },
+        { label: 'Seen', key: 'seen' },
+        { label: 'Respond', key: 'respond' },
+        { label: 'Is Active', key: 'isActive' },
+        { label: 'Action', key: 'action' } // Changed to lowercase for consistency
+    ];
+
+    // Table data
+    const data = [
+        {
+            msgId: 1,
+            subjectLineSchools: (
+                <div>
+                    <span>Reminder - 1 for Second Term outstanding fee/charges.</span> <br />
+                    <a href="#" class="badge badge-primary">Primary</a>
+                    <a href="#" class="badge badge-secondary">Secondary</a>
+                    <a href="#" class="badge badge-success">Success</a>
+                    <a href="#" class="badge badge-danger">Danger</a>
+                    <a href="#" class="badge badge-warning">Warning</a>
+                    <a href="#" class="badge badge-info">Info</a>
+                    <a href="#" class="badge badge-light">Light</a>
+                    <a href="#" class="badge badge-dark">Dark</a>
+                </div>
+            ),
+            priority: '6',
+            showUpto: '2024-10-01',
+            lastPosted: '2024-09-25',
+            lastPostedBy: 'Admin',
+            recipients: 100,
+            seen: 80,
+            respond: 50,
+            isActive: true,
+            action: (
+                <div>
+                    <i className="fa-solid fa-pen-to-square mr-3"></i>
+                    <i className="fa-solid fa-trash-can text-danger mr-3"></i>
+                    <i className="fa-solid fa-paper-plane text-info mr-3"></i>
+                    <i className="fa-solid fa-paper-plane text-success"></i>
+                </div>
+            ),
+        },
+        {
+            msgId: 2,
+            subjectLineSchools: 'Reminder - 2 for Second Term outstanding fee/charges.',
+            priority: '7',
+            showUpto: '2024-10-02',
+            lastPosted: '2024-09-26',
+            lastPostedBy: 'User',
+            recipients: 200,
+            seen: 150,
+            respond: 100,
+            isActive: false,
+            action: (
+                <div>
+                    <i className="fa-solid fa-pen-to-square mr-3"></i>
+                    <i className="fa-solid fa-trash-can text-danger mr-3"></i>
+                    <i className="fa-solid fa-paper-plane text-info mr-3"></i>
+                    <i className="fa-solid fa-paper-plane text-success"></i>
+                </div>
+            ),
+        },
+        // Add more rows as needed for pagination...
+    ];
+
+
     return (
         <>
             <div className="container-scroller">
@@ -52,11 +127,11 @@ const MessageDraft = () => {
                                                         <form className="forms-sample">
                                                             <div className="row">
                                                                 <div className="col-md-3 form-group">
-                                                                    <label for="exampleInputName1">Subject Line<span className="text-danger">*</span></label>
+                                                                    <label htmlFor="exampleInputName1">Subject Line<span className="text-danger">*</span></label>
                                                                     <input type="text" className="form-control" id="exampleInputName1" placeholder="Full Name" />
                                                                 </div>
                                                                 <div className="col-md-3 form-group">
-                                                                    <label for="userType">Priority (1-High)<span className="text-danger">*</span></label>
+                                                                    <label htmlFor="userType">Priority (1-High)<span className="text-danger">*</span></label>
                                                                     <select className="form-control" id="userType">
                                                                         <option>1</option>
                                                                         <option>2</option>
@@ -71,15 +146,15 @@ const MessageDraft = () => {
                                                                     </select>
                                                                 </div>
                                                                 <div className="col-md-3 form-group">
-                                                                    <label for="exampleInputEmail3">Show Upto Date & Time <span className="text-danger">*</span></label>
+                                                                    <label htmlFor="exampleInputEmail3">Show Upto Date & Time <span className="text-danger">*</span></label>
                                                                     <input type="date" className="form-control" id="exampleInputEmail3" placeholder="User Name" />
                                                                 </div>
                                                                 <div className="col-md-3 form-group">
-                                                                    <label for="exampleInputName1">Schools<span className="text-danger">*</span></label>
+                                                                    <label htmlFor="exampleInputName1">Schools<span className="text-danger">*</span></label>
                                                                     <input type="text" className="form-control" id="exampleInputName1" placeholder="Full Name" />
                                                                 </div>
                                                                 <div className="col-md-3 form-group">
-                                                                    <label for="userType">Group-SubGroup<span className="text-danger">*</span></label>
+                                                                    <label htmlFor="userType">Group-SubGroup<span className="text-danger">*</span></label>
                                                                     <select className="form-control" id="userType">
                                                                         <option>1</option>
                                                                         <option>2</option>
@@ -88,13 +163,13 @@ const MessageDraft = () => {
                                                                     </select>
                                                                 </div>
                                                                 <div className="col-md-3 form-group">
-                                                                    <label for="userType">Status</label><br />
+                                                                    <label htmlFor="userType">Status</label><br />
                                                                     <div className="btn-group btn-group-toggle mt-1" data-toggle="buttons">
                                                                         <label className="btn btn-light active py-2">
-                                                                            <input type="radio" name="options" id="option1" autocomplete="off" checked /> Active
+                                                                            <input type="radio" name="options" id="option1" autoComplete="off" defaultChecked /> Active
                                                                         </label>
                                                                         <label className="btn btn-light py-2">
-                                                                            <input type="radio" name="options" id="option2" autocomplete="off" /> Inactive
+                                                                            <input type="radio" name="options" id="option2" autoComplete="off" /> Inactive
                                                                         </label>
                                                                     </div>
                                                                 </div>
@@ -103,7 +178,7 @@ const MessageDraft = () => {
                                                                     <h5 className="card-description text-primary font-weight-bolder">Message Body</h5>
                                                                 </div>
                                                                 <div className="col-md-3 form-group">
-                                                                    <label for="userType">Title Display<span className="text-danger">*</span></label>
+                                                                    <label htmlFor="userType">Title Display<span className="text-danger">*</span></label>
                                                                     <select className="form-control" id="userType">
                                                                         <option>1</option>
                                                                         <option>2</option>
@@ -128,13 +203,13 @@ const MessageDraft = () => {
                                             <div className="col-md-12 grid-margin stretch-card">
                                                 <div className="card shadow-sm">
                                                     <div className="card-body">
-                                                        <p className="card-title">App User List</p>
+                                                        <p className="card-title">Message List</p>
                                                         <div className="row">
                                                             <div className="col-12">
                                                                 <form className="forms-sample">
                                                                     <div className="row">
                                                                         <div className="col-md-3 form-group">
-                                                                            <label for="userType">Group and Subgroup<span className="text-danger">*</span></label>
+                                                                            <label htmlFor="userType">Group and Subgroup<span className="text-danger">*</span></label>
                                                                             <select className="form-control" id="userType">
                                                                                 <option>All</option>
                                                                                 <option>APS</option>
@@ -147,133 +222,14 @@ const MessageDraft = () => {
                                                                             </div>
                                                                         </div>
                                                                         <div className="col-md-3 d-flex align-items-center">
-                                                                            <input type="search" class="form-control ds-input" id="search-input" placeholder="Search..." aria-label="Search for..." autocomplete="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-owns="algolia-autocomplete-listbox-0" dir="auto" />
+                                                                            <input type="search" className="form-control ds-input" id="search-input" placeholder="Search..." aria-label="Search for..." autoComplete="off" spellCheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-owns="algolia-autoComplete-listbox-0" dir="auto" />
                                                                         </div>
                                                                     </div>
                                                                 </form>
                                                             </div>
                                                             <div className="col-12">
                                                                 <div className="table-responsive">
-                                                                    <div id="example_wrapper" className="dataTables_wrapper dt-bootstrap4 no-footer"><div className="row"><div className="col-sm-12 col-md-6"></div><div className="col-sm-12 col-md-6"></div></div><div className="row"><div className="col-sm-12"><table id="example" className="display expandable-table dataTable no-footer" style={{ width: "100%" }} role="grid">
-                                                                        <thead>
-                                                                            <tr role="row">
-                                                                                <th className="select-checkbox sorting_disabled" rowspan="1" colspan="1" aria-label="Quote#" style={{ width: "153px" }}>Quote#</th>
-                                                                                <th className="sorting_asc" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Product: activate to sort column descending" aria-sort="ascending" style={{ width: '177px' }}>Product</th>
-                                                                                <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Business type: activate to sort column ascending" style={{ width: "210px" }}>Business type</th>
-                                                                                <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Policy holder: activate to sort column ascending" style={{ width: "200px" }}>Policy holder</th>
-                                                                                <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Premium: activate to sort column ascending" style={{ width: "149px" }}>Premium</th>
-                                                                                <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style={{ width: "149px" }}>Status</th>
-                                                                                <th className="sorting" tabindex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Updated at: activate to sort column ascending" style={{ width: "177px" }}>Updated at</th>
-                                                                                <th className="details-control sorting_disabled" rowspan="1" colspan="1" aria-label="" style={{ width: "61px" }}></th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            <tr className="odd">
-                                                                                <td className=" select-checkbox">Incs234</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 1</td><td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>In progress</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="even">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Active</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="odd">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Expired</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="even">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>In progress</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="odd">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Active</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="even">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Active</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="odd">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Active</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="even">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Expired</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="odd"><td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td><td>Business type 2</td><td>Jesse Thomas</td><td>$1200</td>
-                                                                                <td>Active</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="even"><td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td><td>$1200</td>
-                                                                                <td>In progress</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </table>
-                                                                    </div>
-                                                                    </div>
-                                                                        <div className="row">
-                                                                            <div className="col-sm-12 col-md-5">
-
-                                                                            </div>
-                                                                            <div className="col-sm-12 col-md-7">
-
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+                                                                    <SortableTable columns={columns} data={data} />
                                                                 </div>
                                                             </div>
                                                         </div>

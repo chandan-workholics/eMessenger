@@ -12,18 +12,18 @@ const Sidebar = () => {
                             <span className="menu-title mr-3">Dashboard</span>
                         </Link>
                     </li>
-                    <p class="text-secondary menu-text mt-2 mb-0">
-                        <span>CUSTOM MESSAGE</span> <i class="fas fa-ellipsis-h"></i>
+                    <p className="text-secondary menu-text mt-2 mb-0">
+                        <span>CUSTOM MESSAGE</span> <i className="fas fa-ellipsis-h"></i>
                     </p>
                     <li className="nav-item">
                         <Link className="nav-link" to="/message-draft">
-                            <i class="fa-solid fa-envelope menu-icon"></i>
+                            <i className="fa-solid fa-envelope menu-icon"></i>
                             <span className="menu-title mr-3">Create Message</span>
                         </Link>
                     </li>
                     <li className="nav-item">
                         <Link className="nav-link" to="/reply-received">
-                            <i class="fa-solid fa-inbox menu-icon"></i>
+                            <i className="fa-solid fa-inbox menu-icon"></i>
                             <span className="menu-title mr-3">Inbox</span>
                         </Link>
                     </li>
@@ -53,36 +53,36 @@ const Sidebar = () => {
                             </ul>
                         </div>
                     </li> */}
-                    <p class="text-secondary menu-text mt-2 mb-0">
-                        <span>MASTER</span> <i class="fas fa-ellipsis-h"></i>
+                    <p className="text-secondary menu-text mt-2 mb-0">
+                        <span>MASTER</span> <i className="fas fa-ellipsis-h"></i>
                     </p>
                     <li className="nav-item">
                         <Link className="nav-link" to="/import-scholar">
-                            <i class="fa-solid fa-file-import menu-icon"></i>
+                            <i className="fa-solid fa-file-import menu-icon"></i>
                             <span className="menu-title mr-3">Import Student</span>
                         </Link>
                     </li>
                     <li className="nav-item">
                         <Link className="nav-link" to="/group-master">
-                            <i class="fa-solid fa-user-group menu-icon"></i>
+                            <i className="fa-solid fa-user-group menu-icon"></i>
                             <span className="menu-title mr-3">Group</span>
                         </Link>
                     </li>
                     <li className="nav-item">
                         <Link className="nav-link" to="/sub-group-master">
-                            <i class="fa-solid fa-users-line menu-icon"></i>
+                            <i className="fa-solid fa-users-line menu-icon"></i>
                             <span className="menu-title mr-3">Sub Group</span>
                         </Link>
                     </li>
                     <li className="nav-item">
                         <Link className="nav-link" to="/user-management">
-                            <i class="fa-solid fa-users-gear menu-icon"></i>
+                            <i className="fa-solid fa-users-gear menu-icon"></i>
                             <span className="menu-title mr-3">Users Management</span>
                         </Link>
                     </li>
                     <li className="nav-item">
                         <Link className="nav-link" to="/school-master">
-                            <i class="fa-solid fa-graduation-cap menu-icon"></i>
+                            <i className="fa-solid fa-graduation-cap menu-icon"></i>
                             <span className="menu-title mr-3">School Master</span>
                         </Link>
                     </li>
@@ -99,18 +99,18 @@ const Sidebar = () => {
                             </ul>
                         </div>
                     </li> */}
-                    <p class="text-secondary menu-text mt-2 mb-0">
-                        <span className=''>SECURITY</span> <i class="fas fa-ellipsis-h"></i>
+                    <p className="text-secondary menu-text mt-2 mb-0">
+                        <span className=''>SECURITY</span> <i className="fas fa-ellipsis-h"></i>
                     </p>
                     <li className="nav-item">
                         <Link className="nav-link" to="/change-password">
-                            <i class="fa-solid fa-key menu-icon"></i>
+                            <i className="fa-solid fa-key menu-icon"></i>
                             <span className="menu-title mr-3">Change Password</span>
                         </Link>
                     </li>
                     <li className="nav-item">
                         <Link className="nav-link" to="/">
-                            <i class="fa-solid fa-arrow-right-from-bracket menu-icon"></i>
+                            <i className="fa-solid fa-arrow-right-from-bracket menu-icon"></i>
                             <span className="menu-title mr-3">Logout</span>
                         </Link>
                     </li>
