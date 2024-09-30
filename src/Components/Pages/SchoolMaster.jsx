@@ -1,9 +1,21 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Navbar from '../Template/Navbar'
 import SidebarSettingPannel from '../Template/SidebarSettingPannel'
 import Sidebar from '../Template/Sidebar'
 
 const SchoolMaster = () => {
+
+    useEffect(() => {
+        const script = document.createElement('script');
+        script.src = '/js/template.js';
+        script.async = true;
+        document.body.appendChild(script);
+
+        return () => {
+            document.body.removeChild(script);
+        };
+    }, []);
+
     return (
         <>
             <div className="container-scroller">
@@ -154,6 +166,7 @@ const SchoolMaster = () => {
                                                                             </tr>
                                                                         </thead>
                                                                         <tbody>
+
                                                                             <tr className="odd">
                                                                                 <td className=" select-checkbox">Incs234</td>
                                                                                 <td className="sorting_1">Car insurance</td>
@@ -163,90 +176,7 @@ const SchoolMaster = () => {
                                                                                 <td>25/04/2020</td>
                                                                                 <td className=" details-control"></td>
                                                                             </tr>
-                                                                            <tr className="even">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Active</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="odd">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Expired</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="even">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>In progress</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="odd">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Active</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="even">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Active</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="odd">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Active</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="even">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Expired</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="odd"><td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td><td>Business type 2</td><td>Jesse Thomas</td><td>$1200</td>
-                                                                                <td>Active</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="even"><td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td><td>$1200</td>
-                                                                                <td>In progress</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
+
                                                                         </tbody>
                                                                     </table>
                                                                     </div>
