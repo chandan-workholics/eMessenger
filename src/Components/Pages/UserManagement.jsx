@@ -2,8 +2,54 @@ import React from 'react'
 import Navbar from '../Template/Navbar'
 import SidebarSettingPannel from '../Template/SidebarSettingPannel'
 import Sidebar from '../Template/Sidebar'
+import SortableTable from '../Template/SortableTable';
 
 const UserManagement = () => {
+
+    // Table columns
+    const columns = [
+        { label: 'User ID', key: 'userId' },
+        { label: 'Full Name', key: 'fullName' },
+        { label: 'User Name', key: 'userName' },
+        { label: 'User Type', key: 'userType' },
+        { label: 'Mobile No.', key: 'mobileNo' },
+        { label: 'Is Active', key: 'isActive' },
+        { label: 'Action', key: 'action' } // Changed to lowercase for consistency
+    ];
+
+    // Table data
+    const data = [
+        {
+            userId: 101,
+            fullName: 'Test Test',
+            userName: 'Test',
+            userType: 'Admin',
+            mobileNo: '1234567890',
+            isActive: true,
+            action: (
+                <div>
+                    <i className="fa-solid fa-pen-to-square mr-3"></i>
+                    <i className="fa-solid fa-trash-can text-danger mr-3"></i>
+                </div>
+            ),
+        },
+        {
+            userId: 101,
+            fullName: 'Test Test',
+            userName: 'Test',
+            userType: 'User',
+            mobileNo: '1234567890',
+            isActive: true,
+            action: (
+                <div>
+                    <i className="fa-solid fa-pen-to-square mr-3"></i>
+                    <i className="fa-solid fa-trash-can text-danger mr-3"></i>
+                </div>
+            ),
+        },
+        // Add more rows as needed for pagination...
+    ];
+
     return (
         <>
             <div className="container-scroller">
@@ -127,126 +173,7 @@ const UserManagement = () => {
                                                         <div className="row">
                                                             <div className="col-12">
                                                                 <div className="table-responsive">
-                                                                    <div id="example_wrapper" className="dataTables_wrapper dt-bootstrap4 no-footer"><div className="row"><div className="col-sm-12 col-md-6"></div><div className="col-sm-12 col-md-6"></div></div><div className="row"><div className="col-sm-12"><table id="example" className="display expandable-table dataTable no-footer" style={{ width: "100%" }} role="grid">
-                                                                        <thead>
-                                                                            <tr role="row">
-                                                                                <th className="select-checkbox sorting_disabled" rowspan="1" colspan="1" aria-label="Quote#" style={{ width: "153px" }}>Quote#</th>
-                                                                                <th className="sorting_asc" tabIndex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Product: activate to sort column descending" aria-sort="ascending" style={{ width: '177px' }}>Product</th>
-                                                                                <th className="sorting" tabIndex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Business type: activate to sort column ascending" style={{ width: "210px" }}>Business type</th>
-                                                                                <th className="sorting" tabIndex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Policy holder: activate to sort column ascending" style={{ width: "200px" }}>Policy holder</th>
-                                                                                <th className="sorting" tabIndex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Premium: activate to sort column ascending" style={{ width: "149px" }}>Premium</th>
-                                                                                <th className="sorting" tabIndex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style={{ width: "149px" }}>Status</th>
-                                                                                <th className="sorting" tabIndex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Updated at: activate to sort column ascending" style={{ width: "177px" }}>Updated at</th>
-                                                                                <th className="details-control sorting_disabled" rowspan="1" colspan="1" aria-label="" style={{ width: "61px" }}></th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            <tr className="odd">
-                                                                                <td className=" select-checkbox">Incs234</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 1</td><td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>In progress</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="even">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Active</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="odd">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Expired</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="even">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>In progress</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="odd">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Active</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="even">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Active</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="odd">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Active</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="even">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Expired</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="odd"><td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td><td>Business type 2</td><td>Jesse Thomas</td><td>$1200</td>
-                                                                                <td>Active</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="even"><td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td><td>$1200</td>
-                                                                                <td>In progress</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </table>
-                                                                    </div>
-                                                                    </div>
-                                                                        <div className="row">
-                                                                            <div className="col-sm-12 col-md-5">
-
-                                                                            </div>
-                                                                            <div className="col-sm-12 col-md-7">
-
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
+                                                                    <SortableTable columns={columns} data={data} />
                                                                 </div>
                                                             </div>
                                                         </div>
