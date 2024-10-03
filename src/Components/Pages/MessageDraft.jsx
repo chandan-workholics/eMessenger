@@ -120,6 +120,14 @@ const MessageDraft = () => {
                                                         <form className="forms-sample">
                                                             <div className="row">
                                                                 <div className="col-md-3 form-group">
+                                                                    <label htmlFor="priority">Message Category<span className="text-danger">*</span></label>
+                                                                    <select className="form-control" id="msgCategory">
+                                                                        <option>Chat</option>
+                                                                        <option>Display</option>
+                                                                        <option>input</option>
+                                                                    </select>
+                                                                </div>
+                                                                <div className="col-md-3 form-group">
                                                                     <label htmlFor="subjectLine">Subject Line<span className="text-danger">*</span></label>
                                                                     <input type="text" className="form-control" id="subjectLine" placeholder="Subject Line" />
                                                                 </div>

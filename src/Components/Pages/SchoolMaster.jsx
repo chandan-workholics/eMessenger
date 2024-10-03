@@ -1,23 +1,38 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../Template/Navbar'
 import SidebarSettingPannel from '../Template/SidebarSettingPannel'
 import Sidebar from '../Template/Sidebar'
-import SortableTable from '../Template/SortableTable';
+import Loding from '../Template/Loding';
+import ExpandRowTable from '../Template/ExpandRowTable';
 
 const SchoolMaster = () => {
 
-    useEffect(() => {
-        const script = document.createElement('script');
-        script.src = '/js/template.js';
-        script.async = true;
-        document.body.appendChild(script);
+    const [schoolList, setSchoolList] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-        return () => {
-            document.body.removeChild(script);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('http://206.189.130.102:3550/api/school/getSchool');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const result = await response.json();
+                setSchoolList(result.data);
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
         };
+
+        fetchData();
     }, []);
 
-    // Table columns
+    if (loading) return <Loding />;
+    if (error) return <p>Error: {error}</p>;
+
     const columns = [
         { label: 'School ID', key: 'schoolId' },
         { label: 'School Full Name', key: 'schoolFullName' },
@@ -30,39 +45,21 @@ const SchoolMaster = () => {
     ];
 
     // Table data
-    const data = [
-        {
-            schoolId: 101,
-            schoolFullName: 'Test Test',
-            shortName: 'Test',
-            isActive: true,
-            scrollNews: 'Lorem ipsum dolor sit amet consectetur ',
-            fontColor: '#ffffff',
-            backgroundColor: '#gmbklk',
-            action: (
-                <div>
-                    <i className="fa-solid fa-pen-to-square mr-3"></i>
-                    <i className="fa-solid fa-trash-can text-danger mr-3"></i>
-                </div>
-            ),
-        },
-        {
-            schoolId: 101,
-            schoolFullName: 'Test Test',
-            shortName: 'Test',
-            isActive: true,
-            scrollNews: 'Lorem ipsum dolor sit amet consectetur ',
-            fontColor: '#ffffff',
-            backgroundColor: '#gmbklk',
-            action: (
-                <div>
-                    <i className="fa-solid fa-pen-to-square mr-3"></i>
-                    <i className="fa-solid fa-trash-can text-danger mr-3"></i>
-                </div>
-            ),
-        },
-        // Add more rows as needed for pagination...
-    ];
+    const data = schoolList.map((school) => ({
+        schoolId: school.sch_id,
+        schoolFullName: school.sch_nm,
+        shortName: school.sch_short_nm,
+        isActive: school.is_active,
+        scrollNews: school.scroll_news_text,
+        fontColor: school.text_color,
+        backgroundColor: school.bg_color,
+        action: (
+            <div>
+                <i className="fa-solid fa-pen-to-square mr-3"></i>
+                <i className="fa-solid fa-trash-can text-danger mr-3"></i>
+            </div>
+        )
+    }));
 
 
     return (
@@ -201,7 +198,7 @@ const SchoolMaster = () => {
                                                         <div className="row">
                                                             <div className="col-12">
                                                                 <div className="table-responsive">
-                                                                    <SortableTable columns={columns} data={data} />
+                                                                    <ExpandRowTable columns={columns} data={data} />
                                                                 </div>
                                                             </div>
                                                         </div>

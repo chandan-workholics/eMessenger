@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
-const SortableTable = ({ columns, data }) => {
+const ExpandRowTable = ({ columns, data }) => {
     const [tableData, setTableData] = useState(data || []); // Data state
     const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
     const [currentPage, setCurrentPage] = useState(1);
+    const [expandedRows, setExpandedRows] = useState([]); // Track expanded rows
     const rowsPerPage = 10; // Number of rows per page
 
     useEffect(() => {
@@ -35,6 +36,15 @@ const SortableTable = ({ columns, data }) => {
             : <i className="fa-solid fa-arrow-up-wide-short"></i>;
     };
 
+    // Toggle the expanded state of a row
+    const toggleExpandRow = (rowIndex) => {
+        if (expandedRows.includes(rowIndex)) {
+            setExpandedRows(expandedRows.filter((index) => index !== rowIndex));
+        } else {
+            setExpandedRows([...expandedRows, rowIndex]);
+        }
+    };
+
     // Paginate the data
     const paginateData = () => {
         const startIndex = (currentPage - 1) * rowsPerPage;
@@ -59,17 +69,44 @@ const SortableTable = ({ columns, data }) => {
                                 {column.label} {getSortIcon(column.key)}
                             </th>
                         ))}
+                        <th></th> {/* Column for Expand/Collapse button */}
                     </tr>
                 </thead>
                 <tbody>
                     {paginateData().map((row, rowIndex) => (
-                        <tr key={rowIndex}>
-                            {columns.map((column) => (
-                                <td key={column.key}>
-                                    {column.key === 'action' ? row[column.key] : row[column.key] !== undefined ? row[column.key].toString() : ''}
+                        <React.Fragment key={rowIndex}>
+                            {/* Main Row */}
+                            <tr>
+                                {columns.map((column) => (
+                                    <td key={column.key} className=''>
+                                        {column.key === 'action' ? row[column.key] : row[column.key] !== undefined ? row[column.key].toString() : ''}
+                                    </td>
+                                ))}
+                                <td className='p-0 px-2'>
+                                    {/* Expand/Collapse Button */}
+                                    <button className='border-0 bg-transparent w-100' onClick={() => toggleExpandRow(rowIndex)} style={{ height: '40px' }}>
+                                        {expandedRows.includes(rowIndex) ? <i class="fa-solid fa-angle-up"></i> : <i class="fa-solid fa-angle-down"></i>}
+                                    </button>
                                 </td>
-                            ))}
-                        </tr>
+                            </tr>
+
+                            {/* Expanded Row */}
+                            {expandedRows.includes(rowIndex) && (
+                                <tr className=''>
+                                    <td colSpan={columns.length + 1} style={{ backgroundColor: '#eaeaf1' }} className='rounded-bottom'>
+                                        <div className="expanded-content">
+                                            {/* Render any additional dynamic content for this row */}
+                                            <p><strong>Additional Details:</strong></p>
+                                            <ul>
+                                                <li><strong>Detail 1:</strong> {row.detail1}</li>
+                                                <li><strong>Detail 2:</strong> {row.detail2}</li>
+                                                <li><strong>Detail 3:</strong> {row.detail3}</li>
+                                            </ul>
+                                        </div>
+                                    </td>
+                                </tr>
+                            )}
+                        </React.Fragment>
                     ))}
                 </tbody>
             </table>
@@ -114,6 +151,6 @@ const SortableTable = ({ columns, data }) => {
             </nav>
         </div>
     );
-};
+}
 
-export default SortableTable;
+export default ExpandRowTable
