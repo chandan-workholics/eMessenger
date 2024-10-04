@@ -41,15 +41,22 @@ const SchoolMaster = () => {
         { label: 'Scroll News', key: 'scrollNews' },
         { label: 'Font Color', key: 'fontColor' },
         { label: 'Background Color', key: 'backgroundColor' },
-        { label: 'Action', key: 'action' } // Changed to lowercase for consistency
+        { label: 'Action', key: 'action' }, // Changed to lowercase for consistency
     ];
 
+    const rows = [
+        { label: 'Added By', key: 'addedBy' },
+        { label: 'Added On', key: 'addedOn' },
+        { label: 'Edit By', key: 'editBy' },
+        { label: 'Edit On', key: 'editOn' },
+    ]
+
     // Table data
-    const data = schoolList.map((school) => ({
+    const data = schoolList ? schoolList.map((school) => ({
         schoolId: school.sch_id,
         schoolFullName: school.sch_nm,
         shortName: school.sch_short_nm,
-        isActive: school.is_active,
+        isActive: school.is_active ? 'Yes' : 'No',
         scrollNews: school.scroll_news_text,
         fontColor: school.text_color,
         backgroundColor: school.bg_color,
@@ -58,8 +65,12 @@ const SchoolMaster = () => {
                 <i className="fa-solid fa-pen-to-square mr-3"></i>
                 <i className="fa-solid fa-trash-can text-danger mr-3"></i>
             </div>
-        )
-    }));
+        ),
+        addedBy: school.entry_by,
+        addedOn: school.entry_date,
+        editBy: school.entry_by,
+        editOn: school.edit_date,
+    })) : [];
 
 
     return (
@@ -198,7 +209,7 @@ const SchoolMaster = () => {
                                                         <div className="row">
                                                             <div className="col-12">
                                                                 <div className="table-responsive">
-                                                                    <ExpandRowTable columns={columns} data={data} />
+                                                                    <ExpandRowTable columns={columns} rows={rows} data={data} />
                                                                 </div>
                                                             </div>
                                                         </div>

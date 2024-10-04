@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const ExpandRowTable = ({ columns, data }) => {
+const ExpandRowTable = ({ columns, rows, data }) => {
     const [tableData, setTableData] = useState(data || []); // Data state
     const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
     const [currentPage, setCurrentPage] = useState(1);
@@ -98,9 +98,11 @@ const ExpandRowTable = ({ columns, data }) => {
                                             {/* Render any additional dynamic content for this row */}
                                             <p><strong>Additional Details:</strong></p>
                                             <ul>
-                                                <li><strong>Detail 1:</strong> {row.detail1}</li>
-                                                <li><strong>Detail 2:</strong> {row.detail2}</li>
-                                                <li><strong>Detail 3:</strong> {row.detail3}</li>
+                                                {rows.map((row) => (
+                                                    <li key={row.key} className=''>
+                                                        {row.key === 'action' ? row.key : row.key !== undefined ? row.key.toString() : ''}
+                                                    </li>
+                                                ))}
                                             </ul>
                                         </div>
                                     </td>
