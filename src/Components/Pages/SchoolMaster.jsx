@@ -7,6 +7,7 @@ import ExpandRowTable from '../Template/ExpandRowTable';
 
 const SchoolMaster = () => {
 
+    const URL = process.env.APP_URL;
     const [schoolList, setSchoolList] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -14,7 +15,7 @@ const SchoolMaster = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('http://206.189.130.102:3550/api/school/getSchool');
+                const response = await fetch(`${URL}/school/getSchool`);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
