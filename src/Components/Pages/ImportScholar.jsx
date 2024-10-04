@@ -4,22 +4,35 @@ import SidebarSettingPannel from '../Template/SidebarSettingPannel';
 import Sidebar from '../Template/Sidebar';
 import Loding from '../Template/Loding';
 
+
 const ImportScholar = () => {
-    const [importStudent, setImportStudent] = useState(null);
+    const URL = process.env.REACT_APP_URL;
+    const [importStudent, setImportStudent] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
     const rowsPerPage = 10;
+
+    const token = sessionStorage.getItem('token');
 
     useEffect(() => {
         const fetchData = async () => {
+            setLoading(true);
             try {
-                const response = await fetch('http://206.189.130.102:3550/api/scholar/getScholarDetail');
+                const response = await fetch(`${URL}/scholar/getScholarDetail?page=${currentPage}&limit=${rowsPerPage}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 const result = await response.json();
                 setImportStudent(result.data);
+                setTotalPages(Math.ceil(result.totalCount / rowsPerPage));
             } catch (error) {
                 setError(error.message);
             } finally {
@@ -28,26 +41,19 @@ const ImportScholar = () => {
         };
 
         fetchData();
-    }, []);
+    }, [currentPage]);
 
-    if (loading) return <Loding />;
-    if (error) return <p>Error: {error}</p>;
-
-    const totalPages = importStudent ? Math.ceil(importStudent.length / rowsPerPage) : 1;
-
-    // Get the data for the current page
-    const paginateData = () => {
-        const startIndex = (currentPage - 1) * rowsPerPage;
-        const endIndex = startIndex + rowsPerPage;
-        return importStudent.slice(startIndex, endIndex);
-    };
-
-    // Handle page change
     const handlePageChange = (page) => {
-        if (page >= 1 && page <= totalPages) {
+        if (page > 0 && page <= totalPages) {
             setCurrentPage(page);
         }
     };
+
+    if (loading) {
+        return <Loding />;
+    }
+
+
 
     return (
         <>
@@ -125,57 +131,37 @@ const ImportScholar = () => {
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                {importStudent && importStudent.length > 0 ? (
-                                                                    paginateData().map((val, index) => (
-                                                                        <tr key={val.id}>
-                                                                            <td>{(currentPage - 1) * rowsPerPage + index + 1}</td>
-                                                                            <td>{val.mobile_no}</td>
-                                                                            <td>{val.sch_short_nm}</td>
-                                                                            <td>{val.student_name || ''}</td>
-                                                                            <td>{val.scholar_no}</td>
-                                                                        </tr>
-                                                                    ))
-                                                                ) : (
-                                                                    <tr><td colSpan="5">No data available</td></tr>
-                                                                )}
+                                                                {importStudent.map((val, index) => (
+                                                                    <tr key={val.id}>
+                                                                        <td>{(currentPage - 1) * rowsPerPage + index + 1}</td>
+                                                                        <td>{val.mobile_no}</td>
+                                                                        <td>{val.sch_short_nm}</td>
+                                                                        <td>{val.student_name || ''}</td>
+                                                                        <td>{val.scholar_no}</td>
+                                                                    </tr>
+                                                                ))}
                                                             </tbody>
                                                         </table>
-
-
-                                                        {/* Pagination controls */}
-                                                        {importStudent && importStudent.length > rowsPerPage && (
-                                                            <nav aria-label="Page navigation">
-                                                                <ul className="pagination justify-content-center">
-                                                                    <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                                                                        <button
-                                                                            className="page-link"
-                                                                            onClick={() => handlePageChange(currentPage - 1)}
-                                                                            disabled={currentPage === 1}
-                                                                        >
-                                                                            Previous
-                                                                        </button>
-                                                                    </li>
-                                                                    {[...Array(totalPages).keys()].map(page => (
-                                                                        <li key={page + 1} className={`page-item ${currentPage === page + 1 ? 'active' : ''}`}>
-                                                                            <button className="page-link" onClick={() => handlePageChange(page + 1)}>
-                                                                                {page + 1}
-                                                                            </button>
-                                                                        </li>
-                                                                    ))}
-                                                                    <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                                                                        <button
-                                                                            className="page-link"
-                                                                            onClick={() => handlePageChange(currentPage + 1)}
-                                                                            disabled={currentPage === totalPages}
-                                                                        >
-                                                                            Next
-                                                                        </button>
-                                                                    </li>
-                                                                </ul>
-                                                            </nav>
-                                                        )}
                                                     </div>
                                                 </div>
+                                            </div>
+                                            {/* Pagination Controls */}
+                                            <div className="pagination">
+                                                <button
+                                                    className='btn btn-primary'
+                                                    onClick={() => handlePageChange(currentPage - 1)}
+                                                    disabled={currentPage === 1}
+                                                >
+                                                    Previous
+                                                </button>
+                                                <span>Page {currentPage} of {totalPages}</span>
+                                                <button
+                                                    className='btn btn-primary'
+                                                    onClick={() => handlePageChange(currentPage + 1)}
+                                                    disabled={currentPage === totalPages}
+                                                >
+                                                    Next
+                                                </button>
                                             </div>
                                         </div>
                                     </div>

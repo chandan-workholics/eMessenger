@@ -58,7 +58,7 @@ const ExpandRowTable = ({ columns, rows, data }) => {
 
     // Calculate total number of pages
     const totalPages = Math.ceil(tableData.length / rowsPerPage);
-
+    console.log('rows', expandedRows)
     return (
         <div>
             <table id='example' className="display expandable-table table-hover w-100 mb-4">
@@ -98,11 +98,17 @@ const ExpandRowTable = ({ columns, rows, data }) => {
                                             {/* Render any additional dynamic content for this row */}
                                             <p><strong>Additional Details:</strong></p>
                                             <ul>
-                                                {rows.map((row) => (
-                                                    <li key={row.key} className=''>
-                                                        {row.key === 'action' ? row.key : row.key !== undefined ? row.key.toString() : ''}
-                                                    </li>
-                                                ))}
+                                                <li>School ID: {row.schoolId}</li>
+                                                <li>Full Name: {row.schoolFullName}</li>
+                                                <li>Short Name: {row.shortName}</li>
+                                                <li>Active: {row.isActive}</li>
+                                                <li>Scroll News: {row.scrollNews}</li>
+                                                <li>Font Color: {row.fontColor}</li>
+                                                <li>Background Color: {row.backgroundColor}</li>
+                                                <li>Added By: {row.addedBy}</li>
+                                                <li>Added On: {row.addedOn}</li>
+                                                <li>Edited By: {row.editBy}</li>
+                                                <li>Edited On: {row.editOn}</li>
                                             </ul>
                                         </div>
                                     </td>

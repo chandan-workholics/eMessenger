@@ -5,9 +5,10 @@ import Sidebar from '../Template/Sidebar'
 import Loding from '../Template/Loding';
 import ExpandRowTable from '../Template/ExpandRowTable';
 
-const SchoolMaster = () => {
 
-    const URL = process.env.APP_URL;
+const SchoolMaster = () => {
+    const token = sessionStorage.getItem('token');
+    const URL = process.env.REACT_APP_URL;
     const [schoolList, setSchoolList] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -15,7 +16,13 @@ const SchoolMaster = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`${URL}/school/getSchool`);
+                const response = await fetch(`${URL}/school/getSchool`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -32,7 +39,6 @@ const SchoolMaster = () => {
     }, []);
 
     if (loading) return <Loding />;
-    if (error) return <p>Error: {error}</p>;
 
     const columns = [
         { label: 'School ID', key: 'schoolId' },

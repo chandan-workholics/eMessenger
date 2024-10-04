@@ -1,7 +1,54 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+
 
 const Login = () => {
+    const URL = process.env.REACT_APP_URL;
+
+    const [adminuser_name, setadminuser_name] = useState('');
+    const [admin_password, setadmin_password] = useState('');
+    const [error, setError] = useState('');
+    const navigate = useNavigate();
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+
+
+        setError('');
+
+
+        if (!adminuser_name || !admin_password) {
+            setError('Please enter both adminuser_name and admin_password.');
+            return;
+        }
+
+        try {
+
+            const response = await fetch(`${URL}/admin/loginAdmin`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ adminuser_name, admin_password }),
+            });
+
+            const data = await response.json();
+
+
+            if (response.ok) {
+
+                sessionStorage.setItem('token', data.token);
+                navigate('/dashboard');
+            } else {
+
+                setError(data.message || 'Invalid adminuser_name or admin_password.');
+            }
+        } catch (error) {
+            setError('An error occurred. Please try again later.');
+            console.error('Login error:', error);
+        }
+    };
+
     return (
         <>
             <div className="container-scroller">
@@ -17,20 +64,37 @@ const Login = () => {
                                         <div className="brand-logo text-left">
                                             <img src="../../images/logo.svg" alt="logo" className='w-50' />
                                         </div>
-                                        <h4>Hello! let's get started</h4>
+                                        <h4>Hello! Let's get started</h4>
                                         <h5 className="font-weight-medium">Login to continue.</h5>
-                                        <form className="pt-3">
+                                        {error && <div className="alert alert-danger">{error}</div>}
+                                        <form className="pt-3" onSubmit={handleLogin}>
                                             <div className="form-group">
-                                                <input type="email" className="form-control form-control-lg" id="exampleInputEmail1" placeholder="Username" />
+                                                <input
+                                                    type="test"
+                                                    className="form-control form-control-lg"
+                                                    id="exampleInputEmail1"
+                                                    placeholder="adminuser_name"
+                                                    value={adminuser_name}
+                                                    onChange={(e) => setadminuser_name(e.target.value)}
+                                                />
                                             </div>
                                             <div className="form-group">
-                                                <input type="password" className="form-control form-control-lg" id="exampleInputPassword1" placeholder="Password" />
+                                                <input
+                                                    type="admin_password"
+                                                    className="form-control form-control-lg"
+                                                    id="exampleInputadmin_password1"
+                                                    placeholder="admin_password"
+                                                    value={admin_password}
+                                                    onChange={(e) => setadmin_password(e.target.value)}
+                                                />
                                             </div>
                                             <div className="mt-3">
-                                                <Link className="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" to="/dashboard">LOGIN</Link>
+                                                <button type="submit" className="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">
+                                                    LOGIN
+                                                </button>
                                             </div>
                                             <div className="my-2 d-flex justify-content-between align-items-center">
-                                                <a href="#" className="auth-link text-black">Forgot password?</a>
+                                                <a href="#" className="auth-link text-black">Forgot admin_password?</a>
                                             </div>
                                             <div className="text-center mt-4 font-weight-light">
                                                 Don't have an account? <Link to="/register" className="text-primary">Create</Link>
