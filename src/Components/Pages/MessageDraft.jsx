@@ -123,6 +123,7 @@ const MessageDraft = () => {
                                                                     <label htmlFor="priority">Message Category<span className="text-danger">*</span></label>
                                                                     <select className="form-control" id="msgCategory">
                                                                         <option>Chat</option>
+                                                                        <option>Group Chat</option>
                                                                         <option>Display</option>
                                                                         <option>input</option>
                                                                     </select>

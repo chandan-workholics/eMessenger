@@ -27,32 +27,6 @@ const Sidebar = () => {
                             <span className="menu-title mr-3">Inbox</span>
                         </Link>
                     </li>
-                    {/* <li className="nav-item">
-                        <a className="nav-link" data-toggle="collapse" href="#custom-messages" aria-expanded="false" aria-controls="custom-messages">
-                            <i className="icon-layout menu-icon"></i>
-                            <span className="menu-title mr-3">Custom Messages</span>
-                            <i className="menu-arrow"></i>
-                        </a>
-                        <div className="collapse" id="custom-messages">
-                            <ul className="nav flex-column sub-menu">
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/import-scholar">Import Scholar</Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/message-draft">Message Draft</Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/reply-received">Reply Received</Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/group-master">Group Master</Link>
-                                </li>
-                                <li className="nav-item">
-                                    <Link className="nav-link" to="/sub-group-master">Sub Group Master</Link>
-                                </li>
-                            </ul>
-                        </div>
-                    </li> */}
                     <p className="text-secondary menu-text mt-2 mb-0">
                         <span>MASTER</span> <i className="fas fa-ellipsis-h"></i>
                     </p>
@@ -86,19 +60,6 @@ const Sidebar = () => {
                             <span className="menu-title mr-3">School Master</span>
                         </Link>
                     </li>
-                    {/* <li className="nav-item">
-                        <a className="nav-link" data-toggle="collapse" href="#other-masters" aria-expanded="false" aria-controls="other-masters">
-                            <i className="icon-columns menu-icon"></i>
-                            <span className="menu-title mr-3">Other Masters</span>
-                            <i className="menu-arrow"></i>
-                        </a>
-                        <div className="collapse" id="other-masters">
-                            <ul className="nav flex-column sub-menu">
-                                <li className="nav-item"><Link className="nav-link" to="/user-management">Users Management</Link></li>
-                                <li className="nav-item"><Link className="nav-link" to="/school-master">School Master</Link></li>
-                            </ul>
-                        </div>
-                    </li> */}
                     <p className="text-secondary menu-text mt-2 mb-0">
                         <span className=''>SECURITY</span> <i className="fas fa-ellipsis-h"></i>
                     </p>

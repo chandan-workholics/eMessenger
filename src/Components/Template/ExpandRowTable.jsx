@@ -3,9 +3,7 @@ import React, { useState, useEffect } from 'react';
 const ExpandRowTable = ({ columns, rows, data }) => {
     const [tableData, setTableData] = useState(data || []); // Data state
     const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
-    const [currentPage, setCurrentPage] = useState(1);
     const [expandedRows, setExpandedRows] = useState([]); // Track expanded rows
-    const rowsPerPage = 10; // Number of rows per page
 
     useEffect(() => {
         setTableData(data); // Update table data when `data` prop changes
@@ -45,20 +43,6 @@ const ExpandRowTable = ({ columns, rows, data }) => {
         }
     };
 
-    // Paginate the data
-    const paginateData = () => {
-        const startIndex = (currentPage - 1) * rowsPerPage;
-        return tableData.slice(startIndex, startIndex + rowsPerPage);
-    };
-
-    // Handle page change
-    const handlePageChange = (pageNumber) => {
-        setCurrentPage(pageNumber);
-    };
-
-    // Calculate total number of pages
-    const totalPages = Math.ceil(tableData.length / rowsPerPage);
-    console.log('rows', expandedRows)
     return (
         <div>
             <table id='example' className="display expandable-table table-hover w-100 mb-4">
@@ -73,7 +57,7 @@ const ExpandRowTable = ({ columns, rows, data }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {paginateData().map((row, rowIndex) => (
+                    {tableData.map((row, rowIndex) => (
                         <React.Fragment key={rowIndex}>
                             {/* Main Row */}
                             <tr>
@@ -85,7 +69,7 @@ const ExpandRowTable = ({ columns, rows, data }) => {
                                 <td className='p-0 px-2'>
                                     {/* Expand/Collapse Button */}
                                     <button className='border-0 bg-transparent w-100' onClick={() => toggleExpandRow(rowIndex)} style={{ height: '40px' }}>
-                                        {expandedRows.includes(rowIndex) ? <i class="fa-solid fa-angle-up"></i> : <i class="fa-solid fa-angle-down"></i>}
+                                        {expandedRows.includes(rowIndex) ? <i className="fa-solid fa-angle-up"></i> : <i className="fa-solid fa-angle-down"></i>}
                                     </button>
                                 </td>
                             </tr>
@@ -118,47 +102,8 @@ const ExpandRowTable = ({ columns, rows, data }) => {
                     ))}
                 </tbody>
             </table>
-
-            {/* Pagination controls */}
-            <nav>
-                <ul className="pagination justify-content-end">
-                    <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                        <button
-                            className="page-link"
-                            onClick={() => handlePageChange(currentPage - 1)}
-                            disabled={currentPage === 1}
-                        >
-                            Previous
-                        </button>
-                    </li>
-
-                    {Array.from({ length: totalPages }, (_, index) => (
-                        <li
-                            key={index + 1}
-                            className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}
-                        >
-                            <button
-                                className="page-link"
-                                onClick={() => handlePageChange(index + 1)}
-                            >
-                                {index + 1}
-                            </button>
-                        </li>
-                    ))}
-
-                    <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                        <button
-                            className="page-link"
-                            onClick={() => handlePageChange(currentPage + 1)}
-                            disabled={currentPage === totalPages}
-                        >
-                            Next
-                        </button>
-                    </li>
-                </ul>
-            </nav>
         </div>
     );
 }
 
-export default ExpandRowTable
+export default ExpandRowTable;

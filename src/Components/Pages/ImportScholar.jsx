@@ -3,18 +3,18 @@ import Navbar from '../Template/Navbar';
 import SidebarSettingPannel from '../Template/SidebarSettingPannel';
 import Sidebar from '../Template/Sidebar';
 import Loding from '../Template/Loding';
-
+import * as XLSX from 'xlsx';
 
 const ImportScholar = () => {
+    const token = sessionStorage.getItem('token');
     const URL = process.env.REACT_APP_URL;
     const [importStudent, setImportStudent] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const rowsPerPage = 10;
 
-    const token = sessionStorage.getItem('token');
+    const rowsPerPage = 10;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -49,6 +49,13 @@ const ImportScholar = () => {
         }
     };
 
+    const exportToExcel = () => {
+        const ws = XLSX.utils.json_to_sheet(importStudent);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Scholar Data');
+        XLSX.writeFile(wb, 'Scholar_Data.xlsx');
+    };
+
     if (loading) {
         return <Loding />;
     }
@@ -58,12 +65,12 @@ const ImportScholar = () => {
     return (
         <>
             <div className="container-scroller">
-                {/*----- Navbar -----*/}
+
                 <Navbar />
 
                 <div className="container-fluid page-body-wrapper">
                     <SidebarSettingPannel />
-                    {/* SideBar */}
+
                     <Sidebar />
 
                     <div className="main-panel">
@@ -106,7 +113,7 @@ const ImportScholar = () => {
                                                         </label>
                                                     </div>
                                                     <button type="submit" className="btn btn-primary mr-2">Import</button>
-                                                    <button type="submit" className="btn btn-success mr-2">Export to Excel</button>
+                                                    <button type="submit" className="btn btn-success mr-2" onClick={exportToExcel}>Export to Excel</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -145,24 +152,23 @@ const ImportScholar = () => {
                                                     </div>
                                                 </div>
                                             </div>
+
                                             {/* Pagination Controls */}
-                                            <div className="pagination">
-                                                <button
-                                                    className='btn btn-primary'
-                                                    onClick={() => handlePageChange(currentPage - 1)}
-                                                    disabled={currentPage === 1}
-                                                >
-                                                    Previous
-                                                </button>
-                                                <span>Page {currentPage} of {totalPages}</span>
-                                                <button
-                                                    className='btn btn-primary'
-                                                    onClick={() => handlePageChange(currentPage + 1)}
-                                                    disabled={currentPage === totalPages}
-                                                >
-                                                    Next
-                                                </button>
-                                            </div>
+                                            <nav>
+                                                <ul class="pagination justify-content-end">
+                                                    <li class="page-item">
+                                                        <button class="page-link" onClick={() => handlePageChange(currentPage - 1)}
+                                                            disabled={currentPage === 1}>Previous</button>
+                                                    </li>
+                                                    <li class="page-item">
+                                                        <button class="page-link">{currentPage} of {totalPages}</button>
+                                                    </li>
+                                                    <li class="page-item">
+                                                        <button class="page-link" onClick={() => handlePageChange(currentPage + 1)}
+                                                            disabled={currentPage === totalPages}>Next</button>
+                                                    </li>
+                                                </ul>
+                                            </nav>
                                         </div>
                                     </div>
                                 </div>

@@ -1,44 +1,55 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../Template/Navbar'
-import SidebarSettingPannel from '../Template/SidebarSettingPannel'
 import Sidebar from '../Template/Sidebar'
 import Loding from '../Template/Loding';
 import ExpandRowTable from '../Template/ExpandRowTable';
-
+import callAPI from '../../commonMethod/api.js';
 
 const SchoolMaster = () => {
+
     const token = sessionStorage.getItem('token');
     const URL = process.env.REACT_APP_URL;
     const [schoolList, setSchoolList] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const rowsPerPage = 10;
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`${URL}/school/getSchool`, {
+                setLoading(true);
+                const response = await fetch(`${URL}/school/getSchool?page=${currentPage}&limit=${rowsPerPage}`, {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
                         'Content-Type': 'application/json'
                     }
                 });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
                 const result = await response.json();
                 setSchoolList(result.data);
+                setTotalPages(Math.ceil(result?.pagination?.totalRecords / rowsPerPage));
             } catch (error) {
-                setError(error.message);
+                console.error('Error fetching school data:', error.message);
             } finally {
                 setLoading(false);
             }
         };
 
         fetchData();
-    }, []);
+    }, [currentPage]);
 
-    if (loading) return <Loding />;
+
+
+    const handlePageChange = (page) => {
+        if (page > 0 && page <= totalPages) {
+            setCurrentPage(page);
+        }
+    };
+
+    if (loading) {
+        return <Loding />;
+    }
 
     const columns = [
         { label: 'School ID', key: 'schoolId' },
@@ -87,7 +98,6 @@ const SchoolMaster = () => {
                 <Navbar />
 
                 <div className="container-fluid page-body-wrapper">
-                    <SidebarSettingPannel />
 
                     {/* SideBar */}
                     <Sidebar />
@@ -106,17 +116,17 @@ const SchoolMaster = () => {
                                         <div className="btn-group" role="group" aria-label="Basic example">
                                             <ul className="nav nav-tabs" id="myTab" role="tablist">
                                                 <li className="nav-item" role="presentation">
-                                                    <a className="nav-link active" id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="true">Add</a>
+                                                    <a className="nav-link " id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="true">Add</a>
                                                 </li>
                                                 <li className="nav-item" role="presentation">
-                                                    <a className="nav-link" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">List</a>
+                                                    <a className="nav-link active" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">List</a>
                                                 </li>
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="tab-content border-0 p-0 w-100" id="myTabContent">
-                                    <div className="tab-pane fade show active" id="add" role="tabpanel" aria-labelledby="add-tab">
+                                    <div className="tab-pane fade show fade" id="add" role="tabpanel" aria-labelledby="add-tab">
                                         <div className="row">
                                             <div className="col-12 grid-margin stretch-card">
                                                 <div className="card shadow-sm">
@@ -207,7 +217,7 @@ const SchoolMaster = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="tab-pane fade" id="list" role="tabpanel" aria-labelledby="list-tab">
+                                    <div className="tab-pane active" id="list" role="tabpanel" aria-labelledby="list-tab">
                                         <div className="row">
                                             <div className="col-md-12 grid-margin stretch-card">
                                                 <div className="card shadow-sm">
@@ -220,6 +230,23 @@ const SchoolMaster = () => {
                                                                 </div>
                                                             </div>
                                                         </div>
+
+                                                        {/* Pagination Controls */}
+                                                        <nav>
+                                                            <ul class="pagination justify-content-end">
+                                                                <li class="page-item">
+                                                                    <button class="page-link" onClick={() => handlePageChange(currentPage - 1)}
+                                                                        disabled={currentPage === 1}>Previous</button>
+                                                                </li>
+                                                                <li class="page-item">
+                                                                    <button class="page-link">{currentPage} of {totalPages}</button>
+                                                                </li>
+                                                                <li class="page-item">
+                                                                    <button class="page-link" onClick={() => handlePageChange(currentPage + 1)}
+                                                                        disabled={currentPage === totalPages}>Next</button>
+                                                                </li>
+                                                            </ul>
+                                                        </nav>
                                                     </div>
                                                 </div>
                                             </div>
