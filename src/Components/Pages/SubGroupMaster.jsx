@@ -130,7 +130,7 @@ const SubGroupMaster = () => {
 
                 <div className="container-fluid page-body-wrapper">
 
-                    {/* SideBar */}
+                    {/ SideBar /}
                     <Sidebar />
 
                     <div className="main-panel">
@@ -214,7 +214,7 @@ const SubGroupMaster = () => {
                                                                         </div>
                                                                     </div>
                                                                     <button type="submit" className="btn btn-primary mr-2">Submit</button>
-                                                                    <button className="btn btn-light" onClick={() => {/* Handle Cancel */ }}>Cancel</button>
+                                                                    <button className="btn btn-light" onClick={() => {/ Handle Cancel / }}>Cancel</button>
                                                                 </form>
                                                             </div>
                                                         </div>
