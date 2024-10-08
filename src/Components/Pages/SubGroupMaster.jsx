@@ -1,10 +1,123 @@
-import React from 'react'
-import Navbar from '../Template/Navbar'
+import React, { useEffect, useState } from 'react'; import Navbar from '../Template/Navbar'
 import SidebarSettingPannel from '../Template/SidebarSettingPannel'
 import Sidebar from '../Template/Sidebar'
 import SortableTable from '../Template/SortableTable';
+import { toast } from 'react-toastify';
+import axios from 'axios';
+import Loding from '../Template/Loding';
 
 const SubGroupMaster = () => {
+    const token = sessionStorage.getItem('token');
+    const URL = process.env.REACT_APP_URL;
+
+    const [groupList, setGroupList] = useState('');
+    const [subgroupList, setSubgroupList] = useState(null);
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const [groupName, setGroupName] = useState('');
+    const [isActive, setIsActive] = useState('1');
+    const [addedUserId] = useState(1);
+    const [msg_group_id, Setmsg_group_id] = useState('');
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const rowsPerPage = 10;
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const data = {
+            msg_sgroup_name: groupName,
+            is_active: isActive,
+            added_user_id: addedUserId,
+            msg_group_id: msg_group_id,
+        };
+
+        try {
+            const response = await axios.post(`${URL}/msg/addSubGroup`, data, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+
+            if (response.status >= 200 && response.status < 300) {
+                toast.success('Group master added successfully');
+            } else {
+                toast.error('Failed to add group master');
+            }
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            toast.error('An error occurred while submitting the form');
+        }
+    };
+
+   
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch(`${URL}/msg/getGroupDetail?page=1&limit=50`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const result = await response.json();
+                setGroupList(result);
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch(`${URL}/msg/getSubGroupDetail?page=${currentPage}&limit=${rowsPerPage}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const result = await response.json();
+                setGroupList(result.data);
+                setTotalPages(Math.ceil(result?.pagination?.limit / rowsPerPage));
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, [currentPage]);
+
+    const handlePageChange = (page) => {
+        if (page > 0 && page <= totalPages) {
+            setCurrentPage(page);
+        }
+    };
+
+    if (loading) {
+        return <Loding />;
+    }
+
 
     // Table columns
     const columns = [
@@ -12,7 +125,7 @@ const SubGroupMaster = () => {
         { label: 'Sub Group Name', key: 'SunGroupName' },
         { label: 'Group Name', key: 'groupName' },
         { label: 'Is Active', key: 'isActive' },
-        { label: 'Action', key: 'action' } // Changed to lowercase for consistency
+        { label: 'Action', key: 'action' }
     ];
 
     // Table data
@@ -90,28 +203,58 @@ const SubGroupMaster = () => {
                                                         </div>
                                                         <div className="row">
                                                             <div className="col-12">
-                                                                <form className="forms-sample">
+                                                                <form className="forms-sample" onSubmit={handleSubmit}>
                                                                     <div className="row">
                                                                         <div className="col-md-3 form-group">
                                                                             <label for="exampleInputName1">Sub Group Name<span className="text-danger">*</span></label>
-                                                                            <input type="text" className="form-control" id="exampleInputName1" placeholder="Full Name" />
+                                                                            <input
+                                                                                type="text"
+                                                                                className="form-control"
+                                                                                id="exampleInputName1"
+                                                                                placeholder="Full Name"
+                                                                                value={groupName}
+                                                                                onChange={(e) => setGroupName(e.target.value)}
+                                                                                required
+                                                                            />
                                                                         </div>
                                                                         <div className="col-md-3 form-group">
                                                                             <label for="userType">Main Group<span className="text-danger">*</span></label>
-                                                                            <select className="form-control" id="userType">
-                                                                                <option selected disabled>Choose Option</option>
-                                                                                <option>Session 2023-2024</option>
-                                                                                <option>Session 2024-2025</option>
+                                                                            <select className="form-control" id="userType" onChange={(e) => Setmsg_group_id(e.target.value)}>
+                                                                                <option >select main group</option>
+                                                                                {groupList?.data?.map((val) => {
+
+                                                                                    return (
+                                                                                        <>
+                                                                                            <option value={val?.msg_group_id}>{val?.msg_group_name}</option>
+                                                                                        </>
+                                                                                    )
+                                                                                })}
+
                                                                             </select>
                                                                         </div>
                                                                         <div className="col-md-3 form-group">
-                                                                            <label for="userType">Status</label><br />
+
+                                                                            <label htmlFor="userType">Status</label><br />
                                                                             <div className="btn-group btn-group-toggle mt-1" data-toggle="buttons">
-                                                                                <label className="btn btn-light active py-2">
-                                                                                    <input type="radio" name="options" id="option1" autocomplete="off" checked /> Active
+                                                                                <label className={`btn btn-light py-2 ${isActive === '1' ? 'active' : ''}`}>
+                                                                                    <input
+                                                                                        type="radio"
+                                                                                        name="options"
+                                                                                        id="option1"
+                                                                                        autoComplete="off"
+                                                                                        checked={isActive === '1'}
+                                                                                        onChange={() => setIsActive('1')}
+                                                                                    /> Active
                                                                                 </label>
-                                                                                <label className="btn btn-light py-2">
-                                                                                    <input type="radio" name="options" id="option2" autocomplete="off" /> Inactive
+                                                                                <label className={`btn btn-light py-2 ${isActive === '0' ? 'active' : ''}`}>
+                                                                                    <input
+                                                                                        type="radio"
+                                                                                        name="options"
+                                                                                        id="option2"
+                                                                                        autoComplete="off"
+                                                                                        checked={isActive === '0'}
+                                                                                        onChange={() => setIsActive('0')}
+                                                                                    /> Inactive
                                                                                 </label>
                                                                             </div>
                                                                         </div>
