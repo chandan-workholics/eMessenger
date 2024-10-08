@@ -1,10 +1,96 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import Navbar from '../Template/Navbar'
-import SidebarSettingPannel from '../Template/SidebarSettingPannel'
 import Sidebar from '../Template/Sidebar'
-import SortableTable from '../Template/SortableTable';
+import Loding from '../Template/Loding';
+import ExpandRowTable from '../Template/ExpandRowTable';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const SubGroupMaster = () => {
+
+    const token = sessionStorage.getItem('token');
+    const URL = process.env.REACT_APP_URL;
+    const [subGroupList, setSubGroupList] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const rowsPerPage = 10;
+
+
+
+    const [subGroupId, setSubGroupId] = useState('');
+    const [subGroupName, setSubGroupName] = useState('');
+    const [isActive, setIsActive] = useState('1');
+    const [addedUserId] = useState(1);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const data = {
+            msg_sgroup_id: subGroupId,
+            msg_sgroup_name: subGroupName,
+            msg_group_id: subGroupName,
+            is_active: isActive,
+            added_user_id: addedUserId,
+        };
+
+        try {
+            const response = await axios.post(`${URL}/msg/addSubGroup`, data, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+
+            if (response.status >= 200 && response.status < 300) {
+                toast.success('Group master added successfully');
+            } else {
+                toast.error('Failed to add group master');
+            }
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            toast.error('An error occurred while submitting the form');
+        }
+    };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch(`${URL}/msg/getSubGroupDetail?page=${currentPage}&limit=${rowsPerPage}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const result = await response.json();
+                setSubGroupList(result.data);
+                setTotalPages(Math.ceil(result?.pagination?.limit / rowsPerPage));
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [currentPage]);
+
+    const handlePageChange = (page) => {
+        if (page > 0 && page <= totalPages) {
+            setCurrentPage(page);
+        }
+    };
+
+    if (loading) {
+        return <Loding />;
+    }
 
     // Table columns
     const columns = [
@@ -15,34 +101,26 @@ const SubGroupMaster = () => {
         { label: 'Action', key: 'action' } // Changed to lowercase for consistency
     ];
 
+    const rows = [
+        { label: 'Added By', key: 'addedBy' },
+        { label: 'Added On', key: 'addedOn' },
+        { label: 'Edit By', key: 'editBy' },
+        { label: 'Edit On', key: 'editOn' },
+    ]
+
     // Table data
-    const data = [
-        {
-            subGroupId: 101,
-            SunGroupName: 'CEP - 10th',
-            groupName: 'Session 2024-2025',
-            isActive: true,
-            action: (
-                <div>
-                    <i className="fa-solid fa-pen-to-square mr-3"></i>
-                    <i className="fa-solid fa-trash-can text-danger mr-3"></i>
-                </div>
-            ),
-        },
-        {
-            subGroupId: 101,
-            SunGroupName: 'CEP - 12th',
-            groupName: 'Session 2023-2024',
-            isActive: true,
-            action: (
-                <div>
-                    <i className="fa-solid fa-pen-to-square mr-3"></i>
-                    <i className="fa-solid fa-trash-can text-danger mr-3"></i>
-                </div>
-            ),
-        },
-        // Add more rows as needed for pagination...
-    ];
+    const data = subGroupList ? subGroupList.map((subGroup) => ({
+        subGroupId: subGroup?.msg_sgroup_id,
+        SunGroupName: subGroup?.msg_sgroup_name,
+        groupName: subGroup?.msg_group_mst?.msg_group_name,
+        isActive: subGroup?.is_active == 1 ? true : false,
+        action: (
+            <div>
+                <i className="fa-solid fa-pen-to-square mr-3"></i>
+                <i className="fa-solid fa-trash-can text-danger mr-3"></i>
+            </div>
+        ),
+    })) : [];
 
     return (
         <>
@@ -51,7 +129,6 @@ const SubGroupMaster = () => {
                 <Navbar />
 
                 <div className="container-fluid page-body-wrapper">
-                    <SidebarSettingPannel />
 
                     {/* SideBar */}
                     <Sidebar />
@@ -90,11 +167,17 @@ const SubGroupMaster = () => {
                                                         </div>
                                                         <div className="row">
                                                             <div className="col-12">
-                                                                <form className="forms-sample">
+                                                                <form className="forms-sample" onSubmit={handleSubmit}>
                                                                     <div className="row">
                                                                         <div className="col-md-3 form-group">
                                                                             <label for="exampleInputName1">Sub Group Name<span className="text-danger">*</span></label>
-                                                                            <input type="text" className="form-control" id="exampleInputName1" placeholder="Full Name" />
+                                                                            <input type="text"
+                                                                                className="form-control"
+                                                                                id="exampleInputName1"
+                                                                                placeholder="Full Name"
+                                                                                value={subGroupName}
+                                                                                onChange={(e) => setSubGroupName(e.target.value)}
+                                                                                required />
                                                                         </div>
                                                                         <div className="col-md-3 form-group">
                                                                             <label for="userType">Main Group<span className="text-danger">*</span></label>
@@ -105,19 +188,33 @@ const SubGroupMaster = () => {
                                                                             </select>
                                                                         </div>
                                                                         <div className="col-md-3 form-group">
-                                                                            <label for="userType">Status</label><br />
+                                                                            <label htmlFor="userType">Status</label><br />
                                                                             <div className="btn-group btn-group-toggle mt-1" data-toggle="buttons">
-                                                                                <label className="btn btn-light active py-2">
-                                                                                    <input type="radio" name="options" id="option1" autocomplete="off" checked /> Active
+                                                                                <label className={`btn btn-light py-2 ${isActive === '1' ? 'active' : ''}`}>
+                                                                                    <input
+                                                                                        type="radio"
+                                                                                        name="options"
+                                                                                        id="option1"
+                                                                                        autoComplete="off"
+                                                                                        checked={isActive === '1'}
+                                                                                        onChange={() => setIsActive('1')}
+                                                                                    /> Active
                                                                                 </label>
-                                                                                <label className="btn btn-light py-2">
-                                                                                    <input type="radio" name="options" id="option2" autocomplete="off" /> Inactive
+                                                                                <label className={`btn btn-light py-2 ${isActive === '0' ? 'active' : ''}`}>
+                                                                                    <input
+                                                                                        type="radio"
+                                                                                        name="options"
+                                                                                        id="option2"
+                                                                                        autoComplete="off"
+                                                                                        checked={isActive === '0'}
+                                                                                        onChange={() => setIsActive('0')}
+                                                                                    /> Inactive
                                                                                 </label>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                     <button type="submit" className="btn btn-primary mr-2">Submit</button>
-                                                                    <button className="btn btn-light">Cancel</button>
+                                                                    <button className="btn btn-light" onClick={() => {/* Handle Cancel */ }}>Cancel</button>
                                                                 </form>
                                                             </div>
                                                         </div>
@@ -147,10 +244,25 @@ const SubGroupMaster = () => {
                                                             </div>
                                                             <div className="col-12">
                                                                 <div className="table-responsive">
-                                                                    <SortableTable columns={columns} data={data} />
+                                                                    <ExpandRowTable columns={columns} rows={rows} data={data} />
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <nav>
+                                                            <ul class="pagination justify-content-end">
+                                                                <li class="page-item">
+                                                                    <button class="page-link" onClick={() => handlePageChange(currentPage - 1)}
+                                                                        disabled={currentPage === 1}>Previous</button>
+                                                                </li>
+                                                                <li class="page-item">
+                                                                    <button class="page-link">{currentPage} of {totalPages}</button>
+                                                                </li>
+                                                                <li class="page-item">
+                                                                    <button class="page-link" onClick={() => handlePageChange(currentPage + 1)}
+                                                                        disabled={currentPage === totalPages}>Next</button>
+                                                                </li>
+                                                            </ul>
+                                                        </nav>
                                                     </div>
                                                 </div>
                                             </div>

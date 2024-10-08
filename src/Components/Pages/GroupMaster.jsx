@@ -253,7 +253,6 @@ const GroupMaster = () => {
                                                                 </li>
                                                             </ul>
                                                         </nav>
-
                                                     </div>
                                                 </div>
                                             </div>
