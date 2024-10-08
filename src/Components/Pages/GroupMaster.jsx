@@ -180,7 +180,7 @@ const GroupMaster = () => {
                                                                         <div className="col-md-3 form-group">
                                                                             <label htmlFor="userType">Status</label><br />
                                                                             <div className="btn-group btn-group-toggle mt-1" data-toggle="buttons">
-                                                                                <label className={`btn btn-light ${isActive === '1' ? 'active' : ''}`}>
+                                                                                <label className={`btn btn-light py-2 ${isActive === '1' ? 'active' : ''}`}>
                                                                                     <input
                                                                                         type="radio"
                                                                                         name="options"
@@ -190,7 +190,7 @@ const GroupMaster = () => {
                                                                                         onChange={() => setIsActive('1')}
                                                                                     /> Active
                                                                                 </label>
-                                                                                <label className={`btn btn-light ${isActive === '0' ? 'active' : ''}`}>
+                                                                                <label className={`btn btn-light py-2 ${isActive === '0' ? 'active' : ''}`}>
                                                                                     <input
                                                                                         type="radio"
                                                                                         name="options"
