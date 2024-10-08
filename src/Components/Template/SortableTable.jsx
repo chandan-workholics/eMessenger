@@ -49,6 +49,7 @@ const SortableTable = ({ columns, data }) => {
     // Calculate total number of pages
     const totalPages = Math.ceil(tableData.length / rowsPerPage);
 
+ 
     return (
         <div>
             <table id='example' className="display expandable-table table-hover w-100 mb-4">

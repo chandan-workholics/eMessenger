@@ -59,7 +59,7 @@ const SchoolMaster = () => {
         { label: 'Scroll News', key: 'scrollNews' },
         { label: 'Font Color', key: 'fontColor' },
         { label: 'Background Color', key: 'backgroundColor' },
-        { label: 'Action', key: 'action' }, // Changed to lowercase for consistency
+        { label: 'Action', key: 'action' },
     ];
 
     const rows = [
@@ -69,7 +69,7 @@ const SchoolMaster = () => {
         { label: 'Edit On', key: 'editOn' },
     ]
 
-    // Table data
+
     const data = schoolList ? schoolList.map((school) => ({
         schoolId: school.sch_id,
         schoolFullName: school.sch_nm,

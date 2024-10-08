@@ -15,10 +15,10 @@ const SubGroupMaster = () => {
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const rowsPerPage = 10;
+    const rowsPerPage = 50;
 
 
-
+    const [groupName, setGroupName] = useState('');
     const [subGroupId, setSubGroupId] = useState('');
     const [subGroupName, setSubGroupName] = useState('');
     const [isActive, setIsActive] = useState('1');
@@ -28,9 +28,8 @@ const SubGroupMaster = () => {
         e.preventDefault();
 
         const data = {
-            msg_sgroup_id: subGroupId,
             msg_sgroup_name: subGroupName,
-            msg_group_id: subGroupName,
+            msg_group_id: subGroupId,
             is_active: isActive,
             added_user_id: addedUserId,
         };
@@ -54,6 +53,33 @@ const SubGroupMaster = () => {
             toast.error('An error occurred while submitting the form');
         }
     };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoading(true);
+            try {
+                const response = await fetch(`${URL}/msg/getGroupDetail?page=${currentPage}&limit=${rowsPerPage}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const result = await response.json();
+                setGroupName(result);
+
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -130,7 +156,7 @@ const SubGroupMaster = () => {
 
                 <div className="container-fluid page-body-wrapper">
 
-                    {/ SideBar /}
+
                     <Sidebar />
 
                     <div className="main-panel">
@@ -181,10 +207,13 @@ const SubGroupMaster = () => {
                                                                         </div>
                                                                         <div className="col-md-3 form-group">
                                                                             <label for="userType">Main Group<span className="text-danger">*</span></label>
-                                                                            <select className="form-control" id="userType">
-                                                                                <option selected disabled>Choose Option</option>
-                                                                                <option>Session 2023-2024</option>
-                                                                                <option>Session 2024-2025</option>
+                                                                            <select className="form-control" id="userType" onClick={(e) => setSubGroupId(e.target.value)}>
+                                                                                {groupName?.data?.map((val) => {
+                                                                                    return (
+                                                                                        <option value={val?.msg_group_id}>{val?.msg_group_name}</option>
+                                                                                    )
+                                                                                })}
+
                                                                             </select>
                                                                         </div>
                                                                         <div className="col-md-3 form-group">
@@ -214,7 +243,7 @@ const SubGroupMaster = () => {
                                                                         </div>
                                                                     </div>
                                                                     <button type="submit" className="btn btn-primary mr-2">Submit</button>
-                                                                    <button className="btn btn-light" onClick={() => {/ Handle Cancel / }}>Cancel</button>
+                                                                    <button className="btn btn-light" >Cancel</button>
                                                                 </form>
                                                             </div>
                                                         </div>

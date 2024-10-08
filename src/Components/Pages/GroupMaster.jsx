@@ -15,7 +15,7 @@ const GroupMaster = () => {
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const rowsPerPage = 10;
+    const rowsPerPage = 50;
 
 
 

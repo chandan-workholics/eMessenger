@@ -1,12 +1,52 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Navbar from '../Template/Navbar'
-import SidebarSettingPannel from '../Template/SidebarSettingPannel'
 import Sidebar from '../Template/Sidebar'
 import SortableTable from '../Template/SortableTable';
+import axios from 'axios';
+import Loding from '../Template/Loding';
+import { toast } from 'react-toastify';
 
 const UserManagement = () => {
+    const token = sessionStorage.getItem('token');
+    const [loading, setLoading] = useState(true);
+    const URL = process.env.REACT_APP_URL;
+    const [datas, setDatas] = useState({ full_name: '', adminuser_name: '', admin_password: '', is_active: '', admin_type: '', mobile_no: '', added_admin_id: '1', parent_admin_id: '' })
+    const [admindata, setAdminData] = useState()
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const rowsPerPage = 10;
 
-    // Table columns
+    let name, value
+    const handleChange = (e) => {
+        name = e.target.name;
+        value = e.target.value;
+        setDatas({ ...datas, [name]: value })
+    }
+
+    useEffect(() => {
+        const getAdminData = async () => {
+            try {
+                const response = await fetch(`${URL}/admin/getAllAdmin?page=1&limit=50`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const result = await response.json();
+                setAdminData(result);
+                setTotalPages(Math.ceil(result?.pagination?.totalPages / rowsPerPage));
+            } catch (error) {
+                console.error('Error fetching data:', error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        getAdminData();
+    }, []);
+
+
+
     const columns = [
         { label: 'User ID', key: 'userId' },
         { label: 'Full Name', key: 'fullName' },
@@ -14,63 +54,71 @@ const UserManagement = () => {
         { label: 'User Type', key: 'userType' },
         { label: 'Mobile No.', key: 'mobileNo' },
         { label: 'Is Active', key: 'isActive' },
-        { label: 'Action', key: 'action' } // Changed to lowercase for consistency
+        { label: 'Action', key: 'action' }
     ];
 
-    // Table data
-    const data = [
-        {
-            userId: 101,
-            fullName: 'Test Test',
-            userName: 'Test',
-            userType: 'Admin',
-            mobileNo: '1234567890',
-            isActive: true,
-            action: (
-                <div>
-                    <i className="fa-solid fa-pen-to-square mr-3"></i>
-                    <i className="fa-solid fa-trash-can text-danger mr-3"></i>
-                </div>
-            ),
-        },
-        {
-            userId: 101,
-            fullName: 'Test Test',
-            userName: 'Test',
-            userType: 'User',
-            mobileNo: '1234567890',
-            isActive: true,
-            action: (
-                <div>
-                    <i className="fa-solid fa-pen-to-square mr-3"></i>
-                    <i className="fa-solid fa-trash-can text-danger mr-3"></i>
-                </div>
-            ),
-        },
-        // Add more rows as needed for pagination...
-    ];
+    const data = admindata ? admindata?.data?.map((val) => ({
+        userId: val?.admin_id,
+        fullName: val?.full_name,
+        userName: val?.adminuser_name,
+        userType: val?.admin_type,
+        mobileNo: val?.mobile_no,
+        isActive: true,
+        action: (
+            <div>
+                <i className="fa-solid fa-pen-to-square mr-3"></i>
+                <i className="fa-solid fa-trash-can text-danger mr-3"></i>
+            </div>
+        ),
+    })) : [];
+
+
+    const handleSubmit = async (e) => {
+
+        try {
+            const response = await axios.post(`${URL}/admin/createAdmin`, datas, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (response.status === 200) {
+                toast.success('Admin Added Successfully')
+            }
+        } catch (error) {
+            console.error('Error creating admin:', error);
+        }
+    };
+
+
+    const handlePageChange = (page) => {
+        if (page > 0 && page <= totalPages) {
+            setCurrentPage(page);
+        }
+    };
+
+    if (loading) {
+        return <Loding />;
+    }
 
     return (
         <>
             <div className="container-scroller">
-                {/*----- Navbar -----*/}
                 <Navbar />
-
                 <div className="container-fluid page-body-wrapper">
-                    <SidebarSettingPannel />
-
-                    {/* SideBar */}
                     <Sidebar />
-
                     <div className="main-panel">
+
                         <div className="content-wrapper">
                             <div className="row">
                                 <div className="col-12 col-md-6 mb-4 mb-xl-0">
                                     <div className="d-flex align-items-center mb-3">
                                         <h3 className="font-weight-bold mr-2">User Management</h3>
-                                        {/* <h6 className="text-primary font-weight-bold">NEW</h6> */}
                                     </div>
                                 </div>
+
+
                                 <div className="col-12 col-md-6 mb-4 mb-xl-0">
                                     <div className="d-flex align-items-center justify-content-end mb-3">
                                         <div className="btn-group" role="group" aria-label="Basic example">
@@ -88,6 +136,7 @@ const UserManagement = () => {
                                         </div>
                                     </div>
                                 </div>
+
                                 <div className="tab-content border-0 p-0 w-100" id="myTabContent">
                                     <div className="tab-pane fade show active" id="add" role="tabpanel" aria-labelledby="add-tab">
                                         <div className="row">
@@ -99,36 +148,36 @@ const UserManagement = () => {
                                                             <p className="text-danger font-weight-bold mb-0">NEW</p>
                                                         </div>
                                                         <h5 className="card-description text-primary font-weight-bolder">Primary Info</h5>
-                                                        <form className="forms-sample">
+                                                        <div className="forms-sample">
                                                             <div className="row">
                                                                 <div className="col-md-6 form-group">
                                                                     <label for="exampleInputName1">Full Name <span className="text-danger">*</span></label>
-                                                                    <input type="text" className="form-control" id="exampleInputName1" placeholder="Full Name" />
+                                                                    <input type="text" className="form-control" name='full_name' value={datas.full_name} onChange={handleChange} id="exampleInputName1" placeholder="Full Name" />
                                                                 </div>
                                                                 <div className="col-md-6 form-group">
                                                                     <label for="exampleInputEmail3">User Name <span className="text-danger">*</span></label>
-                                                                    <input type="email" className="form-control" id="exampleInputEmail3" placeholder="User Name" />
+                                                                    <input type="text" className="form-control" name='adminuser_name' value={datas.adminuser_name} onChange={handleChange} id="exampleInputEmail3" placeholder="User Name" />
                                                                 </div>
                                                                 <div className="col-md-6 form-group">
                                                                     <label for="exampleInputPassword4">User Password <span className="text-danger">*</span></label>
-                                                                    <input type="password" className="form-control" id="exampleInputPassword4" placeholder="Password" />
+                                                                    <input type="text" className="form-control" name='admin_password' value={datas.admin_password} onChange={handleChange} id="exampleInputPassword4" placeholder="Password" />
                                                                 </div>
                                                                 <div className="col-md-6 form-group">
                                                                     <label for="exampleInputNumber">Mobile Number</label>
-                                                                    <input type="number" className="form-control" id="exampleInputNumber" placeholder="Enter Mobile Number" />
+                                                                    <input type="number" className="form-control" name='mobile_no' value={datas.mobile_no} onChange={handleChange} id="exampleInputNumber" placeholder="Enter Mobile Number" />
                                                                 </div>
                                                                 <div className="col-md-6 form-group">
                                                                     <label for="userType">User Type <span className="text-danger">*</span></label>
-                                                                    <select className="form-control" id="userType">
-                                                                        <option>Admin</option>
-                                                                        <option>Management</option>
-                                                                        <option>User</option>
-                                                                        <option>LBF</option>
+                                                                    <select className="form-control" id="userType" name='admin_type' value={datas.admin_type} onChange={handleChange}>
+                                                                        <option value='admin'>Admin</option>
+                                                                        <option value='management'>Management</option>
+                                                                        <option value='user'>User</option>
+
                                                                     </select>
                                                                 </div>
                                                                 <div className="col-md-6 form-group">
                                                                     <label for="userType">Schools <span className="text-danger">*</span></label>
-                                                                    <select className="form-control" id="userType">
+                                                                    <select className="form-control" id="userType" name=''>
                                                                         <option>Admin</option>
                                                                         <option>Management</option>
                                                                         <option>User</option>
@@ -137,33 +186,49 @@ const UserManagement = () => {
                                                                 </div>
                                                                 <div className="col-md-6 form-group">
                                                                     <label for="userType">Reporting/Incharge <span className="text-danger">*</span></label>
-                                                                    <select className="form-control" id="userType">
-                                                                        <option>Admin</option>
-                                                                        <option>Management</option>
-                                                                        <option>User</option>
-                                                                        <option>LBF</option>
+                                                                    <select className="form-control" id="userType" name='parent_admin_id' value={datas.parent_admin_id} onChange={handleChange}>
+                                                                        <option value={1}>Admin</option>
+                                                                        <option value={2}>Management</option>
+                                                                        <option value={3}>User</option>
+                                                                        <option value={4}>LBF</option>
                                                                     </select>
                                                                 </div>
+
                                                                 <div className="col-md-6 form-group">
-                                                                    <label for="userType">Status</label><br />
+                                                                    <label htmlFor="userType">Status</label><br />
                                                                     <div className="btn-group btn-group-toggle mt-1" data-toggle="buttons">
-                                                                        <label className="btn btn-light active py-2">
-                                                                            <input type="radio" name="options" id="option1" autocomplete="off" checked /> Active
+                                                                        <label className={`btn btn-light py-2 ${datas.is_active === '1' ? 'active' : ''}`}>
+                                                                            <input
+                                                                                type="radio"
+                                                                                name="is_active"
+                                                                                value="1"
+                                                                                checked={datas.is_active === '1'}
+                                                                                onChange={handleChange}
+                                                                            /> Active
                                                                         </label>
-                                                                        <label className="btn btn-light py-2">
-                                                                            <input type="radio" name="options" id="option2" autocomplete="off" /> Inactive
+                                                                        <label className={`btn btn-light py-2 ${datas.is_active === '0' ? 'active' : ''}`}>
+                                                                            <input
+                                                                                type="radio"
+                                                                                name="is_active"
+                                                                                value="0"
+                                                                                checked={datas.is_active === '0'}
+                                                                                onChange={handleChange}
+                                                                            /> Inactive
                                                                         </label>
                                                                     </div>
                                                                 </div>
+
+
                                                             </div>
-                                                            <button type="submit" className="btn btn-primary mr-2">Submit</button>
+                                                            <button type="submit" className="btn btn-primary mr-2" onClick={() => handleSubmit()}>Submit</button>
                                                             <button className="btn btn-light">Cancel</button>
-                                                        </form>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div className="tab-pane fade" id="list" role="tabpanel" aria-labelledby="list-tab">
                                         <div className="row">
                                             <div className="col-md-12 grid-margin stretch-card">
@@ -182,6 +247,7 @@ const UserManagement = () => {
                                             </div>
                                         </div>
                                     </div>
+
                                     <div className="tab-pane fade" id="appUsersList" role="tabpanel" aria-labelledby="appUsersList-tab">
                                         <div className="row">
                                             <div className="col-md-12 grid-margin stretch-card">
@@ -224,130 +290,16 @@ const UserManagement = () => {
                                                                     </div>
                                                                 </form>
                                                             </div>
+
+
+
                                                             <div className="col-12">
                                                                 <div className="table-responsive">
-                                                                    <div id="example_wrapper" className="dataTables_wrapper dt-bootstrap4 no-footer"><div className="row"><div className="col-sm-12 col-md-6"></div><div className="col-sm-12 col-md-6"></div></div><div className="row"><div className="col-sm-12"><table id="example" className="display expandable-table dataTable no-footer" style={{ width: "100%" }} role="grid">
-                                                                        <thead>
-                                                                            <tr role="row">
-                                                                                <th className="select-checkbox sorting_disabled" rowspan="1" colspan="1" aria-label="Quote#" style={{ width: "153px" }}>Quote#</th>
-                                                                                <th className="sorting_asc" tabIndex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Product: activate to sort column descending" aria-sort="ascending" style={{ width: '177px' }}>Product</th>
-                                                                                <th className="sorting" tabIndex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Business type: activate to sort column ascending" style={{ width: "210px" }}>Business type</th>
-                                                                                <th className="sorting" tabIndex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Policy holder: activate to sort column ascending" style={{ width: "200px" }}>Policy holder</th>
-                                                                                <th className="sorting" tabIndex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Premium: activate to sort column ascending" style={{ width: "149px" }}>Premium</th>
-                                                                                <th className="sorting" tabIndex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style={{ width: "149px" }}>Status</th>
-                                                                                <th className="sorting" tabIndex="0" aria-controls="example" rowspan="1" colspan="1" aria-label="Updated at: activate to sort column ascending" style={{ width: "177px" }}>Updated at</th>
-                                                                                <th className="details-control sorting_disabled" rowspan="1" colspan="1" aria-label="" style={{ width: "61px" }}></th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            <tr className="odd">
-                                                                                <td className=" select-checkbox">Incs234</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 1</td><td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>In progress</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="even">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Active</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="odd">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Expired</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="even">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>In progress</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="odd">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Active</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="even">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Active</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="odd">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Active</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="even">
-                                                                                <td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td>
-                                                                                <td>$1200</td>
-                                                                                <td>Expired</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="odd"><td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td><td>Business type 2</td><td>Jesse Thomas</td><td>$1200</td>
-                                                                                <td>Active</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                            <tr className="even"><td className=" select-checkbox">Incs235</td>
-                                                                                <td className="sorting_1">Car insurance</td>
-                                                                                <td>Business type 2</td>
-                                                                                <td>Jesse Thomas</td><td>$1200</td>
-                                                                                <td>In progress</td>
-                                                                                <td>25/04/2020</td>
-                                                                                <td className=" details-control"></td>
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </table>
-                                                                    </div>
-                                                                    </div>
-                                                                        <div className="row">
-                                                                            <div className="col-sm-12 col-md-5">
 
-                                                                            </div>
-                                                                            <div className="col-sm-12 col-md-7">
-
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
                                                                 </div>
                                                             </div>
+
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -355,6 +307,7 @@ const UserManagement = () => {
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>
