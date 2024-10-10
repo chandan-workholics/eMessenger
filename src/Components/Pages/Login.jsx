@@ -96,9 +96,9 @@ const Login = () => {
                                             <div className="my-2 d-flex justify-content-between align-items-center">
                                                 <a href="#" className="auth-link text-black">Forgot admin_password?</a>
                                             </div>
-                                            <div className="text-center mt-4 font-weight-light">
+                                            {/* <div className="text-center mt-4 font-weight-light">
                                                 Don't have an account? <Link to="/register" className="text-primary">Create</Link>
-                                            </div>
+                                            </div> */}
                                         </form>
                                     </div>
                                 </div>

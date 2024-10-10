@@ -31,14 +31,14 @@ const Navbar = () => {
                     </button>
                     <ul className="navbar-nav mr-lg-2">
                         <li className="nav-item nav-search d-none d-lg-block">
-                            <div className="input-group">
+                            {/* <div className="input-group">
                                 <div className="input-group-prepend hover-cursor" id="navbar-search-icon">
                                     <span className="input-group-text" id="search">
                                         <i className="icon-search text-white"></i>
                                     </span>
                                 </div>
                                 <input type="text" className="form-control text-white" id="navbar-search-input" placeholder="Search now" aria-label="search" aria-describedby="search" />
-                            </div>
+                            </div> */}
                         </li>
                     </ul>
                     <ul className="navbar-nav navbar-nav-right">
@@ -95,6 +95,10 @@ const Navbar = () => {
                                 <img src="images/faces/face28.jpg" alt="profile" />
                             </Link>
                             <div className="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
+                                <Link to='/register' className="dropdown-item">
+                                    <i className="ti-settings text-primary"></i>
+                                    SignUp
+                                </Link>
                                 <Link className="dropdown-item">
                                     <i className="ti-settings text-primary"></i>
                                     Settings

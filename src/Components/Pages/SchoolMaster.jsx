@@ -162,9 +162,9 @@ const SchoolMaster = () => {
                                                             <h4 className="card-description text-primary font-weight-bolder">Other Info</h4>
                                                             <div className="row">
                                                                 {/* <div className="col-md-4 form-group">
-                                                        <label for="exampleTextarea1">School Address</label>
-                                                        <textarea className="form-control" id="exampleTextarea1" rows="1"></textarea>
-                                                    </div> */}
+                                                                <label for="exampleTextarea1">School Address</label>
+                                                                <textarea className="form-control" id="exampleTextarea1" rows="1"></textarea>
+                                                                </div> */}
                                                                 <div className="col-md-4 form-group">
                                                                     <label for="exampleInputName1">School Address</label>
                                                                     <input type="text" className="form-control" id="exampleInputName1" placeholder="School Address" />
