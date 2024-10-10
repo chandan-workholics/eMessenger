@@ -1,8 +1,8 @@
 import axios from 'axios';
 
-const apiURL = window.location.origin.indexOf('localhost') > -1 ? 'http://206.189.130.102:3550/api/' : `${window.location.origin}/api/`;
+const apiURL = 'http://206.189.130.102:3550/api';
 
-const hostName = window.location.origin.indexOf('localhost') > -1 ? 'http://206.189.130.102/' : window.location.host;
+
 
 const axiosApiInstance = axios.create({ baseURL: apiURL });
 
@@ -14,12 +14,12 @@ export const interceptor = () => {
             config.headers = {
                 Authorization: `Bearer ${token}`,
                 Accept: 'application/json',
-              
+
             };
         } else {
             config.headers = {
                 Accept: 'application/json',
-                
+
             };
         }
         return config;
@@ -91,29 +91,3 @@ const callAPI = {
 };
 
 export default callAPI;
-
-
-
-// const API_URL = process.env.REACT_APP_URL;
-
-// export const fetchWithToken = async (endpoint, options = {}) => {
-//     const token = sessionStorage.getItem('token');
-
-
-//     const headers = {
-//         'Authorization': `Bearer ${token}`,
-//         'Content-Type': 'application/json',
-//         ...options.headers,
-//     };
-
-//     const response = await fetch(`${API_URL}${endpoint}`, {
-//         ...options,
-//         headers,
-//     });
-
-//     if (!response.ok) {
-//         throw new Error(`HTTP error! status: ${response.status}`);
-//     }
-
-//     return response.json();
-// };

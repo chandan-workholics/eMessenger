@@ -7,19 +7,30 @@ import ImportScholar from './Components/Pages/ImportScholar.jsx'
 import MessageDraft from './Components/Pages/MessageDraft.jsx'
 import ReplyReceived from './Components/Pages/ReplyReceived.jsx'
 import GroupMaster from './Components/Pages/GroupMaster.jsx'
-import SubGroupMaster from './Components/Pages/SubGroupMaster.jsx'
+
 import UserManagement from './Components/Pages/UserManagement.jsx'
 import SchoolMaster from './Components/Pages/SchoolMaster.jsx'
 import ChangePassword from './Components/Pages/ChangePassword.jsx'
 import Login from './Components/Pages/Login.jsx';
 import Register from './Components/Pages/Register.jsx';
 import Messages from './Components/Pages/Messages.jsx';
+<<<<<<< HEAD
 import NoticeBoard from './Components/Pages/NoticeBoard.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 
   
   <BrowserRouter>
+=======
+import SubGroupMaster from './Components/Pages/SubGroupMaster.jsx';
+import { interceptor } from './commonMethod/api.js';
+
+interceptor()
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+
+  < BrowserRouter >
+>>>>>>> e3b5135a8311aa921443fa0f1b411c00ee4921c8
     <Routes>
       <Route path="/" element={<App />}>
         <Route path='/' element={<Login />} />
@@ -30,12 +41,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path='/message-draft' element={<MessageDraft />} />
         <Route path='/reply-received' element={<ReplyReceived />} />
         <Route path='/group-master' element={<GroupMaster />} />
-        <Route path='/sub-group-master' element={<SubGroupMaster />} />
+        <Route path='/sub-group' element={<SubGroupMaster />} />
         <Route path='/user-management' element={<UserManagement />} />
         <Route path='/school-master' element={<SchoolMaster />} />
         <Route path='/change-password' element={<ChangePassword />} />
         <Route path='/register' element={<Register />} />
       </Route>
     </Routes>
-  </BrowserRouter>
+  </BrowserRouter >
 );

@@ -6,9 +6,7 @@ import ExpandRowTable from '../Template/ExpandRowTable';
 
 const SchoolMaster = () => {
 
-    const token = sessionStorage.getItem('token');
-    const URL = process.env.REACT_APP_URL;
-    const [schoolList, setSchoolList] = useState(null);
+    const [schoolList, setSchoolList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
@@ -22,8 +20,8 @@ const SchoolMaster = () => {
                     method: 'GET',
                     headers: {
                         'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json',
-                    },
+                        'Content-Type': 'application/json'
+                    }
                 });
                 const result = await response.json();
                 setSchoolList(result.data);
@@ -34,9 +32,8 @@ const SchoolMaster = () => {
                 setLoading(false);
             }
         };
-
         fetchData();
-    }, [currentPage, rowsPerPage, token, URL]);
+    }, [currentPage]);
 
 
 
