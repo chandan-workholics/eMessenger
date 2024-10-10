@@ -3,14 +3,12 @@ import Navbar from '../Template/Navbar';
 import Sidebar from '../Template/Sidebar';
 import Loding from '../Template/Loding';
 import ExpandRowTable from '../Template/ExpandRowTable';
+import callAPI from '../../commonMethod/api';
 import { toast } from 'react-toastify';
-import axios from 'axios';
+
 
 const GroupMaster = () => {
-
-    const token = sessionStorage.getItem('token');
-    const URL = process.env.REACT_APP_URL;
-    const [groupList, setGroupList] = useState(null);
+    const [groupList, setGroupList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
@@ -25,23 +23,15 @@ const GroupMaster = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         const data = {
             msg_group_name: groupName,
             is_active: isActive,
             added_user_id: addedUserId,
         };
-
         try {
-            const response = await axios.post(`${URL}/msg/addSingleGroupData`, data, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-
-
+            const response = await callAPI.post(`./msg/addSingleGroupData`, data);
             if (response.status >= 200 && response.status < 300) {
+                fetchData();
                 toast.success('Group master added successfully');
             } else {
                 toast.error('Failed to add group master');
@@ -53,31 +43,21 @@ const GroupMaster = () => {
     };
 
     useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const response = await fetch(`${URL}/msg/getGroupDetail?page=${currentPage}&limit=${rowsPerPage}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const result = await response.json();
-                setGroupList(result.data);
-                setTotalPages(Math.ceil(result?.pagination?.limit / rowsPerPage));
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchData();
     }, [currentPage]);
+
+    const fetchData = async () => {
+        try {
+            setLoading(true);
+            const response = await callAPI.get(`./msg/getGroupDetail?page=${currentPage}&limit=${rowsPerPage}`);
+            setGroupList(response.data.data || []);
+            setTotalPages(Math.ceil(response?.data?.pagination?.limit / rowsPerPage));
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handlePageChange = (page) => {
         if (page > 0 && page <= totalPages) {
@@ -94,7 +74,7 @@ const GroupMaster = () => {
         { label: 'Group ID', key: 'groupId' },
         { label: 'Group Name', key: 'groupName' },
         { label: 'Is Active', key: 'isActive' },
-        { label: 'Action', key: 'action' } // Changed to lowercase for consistency
+        { label: 'Action', key: 'action' }
     ];
 
     const rows = [

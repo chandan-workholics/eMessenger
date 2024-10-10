@@ -4,13 +4,13 @@ import Sidebar from '../Template/Sidebar'
 import Loding from '../Template/Loding';
 import ExpandRowTable from '../Template/ExpandRowTable';
 import { toast } from 'react-toastify';
-import axios from 'axios';
+import callAPI from '../../commonMethod/api';
+
 
 const SubGroupMaster = () => {
 
-    const token = sessionStorage.getItem('token');
-    const URL = process.env.REACT_APP_URL;
-    const [subGroupList, setSubGroupList] = useState(null);
+
+    const [subGroupList, setSubGroupList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
@@ -18,7 +18,7 @@ const SubGroupMaster = () => {
     const rowsPerPage = 50;
 
 
-    const [groupName, setGroupName] = useState('');
+    const [groupName, setGroupName] = useState([]);
     const [subGroupId, setSubGroupId] = useState('');
     const [subGroupName, setSubGroupName] = useState('');
     const [isActive, setIsActive] = useState('1');
@@ -35,15 +35,9 @@ const SubGroupMaster = () => {
         };
 
         try {
-            const response = await axios.post(`${URL}/msg/addSubGroup`, data, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-
-
+            const response = await callAPI.post(`./msg/addSubGroup`, data);
             if (response.status >= 200 && response.status < 300) {
+                fetchData();
                 toast.success('Group master added successfully');
             } else {
                 toast.error('Failed to add group master');
@@ -54,59 +48,43 @@ const SubGroupMaster = () => {
         }
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const response = await fetch(`${URL}/msg/getGroupDetail?page=${currentPage}&limit=${rowsPerPage}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const result = await response.json();
-                setGroupName(result);
 
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
 
-        fetchData();
-    }, []);
+    const fetchGroupData = async () => {
+        setLoading(true);
+        try {
+            const response = await callAPI.get(`./msg/getGroupDetail?page=1&limit=50`);
+            setGroupName(response?.data?.data || []);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+
 
     useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const response = await fetch(`${URL}/msg/getSubGroupDetail?page=${currentPage}&limit=${rowsPerPage}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const result = await response.json();
-                setSubGroupList(result.data);
-                setTotalPages(Math.ceil(result?.pagination?.limit / rowsPerPage));
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchData();
+        fetchGroupData();
     }, [currentPage]);
+
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            const response = await callAPI.get(`./msg/getSubGroupDetail?page=${currentPage}&limit=${rowsPerPage}`);
+            setSubGroupList(response.data.data || []);
+            setTotalPages(Math.ceil(response?.data?.pagination?.limit / rowsPerPage));
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+
 
     const handlePageChange = (page) => {
         if (page > 0 && page <= totalPages) {
@@ -208,7 +186,7 @@ const SubGroupMaster = () => {
                                                                         <div className="col-md-3 form-group">
                                                                             <label for="userType">Main Group<span className="text-danger">*</span></label>
                                                                             <select className="form-control" id="userType" onClick={(e) => setSubGroupId(e.target.value)}>
-                                                                                {groupName?.data?.map((val) => {
+                                                                                {groupName?.map((val) => {
                                                                                     return (
                                                                                         <option value={val?.msg_group_id}>{val?.msg_group_name}</option>
                                                                                     )

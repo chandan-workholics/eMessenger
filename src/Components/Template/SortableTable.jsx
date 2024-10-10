@@ -67,7 +67,7 @@ const SortableTable = ({ columns, data }) => {
                         <tr key={rowIndex}>
                             {columns.map((column) => (
                                 <td key={column.key}>
-                                    {column.key === 'action' ? row[column.key] : row[column.key] !== undefined ? row[column.key].toString() : ''}
+                                    {column.key === 'action' ? row[column.key] : row[column.key] !== undefined ? row[column.key] : ''}
                                 </td>
                             ))}
                         </tr>

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react'
 import Navbar from '../Template/Navbar'
 import Sidebar from '../Template/Sidebar'
 import SortableTable from '../Template/SortableTable';
-import axios from 'axios';
 import Loding from '../Template/Loding';
 import { toast } from 'react-toastify';
+import callAPI from '../../commonMethod/api';
 
 const UserManagement = () => {
     const token = sessionStorage.getItem('token');
@@ -24,27 +24,20 @@ const UserManagement = () => {
     }
 
     useEffect(() => {
-        const getAdminData = async () => {
-            try {
-                const response = await fetch(`${URL}/admin/getAllAdmin?page=1&limit=50`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                const result = await response.json();
-                setAdminData(result);
-                setTotalPages(Math.ceil(result?.pagination?.totalPages / rowsPerPage));
-            } catch (error) {
-                console.error('Error fetching data:', error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
         getAdminData();
     }, []);
 
+    const getAdminData = async () => {
+        try {
+            const response = await callAPI.get(`./admin/getAllAdmin?page=1&limit=50`);
+            setAdminData(response?.data);
+            setTotalPages(Math.ceil(response?.data?.pagination?.totalPages / rowsPerPage));
+        } catch (error) {
+            console.error('Error fetching data:', error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
 
     const columns = [
@@ -74,16 +67,10 @@ const UserManagement = () => {
 
 
     const handleSubmit = async (e) => {
-
         try {
-            const response = await axios.post(`${URL}/admin/createAdmin`, datas, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
+            const response = await callAPI.post(`./admin/createAdmin`, datas);
             if (response.status === 200) {
+                getAdminData();
                 toast.success('Admin Added Successfully')
             }
         } catch (error) {

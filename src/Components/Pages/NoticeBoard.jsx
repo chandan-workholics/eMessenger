@@ -3,88 +3,64 @@ import Navbar from '../Template/Navbar'
 import Sidebar from '../Template/Sidebar'
 import Loding from '../Template/Loding';
 import SortableTable from '../Template/SortableTable';
+import callAPI from '../../commonMethod/api';
+import { toast } from 'react-toastify';
 
 const NoticeBoard = () => {
+    const [datas, setDatas] = useState({ title: '', document_type: '', document_link: '', thumbnails: '' })
 
-    const [formData, setFormData] = useState({
-        title: '',
-        documentType: '',
-        documentLink: '',
-        thumbnail: null,
-    });
+    let name, value;
+    const handleChange = (e) => {
+        name = e.target.name;
+        value = e.target.value;
+        setDatas({ ...datas, [name]: value })
+    }
 
-    const token = sessionStorage.getItem('token');
-    const URL = process.env.REACT_APP_URL;
     const [loading, setLoading] = useState(false);
-    const [noticeBoardlList, setNoticeBoardList] = useState(null);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [noticeBoardlList, setNoticeBoardList] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
+    const [error, setError] = useState(null);
     const rowsPerPage = 10;
-
-
-    const handleInputChange = (e) => {
-        const { name, value, files } = e.target;
-        if (files) {
-            setFormData({ ...formData, [name]: files[0] }); // For file input
-        } else {
-            setFormData({ ...formData, [name]: value });
-        }
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         setLoading(true);
-        const form = new FormData();
-        form.append('title', formData.title);
-        form.append('documentType', formData.documentType);
-        form.append('documentLink', formData.documentLink);
-        form.append('thumbnail', formData.thumbnail);
-
+        setError(null);
         try {
-            const response = await fetch(`${URL}/notice/addDocument`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: form, // FormData contains the file and other fields
+            callAPI.post(`./notice/addDocument`, datas).then(async (response) => {
+                if (response.status === 201 || response.status === 200) {
+                    toast.success("Notice Added Successfully");
+                    setLoading(false);
+                    fetchData();
+                } else {
+                    setLoading(false);
+                    setError(response.message || 'something went wrong');
+                }
             });
-
-            const result = await response.json();
-            if (response.ok) {
-                console.log('Notice added successfully:', result);
-                // You can add code to reset the form or show success message
-            } else {
-                console.error('Failed to add notice:', result.message);
-            }
         } catch (error) {
+            setLoading(false);
             console.error('Error adding notice:', error.message);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        try {
+            setLoading(true);
+            const response = await callAPI.get(`./notice/getAllNoticeBoardDetail?page=1&limit=50`);
+            setNoticeBoardList(response.data.data || []);
+            setTotalPages(Math.ceil(response?.data?.pagination?.totalRecords / rowsPerPage));
+        } catch (error) {
+            console.error('Error fetching notice data:', error.message);
         } finally {
             setLoading(false);
         }
     };
 
-    useEffect(() => {
-        const getNoticeBoardlList = async () => {
-            try {
-                const response = await fetch(`${URL}/notice/getAllNoticeBoardDetail?page=1&limit=50`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                const result = await response.json();
-                setNoticeBoardList(result);
-                setTotalPages(Math.ceil(result?.pagination?.totalPages / rowsPerPage));
-            } catch (error) {
-                console.error('Error fetching data:', error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-        getNoticeBoardlList();
-    }, []);
+
 
 
 
@@ -98,8 +74,8 @@ const NoticeBoard = () => {
         { label: 'Action', key: 'action' }
     ];
 
-    const data = noticeBoardlList ? noticeBoardlList?.data?.map((val) => ({
-        sn: val?.admin_id,
+    const data = noticeBoardlList ? noticeBoardlList?.map((val) => ({
+        sn: val?.id,
         title: val?.title,
         documentType: val?.document_type,
         documentLink: val?.document_link,
@@ -108,16 +84,9 @@ const NoticeBoard = () => {
         action: (
             <div>
                 <i className="fa-solid fa-pen-to-square mr-3"></i>
-                {/* <i className="fa-solid fa-trash-can text-danger mr-3"></i> */}
             </div>
         ),
     })) : [];
-
-    const handlePageChange = (page) => {
-        if (page > 0 && page <= totalPages) {
-            setCurrentPage(page);
-        }
-    };
 
     if (loading) {
         return <Loding />;
@@ -126,21 +95,15 @@ const NoticeBoard = () => {
     return (
         <>
             <div className="container-scroller">
-                {/*----- Navbar -----*/}
                 <Navbar />
-
                 <div className="container-fluid page-body-wrapper">
-
-                    {/* SideBar */}
                     <Sidebar />
-
                     <div className="main-panel">
                         <div className="content-wrapper">
                             <div className="row">
                                 <div className="col-12 col-md-6 mb-4 mb-xl-0">
                                     <div className="d-flex align-items-center mb-3">
                                         <h3 className="font-weight-bold mr-2">Notice Board</h3>
-                                        {/* <h6 className="text-primary font-weight-bold">NEW</h6> */}
                                     </div>
                                 </div>
                                 <div className="col-12 col-md-6 mb-4 mb-xl-0">
@@ -177,20 +140,19 @@ const NoticeBoard = () => {
                                                                         className="form-control"
                                                                         id="title"
                                                                         name="title"
-                                                                        value={formData.title}
-                                                                        onChange={handleInputChange}
+                                                                        value={datas.title}
+                                                                        onChange={handleChange}
                                                                         placeholder="Title"
                                                                         required
                                                                     />
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
-                                                                    <label htmlFor="documentType">Document Type <span className="text-danger">*</span></label>
+                                                                    <label htmlFor="document_type">Document Type <span className="text-danger">*</span></label>
                                                                     <select
                                                                         className="form-control"
-                                                                        id="documentType"
-                                                                        name="documentType"
-                                                                        value={formData.document_type}
-                                                                        onChange={handleInputChange}
+                                                                        id="document_type"
+                                                                        name="document_type"
+                                                                        onChange={handleChange}
                                                                         required
                                                                     >
                                                                         <option value="" disabled>Please Select</option>
@@ -201,14 +163,14 @@ const NoticeBoard = () => {
                                                                     </select>
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
-                                                                    <label htmlFor="documentLink">Document Link <span className="text-danger">*</span></label>
+                                                                    <label htmlFor="document_link">Document Link <span className="text-danger">*</span></label>
                                                                     <input
                                                                         type="text"
                                                                         className="form-control"
-                                                                        id="documentLink"
-                                                                        name="documentLink"
-                                                                        value={formData.document_link}
-                                                                        onChange={handleInputChange}
+                                                                        id="document_link"
+                                                                        name="document_link"
+                                                                        value={datas.document_link}
+                                                                        onChange={handleChange}
                                                                         placeholder="Enter Document Link"
                                                                         required
                                                                     />
@@ -220,7 +182,7 @@ const NoticeBoard = () => {
                                                                         className="form-control"
                                                                         id="thumbnail"
                                                                         name="thumbnail"
-                                                                        onChange={handleInputChange}
+
                                                                         required
                                                                     />
                                                                 </div>
