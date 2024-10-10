@@ -43,7 +43,7 @@ const Sidebar = () => {
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="/sub-group-master">
+                        <Link className="nav-link" to="/sub-group">
                             <i className="fa-solid fa-users-line menu-icon"></i>
                             <span className="menu-title mr-3">Sub Group</span>
                         </Link>
