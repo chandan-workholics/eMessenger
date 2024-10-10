@@ -15,10 +15,13 @@ import Login from './Components/Pages/Login.jsx';
 import Register from './Components/Pages/Register.jsx';
 import Messages from './Components/Pages/Messages.jsx';
 import SubGroupMaster from './Components/Pages/SubGroupMaster.jsx';
+import { interceptor } from './commonMethod/api.js';
+
+interceptor()
 
 ReactDOM.createRoot(document.getElementById('root')).render(
 
-  <BrowserRouter>
+  < BrowserRouter >
     <Routes>
       <Route path="/" element={<App />}>
         <Route path='/' element={<Login />} />
@@ -35,5 +38,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path='/register' element={<Register />} />
       </Route>
     </Routes>
-  </BrowserRouter>
+  </BrowserRouter >
 );

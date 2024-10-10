@@ -7,9 +7,7 @@ import callAPI from '../../commonMethod/api.js';
 
 const SchoolMaster = () => {
 
-    const token = sessionStorage.getItem('token');
-    const URL = process.env.REACT_APP_URL;
-    const [schoolList, setSchoolList] = useState(null);
+    const [schoolList, setSchoolList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
@@ -19,27 +17,17 @@ const SchoolMaster = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`${URL}/school/getSchool?page=${currentPage}&limit=${rowsPerPage}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                const result = await response.json();
-                setSchoolList(result.data);
-                setTotalPages(Math.ceil(result?.pagination?.totalRecords / rowsPerPage));
+                const response = await callAPI.get(`/school/getSchool?page=${currentPage}&limit=${rowsPerPage}`);
+                setSchoolList(response.data.data || []);
+                setTotalPages(Math.ceil(response?.data?.pagination?.totalRecords / rowsPerPage));
             } catch (error) {
                 console.error('Error fetching school data:', error.message);
             } finally {
                 setLoading(false);
             }
         };
-
         fetchData();
-    }, [currentPage]);
-
-
+    }, [currentPage, rowsPerPage]);
 
     const handlePageChange = (page) => {
         if (page > 0 && page <= totalPages) {
