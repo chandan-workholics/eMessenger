@@ -3,6 +3,7 @@ import Navbar from '../Template/Navbar'
 import Sidebar from '../Template/Sidebar'
 import Loding from '../Template/Loding';
 import ExpandRowTable from '../Template/ExpandRowTable';
+import callAPI from '../../commonMethod/api.js';
 
 const SchoolMaster = () => {
 
@@ -16,16 +17,9 @@ const SchoolMaster = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`${URL}/school/getSchool?page=${currentPage}&limit=${rowsPerPage}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                const result = await response.json();
-                setSchoolList(result.data);
-                setTotalPages(Math.ceil(result?.pagination?.totalRecords / rowsPerPage));
+                const response = await callAPI.get(`/school/getSchool?page=${currentPage}&limit=${rowsPerPage}`);
+                setSchoolList(response.data.data || []);
+                setTotalPages(Math.ceil(response?.data?.pagination?.totalRecords / rowsPerPage));
             } catch (error) {
                 console.error('Error fetching school data:', error.message);
             } finally {
@@ -33,13 +27,12 @@ const SchoolMaster = () => {
             }
         };
         fetchData();
-    }, [currentPage]);
-
-
+    }, [currentPage, rowsPerPage]);
 
     const handlePageChange = (page) => {
         if (page > 0 && page <= totalPages) {
-            setCurrentPage(page);
+            setCurrentPage(page)
+                ;
         }
     };
 
@@ -95,7 +88,7 @@ const SchoolMaster = () => {
 
                 <div className="container-fluid page-body-wrapper">
 
-                    {/* SideBar */}
+
                     <Sidebar />
 
                     <div className="main-panel">
@@ -104,7 +97,7 @@ const SchoolMaster = () => {
                                 <div className="col-12 col-md-6 mb-4 mb-xl-0">
                                     <div className="d-flex align-items-center mb-3">
                                         <h3 className="font-weight-bold mr-2">School Master</h3>
-                                        {/* <h6 className="text-primary font-weight-bold">NEW</h6> */}
+
                                     </div>
                                 </div>
                                 <div className="col-12 col-md-6 mb-4 mb-xl-0">
@@ -112,17 +105,17 @@ const SchoolMaster = () => {
                                         <div className="btn-group" role="group" aria-label="Basic example">
                                             <ul className="nav nav-tabs" id="myTab" role="tablist">
                                                 <li className="nav-item" role="presentation">
-                                                    <a className="nav-link active" id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="true">Add</a>
+                                                    <a className="nav-link " id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="true">Add</a>
                                                 </li>
                                                 <li className="nav-item" role="presentation">
-                                                    <a className="nav-link" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">List</a>
+                                                    <a className="nav-link active" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">List</a>
                                                 </li>
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="tab-content border-0 p-0 w-100" id="myTabContent">
-                                    <div className="tab-pane fade show active" id="add" role="tabpanel" aria-labelledby="add-tab">
+                                    <div className="tab-pane fade show fade" id="add" role="tabpanel" aria-labelledby="add-tab">
                                         <div className="row">
                                             <div className="col-12 grid-margin stretch-card">
                                                 <div className="card shadow-sm">
@@ -135,15 +128,15 @@ const SchoolMaster = () => {
                                                             <h4 className="card-description text-primary font-weight-bolder">Primary Info</h4>
                                                             <div className="row">
                                                                 <div className="col-md-4 form-group">
-                                                                    <label htmlFor="exampleInputName1">School Full Name <span className="text-danger">*</span></label>
+                                                                    <label for="exampleInputName1">School Full Name <span className="text-danger">*</span></label>
                                                                     <input type="text" className="form-control" id="exampleInputName1" placeholder="Full Name" />
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
-                                                                    <label htmlFor="exampleInputName2">School Short Name <span className="text-danger">*</span></label>
+                                                                    <label for="exampleInputName2">School Short Name <span className="text-danger">*</span></label>
                                                                     <input type="text" className="form-control" id="exampleInputName2" placeholder="Short Name" />
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
-                                                                    <label htmlFor="userType">Status</label><br />
+                                                                    <label for="userType">Status</label><br />
                                                                     <div className="btn-group btn-group-toggle" data-toggle="buttons">
                                                                         <label className="btn btn-light py-2 active">
                                                                             <input type="radio" name="options" id="option1" autocomplete="off" checked /> Active
@@ -158,23 +151,23 @@ const SchoolMaster = () => {
                                                             <h4 className="card-description text-primary font-weight-bolder">Other Info</h4>
                                                             <div className="row">
                                                                 {/* <div className="col-md-4 form-group">
-                                                                <label htmlFor="exampleTextarea1">School Address</label>
+                                                                <label for="exampleTextarea1">School Address</label>
                                                                 <textarea className="form-control" id="exampleTextarea1" rows="1"></textarea>
                                                                 </div> */}
                                                                 <div className="col-md-4 form-group">
-                                                                    <label htmlFor="exampleInputName1">School Address</label>
+                                                                    <label for="exampleInputName1">School Address</label>
                                                                     <input type="text" className="form-control" id="exampleInputName1" placeholder="School Address" />
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
-                                                                    <label htmlFor="exampleInputNumber">Contact Number</label>
+                                                                    <label for="exampleInputNumber">Contact Number</label>
                                                                     <input type="number" className="form-control" id="exampleInputNumber" placeholder="Enter Contact Number" />
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
-                                                                    <label htmlFor="exampleInputName1">School Website</label>
+                                                                    <label for="exampleInputName1">School Website</label>
                                                                     <input type="text" className="form-control" id="exampleInputName1" placeholder="School Website" />
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
-                                                                    <label htmlFor="exampleInputEmail3">School Email Id</label>
+                                                                    <label for="exampleInputEmail3">School Email Id</label>
                                                                     <input type="email" className="form-control" id="exampleInputEmail3" placeholder="School Email Id" />
                                                                 </div>
                                                             </div>
@@ -182,7 +175,7 @@ const SchoolMaster = () => {
                                                             <h4 className="card-description text-primary font-weight-bolder">App Top Scrolled News</h4>
                                                             <div className="row">
                                                                 <div className="col-md-6 form-group">
-                                                                    <label htmlFor="exampleTextarea1">Scroll News</label>
+                                                                    <label for="exampleTextarea1">Scroll News</label>
                                                                     <textarea className="form-control" id="exampleTextarea1" rows="4"></textarea>
                                                                 </div>
                                                             </div>
@@ -190,7 +183,7 @@ const SchoolMaster = () => {
                                                             <h4 className="card-description text-primary font-weight-bolder">App Default Welcome Message IDs [ Comma(,) seprated ]</h4>
                                                             <div className="row">
                                                                 <div className="col-md-6 form-group">
-                                                                    <label htmlFor="exampleInputName1">Scroll News</label>
+                                                                    <label for="exampleInputName1">Scroll News</label>
                                                                     <input type="text" className="form-control" id="exampleInputName1" placeholder="Please Enter Msg IDs" />
                                                                 </div>
                                                             </div>
@@ -213,7 +206,7 @@ const SchoolMaster = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="tab-pane fade" id="list" role="tabpanel" aria-labelledby="list-tab">
+                                    <div className="tab-pane active" id="list" role="tabpanel" aria-labelledby="list-tab">
                                         <div className="row">
                                             <div className="col-md-12 grid-margin stretch-card">
                                                 <div className="card shadow-sm">
@@ -227,18 +220,18 @@ const SchoolMaster = () => {
                                                             </div>
                                                         </div>
 
-                                                        {/* Pagination Controls */}
+
                                                         <nav>
-                                                            <ul className="pagination justify-content-end"> {/* Corrected class */}
-                                                                <li className="page-item">
-                                                                    <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}
+                                                            <ul class="pagination justify-content-end">
+                                                                <li class="page-item">
+                                                                    <button class="page-link" onClick={() => handlePageChange(currentPage - 1)}
                                                                         disabled={currentPage === 1}>Previous</button>
                                                                 </li>
-                                                                <li className="page-item">
-                                                                    <button className="page-link">{currentPage} of {totalPages}</button>
+                                                                <li class="page-item">
+                                                                    <button class="page-link">{currentPage} of {totalPages}</button>
                                                                 </li>
-                                                                <li className="page-item">
-                                                                    <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}
+                                                                <li class="page-item">
+                                                                    <button class="page-link" onClick={() => handlePageChange(currentPage + 1)}
                                                                         disabled={currentPage === totalPages}>Next</button>
                                                                 </li>
                                                             </ul>

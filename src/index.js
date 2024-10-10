@@ -7,21 +7,13 @@ import ImportScholar from './Components/Pages/ImportScholar.jsx'
 import MessageDraft from './Components/Pages/MessageDraft.jsx'
 import ReplyReceived from './Components/Pages/ReplyReceived.jsx'
 import GroupMaster from './Components/Pages/GroupMaster.jsx'
-
+import NoticeBoard from './Components/Pages/NoticeBoard.jsx'
 import UserManagement from './Components/Pages/UserManagement.jsx'
 import SchoolMaster from './Components/Pages/SchoolMaster.jsx'
 import ChangePassword from './Components/Pages/ChangePassword.jsx'
 import Login from './Components/Pages/Login.jsx';
 import Register from './Components/Pages/Register.jsx';
 import Messages from './Components/Pages/Messages.jsx';
-<<<<<<< HEAD
-import NoticeBoard from './Components/Pages/NoticeBoard.jsx';
-
-ReactDOM.createRoot(document.getElementById('root')).render(
-
-  
-  <BrowserRouter>
-=======
 import SubGroupMaster from './Components/Pages/SubGroupMaster.jsx';
 import { interceptor } from './commonMethod/api.js';
 
@@ -30,7 +22,6 @@ interceptor()
 ReactDOM.createRoot(document.getElementById('root')).render(
 
   < BrowserRouter >
->>>>>>> e3b5135a8311aa921443fa0f1b411c00ee4921c8
     <Routes>
       <Route path="/" element={<App />}>
         <Route path='/' element={<Login />} />
