@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 
 const NoticeBoard = () => {
     const [datas, setDatas] = useState({ title: '', document_type: '', document_link: '', thumbnails: '' })
+    const [updateNotice, setUpdateNotice] = useState({});
 
     let name, value;
     const handleChange = (e) => {
@@ -60,17 +61,13 @@ const NoticeBoard = () => {
         }
     };
 
-
-
-
-
     const columns = [
         { label: 'S.No.', key: 'sn' },
         { label: 'Title', key: 'title' },
         { label: 'Document Type', key: 'documentType' },
         { label: 'Document Link', key: 'documentLink' },
         { label: 'Thumbnails', key: 'thumbnails' },
-        { label: 'Is Active', key: 'isActive' },
+        // { label: 'Is Active', key: 'isActive' },
         { label: 'Action', key: 'action' }
     ];
 
@@ -80,13 +77,32 @@ const NoticeBoard = () => {
         documentType: val?.document_type,
         documentLink: val?.document_link,
         thumbnails: val?.thumbnails,
-        isActive: true,
+        // isActive: true,
         action: (
             <div>
-                <i className="fa-solid fa-pen-to-square mr-3"></i>
+                <button onClick={() => handleUpdateNotice(val)} type="button" class="btn" data-toggle="modal" data-target="#exampleModalCenter">
+                    <i className="fa-solid fa-pen-to-square text-warning"></i>
+                </button>
             </div>
         ),
     })) : [];
+
+    const handleUpdateNotice = (val) => setUpdateNotice(val);
+
+    
+
+    const fetchUpdateData = (id, notice) => {
+        return callAPI.put(`/notice/updateDocument/${id}`, notice);
+    };
+
+    useEffect(() => {
+        updateNotice && setDatas({
+            title: updateNotice.title || "",
+            document_type: updateNotice.document_type || "",
+            document_link: updateNotice.document_link || "",
+            thumbnails: updateNotice.thumbnails || ""
+        })
+    }, [updateNotice])
 
     if (loading) {
         return <Loding />;
@@ -221,6 +237,86 @@ const NoticeBoard = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Modal - Start */}
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header p-3">
+                            <h3 class="modal-title text-primary font-weight-bolder" id="exampleModalLongTitle">Update Notice Board</h3>
+                            {/* <button type="button" class="close fs-3" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button> */}
+                        </div>
+                        <div class="modal-body py-3">
+                            <form className="forms-sample" updateNotice={updateNotice} setUpdateNotice={setUpdateNotice} onSubmit={handleSubmit}>
+                                <h4 className="card-description text-primary font-weight-bolder">Primary Info</h4>
+                                <div className="row">
+                                    <div className="col-md-12 form-group">
+                                        <label htmlFor="title">Title <span className="text-danger">*</span></label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="title"
+                                            name="title"
+                                            value={datas.title}
+                                            onChange={handleChange}
+                                            placeholder="Title"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="col-md-12 form-group">
+                                        <label htmlFor="document_type">Document Type <span className="text-danger">*</span></label>
+                                        <select
+                                            className="form-control"
+                                            id="document_type"
+                                            name="document_type"
+                                            onChange={handleChange}
+                                            required
+                                        >
+                                            <option value="" disabled>Please Select</option>
+                                            <option value="jpg">jpg</option>
+                                            <option value="doc">Doc</option>
+                                            <option value="png">png</option>
+                                            <option value="pdf">pdf</option>
+                                        </select>
+                                    </div>
+                                    <div className="col-md-12 form-group">
+                                        <label htmlFor="document_link">Document Link <span className="text-danger">*</span></label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="document_link"
+                                            name="document_link"
+                                            value={datas.document_link}
+                                            onChange={handleChange}
+                                            placeholder="Enter Document Link"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="col-md-12 form-group">
+                                        <label htmlFor="thumbnail">Thumbnails <span className="text-danger">*</span></label>
+                                        <input
+                                            type="file"
+                                            className="form-control"
+                                            id="thumbnail"
+                                            name="thumbnail"
+
+                                            required
+                                        />
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-success">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* Modal - End */}
+
         </>
     )
 }
