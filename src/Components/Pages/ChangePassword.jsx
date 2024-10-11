@@ -1,11 +1,9 @@
 import React, { useState } from 'react'
 import Navbar from '../Template/Navbar'
 import Sidebar from '../Template/Sidebar'
+import callAPI from '../../commonMethod/api'
 
 const ChangePassword = () => {
-
-    const URL = process.env.REACT_APP_URL;
-    const token = sessionStorage.getItem('token');
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -14,31 +12,15 @@ const ChangePassword = () => {
 
     const handlePasswordChange = async (e) => {
         e.preventDefault();
-
-        // Simple validation
         if (newPassword !== confirmPassword) {
             setError('New password and confirm password do not match');
             return;
         }
-
         try {
-            const response = await fetch(`${URL}/admin/updatePassword`, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    oldPassword,
-                    newPassword,
-                }),
-            });
-
+            const response = await callAPI.put(`./admin/updatePassword`, ({ oldPassword, newPassword, }));
             if (!response.ok) {
                 throw new Error('Failed to change password');
             }
-
-            const result = await response.json();
             setSuccess('Password updated successfully');
             setError(null);
         } catch (error) {

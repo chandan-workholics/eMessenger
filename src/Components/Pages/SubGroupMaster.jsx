@@ -12,7 +12,7 @@ const SubGroupMaster = () => {
 
     const [subGroupList, setSubGroupList] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const rowsPerPage = 50;
@@ -26,14 +26,12 @@ const SubGroupMaster = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         const data = {
             msg_sgroup_name: subGroupName,
             msg_group_id: subGroupId,
             is_active: isActive,
             added_user_id: addedUserId,
         };
-
         try {
             const response = await callAPI.post(`./msg/addSubGroup`, data);
             if (response.status >= 200 && response.status < 300) {
@@ -48,26 +46,22 @@ const SubGroupMaster = () => {
         }
     };
 
-
-
     const fetchGroupData = async () => {
         setLoading(true);
         try {
             const response = await callAPI.get(`./msg/getGroupDetail?page=1&limit=50`);
             setGroupName(response?.data?.data || []);
         } catch (error) {
-            setError(error.message);
+
         } finally {
             setLoading(false);
         }
     };
 
 
-
-
     useEffect(() => {
         fetchData();
-        fetchGroupData();
+        fetchGroupData(); // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage]);
 
     const fetchData = async () => {
@@ -77,13 +71,11 @@ const SubGroupMaster = () => {
             setSubGroupList(response.data.data || []);
             setTotalPages(Math.ceil(response?.data?.pagination?.limit / rowsPerPage));
         } catch (error) {
-            setError(error.message);
+
         } finally {
             setLoading(false);
         }
     };
-
-
 
 
     const handlePageChange = (page) => {
@@ -102,7 +94,7 @@ const SubGroupMaster = () => {
         { label: 'Sub Group Name', key: 'SunGroupName' },
         { label: 'Group Name', key: 'groupName' },
         { label: 'Is Active', key: 'isActive' },
-        { label: 'Action', key: 'action' } // Changed to lowercase for consistency
+        { label: 'Action', key: 'action' } 
     ];
 
     const rows = [
@@ -117,7 +109,7 @@ const SubGroupMaster = () => {
         subGroupId: subGroup?.msg_sgroup_id,
         SunGroupName: subGroup?.msg_sgroup_name,
         groupName: subGroup?.msg_group_mst?.msg_group_name,
-        isActive: subGroup?.is_active == 1 ? true : false,
+        isActive: subGroup?.is_active === 1 ? true : false,
         action: (
             <div>
                 <i className="fa-solid fa-pen-to-square mr-3"></i>
@@ -256,16 +248,16 @@ const SubGroupMaster = () => {
                                                             </div>
                                                         </div>
                                                         <nav>
-                                                            <ul class="pagination justify-content-end">
-                                                                <li class="page-item">
-                                                                    <button class="page-link" onClick={() => handlePageChange(currentPage - 1)}
+                                                            <ul className="pagination justify-content-end">
+                                                                <li className="page-item">
+                                                                    <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}
                                                                         disabled={currentPage === 1}>Previous</button>
                                                                 </li>
-                                                                <li class="page-item">
-                                                                    <button class="page-link">{currentPage} of {totalPages}</button>
+                                                                <li className="page-item">
+                                                                    <button className="page-link">{currentPage} of {totalPages}</button>
                                                                 </li>
-                                                                <li class="page-item">
-                                                                    <button class="page-link" onClick={() => handlePageChange(currentPage + 1)}
+                                                                <li className="page-item">
+                                                                    <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}
                                                                         disabled={currentPage === totalPages}>Next</button>
                                                                 </li>
                                                             </ul>

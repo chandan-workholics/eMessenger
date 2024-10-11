@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 
 const Login = () => {
@@ -94,7 +94,7 @@ const Login = () => {
                                                 </button>
                                             </div>
                                             <div className="my-2 d-flex justify-content-between align-items-center">
-                                                <a href="#" className="auth-link text-black">Forgot Password?</a>
+                                                <a href="/" className="auth-link text-black">Forgot Password?</a>
                                             </div>
                                             {/* <div className="text-center mt-4 font-weight-light">
                                                 Don't have an account? <Link to="/register" className="text-primary">Create</Link>

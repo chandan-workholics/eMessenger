@@ -40,7 +40,7 @@ const ImportScholar = () => {
             }
         };
 
-        fetchData();
+        fetchData();// eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage]);
 
     const handlePageChange = (page) => {
@@ -155,20 +155,21 @@ const ImportScholar = () => {
 
                                             {/* Pagination Controls */}
                                             <nav>
-                                                <ul class="pagination justify-content-end">
-                                                    <li class="page-item">
-                                                        <button class="page-link" onClick={() => handlePageChange(currentPage - 1)}
+                                                <ul className="pagination justify-content-end">
+                                                    <li className="page-item">
+                                                        <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}
                                                             disabled={currentPage === 1}>Previous</button>
                                                     </li>
-                                                    <li class="page-item">
-                                                        <button class="page-link">{currentPage} of {totalPages}</button>
+                                                    <li className="page-item">
+                                                        <button className="page-link">{currentPage} of {totalPages}</button>
                                                     </li>
-                                                    <li class="page-item">
-                                                        <button class="page-link" onClick={() => handlePageChange(currentPage + 1)}
+                                                    <li className="page-item">
+                                                        <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}
                                                             disabled={currentPage === totalPages}>Next</button>
                                                     </li>
                                                 </ul>
                                             </nav>
+                                            {error && <div className="alert alert-danger">{error}</div>}
                                         </div>
                                     </div>
                                 </div>

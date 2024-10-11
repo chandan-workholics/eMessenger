@@ -33,39 +33,39 @@ const Calendar = () => {
         const calendar = [];
 
         while (day.isBefore(endOfWeek, "day")) {
-            calendar.push(
-                Array(7)
-                    .fill(0)
-                    .map(() => {
-                        day = day.add(1, "day");
-                        const isCurrentMonth = day.month() === currentDate.month();
-                        const isToday = day.isSame(today, "day");
+            const week = Array(7).fill(0).map(() => {
+                // Clone the day at the start of each iteration
+                const dayCopy = day.clone();
+                day.add(1, "day"); // Increment the day here to avoid closure issues
 
-                        return (
-                            <div
-                                className={`col text-center p-0 ${isCurrentMonth
-                                    ? isToday
-                                        ? "bg-warning text-white font-weight-bold"
-                                        : "bg-white text-dark"
-                                    : "text-muted"
-                                    }`}
-                                key={day.format("DDMMYY")}
-                                style={{
-                                    borderRadius: isToday ? "60px" : "none",
-                                    transition: "transform 0.2s",
-                                    height: "45px",
-                                    width: "45px",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    margin: "0 auto", // Center the circle
-                                }}
-                            >
-                                {day.date()}
-                            </div>
-                        );
-                    })
-            );
+                const isCurrentMonth = dayCopy.month() === currentDate.month();
+                const isToday = dayCopy.isSame(today, "day");
+
+                return (
+                    <div
+                        className={`col text-center p-0 ${isCurrentMonth
+                            ? isToday
+                                ? "bg-warning text-white font-weight-bold"
+                                : "bg-white text-dark"
+                            : "text-muted"
+                            }`}
+                        key={dayCopy.format("DDMMYY")}
+                        style={{
+                            borderRadius: isToday ? "60px" : "none",
+                            transition: "transform 0.2s",
+                            height: "45px",
+                            width: "45px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            margin: "0 auto",
+                        }}
+                    >
+                        {dayCopy.date()}
+                    </div>
+                );
+            });
+            calendar.push(week);
         }
 
         return calendar.map((week, index) => (
@@ -74,6 +74,8 @@ const Calendar = () => {
             </div>
         ));
     };
+
+
 
     return (
         <div className="strech-card card p-4 calendar-component calendar-bg">

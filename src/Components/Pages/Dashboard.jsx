@@ -1,6 +1,5 @@
 import React from 'react'
 import Navbar from '../Template/Navbar'
-import SidebarSettingPannel from '../Template/SidebarSettingPannel'
 import Sidebar from '../Template/Sidebar'
 import Footer from '../Template/Footer'
 import Calendar from '../Template/Calendar'
@@ -87,65 +86,7 @@ const Dashboard = () => {
                                         </div>
                                     </div>
                                 </div>
-                                {/* <div className="col-md-12 grid-margin transparent">
-                                    <div className="row">
-                                        <div className="col-md-3 mb-4 stretch-card transparent">
-                                            <div className="card bg-light shadow" style={{ borderTop: "4px solid #00394f" }}>
-                                                <div className="card-body">
-                                                    <h4 className="mb-3">Users (Sign Ups)</h4>
-                                                    <p className="fs-30 mb-2">7252</p>
-                                                    <p>Count of all active Users/Parents</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-3 mb-4 stretch-card transparent">
-                                            <div className="card bg-light shadow" style={{ borderTop: "4px solid #00394f" }}>
-                                                <div className="card-body">
-                                                    <h4 className="mb-3">Sent (This Month)</h4>
-                                                    <p className="fs-30 mb-2">19945</p>
-                                                    <p>Sent Msg. Count</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-3 mb-4 stretch-card transparent">
-                                            <div className="card bg-light shadow" style={{ borderTop: "4px solid #00394f" }}>
-                                                <div className="card-body">
-                                                    <h4 className="mb-3">Reply (This Month)</h4>
-                                                    <p className="fs-30 mb-2">0</p>
-                                                    <p>Sent Msg. Reply Count</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-3 mb-4 stretch-card transparent">
-                                            <div className="card bg-light shadow" style={{ borderTop: "4px solid #00394f" }}>
-                                                <div className="card-body">
-                                                    <h4 className="mb-3">Mobile Nos.(All)</h4>
-                                                    <p className="fs-30 mb-2">26351</p>
-                                                    <p>Scholar Data Table Rows Count</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-3 mb-4 stretch-card transparent">
-                                            <div className="card bg-light shadow" style={{ borderTop: "4px solid #00394f" }}>
-                                                <div className="card-body">
-                                                    <h4 className="mb-3">Book Orders (Success)</h4>
-                                                    <p className="fs-30 mb-2">0</p>
-                                                    <p>Book Order Table Rows Count</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="col-md-3 mb-4 stretch-card transparent">
-                                            <div className="card bg-light shadow" style={{ borderTop: "4px solid #00394f" }}>
-                                                <div className="card-body">
-                                                    <h4 className="mb-3">Book Consignment (All)</h4>
-                                                    <p className="fs-30 mb-2">0</p>
-                                                    <p>Book Consignment Table Rows Count</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div> */}
-
+                              
                                 <div className="col-md-4 grid-margin stretch-card">
                                     <Calendar />
                                 </div>
@@ -401,48 +342,18 @@ const Dashboard = () => {
                                     </div>
                                 </div>
                             </div>
-                            {/* <div className="row">
-                                <div className="col-md-12 grid-margin stretch-card">
-                                    <div className="card shadow-sm">
-                                        <div className="card-body">
-                                            <p className="card-title">Advanced Table</p>
-                                            <div className="row">
-                                                <div className="col-12">
-                                                    <div className="table-responsive">
-                                                        <table id="example" className="display expandable-table" style={{ width: '100%' }}>
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Quote#</th>
-                                                                    <th>Product</th>
-                                                                    <th>Business type</th>
-                                                                    <th>Policy holder</th>
-                                                                    <th>Premium</th>
-                                                                    <th>Status</th>
-                                                                    <th>Updated at</th>
-                                                                    <th></th>
-                                                                </tr>
-                                                            </thead>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-                                </div>
-                            </div> */}
+                          
                         </div>
-                        {/*content-wrapper ends */}
+                        
 
-                        {/*----- Footer -----*/}
+                        
                         <Footer />
                     </div>
-                    {/*main-panel ends */}
+                  
                 </div>
-                {/*page-body-wrapper ends */}
+               
             </div>
-            {/* container-scroller */}
+           
         </>
     )
 }

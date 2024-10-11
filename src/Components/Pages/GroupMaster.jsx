@@ -43,7 +43,7 @@ const GroupMaster = () => {
     };
 
     useEffect(() => {
-        fetchData();
+        fetchData(); // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage]);
 
     const fetchData = async () => {
@@ -69,6 +69,7 @@ const GroupMaster = () => {
         return <Loding />;
     }
 
+    console.log(error)
     // Table columns
     const columns = [
         { label: 'Group ID', key: 'groupId' },
@@ -88,7 +89,7 @@ const GroupMaster = () => {
     const data = groupList ? groupList.map((group) => ({
         groupId: group?.msg_group_id,
         groupName: group?.msg_group_name,
-        isActive: group?.is_active == 1 ? true : false,
+        isActive: group?.is_active === 1 ? true : false,
         action: (
             <div>
                 <i className="fa-solid fa-pen-to-square mr-3"></i>
@@ -219,16 +220,16 @@ const GroupMaster = () => {
                                                             </div>
                                                         </div>
                                                         <nav>
-                                                            <ul class="pagination justify-content-end">
-                                                                <li class="page-item">
-                                                                    <button class="page-link" onClick={() => handlePageChange(currentPage - 1)}
+                                                            <ul className="pagination justify-content-end">
+                                                                <li className="page-item">
+                                                                    <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}
                                                                         disabled={currentPage === 1}>Previous</button>
                                                                 </li>
-                                                                <li class="page-item">
-                                                                    <button class="page-link">{currentPage} of {totalPages}</button>
+                                                                <li className="page-item">
+                                                                    <button className="page-link">{currentPage} of {totalPages}</button>
                                                                 </li>
-                                                                <li class="page-item">
-                                                                    <button class="page-link" onClick={() => handlePageChange(currentPage + 1)}
+                                                                <li className="page-item">
+                                                                    <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}
                                                                         disabled={currentPage === totalPages}>Next</button>
                                                                 </li>
                                                             </ul>

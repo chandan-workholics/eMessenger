@@ -7,12 +7,10 @@ import { toast } from 'react-toastify';
 import callAPI from '../../commonMethod/api';
 
 const UserManagement = () => {
-    const token = sessionStorage.getItem('token');
     const [loading, setLoading] = useState(true);
-    const URL = process.env.REACT_APP_URL;
     const [datas, setDatas] = useState({ full_name: '', adminuser_name: '', admin_password: '', is_active: '', admin_type: '', mobile_no: '', added_admin_id: '1', parent_admin_id: '' })
     const [admindata, setAdminData] = useState()
-    const [currentPage, setCurrentPage] = useState(1);
+
     const [totalPages, setTotalPages] = useState(0);
     const rowsPerPage = 10;
 
@@ -79,16 +77,12 @@ const UserManagement = () => {
     };
 
 
-    const handlePageChange = (page) => {
-        if (page > 0 && page <= totalPages) {
-            setCurrentPage(page);
-        }
-    };
 
     if (loading) {
         return <Loding />;
     }
 
+    console.log(totalPages)
     return (
         <>
             <div className="container-scroller">
@@ -277,16 +271,10 @@ const UserManagement = () => {
                                                                     </div>
                                                                 </form>
                                                             </div>
-
-
-
                                                             <div className="col-12">
                                                                 <div className="table-responsive">
-
                                                                 </div>
                                                             </div>
-
-
                                                         </div>
                                                     </div>
                                                 </div>
@@ -294,7 +282,6 @@ const UserManagement = () => {
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
