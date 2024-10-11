@@ -7,11 +7,15 @@ import callAPI from '../../commonMethod/api';
 import { toast } from 'react-toastify';
 
 
-
 const NoticeBoard = () => {
     const [datas, setDatas] = useState({ title: '', document_type: '', document_link: '', thumbnails: '' })
     const [updateNotice, setUpdateNotice] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [noticeBoardlList, setNoticeBoardList] = useState([]);
+    const [totalPages, setTotalPages] = useState(0);
+    const [error, setError] = useState(null);
+    const rowsPerPage = 10;
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => {
@@ -19,19 +23,12 @@ const NoticeBoard = () => {
         setDatas({ title: '', document_type: '', document_link: '', thumbnails: '' });
     };
 
-
     let name, value;
     const handleChange = (e) => {
         name = e.target.name;
         value = e.target.value;
         setDatas({ ...datas, [name]: value })
     }
-
-    const [loading, setLoading] = useState(false);
-    const [noticeBoardlList, setNoticeBoardList] = useState([]);
-    const [totalPages, setTotalPages] = useState(0);
-    const [error, setError] = useState(null);
-    const rowsPerPage = 10;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -133,9 +130,9 @@ const NoticeBoard = () => {
         return <Loding />;
     }
 
-
     console.log(totalPages)
     console.log(error)
+
     return (
         <>
             <div className="container-scroller">
@@ -226,8 +223,6 @@ const NoticeBoard = () => {
                                                                         className="form-control"
                                                                         id="thumbnail"
                                                                         name="thumbnail"
-
-
                                                                     />
                                                                 </div>
                                                             </div>
@@ -266,19 +261,20 @@ const NoticeBoard = () => {
                 </div>
             </div>
 
+            {/* Modal Start */}
             {isModalOpen && (
-                <div className="modal show" style={{ display: 'block' }}>
+                <div className="modal show" style={{ display: 'block', background: '#0000008e' }}>
                     <div className="modal-dialog">
                         <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">Add Notice</h5>
+                            <div className="modal-header d-flex align-items-center bg-ffe2e5 py-3">
+                                <h3 className="modal-title font-weight-bold text-primary">Update Notice Board</h3>
                                 <button type="button" className="close" onClick={closeModal}>
-                                    <span>&times;</span>
+                                    <i class="fa-solid fa-xmark fs-3 text-primary"></i>
                                 </button>
                             </div>
-                            <div className="modal-body">
+                            <div className="modal-body p-3">
                                 <form className="forms-sample" onSubmit={handleUpdate}>
-                                    <div className="modal-body">
+                                    <div className="modal-body p-0">
                                         <div className="form-group">
                                             <label htmlFor="title">Title</label>
                                             <input
@@ -333,8 +329,8 @@ const NoticeBoard = () => {
                                             />
                                         </div>
                                     </div>
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <div className="modal-footer p-0 border-0">
+                                        <button type="button" className="btn btn-secondary" data-dismiss="modal" onClick={closeModal}>Close</button>
                                         <button type="submit" className="btn btn-primary">Update</button>
                                     </div>
                                 </form>
@@ -343,6 +339,7 @@ const NoticeBoard = () => {
                     </div>
                 </div>
             )}
+            {/* Modal End */}
 
         </>
     )
