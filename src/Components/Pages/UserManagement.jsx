@@ -71,8 +71,9 @@ const UserManagement = () => {
                 getAdminData();
                 toast.success('Admin Added Successfully')
             }
+            toast.error(response.message)
         } catch (error) {
-            console.error('Error creating admin:', error);
+
         }
     };
 
@@ -96,6 +97,7 @@ const UserManagement = () => {
                                 <div className="col-12 col-md-6 mb-4 mb-xl-0">
                                     <div className="d-flex align-items-center mb-3">
                                         <h3 className="font-weight-bold mr-2">User Management</h3>
+
                                     </div>
                                 </div>
 
@@ -235,6 +237,7 @@ const UserManagement = () => {
                                                 <div className="card shadow-sm">
                                                     <div className="card-body">
                                                         <p className="card-title">App User List</p>
+
                                                         <div className="row">
                                                             <div className="col-12">
                                                                 <form className="forms-sample">
