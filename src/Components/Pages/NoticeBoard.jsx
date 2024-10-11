@@ -5,6 +5,8 @@ import Loding from '../Template/Loding';
 import SortableTable from '../Template/SortableTable';
 import callAPI from '../../commonMethod/api';
 import { toast } from 'react-toastify';
+import $ from 'jquery';
+
 
 const NoticeBoard = () => {
     const [datas, setDatas] = useState({ title: '', document_type: '', document_link: '', thumbnails: '' })
@@ -48,6 +50,7 @@ const NoticeBoard = () => {
         fetchData();
     }, []);
 
+
     const fetchData = async () => {
         try {
             setLoading(true);
@@ -61,13 +64,40 @@ const NoticeBoard = () => {
         }
     };
 
+    const closeModal = () => {
+        $('#exampleModalCenter').modal('hide');
+        $('.modal-backdrop').remove();
+    };
+
+
+
+    const handleUpdate = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError(null);
+        try {
+            await callAPI.put(`./notice/updateDocument/${updateNotice.id}`, datas).then((response) => {
+                if (response.status === 201 || response.status === 200) {
+                    toast.success("Notice Updated Successfully");
+                    closeModal();
+                    fetchData();
+                } else {
+                    setError(response.message || 'Something went wrong');
+                }
+            });
+        } catch (error) {
+            setError('Error updating notice: ' + error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const columns = [
         { label: 'S.No.', key: 'sn' },
         { label: 'Title', key: 'title' },
         { label: 'Document Type', key: 'documentType' },
         { label: 'Document Link', key: 'documentLink' },
         { label: 'Thumbnails', key: 'thumbnails' },
-        // { label: 'Is Active', key: 'isActive' },
         { label: 'Action', key: 'action' }
     ];
 
@@ -77,37 +107,32 @@ const NoticeBoard = () => {
         documentType: val?.document_type,
         documentLink: val?.document_link,
         thumbnails: val?.thumbnails,
-        // isActive: true,
         action: (
             <div>
-                <button onClick={() => handleUpdateNotice(val)} type="button" class="btn" data-toggle="modal" data-target="#exampleModalCenter">
+                <button onClick={() => handleUpdateNotice(val)} type="button" className="btn" data-toggle="modal" data-target="#exampleModalCenter">
                     <i className="fa-solid fa-pen-to-square text-warning"></i>
                 </button>
             </div>
         ),
     })) : [];
 
-    const handleUpdateNotice = (val) => setUpdateNotice(val);
-
-    
-
-    const fetchUpdateData = (id, notice) => {
-        return callAPI.put(`/notice/updateDocument/${id}`, notice);
+    const handleUpdateNotice = (val) => {
+        setUpdateNotice(val);
+        setDatas({
+            title: val.title,
+            document_type: val.document_type,
+            document_link: val.document_link,
+            thumbnails: val.thumbnails
+        });
     };
-
-    useEffect(() => {
-        updateNotice && setDatas({
-            title: updateNotice.title || "",
-            document_type: updateNotice.document_type || "",
-            document_link: updateNotice.document_link || "",
-            thumbnails: updateNotice.thumbnails || ""
-        })
-    }, [updateNotice])
 
     if (loading) {
         return <Loding />;
     }
 
+
+    console.log(totalPages)
+    console.log(error)
     return (
         <>
             <div className="container-scroller">
@@ -238,84 +263,86 @@ const NoticeBoard = () => {
                 </div>
             </div>
 
-            {/* Modal - Start */}
-            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header p-3">
-                            <h3 class="modal-title text-primary font-weight-bolder" id="exampleModalLongTitle">Update Notice Board</h3>
-                            {/* <button type="button" class="close fs-3" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button> */}
-                        </div>
-                        <div class="modal-body py-3">
-                            <form className="forms-sample" updateNotice={updateNotice} setUpdateNotice={setUpdateNotice} onSubmit={handleSubmit}>
-                                <h4 className="card-description text-primary font-weight-bolder">Primary Info</h4>
-                                <div className="row">
-                                    <div className="col-md-12 form-group">
-                                        <label htmlFor="title">Title <span className="text-danger">*</span></label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="title"
-                                            name="title"
-                                            value={datas.title}
-                                            onChange={handleChange}
-                                            placeholder="Title"
-                                            required
-                                        />
-                                    </div>
-                                    <div className="col-md-12 form-group">
-                                        <label htmlFor="document_type">Document Type <span className="text-danger">*</span></label>
-                                        <select
-                                            className="form-control"
-                                            id="document_type"
-                                            name="document_type"
-                                            onChange={handleChange}
-                                            required
-                                        >
-                                            <option value="" disabled>Please Select</option>
-                                            <option value="jpg">jpg</option>
-                                            <option value="doc">Doc</option>
-                                            <option value="png">png</option>
-                                            <option value="pdf">pdf</option>
-                                        </select>
-                                    </div>
-                                    <div className="col-md-12 form-group">
-                                        <label htmlFor="document_link">Document Link <span className="text-danger">*</span></label>
-                                        <input
-                                            type="text"
-                                            className="form-control"
-                                            id="document_link"
-                                            name="document_link"
-                                            value={datas.document_link}
-                                            onChange={handleChange}
-                                            placeholder="Enter Document Link"
-                                            required
-                                        />
-                                    </div>
-                                    <div className="col-md-12 form-group">
-                                        <label htmlFor="thumbnail">Thumbnails <span className="text-danger">*</span></label>
-                                        <input
-                                            type="file"
-                                            className="form-control"
-                                            id="thumbnail"
-                                            name="thumbnail"
 
-                                            required
-                                        />
-                                    </div>
+            <div className="modal fade" id="exampleModalCenter" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div className="modal-dialog modal-dialog-centered" role="document">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title" id="exampleModalCenterTitle">Update Notice</h5>
+                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form className="forms-sample" onSubmit={handleUpdate}>
+                            <div className="modal-body">
+                                <div className="form-group">
+                                    <label htmlFor="title">Title</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="update_title"
+                                        name="title"
+                                        value={datas.title}
+                                        onChange={handleChange}
+                                        placeholder="Title"
+                                        required
+                                    />
                                 </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-success">Save changes</button>
-                        </div>
+                                <div className="form-group">
+                                    <label htmlFor="document_type">Document Type</label>
+                                    <select
+                                        className="form-control"
+                                        id="document_type"
+                                        name="document_type"
+                                        value={datas.document_type}
+                                        onChange={handleChange}
+                                        required
+                                    >
+                                        <option value="" disabled>Please Select</option>
+                                        <option value="jpg">jpg</option>
+                                        <option value="doc">Doc</option>
+                                        <option value="png">png</option>
+                                        <option value="pdf">pdf</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="document_link">Document Link</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="document_link"
+                                        name="document_link"
+                                        value={datas.document_link}
+                                        onChange={handleChange}
+                                        placeholder="Enter Document Link"
+                                        required
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="thumbnail">Thumbnails</label>
+                                    <input
+                                        type="file"
+                                        className="form-control"
+                                        id="thumbnail"
+                                        name="thumbnail"
+                                        required
+                                    />
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="submit" className="btn btn-primary">Update</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
-            {/* Modal - End */}
+
+
+
+
+
+
 
         </>
     )
