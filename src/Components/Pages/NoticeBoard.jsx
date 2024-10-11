@@ -5,12 +5,20 @@ import Loding from '../Template/Loding';
 import SortableTable from '../Template/SortableTable';
 import callAPI from '../../commonMethod/api';
 import { toast } from 'react-toastify';
-import $ from 'jquery';
+
 
 
 const NoticeBoard = () => {
     const [datas, setDatas] = useState({ title: '', document_type: '', document_link: '', thumbnails: '' })
     const [updateNotice, setUpdateNotice] = useState({});
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setDatas({ title: '', document_type: '', document_link: '', thumbnails: '' });
+    };
+
 
     let name, value;
     const handleChange = (e) => {
@@ -64,12 +72,6 @@ const NoticeBoard = () => {
         }
     };
 
-    const closeModal = () => {
-        $('#exampleModalCenter').modal('hide');
-        $('.modal-backdrop').remove();
-    };
-
-
 
     const handleUpdate = async (e) => {
         e.preventDefault();
@@ -109,7 +111,7 @@ const NoticeBoard = () => {
         thumbnails: val?.thumbnails,
         action: (
             <div>
-                <button onClick={() => handleUpdateNotice(val)} type="button" className="btn" data-toggle="modal" data-target="#exampleModalCenter">
+                <button onClick={() => handleUpdateNotice(val)} type="button" className="btn">
                     <i className="fa-solid fa-pen-to-square text-warning"></i>
                 </button>
             </div>
@@ -118,6 +120,7 @@ const NoticeBoard = () => {
 
     const handleUpdateNotice = (val) => {
         setUpdateNotice(val);
+        openModal();
         setDatas({
             title: val.title,
             document_type: val.document_type,
@@ -152,17 +155,17 @@ const NoticeBoard = () => {
                                         <div className="btn-group" role="group" aria-label="Basic example">
                                             <ul className="nav nav-tabs" id="myTab" role="tablist">
                                                 <li className="nav-item" role="presentation">
-                                                    <a className="nav-link active" id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="true">Add</a>
+                                                    <a className="nav-link" id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="true">Add</a>
                                                 </li>
                                                 <li className="nav-item" role="presentation">
-                                                    <a className="nav-link" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">List</a>
+                                                    <a className="nav-link active" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">List</a>
                                                 </li>
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="tab-content border-0 p-0 w-100" id="myTabContent">
-                                    <div className="tab-pane fade show active" id="add" role="tabpanel" aria-labelledby="add-tab">
+                                    <div className="tab-pane fade " id="add" role="tabpanel" aria-labelledby="add-tab">
                                         <div className="row">
                                             <div className="col-12 grid-margin stretch-card">
                                                 <div className="card shadow-sm">
@@ -224,7 +227,7 @@ const NoticeBoard = () => {
                                                                         id="thumbnail"
                                                                         name="thumbnail"
 
-                                                                        required
+
                                                                     />
                                                                 </div>
                                                             </div>
@@ -238,7 +241,7 @@ const NoticeBoard = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="tab-pane fade" id="list" role="tabpanel" aria-labelledby="list-tab">
+                                    <div className="tab-pane fade show active" id="list" role="tabpanel" aria-labelledby="list-tab">
                                         <div className="row">
                                             <div className="col-md-12 grid-margin stretch-card">
                                                 <div className="card shadow-sm">
@@ -263,86 +266,83 @@ const NoticeBoard = () => {
                 </div>
             </div>
 
-
-            <div className="modal fade" id="exampleModalCenter" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div className="modal-dialog modal-dialog-centered" role="document">
-                    <div className="modal-content">
-                        <div className="modal-header">
-                            <h5 className="modal-title" id="exampleModalCenterTitle">Update Notice</h5>
-                            <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <form className="forms-sample" onSubmit={handleUpdate}>
+            {isModalOpen && (
+                <div className="modal show" style={{ display: 'block' }}>
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header">
+                                <h5 className="modal-title">Add Notice</h5>
+                                <button type="button" className="close" onClick={closeModal}>
+                                    <span>&times;</span>
+                                </button>
+                            </div>
                             <div className="modal-body">
-                                <div className="form-group">
-                                    <label htmlFor="title">Title</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        id="update_title"
-                                        name="title"
-                                        value={datas.title}
-                                        onChange={handleChange}
-                                        placeholder="Title"
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="document_type">Document Type</label>
-                                    <select
-                                        className="form-control"
-                                        id="document_type"
-                                        name="document_type"
-                                        value={datas.document_type}
-                                        onChange={handleChange}
-                                        required
-                                    >
-                                        <option value="" disabled>Please Select</option>
-                                        <option value="jpg">jpg</option>
-                                        <option value="doc">Doc</option>
-                                        <option value="png">png</option>
-                                        <option value="pdf">pdf</option>
-                                    </select>
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="document_link">Document Link</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        id="document_link"
-                                        name="document_link"
-                                        value={datas.document_link}
-                                        onChange={handleChange}
-                                        placeholder="Enter Document Link"
-                                        required
-                                    />
-                                </div>
-                                <div className="form-group">
-                                    <label htmlFor="thumbnail">Thumbnails</label>
-                                    <input
-                                        type="file"
-                                        className="form-control"
-                                        id="thumbnail"
-                                        name="thumbnail"
-                                        required
-                                    />
-                                </div>
+                                <form className="forms-sample" onSubmit={handleUpdate}>
+                                    <div className="modal-body">
+                                        <div className="form-group">
+                                            <label htmlFor="title">Title</label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                id="update_title"
+                                                name="title"
+                                                value={datas.title}
+                                                onChange={handleChange}
+                                                placeholder="Title"
+                                                required
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="document_type">Document Type</label>
+                                            <select
+                                                className="form-control"
+                                                id="document_type"
+                                                name="document_type"
+                                                value={datas.document_type}
+                                                onChange={handleChange}
+                                                required
+                                            >
+                                                <option value="" disabled>Please Select</option>
+                                                <option value="jpg">jpg</option>
+                                                <option value="doc">Doc</option>
+                                                <option value="png">png</option>
+                                                <option value="pdf">pdf</option>
+                                            </select>
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="document_link">Document Link</label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                id="document_link"
+                                                name="document_link"
+                                                value={datas.document_link}
+                                                onChange={handleChange}
+                                                placeholder="Enter Document Link"
+                                                required
+                                            />
+                                        </div>
+                                        <div className="form-group">
+                                            <label htmlFor="thumbnail">Thumbnails</label>
+                                            <input
+                                                type="file"
+                                                className="form-control"
+                                                id="thumbnail"
+                                                name="thumbnail"
+
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="submit" className="btn btn-primary">Update</button>
+                                    </div>
+                                </form>
                             </div>
-                            <div className="modal-footer">
-                                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" className="btn btn-primary">Update</button>
-                            </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-
-
-
-
-
+            )}
 
         </>
     )
