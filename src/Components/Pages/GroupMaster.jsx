@@ -8,28 +8,33 @@ import { toast } from 'react-toastify';
 
 
 const GroupMaster = () => {
+    const [datas, setDatas] = useState({ msg_group_name: '', isActive: '1', addedUserId: '' })
+    const [updateNotice, setUpdateNotice] = useState({});
     const [groupList, setGroupList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const rowsPerPage = 50;
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setDatas({ msg_group_name: '', isActive: '1', addedUserId: '' });
+    };
 
-
-    const [groupName, setGroupName] = useState('');
-    const [isActive, setIsActive] = useState('1');
-    const [addedUserId] = useState(1);
+    let name, value;
+    const handleChange = (e) => {
+        name = e.target.name;
+        value = e.target.value;
+        setDatas({ ...datas, [name]: value })
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const data = {
-            msg_group_name: groupName,
-            is_active: isActive,
-            added_user_id: addedUserId,
-        };
         try {
-            const response = await callAPI.post(`./msg/addSingleGroupData`, data);
+            const response = await callAPI.post(`./msg/addSingleGroupData`, datas);
             if (response.status >= 200 && response.status < 300) {
                 fetchData();
                 toast.success('Group master added successfully');
@@ -59,6 +64,9 @@ const GroupMaster = () => {
         }
     };
 
+
+
+
     const handlePageChange = (page) => {
         if (page > 0 && page <= totalPages) {
             setCurrentPage(page);
@@ -73,7 +81,7 @@ const GroupMaster = () => {
     // Table columns
     const columns = [
         { label: 'Group ID', key: 'groupId' },
-        { label: 'Group Name', key: 'groupName' },
+        { label: 'Group Name', key: 'msg_group_name' },
         { label: 'Is Active', key: 'isActive' },
         { label: 'Action', key: 'action' }
     ];
@@ -85,14 +93,48 @@ const GroupMaster = () => {
         { label: 'Edit On', key: 'editOn' },
     ]
 
+    const handleUpdateNotice = (val) => {
+        setUpdateNotice(val);
+        openModal();
+        setDatas({
+            msg_group_name: val.msg_group_name,
+            isActive: val.isActive,
+            addedUserId: val.ddedUserId
+        });
+    };
+
+
+    const handleUpdate = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError(null);
+        try {
+            await callAPI.put(`./msg/updateSingleGroupData/${updateNotice.msg_group_id}`, datas).then((response) => {
+                if (response.status === 201 || response.status === 200) {
+                    toast.success("Notice Updated Successfully");
+                    closeModal();
+                    fetchData();
+                } else {
+                    setError(response.message || 'Something went wrong');
+                }
+            });
+        } catch (error) {
+            setError('Error updating notice: ' + error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     // Table data
-    const data = groupList ? groupList.map((group) => ({
-        groupId: group?.msg_group_id,
-        groupName: group?.msg_group_name,
-        isActive: group?.is_active === 1 ? true : false,
+    const data = groupList ? groupList.map((val) => ({
+        groupId: val?.msg_group_id,
+        groupName: val?.msg_group_name,
+        isActive: val?.is_active === 1 ? true : false,
         action: (
             <div>
-                <i className="fa-solid fa-pen-to-square mr-3"></i>
+                <button onClick={() => handleUpdateNotice(val)} type="button" className="btn">
+                    <i className="fa-solid fa-pen-to-square text-warning"></i>
+                </button>
                 <i className="fa-solid fa-trash-can text-danger mr-3"></i>
             </div>
         ),
@@ -153,32 +195,33 @@ const GroupMaster = () => {
                                                                                 className="form-control"
                                                                                 id="exampleInputName1"
                                                                                 placeholder="Full Name"
-                                                                                value={groupName}
-                                                                                onChange={(e) => setGroupName(e.target.value)}
+                                                                                name="msg_group_name"
+                                                                                value={datas.msg_group_name}
+                                                                                onChange={handleChange}
                                                                                 required
                                                                             />
                                                                         </div>
                                                                         <div className="col-md-3 form-group">
                                                                             <label htmlFor="userType">Status</label><br />
                                                                             <div className="btn-group btn-group-toggle mt-1" data-toggle="buttons">
-                                                                                <label className={`btn btn-light py-2 ${isActive === '1' ? 'active' : ''}`}>
+                                                                                <label className={`btn btn-light py-2 ${datas.isActive === '1' ? 'active' : ''}`}>
                                                                                     <input
                                                                                         type="radio"
                                                                                         name="options"
                                                                                         id="option1"
                                                                                         autoComplete="off"
-                                                                                        checked={isActive === '1'}
-                                                                                        onChange={() => setIsActive('1')}
+                                                                                        checked={datas.isActive === '1'}
+                                                                                        onChange={handleChange}
                                                                                     /> Active
                                                                                 </label>
-                                                                                <label className={`btn btn-light py-2 ${isActive === '0' ? 'active' : ''}`}>
+                                                                                <label className={`btn btn-light py-2 ${datas.isActive === '0' ? 'active' : ''}`}>
                                                                                     <input
                                                                                         type="radio"
                                                                                         name="options"
                                                                                         id="option2"
                                                                                         autoComplete="off"
-                                                                                        checked={isActive === '0'}
-                                                                                        onChange={() => setIsActive('0')}
+                                                                                        checked={datas.isActive === '0'}
+                                                                                        onChange={handleChange}
                                                                                     /> Inactive
                                                                                 </label>
                                                                             </div>
@@ -245,6 +288,70 @@ const GroupMaster = () => {
                     </div>
                 </div>
             </div>
+
+            {isModalOpen && (
+                <div className="modal show" style={{ display: 'block', background: '#0000008e' }}>
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header d-flex align-items-center bg-ffe2e5 py-3">
+                                <h3 className="modal-title font-weight-bold text-primary">Update Notice Board</h3>
+                                <button type="button" className="close" onClick={closeModal}>
+                                    <i class="fa-solid fa-xmark fs-3 text-primary"></i>
+                                </button>
+                            </div>
+                            <div className="modal-body p-3">
+                                <form className="forms-sample" onSubmit={handleUpdate}>
+                                    <div className="form-group">
+                                        <label htmlFor="msg_group_name">Group Name</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="msg_group_name"
+                                            name="msg_group_name"
+                                            value={datas.msg_group_name}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Status</label><br />
+                                        <div className="btn-group btn-group-toggle mt-1" data-toggle="buttons">
+                                            <label className={`btn btn-light py-2 ${datas.is_active === '1' ? 'active' : ''}`}>
+                                                <input
+                                                    type="radio"
+                                                    name="is_active"
+                                                    id="option1"
+                                                    autoComplete="off"
+                                                    value="1"
+                                                    checked={datas.isActive === '1'}
+                                                    onChange={handleChange}
+                                                /> Active
+                                            </label>
+                                            <label className={`btn btn-light py-2 ${datas.is_active === '0' ? 'active' : ''}`}>
+                                                <input
+                                                    type="radio"
+                                                    name="is_active"
+                                                    id="option2"
+                                                    autoComplete="off"
+                                                    value="0"
+                                                    checked={datas.isActive === '0'}
+                                                    onChange={handleChange}
+                                                /> Inactive
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
+                                        <button type="submit" className="btn btn-primary" disabled={loading}>
+                                            {loading ? 'Updating...' : 'Update'}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     )
 }
