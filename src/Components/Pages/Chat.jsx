@@ -54,25 +54,26 @@ const Chat = () => {
                                                     <h6 className="text-263F53 font-weight-bold mb-2">Saurabh Singh <span className="float-right text-8A8A8A font-weight-medium small">20-01-2022</span></h6>
                                                     <h6 className="text-8A8A8A font-weight-normal mb-2 small">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga iure, numquam accusamus cumque nemo velit.</h6>
                                                     <h6 className="text-8A8A8A font-weight-medium small">9555641793</h6>
-                                                    <button className="btn shortList-btn btn-sm text-27BAF0 bg-E9F9FF px-3">shortlist</button>
                                                 </div>
                                                 <div className="chat-person border-bottom p-3">
                                                     <h6 className="text-263F53 font-weight-bold mb-2">Saurabh Singh <span className="float-right text-8A8A8A font-weight-medium small">20-01-2022</span></h6>
                                                     <h6 className="text-8A8A8A font-weight-normal mb-2 small">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga iure, numquam accusamus cumque nemo velit.</h6>
                                                     <h6 className="text-8A8A8A font-weight-medium small">9555641793</h6>
-                                                    <button className="btn shortList-btn btn-sm text-27BAF0 bg-E9F9FF px-3">shortlist</button>
                                                 </div>
                                                 <div className="chat-person border-bottom p-3">
                                                     <h6 className="text-263F53 font-weight-bold mb-2">Saurabh Singh <span className="float-right text-8A8A8A font-weight-medium small">20-01-2022</span></h6>
                                                     <h6 className="text-8A8A8A font-weight-normal mb-2 small">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga iure, numquam accusamus cumque nemo velit.</h6>
                                                     <h6 className="text-8A8A8A font-weight-medium small">9555641793</h6>
-                                                    <button className="btn shortList-btn btn-sm text-27BAF0 bg-E9F9FF px-3">shortlist</button>
                                                 </div>
                                                 <div className="chat-person border-bottom p-3">
                                                     <h6 className="text-263F53 font-weight-bold mb-2">Saurabh Singh <span className="float-right text-8A8A8A font-weight-medium small">20-01-2022</span></h6>
                                                     <h6 className="text-8A8A8A font-weight-normal mb-2 small">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga iure, numquam accusamus cumque nemo velit.</h6>
                                                     <h6 className="text-8A8A8A font-weight-medium small">9555641793</h6>
-                                                    <button className="btn shortList-btn btn-sm text-27BAF0 bg-E9F9FF px-3">shortlist</button>
+                                                </div>
+                                                <div className="chat-person border-bottom p-3">
+                                                    <h6 className="text-263F53 font-weight-bold mb-2">Saurabh Singh <span className="float-right text-8A8A8A font-weight-medium small">20-01-2022</span></h6>
+                                                    <h6 className="text-8A8A8A font-weight-normal mb-2 small">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga iure, numquam accusamus cumque nemo velit.</h6>
+                                                    <h6 className="text-8A8A8A font-weight-medium small">9555641793</h6>
                                                 </div>
                                             </div>
                                         </div>

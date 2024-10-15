@@ -8,8 +8,8 @@ import { toast } from 'react-toastify';
 
 
 const GroupMaster = () => {
-    const [datas, setDatas] = useState({ msg_group_name: '', isActive: '1', addedUserId: '' })
-    const [updateNotice, setUpdateNotice] = useState({});
+    const [datas, setDatas] = useState({ msg_group_name: '', is_active: '1', addedUserId: '' })
+    const [updateGroup, setUpdateGroup] = useState({});
     const [groupList, setGroupList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -21,7 +21,7 @@ const GroupMaster = () => {
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => {
         setIsModalOpen(false);
-        setDatas({ msg_group_name: '', isActive: '1', addedUserId: '' });
+        setDatas({ msg_group_name: '', is_active: '1', addedUserId: '' });
     };
 
     let name, value;
@@ -82,7 +82,7 @@ const GroupMaster = () => {
     const columns = [
         { label: 'Group ID', key: 'groupId' },
         { label: 'Group Name', key: 'msg_group_name' },
-        { label: 'Is Active', key: 'isActive' },
+        { label: 'Is Active', key: 'is_active' },
         { label: 'Action', key: 'action' }
     ];
 
@@ -93,12 +93,12 @@ const GroupMaster = () => {
         { label: 'Edit On', key: 'editOn' },
     ]
 
-    const handleUpdateNotice = (val) => {
-        setUpdateNotice(val);
+    const handleupdateGroup = (val) => {
+        setUpdateGroup(val);
         openModal();
         setDatas({
             msg_group_name: val.msg_group_name,
-            isActive: val.isActive,
+            is_active: val.is_active,
             addedUserId: val.ddedUserId
         });
     };
@@ -109,7 +109,7 @@ const GroupMaster = () => {
         setLoading(true);
         setError(null);
         try {
-            await callAPI.put(`./msg/updateSingleGroupData/${updateNotice.msg_group_id}`, datas).then((response) => {
+            await callAPI.put(`./msg/updateSingleGroupData/${updateGroup.msg_group_id}`, datas).then((response) => {
                 if (response.status === 201 || response.status === 200) {
                     toast.success("Notice Updated Successfully");
                     closeModal();
@@ -128,11 +128,11 @@ const GroupMaster = () => {
     // Table data
     const data = groupList ? groupList.map((val) => ({
         groupId: val?.msg_group_id,
-        groupName: val?.msg_group_name,
-        isActive: val?.is_active === 1 ? true : false,
+        msg_group_name: val?.msg_group_name,
+        is_active: val?.is_active === 1 ? true : false,
         action: (
             <div>
-                <button onClick={() => handleUpdateNotice(val)} type="button" className="btn">
+                <button onClick={() => handleupdateGroup(val)} type="button" className="btn">
                     <i className="fa-solid fa-pen-to-square text-warning"></i>
                 </button>
                 <i className="fa-solid fa-trash-can text-danger mr-3"></i>
