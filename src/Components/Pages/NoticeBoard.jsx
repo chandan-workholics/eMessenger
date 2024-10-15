@@ -243,6 +243,14 @@ const NoticeBoard = () => {
                                                     <div className="card-body">
                                                         <p className="card-title">Notice List</p>
                                                         <div className="row">
+                                                            <div class="ml-auto col-md-3 form-group">
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" />
+                                                                    <div class="input-group-append">
+                                                                        <button class="btn btn-sm btn-primary px-4" type="button">Filter</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                             <div className="col-12">
                                                                 <div className="table-responsive">
                                                                     <SortableTable columns={columns} data={data} />

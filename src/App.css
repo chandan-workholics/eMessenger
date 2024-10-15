@@ -22,6 +22,14 @@
   background-color: #e1f0ff;
 }
 
+.bg-E9F9FF {
+  background-color: #E9F9FF;
+}
+
+.bg-263F53 {
+  background-color: #263F53;
+}
+
 /* Text-Color */
 .text-ffad44 {
   color: #ffad44;
@@ -37,6 +45,18 @@
 
 .text-3699ff {
   color: #3699ff;
+}
+
+.text-263F53 {
+  color: #263F53 !important;
+}
+
+.text-8A8A8A {
+  color: #8A8A8A;
+}
+
+.text-27BAF0 {
+  color: #27BAF0;
 }
 
 .navbar-brand-wrapper,
@@ -111,3 +131,21 @@
     }
   }
 }
+
+
+/*=========================================================== Chat-PAGE-Start CSS ===========================================================*/
+.chat-page {
+  .chat-list {
+    height: 32rem;
+  }
+
+  .chat-list .chat-person-active {
+    border-left: 2px solid #27BAF0;
+  }
+
+  .chatt {
+    height: 34.5rem;
+  }
+}
+
+/*=========================================================== Chat-PAGE-End CSS ===========================================================*/

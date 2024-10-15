@@ -74,34 +74,13 @@ const ReplyReceived = () => {
                                             <div className="col-12">
                                                 <form className="forms-sample">
                                                     <div className="row">
-                                                        <div className="col-md-3 form-group">
-                                                            <select className="form-control" id="userType">
-                                                                <option>All</option>
-                                                                <option>APS</option>
-                                                                <option>e-Messenger</option>
-                                                            </select>
-                                                        </div>
-                                                        <div className="col-md-6">
-                                                            <div>
-                                                                <button type="submit" className="btn btn-primary mr-2">
-                                                                    Filter
-                                                                </button>
+                                                        <div class="ml-auto col-md-3 form-group">
+                                                            <div class="input-group">
+                                                                <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" />
+                                                                <div class="input-group-append">
+                                                                    <button class="btn btn-sm btn-primary px-4" type="button">Filter</button>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div className="col-md-3">
-                                                            <input
-                                                                type="search"
-                                                                className="form-control ds-input"
-                                                                id="search-input"
-                                                                placeholder="Search..."
-                                                                aria-label="Search for..."
-                                                                autoComplete="off"
-                                                                spellCheck="false"
-                                                                role="combobox"
-                                                                aria-controls="dropdown-listbox"
-                                                                aria-expanded="false"
-                                                                dir="auto"
-                                                            />
                                                         </div>
                                                     </div>
                                                 </form>

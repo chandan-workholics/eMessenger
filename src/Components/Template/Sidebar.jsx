@@ -6,7 +6,7 @@ const Sidebar = () => {
         <>
             <nav className="sidebar sidebar-offcanvas" id="sidebar">
                 <ul className="nav">
-                    <li className="nav-item active">
+                    <li className="nav-item">
                         <Link className="nav-link" to="/dashboard">
                             <i className="icon-grid menu-icon"></i>
                             <span className="menu-title mr-3">Dashboard</span>

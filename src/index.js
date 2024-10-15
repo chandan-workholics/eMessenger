@@ -16,6 +16,7 @@ import Register from './Components/Pages/Register.jsx';
 import Messages from './Components/Pages/Messages.jsx';
 import SubGroupMaster from './Components/Pages/SubGroupMaster.jsx';
 import { interceptor } from './commonMethod/api.js';
+import Chat from './Components/Pages/Chat.jsx';
 
 interceptor()
 
@@ -30,6 +31,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path='/messages' element={<Messages />} />
         <Route path='/notice-board' element={<NoticeBoard />} />
         <Route path='/message-draft' element={<MessageDraft />} />
+        <Route path='/chat' element={<Chat />} />
         <Route path='/reply-received' element={<ReplyReceived />} />
         <Route path='/group-master' element={<GroupMaster />} />
         <Route path='/sub-group' element={<SubGroupMaster />} />
