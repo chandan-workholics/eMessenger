@@ -7,12 +7,21 @@ import { toast } from 'react-toastify';
 import callAPI from '../../commonMethod/api';
 
 const UserManagement = () => {
-    const [loading, setLoading] = useState(true);
     const [datas, setDatas] = useState({ full_name: '', adminuser_name: '', admin_password: '', is_active: '', admin_type: '', mobile_no: '', added_admin_id: '1', parent_admin_id: '' })
+    const [updateUserManagement, setUpdateUserManagement] = useState({});
     const [admindata, setAdminData] = useState()
-
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const rowsPerPage = 10;
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setDatas({ full_name: '', adminuser_name: '', admin_password: '', is_active: '', admin_type: '', mobile_no: '', added_admin_id: '1', parent_admin_id: '' });
+    };
 
     let name, value
     const handleChange = (e) => {
@@ -21,12 +30,29 @@ const UserManagement = () => {
         setDatas({ ...datas, [name]: value })
     }
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await callAPI.post(`./admin/createAdmin`, datas);
+            if (response.status >= 200 && response.status < 300) {
+                getAdminData();
+                toast.success('User added successfully');
+            } else {
+                toast.error('Failed to add User');
+            }
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            toast.error('An error occurred while submitting the form');
+        }
+    };
+
     useEffect(() => {
         getAdminData();
-    }, []);
+    }, [currentPage]);
 
     const getAdminData = async () => {
         try {
+            setLoading(true);
             const response = await callAPI.get(`./admin/getAllAdmin?page=1&limit=50`);
             setAdminData(response?.data);
             setTotalPages(Math.ceil(response?.data?.pagination?.totalPages / rowsPerPage));
@@ -37,7 +63,18 @@ const UserManagement = () => {
         }
     };
 
+    const handlePageChange = (page) => {
+        if (page > 0 && page <= totalPages) {
+            setCurrentPage(page);
+        }
+    };
 
+    if (loading) {
+        return <Loding />;
+    }
+
+    console.log(error)
+    // Table columns
     const columns = [
         { label: 'User ID', key: 'userId' },
         { label: 'Full Name', key: 'fullName' },
@@ -57,33 +94,47 @@ const UserManagement = () => {
         isActive: true,
         action: (
             <div>
-                <i className="fa-solid fa-pen-to-square mr-3"></i>
+                <button onClick={() => handleupdateUser(val)} type="button" className="btn">
+                    <i className="fa-solid fa-pen-to-square text-warning"></i>
+                </button>
                 <i className="fa-solid fa-trash-can text-danger mr-3"></i>
             </div>
         ),
     })) : [];
 
+    const handleupdateUser = (val) => {
+        setUpdateUserManagement(val);
+        openModal();
+        setDatas({
+            fullName: val.full_name,
+            userName: val.adminuser_name,
+            userType: val.admin_type,
+            mobileNo: val.mobile_no,
+        });
+    };
 
-    const handleSubmit = async (e) => {
+    const handleUpdate = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError(null);
         try {
-            const response = await callAPI.post(`./admin/createAdmin`, datas);
-            if (response.status === 200) {
-                getAdminData();
-                toast.success('Admin Added Successfully')
-            }
-            toast.error(response.message)
+            await callAPI.put(`./admin/updateProfileDetail/${updateUserManagement.added_admin_id}`, datas).then((response) => {
+                if (response.status === 201 || response.status === 200) {
+                    toast.success("User Updated Successfully");
+                    closeModal();
+                    getAdminData();
+                } else {
+                    setError(response.message || 'Something went wrong');
+                }
+            });
         } catch (error) {
-
+            setError('Error updating notice: ' + error.message);
+        } finally {
+            setLoading(false);
         }
     };
 
-
-
-    if (loading) {
-        return <Loding />;
-    }
-
-    console.log(totalPages)
+    // console.log(totalPages)
     return (
         <>
             <div className="container-scroller">
@@ -97,7 +148,6 @@ const UserManagement = () => {
                                 <div className="col-12 col-md-6 mb-4 mb-xl-0">
                                     <div className="d-flex align-items-center mb-3">
                                         <h3 className="font-weight-bold mr-2">User Management</h3>
-
                                     </div>
                                 </div>
 
@@ -131,80 +181,117 @@ const UserManagement = () => {
                                                             <p className="text-danger font-weight-bold mb-0">NEW</p>
                                                         </div>
                                                         <h5 className="card-description text-primary font-weight-bolder">Primary Info</h5>
-                                                        <div className="forms-sample">
-                                                            <div className="row">
-                                                                <div className="col-md-6 form-group">
-                                                                    <label for="exampleInputName1">Full Name <span className="text-danger">*</span></label>
-                                                                    <input type="text" className="form-control" name='full_name' value={datas.full_name} onChange={handleChange} id="exampleInputName1" placeholder="Full Name" />
-                                                                </div>
-                                                                <div className="col-md-6 form-group">
-                                                                    <label for="exampleInputEmail3">User Name <span className="text-danger">*</span></label>
-                                                                    <input type="text" className="form-control" name='adminuser_name' value={datas.adminuser_name} onChange={handleChange} id="exampleInputEmail3" placeholder="User Name" />
-                                                                </div>
-                                                                <div className="col-md-6 form-group">
-                                                                    <label for="exampleInputPassword4">User Password <span className="text-danger">*</span></label>
-                                                                    <input type="text" className="form-control" name='admin_password' value={datas.admin_password} onChange={handleChange} id="exampleInputPassword4" placeholder="Password" />
-                                                                </div>
-                                                                <div className="col-md-6 form-group">
-                                                                    <label for="exampleInputNumber">Mobile Number</label>
-                                                                    <input type="number" className="form-control" name='mobile_no' value={datas.mobile_no} onChange={handleChange} id="exampleInputNumber" placeholder="Enter Mobile Number" />
-                                                                </div>
-                                                                <div className="col-md-6 form-group">
-                                                                    <label for="userType">User Type <span className="text-danger">*</span></label>
-                                                                    <select className="form-control" id="userType" name='admin_type' value={datas.admin_type} onChange={handleChange}>
-                                                                        <option value='admin'>Admin</option>
-                                                                        <option value='management'>Management</option>
-                                                                        <option value='user'>User</option>
-
-                                                                    </select>
-                                                                </div>
-                                                                <div className="col-md-6 form-group">
-                                                                    <label for="userType">Schools <span className="text-danger">*</span></label>
-                                                                    <select className="form-control" id="userType" name=''>
-                                                                        <option>Admin</option>
-                                                                        <option>Management</option>
-                                                                        <option>User</option>
-                                                                        <option>LBF</option>
-                                                                    </select>
-                                                                </div>
-                                                                <div className="col-md-6 form-group">
-                                                                    <label for="userType">Reporting/Incharge <span className="text-danger">*</span></label>
-                                                                    <select className="form-control" id="userType" name='parent_admin_id' value={datas.parent_admin_id} onChange={handleChange}>
-                                                                        <option value={1}>Admin</option>
-                                                                        <option value={2}>Management</option>
-                                                                        <option value={3}>User</option>
-                                                                        <option value={4}>LBF</option>
-                                                                    </select>
-                                                                </div>
-
-                                                                <div className="col-md-6 form-group">
-                                                                    <label htmlFor="userType">Status</label><br />
-                                                                    <div className="btn-group btn-group-toggle mt-1" data-toggle="buttons">
-                                                                        <label className={`btn btn-light py-2 ${datas.is_active === '1' ? 'active' : ''}`}>
+                                                        <div className="row">
+                                                            <div className="col-12">
+                                                                <form className="forms-sample" onSubmit={handleSubmit}>
+                                                                    <div className="row">
+                                                                        <div className="col-md-6 form-group">
+                                                                            <label for="exampleInputName1">Full Name <span className="text-danger">*</span></label>
                                                                             <input
-                                                                                type="radio"
-                                                                                name="is_active"
-                                                                                value="1"
-                                                                                checked={datas.is_active === '1'}
+                                                                                type="text"
+                                                                                className="form-control"
+                                                                                id="exampleInputName1"
+                                                                                placeholder="Full Name"
+                                                                                name='full_name'
+                                                                                value={datas.full_name}
                                                                                 onChange={handleChange}
-                                                                            /> Active
-                                                                        </label>
-                                                                        <label className={`btn btn-light py-2 ${datas.is_active === '0' ? 'active' : ''}`}>
+                                                                                required
+                                                                            />
+                                                                        </div>
+                                                                        <div className="col-md-6 form-group">
+                                                                            <label for="exampleInputEmail3">User Name <span className="text-danger">*</span></label>
                                                                             <input
-                                                                                type="radio"
-                                                                                name="is_active"
-                                                                                value="0"
-                                                                                checked={datas.is_active === '0'}
+                                                                                type="text"
+                                                                                className="form-control"
+                                                                                id="exampleInputEmail3"
+                                                                                placeholder="User Name"
+                                                                                name='adminuser_name'
+                                                                                value={datas.adminuser_name}
                                                                                 onChange={handleChange}
-                                                                            /> Inactive
-                                                                        </label>
+                                                                                required
+                                                                            />
+                                                                        </div>
+                                                                        <div className="col-md-6 form-group">
+                                                                            <label for="exampleInputPassword4">User Password <span className="text-danger">*</span></label>
+                                                                            <input
+                                                                                type="text"
+                                                                                className="form-control"
+                                                                                id="exampleInputPassword4"
+                                                                                placeholder="Password"
+                                                                                name='admin_password'
+                                                                                value={datas.admin_password}
+                                                                                onChange={handleChange}
+                                                                                required
+                                                                            />
+                                                                        </div>
+                                                                        <div className="col-md-6 form-group">
+                                                                            <label for="exampleInputNumber">Mobile Number</label>
+                                                                            <input
+                                                                                type="number"
+                                                                                className="form-control"
+                                                                                id="exampleInputNumber"
+                                                                                placeholder="Enter Mobile Number"
+                                                                                name='mobile_no'
+                                                                                value={datas.mobile_no}
+                                                                                onChange={handleChange}
+                                                                                required
+                                                                            />
+                                                                        </div>
+                                                                        <div className="col-md-6 form-group">
+                                                                            <label for="userType">User Type <span className="text-danger">*</span></label>
+                                                                            <select className="form-control" id="userType" name='admin_type' value={datas.admin_type} onChange={handleChange}>
+                                                                                <option value='admin'>Admin</option>
+                                                                                <option value='management'>Management</option>
+                                                                                <option value='user'>User</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div className="col-md-6 form-group">
+                                                                            <label for="userType">Schools <span className="text-danger">*</span></label>
+                                                                            <select className="form-control" id="userType" name=''>
+                                                                                <option>Admin</option>
+                                                                                <option>Management</option>
+                                                                                <option>User</option>
+                                                                                <option>LBF</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div className="col-md-6 form-group">
+                                                                            <label for="userType">Reporting/Incharge <span className="text-danger">*</span></label>
+                                                                            <select className="form-control" id="userType" name='parent_admin_id' value={datas.parent_admin_id} onChange={handleChange}>
+                                                                                <option value={1}>Admin</option>
+                                                                                <option value={2}>Management</option>
+                                                                                <option value={3}>User</option>
+                                                                                <option value={4}>LBF</option>
+                                                                            </select>
+                                                                        </div>
+
+                                                                        <div className="col-md-6 form-group">
+                                                                            <label htmlFor="userType">Status</label><br />
+                                                                            <div className="btn-group btn-group-toggle mt-1" data-toggle="buttons">
+                                                                                <label className={`btn btn-light py-2 ${datas.is_active === '1' ? 'active' : ''}`}>
+                                                                                    <input
+                                                                                        type="radio"
+                                                                                        name="is_active"
+                                                                                        value="1"
+                                                                                        checked={datas.is_active === '1'}
+                                                                                        onChange={handleChange}
+                                                                                    /> Active
+                                                                                </label>
+                                                                                <label className={`btn btn-light py-2 ${datas.is_active === '0' ? 'active' : ''}`}>
+                                                                                    <input
+                                                                                        type="radio"
+                                                                                        name="is_active"
+                                                                                        value="0"
+                                                                                        checked={datas.is_active === '0'}
+                                                                                        onChange={handleChange}
+                                                                                    /> Inactive
+                                                                                </label>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-
-
+                                                                    <button type="submit" className="btn btn-primary mr-2">Submit</button>
+                                                                    <button type="button" className="btn btn-light" onClick={() => {/* Handle Cancel */ }}>Cancel</button>
+                                                                </form>
                                                             </div>
-                                                            <button type="submit" className="btn btn-primary mr-2" onClick={() => handleSubmit()}>Submit</button>
-                                                            <button className="btn btn-light">Cancel</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -219,6 +306,14 @@ const UserManagement = () => {
                                                     <div className="card-body">
                                                         <p className="card-title">User List</p>
                                                         <div className="row">
+                                                            <div class="ml-auto col-md-3 form-group">
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" />
+                                                                    <div class="input-group-append">
+                                                                        <button class="btn btn-sm btn-primary px-4" type="button">Filter</button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                             <div className="col-12">
                                                                 <div className="table-responsive">
                                                                     <SortableTable columns={columns} data={data} />
@@ -290,6 +385,135 @@ const UserManagement = () => {
                     </div>
                 </div>
             </div>
+
+            {isModalOpen && (
+                <div className="modal show" style={{ display: 'block', background: '#0000008e' }}>
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header d-flex align-items-center bg-ffe2e5 py-3">
+                                <h3 className="modal-title font-weight-bold text-primary">Update User Details</h3>
+                                <button type="button" className="close" onClick={closeModal}>
+                                    <i class="fa-solid fa-xmark fs-3 text-primary"></i>
+                                </button>
+                            </div>
+                            <div className="modal-body p-3">
+                                <form className="forms-sample" onSubmit={handleUpdate}>
+                                    <div className="row">
+                                        <div className="col-md-6 form-group">
+                                            <label for="exampleInputName1">Full Name <span className="text-danger">*</span></label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                id="exampleInputName1"
+                                                placeholder="Full Name"
+                                                name='full_name'
+                                                value={datas.full_name}
+                                                onChange={handleChange}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="col-md-6 form-group">
+                                            <label for="exampleInputEmail3">User Name <span className="text-danger">*</span></label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                id="exampleInputEmail3"
+                                                placeholder="User Name"
+                                                name='adminuser_name'
+                                                value={datas.adminuser_name}
+                                                onChange={handleChange}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="col-md-6 form-group">
+                                            <label for="exampleInputPassword4">User Password <span className="text-danger">*</span></label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                id="exampleInputPassword4"
+                                                placeholder="Password"
+                                                name='admin_password'
+                                                value={datas.admin_password}
+                                                onChange={handleChange}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="col-md-6 form-group">
+                                            <label for="exampleInputNumber">Mobile Number</label>
+                                            <input
+                                                type="number"
+                                                className="form-control"
+                                                id="exampleInputNumber"
+                                                placeholder="Enter Mobile Number"
+                                                name='mobile_no'
+                                                value={datas.mobile_no}
+                                                onChange={handleChange}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="col-md-6 form-group">
+                                            <label for="userType">User Type <span className="text-danger">*</span></label>
+                                            <select className="form-control" id="userType" name='admin_type' value={datas.admin_type} onChange={handleChange}>
+                                                <option value='admin'>Admin</option>
+                                                <option value='management'>Management</option>
+                                                <option value='user'>User</option>
+                                            </select>
+                                        </div>
+                                        <div className="col-md-6 form-group">
+                                            <label for="userType">Schools <span className="text-danger">*</span></label>
+                                            <select className="form-control" id="userType" name=''>
+                                                <option>Admin</option>
+                                                <option>Management</option>
+                                                <option>User</option>
+                                                <option>LBF</option>
+                                            </select>
+                                        </div>
+                                        <div className="col-md-6 form-group">
+                                            <label for="userType">Reporting/Incharge <span className="text-danger">*</span></label>
+                                            <select className="form-control" id="userType" name='parent_admin_id' value={datas.parent_admin_id} onChange={handleChange}>
+                                                <option value={1}>Admin</option>
+                                                <option value={2}>Management</option>
+                                                <option value={3}>User</option>
+                                                <option value={4}>LBF</option>
+                                            </select>
+                                        </div>
+
+                                        <div className="col-md-6 form-group">
+                                            <label htmlFor="userType">Status</label><br />
+                                            <div className="btn-group btn-group-toggle mt-1" data-toggle="buttons">
+                                                <label className={`btn btn-light py-2 ${datas.is_active === '1' ? 'active' : ''}`}>
+                                                    <input
+                                                        type="radio"
+                                                        name="is_active"
+                                                        value="1"
+                                                        checked={datas.is_active === '1'}
+                                                        onChange={handleChange}
+                                                    /> Active
+                                                </label>
+                                                <label className={`btn btn-light py-2 ${datas.is_active === '0' ? 'active' : ''}`}>
+                                                    <input
+                                                        type="radio"
+                                                        name="is_active"
+                                                        value="0"
+                                                        checked={datas.is_active === '0'}
+                                                        onChange={handleChange}
+                                                    /> Inactive
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
+                                        <button type="submit" className="btn btn-primary" disabled={loading}>
+                                            {loading ? 'Updating...' : 'Update'}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     )
 }

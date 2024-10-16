@@ -4,35 +4,94 @@ import Sidebar from '../Template/Sidebar'
 import Loding from '../Template/Loding';
 import ExpandRowTable from '../Template/ExpandRowTable';
 import callAPI from '../../commonMethod/api.js';
+import { toast } from 'react-toastify';
 
 const SchoolMaster = () => {
-
+    const [datas, setDatas] = useState({
+        sch_nm: '',
+        sch_short_nm: '',
+        is_active: '1',
+        address: '',
+        contact_no: '',
+        website: '',
+        email_id: '',
+        scroll_news_text: '',
+        def_msg_ids: '',
+        text_color: '',
+        bg_color: '',
+        logo_img: '',
+    })
+    const [updateSchool, setUpdateSchool] = useState({});
     const [schoolList, setSchoolList] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const rowsPerPage = 10;
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setDatas({
+            sch_nm: '',
+            sch_short_nm: '',
+            is_active: '1',
+            address: '',
+            contact_no: '',
+            website: '',
+            email_id: '',
+            scroll_news_text: '',
+            def_msg_ids: '',
+            text_color: '',
+            bg_color: '',
+            logo_img: '',
+        });
+    };
+
+    let name, value;
+    const handleChange = (e) => {
+        name = e.target.name;
+        value = e.target.value;
+        setDatas({ ...datas, [name]: value })
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await callAPI.post(`./school/createSchool`, datas);
+            if (response.status >= 200 && response.status < 300) {
+                fetchData();
+                toast.success('School added successfully');
+            } else {
+                toast.error('Failed to add School');
+            }
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            toast.error('An error occurred while submitting the form');
+        }
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                const response = await callAPI.get(`/school/getSchool?page=${currentPage}&limit=${rowsPerPage}`);
-                setSchoolList(response.data.data || []);
-                setTotalPages(Math.ceil(response?.data?.pagination?.totalRecords / rowsPerPage));
-            } catch (error) {
-                console.error('Error fetching school data:', error.message);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchData();
     }, [currentPage, rowsPerPage]);
 
+    const fetchData = async () => {
+        try {
+            setLoading(true);
+            const response = await callAPI.get(`/school/getSchool?page=${currentPage}&limit=${rowsPerPage}`);
+            setSchoolList(response.data.data || []);
+            setTotalPages(Math.ceil(response?.data?.pagination?.totalRecords / rowsPerPage));
+        } catch (error) {
+            console.error('Error fetching school data:', error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     const handlePageChange = (page) => {
         if (page > 0 && page <= totalPages) {
-            setCurrentPage(page)
-                ;
+            setCurrentPage(page);
         }
     };
 
@@ -40,6 +99,8 @@ const SchoolMaster = () => {
         return <Loding />;
     }
 
+    console.log(error)
+    // Table columns
     const columns = [
         { label: 'School ID', key: 'schoolId' },
         { label: 'School Full Name', key: 'schoolFullName' },
@@ -69,7 +130,9 @@ const SchoolMaster = () => {
         backgroundColor: school.bg_color,
         action: (
             <div>
-                <i className="fa-solid fa-pen-to-square mr-3"></i>
+                <button onClick={() => handleupdateSchool(school)} type="button" className="btn">
+                    <i className="fa-solid fa-pen-to-square text-warning"></i>
+                </button>
                 <i className="fa-solid fa-trash-can text-danger mr-3"></i>
             </div>
         ),
@@ -79,6 +142,40 @@ const SchoolMaster = () => {
         editOn: school.edit_date,
     })) : [];
 
+    const handleupdateSchool = (school) => {
+        setUpdateSchool(school);
+        openModal();
+        setDatas({
+            schoolId: school.sch_id,
+            schoolFullName: school.sch_nm,
+            shortName: school.sch_short_nm,
+            isActive: school.is_active ? 'Yes' : 'No',
+            scrollNews: school.scroll_news_text,
+            fontColor: school.text_color,
+            backgroundColor: school.bg_color,
+        });
+    };
+
+    const handleUpdate = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError(null);
+        try {
+            await callAPI.put(`./school/updateSchool/${updateSchool.sch_id}`, datas).then((response) => {
+                if (response.status === 201 || response.status === 200) {
+                    toast.success("School Updated Successfully");
+                    closeModal();
+                    fetchData();
+                } else {
+                    setError(response.message || 'Something went wrong');
+                }
+            });
+        } catch (error) {
+            setError('Error updating notice: ' + error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <>
@@ -124,25 +221,60 @@ const SchoolMaster = () => {
                                                             <h4 className="card-title mb-0 mr-2">School Entry Form</h4>
                                                             <p className="text-danger font-weight-bold mb-0">NEW</p>
                                                         </div>
-                                                        <form className="forms-sample">
+                                                        <form className="forms-sample" onSubmit={handleSubmit}>
                                                             <h4 className="card-description text-primary font-weight-bolder">Primary Info</h4>
                                                             <div className="row">
                                                                 <div className="col-md-4 form-group">
-                                                                    <label for="exampleInputName1">School Full Name <span className="text-danger">*</span></label>
-                                                                    <input type="text" className="form-control" id="exampleInputName1" placeholder="Full Name" />
+                                                                    <label htmlFor="exampleInputName1">School Full Name <span className="text-danger">*</span></label>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="form-control"
+                                                                        id="exampleInputName1"
+                                                                        placeholder="School Full Name"
+                                                                        name="sch_nm"
+                                                                        value={datas.sch_nm}
+                                                                        onChange={handleChange}
+                                                                        required
+                                                                    />
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
-                                                                    <label for="exampleInputName2">School Short Name <span className="text-danger">*</span></label>
-                                                                    <input type="text" className="form-control" id="exampleInputName2" placeholder="Short Name" />
+                                                                    <label htmlFor="exampleInputName2">School Short Name <span className="text-danger">*</span></label>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="form-control"
+                                                                        id="exampleInputName2"
+                                                                        placeholder="Short Name"
+                                                                        name='sch_short_nm'
+                                                                        value={datas.sch_short_nm}
+                                                                        onChange={handleChange}
+                                                                        required
+
+                                                                    />
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
-                                                                    <label for="userType">Status</label><br />
-                                                                    <div className="btn-group btn-group-toggle" data-toggle="buttons">
-                                                                        <label className="btn btn-light py-2 active">
-                                                                            <input type="radio" name="options" id="option1" autocomplete="off" checked /> Active
+                                                                    <label htmlFor="userType">Status</label><br />
+                                                                    <div className="btn-group btn-group-toggle mt-1" data-toggle="buttons">
+                                                                        <label className={`btn btn-light py-2 ${datas.is_active === '1' ? 'active' : ''}`}>
+                                                                            <input
+                                                                                type="radio"
+                                                                                name="is_active"
+                                                                                id="option1"
+                                                                                value="1"
+                                                                                autoComplete="off"
+                                                                                checked={datas.is_active === '1'}
+                                                                                onChange={handleChange}
+                                                                            /> Active
                                                                         </label>
-                                                                        <label className="btn btn-light py-2">
-                                                                            <input type="radio" name="options" id="option2" autocomplete="off" /> Inactive
+                                                                        <label className={`btn btn-light py-2 ${datas.is_active === '0' ? 'active' : ''}`}>
+                                                                            <input
+                                                                                type="radio"
+                                                                                name="is_active"
+                                                                                id="option2"
+                                                                                value="0"
+                                                                                autoComplete="off"
+                                                                                checked={datas.is_active === '0'}
+                                                                                onChange={handleChange}
+                                                                            /> Inactive
                                                                         </label>
                                                                     </div>
                                                                 </div>
@@ -150,41 +282,91 @@ const SchoolMaster = () => {
                                                             <hr />
                                                             <h4 className="card-description text-primary font-weight-bolder">Other Info</h4>
                                                             <div className="row">
-                                                                {/* <div className="col-md-4 form-group">
-                                                                <label for="exampleTextarea1">School Address</label>
-                                                                <textarea className="form-control" id="exampleTextarea1" rows="1"></textarea>
-                                                                </div> */}
                                                                 <div className="col-md-4 form-group">
-                                                                    <label for="exampleInputName1">School Address</label>
-                                                                    <input type="text" className="form-control" id="exampleInputName1" placeholder="School Address" />
+                                                                    <label htmlFor="exampleInputName1">School Address</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="form-control"
+                                                                        id="exampleInputName1"
+                                                                        placeholder="School Address"
+                                                                        name='address'
+                                                                        value={datas.address}
+                                                                        onChange={handleChange}
+                                                                        required
+                                                                    />
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
-                                                                    <label for="exampleInputNumber">Contact Number</label>
-                                                                    <input type="number" className="form-control" id="exampleInputNumber" placeholder="Enter Contact Number" />
+                                                                    <label htmlFor="exampleInputNumber">Contact Number</label>
+                                                                    <input
+                                                                        type="number"
+                                                                        className="form-control"
+                                                                        id="exampleInputNumber"
+                                                                        placeholder="Enter Contact Number"
+                                                                        name='contact_no'
+                                                                        value={datas.contact_no}
+                                                                        onChange={handleChange}
+                                                                        required
+                                                                    />
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
-                                                                    <label for="exampleInputName1">School Website</label>
-                                                                    <input type="text" className="form-control" id="exampleInputName1" placeholder="School Website" />
+                                                                    <label htmlFor="exampleInputName1">School Website</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="form-control"
+                                                                        id="exampleInputName1"
+                                                                        placeholder="School Website"
+                                                                        name='website'
+                                                                        value={datas.website}
+                                                                        onChange={handleChange}
+                                                                        required
+                                                                    />
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
-                                                                    <label for="exampleInputEmail3">School Email Id</label>
-                                                                    <input type="email" className="form-control" id="exampleInputEmail3" placeholder="School Email Id" />
+                                                                    <label htmlFor="exampleInputEmail3">School Email Id</label>
+                                                                    <input
+                                                                        type="email"
+                                                                        className="form-control"
+                                                                        id="exampleInputEmail3"
+                                                                        placeholder="School Email Id"
+                                                                        name='email_id'
+                                                                        value={datas.email_id}
+                                                                        onChange={handleChange}
+                                                                        required
+                                                                    />
                                                                 </div>
                                                             </div>
                                                             <hr />
                                                             <h4 className="card-description text-primary font-weight-bolder">App Top Scrolled News</h4>
                                                             <div className="row">
                                                                 <div className="col-md-6 form-group">
-                                                                    <label for="exampleTextarea1">Scroll News</label>
-                                                                    <textarea className="form-control" id="exampleTextarea1" rows="4"></textarea>
+                                                                    <label htmlFor="exampleTextarea1">Scroll News</label>
+                                                                    <textarea
+                                                                        className="form-control"
+                                                                        id="exampleTextarea1"
+                                                                        rows="4"
+                                                                        placeholder="Please enter Scroll News"
+                                                                        name='scroll_news_text'
+                                                                        value={datas.scroll_news_text}
+                                                                        onChange={handleChange}
+                                                                        required
+                                                                    ></textarea>
                                                                 </div>
                                                             </div>
                                                             <hr />
                                                             <h4 className="card-description text-primary font-weight-bolder">App Default Welcome Message IDs [ Comma(,) seprated ]</h4>
                                                             <div className="row">
                                                                 <div className="col-md-6 form-group">
-                                                                    <label for="exampleInputName1">Scroll News</label>
-                                                                    <input type="text" className="form-control" id="exampleInputName1" placeholder="Please Enter Msg IDs" />
+                                                                    <label htmlFor="exampleInputName1">Message IDs</label>
+                                                                    <input
+                                                                        type="text"
+                                                                        className="form-control"
+                                                                        id="exampleInputName1"
+                                                                        placeholder="Please Enter Msg IDs"
+                                                                        name='def_msg_ids'
+                                                                        value={datas.def_msg_ids}
+                                                                        onChange={handleChange}
+                                                                        required
+                                                                    />
                                                                 </div>
                                                             </div>
                                                             <hr />
@@ -199,7 +381,7 @@ const SchoolMaster = () => {
                                                             </div>
 
                                                             <button type="submit" className="btn btn-primary mr-2">Submit</button>
-                                                            <button className="btn btn-light">Cancel</button>
+                                                            <button type="button" className="btn btn-light" onClick={() => {/* Handle Cancel */ }}>Cancel</button>
                                                         </form>
                                                     </div>
                                                 </div>
@@ -219,7 +401,6 @@ const SchoolMaster = () => {
                                                                 </div>
                                                             </div>
                                                         </div>
-
 
                                                         <nav>
                                                             <ul className="pagination justify-content-end">
@@ -247,6 +428,197 @@ const SchoolMaster = () => {
                     </div>
                 </div>
             </div>
+
+            {isModalOpen && (
+                <div className="modal show" style={{ display: 'block', background: '#0000008e' }}>
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header d-flex align-items-center bg-ffe2e5 py-3">
+                                <h3 className="modal-title font-weight-bold text-primary">Update Notice Board</h3>
+                                <button type="button" className="close" onClick={closeModal}>
+                                    <i class="fa-solid fa-xmark fs-3 text-primary"></i>
+                                </button>
+                            </div>
+                            <div className="modal-body p-3">
+                                <form className="forms-sample" onSubmit={handleUpdate}>
+                                    <div className="row">
+                                        <div className="col-md-6 form-group">
+                                            <label htmlFor="exampleInputName1">School Full Name <span className="text-danger">*</span></label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                id="exampleInputName1"
+                                                placeholder="School Full Name"
+                                                name="sch_nm"
+                                                value={datas.sch_nm}
+                                                onChange={handleChange}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="col-md-6 form-group">
+                                            <label htmlFor="exampleInputName2">School Short Name <span className="text-danger">*</span></label>
+                                            <input
+                                                type="text"
+                                                className="form-control"
+                                                id="exampleInputName2"
+                                                placeholder="Short Name"
+                                                name='sch_short_nm'
+                                                value={datas.sch_short_nm}
+                                                onChange={handleChange}
+                                                required
+
+                                            />
+                                        </div>
+                                        <div className="col-md-6 form-group">
+                                            <label htmlFor="userType">Status</label><br />
+                                            <div className="btn-group btn-group-toggle mt-1" data-toggle="buttons">
+                                                <label className={`btn btn-light py-2 ${datas.is_active === '1' ? 'active' : ''}`}>
+                                                    <input
+                                                        type="radio"
+                                                        name="is_active"
+                                                        id="option1"
+                                                        value="1"
+                                                        autoComplete="off"
+                                                        checked={datas.is_active === '1'}
+                                                        onChange={handleChange}
+                                                    /> Active
+                                                </label>
+                                                <label className={`btn btn-light py-2 ${datas.is_active === '0' ? 'active' : ''}`}>
+                                                    <input
+                                                        type="radio"
+                                                        name="is_active"
+                                                        id="option2"
+                                                        value="0"
+                                                        autoComplete="off"
+                                                        checked={datas.is_active === '0'}
+                                                        onChange={handleChange}
+                                                    /> Inactive
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div className="col-12">
+                                            <h4 className="card-description text-primary font-weight-bolder">Other Info</h4>
+                                            <div className="row">
+                                                <div className="col-md-6 form-group">
+                                                    <label htmlFor="exampleInputName1">School Address</label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        id="exampleInputName1"
+                                                        placeholder="School Address"
+                                                        name='address'
+                                                        value={datas.address}
+                                                        onChange={handleChange}
+                                                        required
+                                                    />
+                                                </div>
+                                                <div className="col-md-6 form-group">
+                                                    <label htmlFor="exampleInputNumber">Contact Number</label>
+                                                    <input
+                                                        type="number"
+                                                        className="form-control"
+                                                        id="exampleInputNumber"
+                                                        placeholder="Enter Contact Number"
+                                                        name='contact_no'
+                                                        value={datas.contact_no}
+                                                        onChange={handleChange}
+                                                        required
+                                                    />
+                                                </div>
+                                                <div className="col-md-6 form-group">
+                                                    <label htmlFor="exampleInputName1">School Website</label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        id="exampleInputName1"
+                                                        placeholder="School Website"
+                                                        name='website'
+                                                        value={datas.website}
+                                                        onChange={handleChange}
+                                                        required
+                                                    />
+                                                </div>
+                                                <div className="col-md-6 form-group">
+                                                    <label htmlFor="exampleInputEmail3">School Email Id</label>
+                                                    <input
+                                                        type="email"
+                                                        className="form-control"
+                                                        id="exampleInputEmail3"
+                                                        placeholder="School Email Id"
+                                                        name='email_id'
+                                                        value={datas.email_id}
+                                                        onChange={handleChange}
+                                                        required
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div className="col-12">
+                                            <h4 className="card-description text-primary font-weight-bolder">App Top Scrolled News</h4>
+                                            <div className="row">
+                                                <div className="col-md-12 form-group">
+                                                    <label htmlFor="exampleTextarea1">Scroll News</label>
+                                                    <textarea
+                                                        className="form-control"
+                                                        id="exampleTextarea1"
+                                                        rows="4"
+                                                        placeholder="Please enter Scroll News"
+                                                        name='scroll_news_text'
+                                                        value={datas.scroll_news_text}
+                                                        onChange={handleChange}
+                                                        required
+                                                    ></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div className="col-12">
+                                            <h4 className="card-description text-primary font-weight-bolder">App Default Welcome Message IDs [ Comma(,) seprated ]</h4>
+                                            <div className="row">
+                                                <div className="col-md-12 form-group">
+                                                    <label htmlFor="exampleInputName1">Message IDs</label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        id="exampleInputName1"
+                                                        placeholder="Please Enter Msg IDs"
+                                                        name='def_msg_ids'
+                                                        value={datas.def_msg_ids}
+                                                        onChange={handleChange}
+                                                        required
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div className="col-12">
+                                            <h4 className="card-description text-primary font-weight-bolder">Scholar Color</h4>
+                                            <div className="row">
+
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div className="col-12">
+                                            <h4 className="card-description text-primary font-weight-bolder">School Logo</h4>
+                                            <div className="row">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
+                                        <button type="submit" className="btn btn-primary" disabled={loading}>
+                                            {loading ? 'Updating...' : 'Update'}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     )
 }

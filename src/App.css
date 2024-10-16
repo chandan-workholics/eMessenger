@@ -59,6 +59,11 @@
   color: #27BAF0;
 }
 
+.modal-body {
+  max-height: 450px;
+  overflow-y: scroll;
+}
+
 .navbar-brand-wrapper,
 .navbar-menu-wrapper {
   /* background: url('assets/Images/navbar-bg.png') !important; */

@@ -116,7 +116,6 @@ const GroupMaster = () => {
         });
     };
 
-
     const handleUpdate = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -124,7 +123,7 @@ const GroupMaster = () => {
         try {
             await callAPI.put(`./msg/updateSingleGroupData/${updateGroup.msg_group_id}`, datas).then((response) => {
                 if (response.status === 201 || response.status === 200) {
-                    toast.success("Notice Updated Successfully");
+                    toast.success("Group Updated Successfully");
                     closeModal();
                     fetchData();
                 } else {
@@ -204,8 +203,9 @@ const GroupMaster = () => {
                                                                                 <label className={`btn btn-light py-2 ${datas.is_active === '1' ? 'active' : ''}`}>
                                                                                     <input
                                                                                         type="radio"
-                                                                                        name="options"
+                                                                                        name="is_active"
                                                                                         id="option1"
+                                                                                        value="1"
                                                                                         autoComplete="off"
                                                                                         checked={datas.is_active === '1'}
                                                                                         onChange={handleChange}
@@ -214,8 +214,9 @@ const GroupMaster = () => {
                                                                                 <label className={`btn btn-light py-2 ${datas.is_active === '0' ? 'active' : ''}`}>
                                                                                     <input
                                                                                         type="radio"
-                                                                                        name="options"
+                                                                                        name="is_active"
                                                                                         id="option2"
+                                                                                        value="0"
                                                                                         autoComplete="off"
                                                                                         checked={datas.is_active === '0'}
                                                                                         onChange={handleChange}

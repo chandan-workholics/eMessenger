@@ -11,7 +11,6 @@ const SubGroupMaster = () => {
 
     const [datas, setDatas] = useState({ msg_sgroup_name: '', is_active: '1', added_user_id: '1', msg_group_id: '' })
     const [updateSubGroup, setUpdateSubGroup] = useState({});
-    const [subGroupId, setSubGroupId] = useState({});
     const [subGroupList, setSubGroupList] = useState([]);
     const [GroupList, setGroupList] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -99,9 +98,9 @@ const SubGroupMaster = () => {
     // Table columns
     const columns = [
         { label: 'Sub Group ID', key: 'subGroupId' },
-        { label: 'Sub Group Name', key: 'SubGroupName' },
-        { label: 'Group Name', key: 'groupName' },
-        { label: 'Is Active', key: 'isActive' },
+        { label: 'Sub Group Name', key: 'msg_sgroup_name' },
+        { label: 'Group Name', key: 'msg_group_name' },
+        { label: 'Is Active', key: 'is_active' },
         { label: 'Action', key: 'action' }
     ];
 
@@ -115,9 +114,9 @@ const SubGroupMaster = () => {
     // Table data
     const data = subGroupList ? subGroupList.map((val) => ({
         subGroupId: val?.msg_sgroup_id,
-        SubGroupName: val?.msg_sgroup_name,
-        groupName: val?.msg_group_mst?.msg_group_name,
-        isActive: val?.is_active === 1 ? true : false,
+        msg_sgroup_name: val?.msg_sgroup_name,
+        msg_group_name: val?.msg_group_mst?.msg_group_name,
+        is_active: val?.is_active === 1 ? true : false,
         action: (
             <div>
                 <button onClick={() => handleupdateGroup(val)} type="button" className="btn">
@@ -132,9 +131,9 @@ const SubGroupMaster = () => {
         setUpdateSubGroup(val);
         openModal();
         setDatas({
-            SubGroupName: val.msg_sgroup_name,
-            isActive: val.is_active,
-            addedUserId: val.ddedUserId
+            msg_sgroup_name: val.msg_sgroup_name,
+            is_active: val.is_active,
+            addedUserId: val.addedUserId
         });
     };
 
@@ -143,7 +142,7 @@ const SubGroupMaster = () => {
         setLoading(true);
         setError(null);
         try {
-            await callAPI.put(`./msg/updateSubGroup//${updateSubGroup.msg_sgroup_id}`, datas).then((response) => {
+            await callAPI.put(`./msg/updateSubGroup/${updateSubGroup.msg_sgroup_id}`, datas).then((response) => {
                 if (response.status === 201 || response.status === 200) {
                     toast.success("Notice Updated Successfully");
                     closeModal();
@@ -166,7 +165,6 @@ const SubGroupMaster = () => {
                 <Navbar />
 
                 <div className="container-fluid page-body-wrapper">
-
 
                     <Sidebar />
 
