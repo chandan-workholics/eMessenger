@@ -316,7 +316,7 @@ const GroupMaster = () => {
                                                     id="option1"
                                                     autoComplete="off"
                                                     value="1"
-                                                    checked={datas.isActive === '1'}
+                                                    checked={datas.is_active === '1'}
                                                     onChange={handleChange}
                                                 /> Active
                                             </label>
@@ -327,7 +327,7 @@ const GroupMaster = () => {
                                                     id="option2"
                                                     autoComplete="off"
                                                     value="0"
-                                                    checked={datas.isActive === '0'}
+                                                    checked={datas.is_active === '0'}
                                                     onChange={handleChange}
                                                 /> Inactive
                                             </label>

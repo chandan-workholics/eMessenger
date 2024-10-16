@@ -297,6 +297,70 @@ const SubGroupMaster = () => {
                     </div>
                 </div>
             </div>
+
+            {isModalOpen && (
+                <div className="modal show" style={{ display: 'block', background: '#0000008e' }}>
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header d-flex align-items-center bg-ffe2e5 py-3">
+                                <h3 className="modal-title font-weight-bold text-primary">Update Notice Board</h3>
+                                <button type="button" className="close" onClick={closeModal}>
+                                    <i class="fa-solid fa-xmark fs-3 text-primary"></i>
+                                </button>
+                            </div>
+                            <div className="modal-body p-3">
+                                <form className="forms-sample" onSubmit={handleUpdate}>
+                                    <div className="form-group">
+                                        <label htmlFor="msg_group_name">Group Name</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="msg_group_name"
+                                            name="msg_group_name"
+                                            value={datas.msg_sgroup_name}
+                                            onChange={handleChange}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="form-group">
+                                        <label>Status</label><br />
+                                        <div className="btn-group btn-group-toggle mt-1" data-toggle="buttons">
+                                            <label className={`btn btn-light py-2 ${datas.is_active === '1' ? 'active' : ''}`}>
+                                                <input
+                                                    type="radio"
+                                                    name="is_active"
+                                                    id="option1"
+                                                    autoComplete="off"
+                                                    value="1"
+                                                    checked={datas.is_active === '1'}
+                                                    onChange={handleChange}
+                                                /> Active
+                                            </label>
+                                            <label className={`btn btn-light py-2 ${datas.is_active === '0' ? 'active' : ''}`}>
+                                                <input
+                                                    type="radio"
+                                                    name="is_active"
+                                                    id="option2"
+                                                    autoComplete="off"
+                                                    value="0"
+                                                    checked={datas.is_active === '0'}
+                                                    onChange={handleChange}
+                                                /> Inactive
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
+                                        <button type="submit" className="btn btn-primary" disabled={loading}>
+                                            {loading ? 'Updating...' : 'Update'}
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     )
 }
