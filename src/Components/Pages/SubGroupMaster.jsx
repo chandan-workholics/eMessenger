@@ -3,37 +3,39 @@ import Navbar from '../Template/Navbar'
 import Sidebar from '../Template/Sidebar'
 import Loding from '../Template/Loding';
 import ExpandRowTable from '../Template/ExpandRowTable';
-import { toast } from 'react-toastify';
 import callAPI from '../../commonMethod/api';
+import { toast } from 'react-toastify';
 
 
 const SubGroupMaster = () => {
 
-
+    const [datas, setDatas] = useState({ msg_sgroup_name: '', is_active: '1', added_user_id: '' })
+    const [updateSubGroup, setUpdateSubGroup] = useState({});
     const [subGroupList, setSubGroupList] = useState([]);
     const [loading, setLoading] = useState(true);
-
+    const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const rowsPerPage = 50;
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setDatas({ msg_sgroup_name: '', is_active: '1', added_user_id: '' });
+    };
 
-    const [groupName, setGroupName] = useState([]);
-    const [subGroupId, setSubGroupId] = useState('');
-    const [subGroupName, setSubGroupName] = useState('');
-    const [isActive, setIsActive] = useState('1');
-    const [addedUserId] = useState(1);
+    let name, value;
+    const handleChange = (e) => {
+        name = e.target.name;
+        value = e.target.value;
+        setDatas({ ...datas, [name]: value })
+    }
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const data = {
-            msg_sgroup_name: subGroupName,
-            msg_group_id: subGroupId,
-            is_active: isActive,
-            added_user_id: addedUserId,
-        };
         try {
-            const response = await callAPI.post(`./msg/addSubGroup`, data);
+            const response = await callAPI.post(`./msg/addSubGroup`, datas);
             if (response.status >= 200 && response.status < 300) {
                 fetchData();
                 toast.success('Group master added successfully');
@@ -46,37 +48,22 @@ const SubGroupMaster = () => {
         }
     };
 
-    const fetchGroupData = async () => {
-        setLoading(true);
-        try {
-            const response = await callAPI.get(`./msg/getGroupDetail?page=1&limit=50`);
-            setGroupName(response?.data?.data || []);
-        } catch (error) {
-
-        } finally {
-            setLoading(false);
-        }
-    };
-
-
     useEffect(() => {
         fetchData();
-        fetchGroupData(); // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage]);
 
     const fetchData = async () => {
-        setLoading(true);
         try {
+            setLoading(true);
             const response = await callAPI.get(`./msg/getSubGroupDetail?page=${currentPage}&limit=${rowsPerPage}`);
             setSubGroupList(response.data.data || []);
             setTotalPages(Math.ceil(response?.data?.pagination?.limit / rowsPerPage));
         } catch (error) {
-
+            setError(error.message);
         } finally {
             setLoading(false);
         }
     };
-
 
     const handlePageChange = (page) => {
         if (page > 0 && page <= totalPages) {
@@ -88,13 +75,14 @@ const SubGroupMaster = () => {
         return <Loding />;
     }
 
+    console.log(error)
     // Table columns
     const columns = [
         { label: 'Sub Group ID', key: 'subGroupId' },
-        { label: 'Sub Group Name', key: 'SunGroupName' },
+        { label: 'Sub Group Name', key: 'SubGroupName' },
         { label: 'Group Name', key: 'groupName' },
         { label: 'Is Active', key: 'isActive' },
-        { label: 'Action', key: 'action' } 
+        { label: 'Action', key: 'action' }
     ];
 
     const rows = [
@@ -105,18 +93,51 @@ const SubGroupMaster = () => {
     ]
 
     // Table data
-    const data = subGroupList ? subGroupList.map((subGroup) => ({
-        subGroupId: subGroup?.msg_sgroup_id,
-        SunGroupName: subGroup?.msg_sgroup_name,
-        groupName: subGroup?.msg_group_mst?.msg_group_name,
-        isActive: subGroup?.is_active === 1 ? true : false,
+    const data = subGroupList ? subGroupList.map((val) => ({
+        subGroupId: val?.msg_sgroup_id,
+        SubGroupName: val?.msg_sgroup_name,
+        groupName: val?.msg_group_mst?.msg_group_name,
+        isActive: val?.is_active === 1 ? true : false,
         action: (
             <div>
-                <i className="fa-solid fa-pen-to-square mr-3"></i>
+                <button onClick={() => handleupdateGroup(val)} type="button" className="btn">
+                    <i className="fa-solid fa-pen-to-square text-warning"></i>
+                </button>
                 <i className="fa-solid fa-trash-can text-danger mr-3"></i>
             </div>
         ),
     })) : [];
+
+    const handleupdateGroup = (val) => {
+        setUpdateSubGroup(val);
+        openModal();
+        setDatas({
+            SubGroupName: val.msg_sgroup_name,
+            isActive: val.is_active,
+            addedUserId: val.ddedUserId
+        });
+    };
+
+    const handleUpdate = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setError(null);
+        try {
+            await callAPI.put(`./msg/updateSubGroup//${updateSubGroup.msg_sgroup_id}`, datas).then((response) => {
+                if (response.status === 201 || response.status === 200) {
+                    toast.success("Notice Updated Successfully");
+                    closeModal();
+                    fetchData();
+                } else {
+                    setError(response.message || 'Something went wrong');
+                }
+            });
+        } catch (error) {
+            setError('Error updating notice: ' + error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <>
@@ -167,13 +188,16 @@ const SubGroupMaster = () => {
                                                                     <div className="row">
                                                                         <div className="col-md-3 form-group">
                                                                             <label for="exampleInputName1">Sub Group Name<span className="text-danger">*</span></label>
-                                                                            <input type="text"
+                                                                            <input
+                                                                                type="text"
                                                                                 className="form-control"
                                                                                 id="exampleInputName1"
                                                                                 placeholder="Full Name"
-                                                                                value={subGroupName}
-                                                                                onChange={(e) => setSubGroupName(e.target.value)}
-                                                                                required />
+                                                                                name="msg_sgroup_name"
+                                                                                value={datas.msg_sgroup_name}
+                                                                                onChange={handleChange}
+                                                                                required
+                                                                            />
                                                                         </div>
                                                                         <div className="col-md-3 form-group">
                                                                             <label for="userType">Main Group<span className="text-danger">*</span></label>
@@ -189,24 +213,24 @@ const SubGroupMaster = () => {
                                                                         <div className="col-md-3 form-group">
                                                                             <label htmlFor="userType">Status</label><br />
                                                                             <div className="btn-group btn-group-toggle mt-1" data-toggle="buttons">
-                                                                                <label className={`btn btn-light py-2 ${isActive === '1' ? 'active' : ''}`}>
+                                                                                <label className={`btn btn-light py-2 ${datas.is_active === '1' ? 'active' : ''}`}>
                                                                                     <input
                                                                                         type="radio"
                                                                                         name="options"
                                                                                         id="option1"
                                                                                         autoComplete="off"
-                                                                                        checked={isActive === '1'}
-                                                                                        onChange={() => setIsActive('1')}
+                                                                                        checked={datas.is_active === '1'}
+                                                                                        onChange={handleChange}
                                                                                     /> Active
                                                                                 </label>
-                                                                                <label className={`btn btn-light py-2 ${isActive === '0' ? 'active' : ''}`}>
+                                                                                <label className={`btn btn-light py-2 ${datas.is_active === '0' ? 'active' : ''}`}>
                                                                                     <input
                                                                                         type="radio"
                                                                                         name="options"
                                                                                         id="option2"
                                                                                         autoComplete="off"
-                                                                                        checked={isActive === '0'}
-                                                                                        onChange={() => setIsActive('0')}
+                                                                                        checked={datas.is_active === '0'}
+                                                                                        onChange={handleChange}
                                                                                     /> Inactive
                                                                                 </label>
                                                                             </div>
