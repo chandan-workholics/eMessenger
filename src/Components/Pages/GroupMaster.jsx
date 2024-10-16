@@ -8,12 +8,8 @@ import { toast } from 'react-toastify';
 
 
 const GroupMaster = () => {
-<<<<<<< HEAD
-    const [datas, setDatas] = useState({ msg_group_name: '', is_active: '1', added_user_id: '1' })
-=======
 
-    const [datas, setDatas] = useState({ msg_group_name: '', is_active: '1', added_user_id: '' })
->>>>>>> 088b2a7e1ba7abb391e83d619e0e0cfeafce7c74
+    const [datas, setDatas] = useState({ msg_group_name: '', is_active: '1', added_user_id: '1' })
     const [updateGroup, setUpdateGroup] = useState({});
     const [groupList, setGroupList] = useState([]);
     const [loading, setLoading] = useState(true);
