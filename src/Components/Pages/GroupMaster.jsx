@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 
 const GroupMaster = () => {
 
-    const [datas, setDatas] = useState({ msg_group_name: '', is_active: '1', added_user_id: '' })
+    const [datas, setDatas] = useState({ msg_group_name: '', is_active: '1', added_user_id: '1' })
     const [updateGroup, setUpdateGroup] = useState({});
     const [groupList, setGroupList] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -112,7 +112,7 @@ const GroupMaster = () => {
         setDatas({
             msg_group_name: val.msg_group_name,
             is_active: val.is_active,
-            addedUserId: val.ddedUserId
+            added_user_id: val.added_user_id
         });
     };
 

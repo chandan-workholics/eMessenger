@@ -9,9 +9,11 @@ import { toast } from 'react-toastify';
 
 const SubGroupMaster = () => {
 
-    const [datas, setDatas] = useState({ msg_sgroup_name: '', is_active: '1', added_user_id: '' })
+    const [datas, setDatas] = useState({ msg_sgroup_name: '', is_active: '1', added_user_id: '1', msg_group_id: '' })
     const [updateSubGroup, setUpdateSubGroup] = useState({});
+    const [subGroupId, setSubGroupId] = useState({});
     const [subGroupList, setSubGroupList] = useState([]);
+    const [GroupList, setGroupList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
@@ -22,7 +24,7 @@ const SubGroupMaster = () => {
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => {
         setIsModalOpen(false);
-        setDatas({ msg_sgroup_name: '', is_active: '1', added_user_id: '' });
+        setDatas({ msg_sgroup_name: '', is_active: '1', added_user_id: '', msg_group_id: '' });
     };
 
     let name, value;
@@ -31,6 +33,18 @@ const SubGroupMaster = () => {
         value = e.target.value;
         setDatas({ ...datas, [name]: value })
     }
+
+    const fetchGroupData = async () => {
+        try {
+            setLoading(true);
+            const response = await callAPI.get(`./msg/getSubGroupDetail?page=1&limit=100`);
+            setGroupList(response.data.data || []);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -52,6 +66,10 @@ const SubGroupMaster = () => {
         fetchData();
     }, [currentPage]);
 
+    useEffect(() => {
+        fetchGroupData();
+    }, []);
+
     const fetchData = async () => {
         try {
             setLoading(true);
@@ -64,6 +82,8 @@ const SubGroupMaster = () => {
             setLoading(false);
         }
     };
+
+    
 
     const handlePageChange = (page) => {
         if (page > 0 && page <= totalPages) {
@@ -201,8 +221,8 @@ const SubGroupMaster = () => {
                                                                         </div>
                                                                         <div className="col-md-3 form-group">
                                                                             <label for="userType">Main Group<span className="text-danger">*</span></label>
-                                                                            <select className="form-control" id="userType" onClick={(e) => setSubGroupId(e.target.value)}>
-                                                                                {groupName?.map((val) => {
+                                                                            <select className="form-control" name='msg_group_id' id="msg_group_id" onChange={handleChange}>
+                                                                                {GroupList?.map((val) => {
                                                                                     return (
                                                                                         <option value={val?.msg_group_id}>{val?.msg_group_name}</option>
                                                                                     )
