@@ -8,7 +8,8 @@ import { toast } from 'react-toastify';
 
 
 const GroupMaster = () => {
-    const [datas, setDatas] = useState({ msg_group_name: '', is_active: '1', addedUserId: '' })
+
+    const [datas, setDatas] = useState({ msg_group_name: '', is_active: '1', added_user_id: '' })
     const [updateGroup, setUpdateGroup] = useState({});
     const [groupList, setGroupList] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -21,7 +22,7 @@ const GroupMaster = () => {
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => {
         setIsModalOpen(false);
-        setDatas({ msg_group_name: '', is_active: '1', addedUserId: '' });
+        setDatas({ msg_group_name: '', is_active: '1', added_user_id: '' });
     };
 
     let name, value;
@@ -48,7 +49,7 @@ const GroupMaster = () => {
     };
 
     useEffect(() => {
-        fetchData(); // eslint-disable-next-line react-hooks/exhaustive-deps
+        fetchData();
     }, [currentPage]);
 
     const fetchData = async () => {
@@ -63,9 +64,6 @@ const GroupMaster = () => {
             setLoading(false);
         }
     };
-
-
-
 
     const handlePageChange = (page) => {
         if (page > 0 && page <= totalPages) {
@@ -92,6 +90,21 @@ const GroupMaster = () => {
         { label: 'Edit By', key: 'editBy' },
         { label: 'Edit On', key: 'editOn' },
     ]
+
+    // Table data
+    const data = groupList ? groupList.map((val) => ({
+        groupId: val?.msg_group_id,
+        msg_group_name: val?.msg_group_name,
+        is_active: val?.is_active === 1 ? true : false,
+        action: (
+            <div>
+                <button onClick={() => handleupdateGroup(val)} type="button" className="btn">
+                    <i className="fa-solid fa-pen-to-square text-warning"></i>
+                </button>
+                <i className="fa-solid fa-trash-can text-danger mr-3"></i>
+            </div>
+        ),
+    })) : [];
 
     const handleupdateGroup = (val) => {
         setUpdateGroup(val);
@@ -124,22 +137,6 @@ const GroupMaster = () => {
             setLoading(false);
         }
     };
-
-    // Table data
-    const data = groupList ? groupList.map((val) => ({
-        groupId: val?.msg_group_id,
-        msg_group_name: val?.msg_group_name,
-        is_active: val?.is_active === 1 ? true : false,
-        action: (
-            <div>
-                <button onClick={() => handleupdateGroup(val)} type="button" className="btn">
-                    <i className="fa-solid fa-pen-to-square text-warning"></i>
-                </button>
-                <i className="fa-solid fa-trash-can text-danger mr-3"></i>
-            </div>
-        ),
-    })) : [];
-
 
     return (
         <>
@@ -204,23 +201,23 @@ const GroupMaster = () => {
                                                                         <div className="col-md-3 form-group">
                                                                             <label htmlFor="userType">Status</label><br />
                                                                             <div className="btn-group btn-group-toggle mt-1" data-toggle="buttons">
-                                                                                <label className={`btn btn-light py-2 ${datas.isActive === '1' ? 'active' : ''}`}>
+                                                                                <label className={`btn btn-light py-2 ${datas.is_active === '1' ? 'active' : ''}`}>
                                                                                     <input
                                                                                         type="radio"
                                                                                         name="options"
                                                                                         id="option1"
                                                                                         autoComplete="off"
-                                                                                        checked={datas.isActive === '1'}
+                                                                                        checked={datas.is_active === '1'}
                                                                                         onChange={handleChange}
                                                                                     /> Active
                                                                                 </label>
-                                                                                <label className={`btn btn-light py-2 ${datas.isActive === '0' ? 'active' : ''}`}>
+                                                                                <label className={`btn btn-light py-2 ${datas.is_active === '0' ? 'active' : ''}`}>
                                                                                     <input
                                                                                         type="radio"
                                                                                         name="options"
                                                                                         id="option2"
                                                                                         autoComplete="off"
-                                                                                        checked={datas.isActive === '0'}
+                                                                                        checked={datas.is_active === '0'}
                                                                                         onChange={handleChange}
                                                                                     /> Inactive
                                                                                 </label>
@@ -244,17 +241,13 @@ const GroupMaster = () => {
                                                     <div className="card-body">
                                                         <p className="card-title">Message Group List</p>
                                                         <div className="row">
-                                                            <div className="col-12">
-                                                                <form className="forms-sample">
-                                                                    <div className="row">
-                                                                        <div className="col-md-3 form-group">
-                                                                            <input type="search" className="form-control" id="exampleInputName1" placeholder="Full Name" />
-                                                                        </div>
-                                                                        <div className="col-md-3 form-group">
-                                                                            <button type="submit" className="btn btn-primary mr-2">search</button>
-                                                                        </div>
+                                                            <div class="ml-auto col-md-3 form-group">
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" />
+                                                                    <div class="input-group-append">
+                                                                        <button class="btn btn-sm btn-primary px-4" type="button">Filter</button>
                                                                     </div>
-                                                                </form>
+                                                                </div>
                                                             </div>
                                                             <div className="col-12">
                                                                 <div className="table-responsive">
