@@ -101,7 +101,10 @@ const GroupMaster = () => {
                 <button onClick={() => handleupdateGroup(val)} type="button" className="btn">
                     <i className="fa-solid fa-pen-to-square text-warning"></i>
                 </button>
-                <i className="fa-solid fa-trash-can text-danger mr-3"></i>
+                <button onClick={() => handleDelete(1)} type="button" className="btn">
+                    <i className="fa-solid fa-trash-can text-danger"></i>
+                </button>
+
             </div>
         ),
     })) : [];
@@ -135,6 +138,31 @@ const GroupMaster = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const deleteItem = async (id) => {
+        try {
+            const response = await fetch(`http://your-api-url/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Add any authorization headers if required
+                },
+            });
+
+            if (response.ok) {
+                console.log('Item deleted successfully');
+                // Handle successful deletion (e.g., update UI or show a message)
+            } else {
+                console.error('Error deleting the item');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    };
+
+    const handleDelete = (id) => {
+        deleteItem(id);
     };
 
     return (
