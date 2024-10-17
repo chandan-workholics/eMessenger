@@ -60,9 +60,15 @@
 }
 
 .modal-body form {
-  max-height: 450px;
+  max-height: 500px;
   overflow-y: scroll;
   padding: 0px 15px;
+}
+
+@media only screen and (max-width:767px) {
+  .modal-body form {
+    max-height: 430px;
+  }
 }
 
 .navbar-brand-wrapper,

@@ -7,9 +7,12 @@ import { toast } from 'react-toastify';
 import callAPI from '../../commonMethod/api';
 
 const UserManagement = () => {
+
     const [datas, setDatas] = useState({ full_name: '', adminuser_name: '', admin_password: '', is_active: '', admin_type: '', mobile_no: '', added_admin_id: '1', parent_admin_id: '' })
     const [updateUserManagement, setUpdateUserManagement] = useState({});
     const [admindata, setAdminData] = useState()
+    const [deleteid, Setdeleteid] = useState('')
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
@@ -21,6 +24,10 @@ const UserManagement = () => {
     const closeModal = () => {
         setIsModalOpen(false);
         setDatas({ full_name: '', adminuser_name: '', admin_password: '', is_active: '', admin_type: '', mobile_no: '', added_admin_id: '1', parent_admin_id: '' });
+    };
+
+    const closeDeleteModal = () => {
+        setIsDeleteModalOpen(false);
     };
 
     let name, value
@@ -95,10 +102,12 @@ const UserManagement = () => {
         isActive: true,
         action: (
             <div>
-                <button onClick={() => handleupdateUser(val)} type="button" className="btn">
+                <button onClick={() => handleupdateUser(val)} type="button" className="btn p-2">
                     <i className="fa-solid fa-pen-to-square text-warning"></i>
                 </button>
-                <i className="fa-solid fa-trash-can text-danger mr-3"></i>
+                <button onClick={() => handleDelete(val?.admin_id)} type="button" className="btn p-2">
+                    <i className="fa-solid fa-trash-can text-danger"></i>
+                </button>
             </div>
         ),
     })) : [];
@@ -135,7 +144,24 @@ const UserManagement = () => {
         }
     };
 
-    // console.log(totalPages)
+    const handleDelete = (id) => {
+        Setdeleteid(id);
+        setIsDeleteModalOpen(true)
+    };
+
+    function deleteItem(id) {
+        callAPI.del(`./admin/deleteAdmin/${id}`).then(async (response) => {
+            if (response.status === 200 || response.status === 201) {
+                toast.success('Delete Item Successfully');
+                closeDeleteModal();
+                getAdminData();
+            }
+            else {
+                toast.error('something went wrong');
+            }
+        });
+    }
+
     return (
         <>
             <div className="container-scroller">
@@ -392,7 +418,7 @@ const UserManagement = () => {
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header d-flex align-items-center bg-ffe2e5 py-3">
-                                <h3 className="modal-title font-weight-bold text-primary">Update User Details</h3>
+                                <h4 className="modal-title font-weight-bold text-primary">Update User Details</h4>
                                 <button type="button" className="close" onClick={closeModal}>
                                     <i class="fa-solid fa-xmark fs-3 text-primary"></i>
                                 </button>
@@ -503,13 +529,43 @@ const UserManagement = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
-                                        <button type="submit" className="btn btn-primary" disabled={loading}>
-                                            {loading ? 'Updating...' : 'Update'}
-                                        </button>
+                                    <div className="modal-footer pb-0 px-0">
+                                        <div className="d-flex align-items-center">
+                                            <button type="button" className="btn btn-secondary mr-3" onClick={closeModal}>Close</button>
+                                            <button type="submit" className="btn btn-primary" disabled={loading}>
+                                                {loading ? 'Updating...' : 'Update'}
+                                            </button>
+                                        </div>
                                     </div>
                                 </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {isDeleteModalOpen && (
+                <div className="modal show" style={{ display: 'block', background: '#0000008e' }}>
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header d-flex align-items-center bg-ffe2e5 py-3">
+                                <h4 className="modal-title font-weight-bold text-primary">Warning!</h4>
+                                <button type="button" className="close" onClick={closeDeleteModal}>
+                                    <i class="fa-solid fa-xmark fs-3 text-primary"></i>
+                                </button>
+                            </div>
+                            <div className="modal-body p-3">
+                                <div className="modal-body">
+                                    <h5 className="text-primary text-center">Do you want to permanently delete?</h5>
+                                    <img src="images/deleteWarning.png" alt="" className="w-100 m-auto" />
+                                </div>
+                                <div className="modal-footer pb-0">
+                                    <div className="d-flex align-items-center">
+                                        <button type="button" className="btn btn-danger mr-3" onClick={() => deleteItem(deleteid)}>Yes</button>
+                                        <button type="button" className="btn btn-outline-danger" onClick={closeDeleteModal}>No</button>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>

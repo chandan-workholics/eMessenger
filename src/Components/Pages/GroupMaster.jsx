@@ -6,10 +6,13 @@ import ExpandRowTable from '../Template/ExpandRowTable';
 import callAPI from '../../commonMethod/api';
 import { toast } from 'react-toastify';
 
-
 const GroupMaster = () => {
 
-    const [datas, setDatas] = useState({ msg_group_name: '', is_active: '1', added_user_id: '1' })
+    const [datas, setDatas] = useState({
+        msg_group_name: '',
+        is_active: '1',
+        added_user_id: '1'
+    });
     const [updateGroup, setUpdateGroup] = useState({});
     const [groupList, setGroupList] = useState([]);
     const [deleteid, Setdeleteid] = useState('')
@@ -26,6 +29,7 @@ const GroupMaster = () => {
         setIsModalOpen(false);
         setDatas({ msg_group_name: '', is_active: '1', added_user_id: '' });
     };
+
     const closeDeleteModal = () => {
         setIsDeleteModalOpen(false);
     };
@@ -103,10 +107,10 @@ const GroupMaster = () => {
         is_active: val?.is_active === 1 ? true : false,
         action: (
             <div>
-                <button onClick={() => handleupdateGroup(val)} type="button" className="btn">
+                <button onClick={() => handleupdateGroup(val)} type="button" className="btn p-2">
                     <i className="fa-solid fa-pen-to-square text-warning"></i>
                 </button>
-                <button onClick={() => handleDelete(val?.msg_group_id)} type="button" className="btn">
+                <button onClick={() => handleDelete(val?.msg_group_id)} type="button" className="btn p-2">
                     <i className="fa-solid fa-trash-can text-danger"></i>
                 </button>
 
@@ -144,8 +148,6 @@ const GroupMaster = () => {
             setLoading(false);
         }
     };
-
-
 
     const handleDelete = (id) => {
         Setdeleteid(id);
@@ -362,11 +364,13 @@ const GroupMaster = () => {
                                             </label>
                                         </div>
                                     </div>
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
-                                        <button type="submit" className="btn btn-primary" disabled={loading}>
-                                            {loading ? 'Updating...' : 'Update'}
-                                        </button>
+                                    <div className="modal-footer pb-0 px-0">
+                                        <div className="d-flex align-items-center">
+                                            <button type="button" className="btn btn-secondary mr-3" onClick={closeModal}>Close</button>
+                                            <button type="submit" className="btn btn-primary" disabled={loading}>
+                                                {loading ? 'Updating...' : 'Update'}
+                                            </button>
+                                        </div>
                                     </div>
                                 </form>
                             </div>
@@ -380,25 +384,26 @@ const GroupMaster = () => {
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header d-flex align-items-center bg-ffe2e5 py-3">
-                                <h3 className="modal-title font-weight-bold text-primary">Warning X</h3>
+                                <h4 className="modal-title font-weight-bold text-primary">Warning!</h4>
                                 <button type="button" className="close" onClick={closeDeleteModal}>
                                     <i class="fa-solid fa-xmark fs-3 text-primary"></i>
                                 </button>
                             </div>
                             <div className="modal-body p-3">
                                 <div className="modal-body">
-                                    Do You Want To Delete Permanently
+                                    <h5 className="text-primary text-center">Do you want to permanently delete?</h5>
+                                    <img src="images/deleteWarning.png" alt="" className="w-100 m-auto" />
                                 </div>
-                                <div className="modal-footer">
-                                    <button type="button" className="btn btn-info me-3" onClick={() => deleteItem(deleteid)}>Yes</button>
-                                    <button type="button" className="btn btn-info" onClick={closeDeleteModal}>No</button>
+                                <div className="modal-footer pb-0">
+                                    <div className="d-flex align-items-center">
+                                        <button type="button" className="btn btn-danger mr-3" onClick={() => deleteItem(deleteid)}>Yes</button>
+                                        <button type="button" className="btn btn-outline-danger" onClick={closeDeleteModal}>No</button>
+                                    </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
-
             )}
         </>
     )

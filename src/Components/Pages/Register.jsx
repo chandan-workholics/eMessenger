@@ -1,57 +1,74 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import callAPI from '../../commonMethod/api';
+import { toast } from 'react-toastify';
 
 const Register = () => {
 
-    const token = sessionStorage.getItem('token');
-    const URL = process.env.REACT_APP_URL;
-
     const [formData, setFormData] = useState({
-        fullName: '',
-        username: '',
-        password: '',
-        mobile: '',
-        role: 'admin'
+        full_name: '',
+        adminuser_name: '',
+        admin_password: '',
+        mobile_no: '',
+        admin_type: ''
     });
-
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(null);
+
+    // Validations
+    const validateForm = () => {
+        const { adminuser_name, admin_password, mobile_no } = formData;
+
+        // Username validation: at least 3 characters
+        if (adminuser_name.length < 3) {
+            setError('Username must be at least 3 characters long.');
+            return false;
+        }
+
+        // Password validation: at least 6 characters
+        if (admin_password.length < 6) {
+            setError('Password must be at least 6 characters long.');
+            return false;
+        }
+
+        // Mobile number validation: must be exactly 10 digits
+        const mobilePattern = /^[0-9]{10}$/;
+        if (!mobilePattern.test(mobile_no)) {
+            setError('Mobile number must be exactly 10 digits.');
+            return false;
+        }
+
+        // If all validations pass, clear the error
+        setError(null);
+        return true;
+    };
 
     // Handle form input change
     const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
     };
 
     // Handle form submit
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        // Run validation before submission
+        if (!validateForm()) {
+            return;
+        }
+
         setLoading(true);
-        setError(null);
-        setSuccess(null);
-
         try {
-            const response = await fetch(`${URL}/admin/createAdmin`, {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                setSuccess('Signup successful!');
+            const response = await callAPI.post(`./admin/createAdmin`, formData);
+            if (response.status >= 200 && response.status < 300) {
+                toast.success('Sign up successfully');
             } else {
-                setError(data.message || 'Signup failed');
+                toast.error('Failed to Sign Up');
             }
-        } catch (err) {
-            setError('An error occurred. Please try again.');
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            toast.error('An error occurred while submitting the form');
         } finally {
             setLoading(false);
         }
@@ -72,13 +89,21 @@ const Register = () => {
                                         <h4>New here?</h4>
                                         <h5 className="font-weight-medium">Signing up is easy. It only takes a few steps</h5>
                                         <form className="pt-3" onSubmit={handleSubmit}>
+                                            <div className=" form-group">
+                                                <select className="form-control" id="userType" name='admin_type' value={formData.admin_type} onChange={handleChange} required>
+                                                    <option value='' selected disabled>Select User Type</option>
+                                                    <option value='admin'>Admin</option>
+                                                    <option value='management'>Management</option>
+                                                    <option value='user'>User</option>
+                                                </select>
+                                            </div>
                                             <div className="form-group">
                                                 <input
                                                     type="text"
                                                     className="form-control form-control-lg bg-white"
-                                                    name="fullName"
+                                                    name="full_name"
                                                     placeholder="Full Name"
-                                                    value={formData.fullName}
+                                                    value={formData.full_name}
                                                     onChange={handleChange}
                                                     required
                                                 />
@@ -87,9 +112,9 @@ const Register = () => {
                                                 <input
                                                     type="text"
                                                     className="form-control form-control-lg bg-white"
-                                                    name="username"
+                                                    name="adminuser_name"
                                                     placeholder="Username"
-                                                    value={formData.username}
+                                                    value={formData.adminuser_name}
                                                     onChange={handleChange}
                                                     required
                                                 />
@@ -98,9 +123,9 @@ const Register = () => {
                                                 <input
                                                     type="password"
                                                     className="form-control form-control-lg bg-white"
-                                                    name="password"
+                                                    name="admin_password"
                                                     placeholder="Password"
-                                                    value={formData.password}
+                                                    value={formData.admin_password}
                                                     onChange={handleChange}
                                                     required
                                                 />
@@ -109,9 +134,9 @@ const Register = () => {
                                                 <input
                                                     type="tel"
                                                     className="form-control form-control-lg bg-white"
-                                                    name="mobile"
+                                                    name="mobile_no"
                                                     placeholder="Mobile No."
-                                                    value={formData.mobile}
+                                                    value={formData.mobile_no}
                                                     onChange={handleChange}
                                                     required
                                                 />
@@ -130,7 +155,6 @@ const Register = () => {
                                             </div>
                                         </form>
                                         {error && <p style={{ color: 'red' }}>{error}</p>}
-                                        {success && <p style={{ color: 'green' }}>{success}</p>}
                                     </div>
                                 </div>
                                 <div className="col-lg-7 d-lg-block d-none">

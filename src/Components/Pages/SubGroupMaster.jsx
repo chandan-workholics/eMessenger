@@ -13,6 +13,8 @@ const SubGroupMaster = () => {
     const [updateSubGroup, setUpdateSubGroup] = useState({});
     const [subGroupList, setSubGroupList] = useState([]);
     const [GroupList, setGroupList] = useState([]);
+    const [deleteid, Setdeleteid] = useState('')
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
@@ -24,6 +26,10 @@ const SubGroupMaster = () => {
     const closeModal = () => {
         setIsModalOpen(false);
         setDatas({ msg_sgroup_name: '', is_active: '1', added_user_id: '', msg_group_id: '' });
+    };
+
+    const closeDeleteModal = () => {
+        setIsDeleteModalOpen(false);
     };
 
     let name, value;
@@ -82,7 +88,7 @@ const SubGroupMaster = () => {
         }
     };
 
-    
+
 
     const handlePageChange = (page) => {
         if (page > 0 && page <= totalPages) {
@@ -119,10 +125,12 @@ const SubGroupMaster = () => {
         is_active: val?.is_active === 1 ? true : false,
         action: (
             <div>
-                <button onClick={() => handleupdateGroup(val)} type="button" className="btn">
+                <button onClick={() => handleupdateGroup(val)} type="button" className="btn p-2">
                     <i className="fa-solid fa-pen-to-square text-warning"></i>
                 </button>
-                <i className="fa-solid fa-trash-can text-danger mr-3"></i>
+                <button onClick={() => handleDelete(val?.msg_sgroup_id)} type='button' className="btn p-2">
+                    <i className="fa-solid fa-trash-can text-danger"></i>
+                </button>
             </div>
         ),
     })) : [];
@@ -157,6 +165,24 @@ const SubGroupMaster = () => {
             setLoading(false);
         }
     };
+
+    const handleDelete = (id) => {
+        Setdeleteid(id);
+        setIsDeleteModalOpen(true);
+    };
+
+    function deleteItem(id) {
+        callAPI.del(`./msg/deleteSubGroup/${id}`).then(async (response) => {
+            if (response.status === 200 || response.status === 201) {
+                toast.success('Delete Item Successfully');
+                closeDeleteModal();
+                fetchData();
+            }
+            else {
+                toast.error('something went wrong');
+            }
+        });
+    }
 
     return (
         <>
@@ -271,17 +297,13 @@ const SubGroupMaster = () => {
                                                     <div className="card-body">
                                                         <p className="card-title">Message Sub Group List</p>
                                                         <div className="row">
-                                                            <div className="col-12">
-                                                                <form className="forms-sample">
-                                                                    <div className="row">
-                                                                        <div className="col-md-3 form-group">
-                                                                            <input type="search" className="form-control" id="exampleInputName1" placeholder="Full Name" />
-                                                                        </div>
-                                                                        <div className="col-md-3 form-group">
-                                                                            <button type="submit" className="btn btn-primary mr-2">search</button>
-                                                                        </div>
+                                                            <div class="ml-auto col-md-3 form-group">
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" />
+                                                                    <div class="input-group-append">
+                                                                        <button class="btn btn-sm btn-primary px-4" type="button">Filter</button>
                                                                     </div>
-                                                                </form>
+                                                                </div>
                                                             </div>
                                                             <div className="col-12">
                                                                 <div className="table-responsive">
@@ -367,17 +389,48 @@ const SubGroupMaster = () => {
                                             </label>
                                         </div>
                                     </div>
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary" onClick={closeModal}>Close</button>
-                                        <button type="submit" className="btn btn-primary" disabled={loading}>
-                                            {loading ? 'Updating...' : 'Update'}
-                                        </button>
+                                    <div className="modal-footer pb-0 px-0">
+                                        <div className="d-flex align-items-center">
+                                            <button type="button" className="btn btn-secondary mr-3" onClick={closeModal}>Close</button>
+                                            <button type="submit" className="btn btn-primary" disabled={loading}>
+                                                {loading ? 'Updating...' : 'Update'}
+                                            </button>
+                                        </div>
                                     </div>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
+            )}
+
+            {isDeleteModalOpen && (
+                <div className="modal show" style={{ display: 'block', background: '#0000008e' }}>
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header d-flex align-items-center bg-ffe2e5 py-3">
+                                <h4 className="modal-title font-weight-bold text-primary">Warning!</h4>
+                                <button type="button" className="close" onClick={closeDeleteModal}>
+                                    <i class="fa-solid fa-xmark fs-3 text-primary"></i>
+                                </button>
+                            </div>
+                            <div className="modal-body p-3">
+                                <div className="modal-body">
+                                    <h5 className="text-primary text-center">Do you want to permanently delete?</h5>
+                                    <img src="images/deleteWarning.png" alt="" className="w-100 m-auto" />
+                                </div>
+                                <div className="modal-footer pb-0">
+                                    <div className="d-flex align-items-center">
+                                        <button type="button" className="btn btn-danger mr-3" onClick={() => deleteItem(deleteid)}>Yes</button>
+                                        <button type="button" className="btn btn-outline-danger" onClick={closeDeleteModal}>No</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             )}
         </>
     )
