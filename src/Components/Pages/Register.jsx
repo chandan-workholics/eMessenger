@@ -4,7 +4,6 @@ import callAPI from '../../commonMethod/api';
 import { toast } from 'react-toastify';
 
 const Register = () => {
-
     const [formData, setFormData] = useState({
         full_name: '',
         adminuser_name: '',
@@ -12,35 +11,43 @@ const Register = () => {
         mobile_no: '',
         admin_type: ''
     });
+    const [formErrors, setFormErrors] = useState({});
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
 
     // Validations
     const validateForm = () => {
-        const { adminuser_name, admin_password, mobile_no } = formData;
+        const { full_name, adminuser_name, admin_password, mobile_no, admin_type } = formData;
+        let errors = {};
+
+        // Full name validation: must not be empty
+        if (full_name.trim() === '') {
+            errors.full_name = 'Full name is required.';
+        }
 
         // Username validation: at least 3 characters
         if (adminuser_name.length < 3) {
-            setError('Username must be at least 3 characters long.');
-            return false;
+            errors.adminuser_name = 'Username must be at least 3 characters long.';
         }
 
         // Password validation: at least 6 characters
         if (admin_password.length < 6) {
-            setError('Password must be at least 6 characters long.');
-            return false;
+            errors.admin_password = 'Password must be at least 6 characters long.';
         }
 
         // Mobile number validation: must be exactly 10 digits
         const mobilePattern = /^[0-9]{10}$/;
         if (!mobilePattern.test(mobile_no)) {
-            setError('Mobile number must be exactly 10 digits.');
-            return false;
+            errors.mobile_no = 'Mobile number must be exactly 10 digits.';
         }
 
-        // If all validations pass, clear the error
-        setError(null);
-        return true;
+        // User type validation: must select an option
+        if (!admin_type) {
+            errors.admin_type = 'Please select a user type.';
+        }
+
+        // Set form errors and return if valid
+        setFormErrors(errors);
+        return Object.keys(errors).length === 0;
     };
 
     // Handle form input change
@@ -89,13 +96,21 @@ const Register = () => {
                                         <h4>New here?</h4>
                                         <h5 className="font-weight-medium">Signing up is easy. It only takes a few steps</h5>
                                         <form className="pt-3" onSubmit={handleSubmit}>
-                                            <div className=" form-group">
-                                                <select className="form-control" id="userType" name='admin_type' value={formData.admin_type} onChange={handleChange} required>
-                                                    <option value='' selected disabled>Select User Type</option>
+                                            <div className="form-group">
+                                                <select
+                                                    className="form-control"
+                                                    id="userType"
+                                                    name='admin_type'
+                                                    value={formData.admin_type}
+                                                    onChange={handleChange}
+                                                    required
+                                                >
+                                                    <option value='' disabled>Select User Type</option>
                                                     <option value='admin'>Admin</option>
                                                     <option value='management'>Management</option>
                                                     <option value='user'>User</option>
                                                 </select>
+                                                {formErrors.admin_type && <p style={{ color: 'red' }}>{formErrors.admin_type}</p>}
                                             </div>
                                             <div className="form-group">
                                                 <input
@@ -107,6 +122,7 @@ const Register = () => {
                                                     onChange={handleChange}
                                                     required
                                                 />
+                                                {formErrors.full_name && <p style={{ color: 'red' }}>{formErrors.full_name}</p>}
                                             </div>
                                             <div className="form-group">
                                                 <input
@@ -118,6 +134,7 @@ const Register = () => {
                                                     onChange={handleChange}
                                                     required
                                                 />
+                                                {formErrors.adminuser_name && <p style={{ color: 'red' }}>{formErrors.adminuser_name}</p>}
                                             </div>
                                             <div className="form-group">
                                                 <input
@@ -129,6 +146,7 @@ const Register = () => {
                                                     onChange={handleChange}
                                                     required
                                                 />
+                                                {formErrors.admin_password && <p style={{ color: 'red' }}>{formErrors.admin_password}</p>}
                                             </div>
                                             <div className="form-group">
                                                 <input
@@ -140,6 +158,7 @@ const Register = () => {
                                                     onChange={handleChange}
                                                     required
                                                 />
+                                                {formErrors.mobile_no && <p style={{ color: 'red' }}>{formErrors.mobile_no}</p>}
                                             </div>
                                             <div className="mt-3">
                                                 <button
@@ -154,7 +173,6 @@ const Register = () => {
                                                 Already have an account? <Link to="/" className="text-primary">Login</Link>
                                             </div>
                                         </form>
-                                        {error && <p style={{ color: 'red' }}>{error}</p>}
                                     </div>
                                 </div>
                                 <div className="col-lg-7 d-lg-block d-none">

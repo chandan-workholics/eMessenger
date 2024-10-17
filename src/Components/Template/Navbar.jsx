@@ -14,6 +14,10 @@ const Navbar = () => {
         };
     }, []);
 
+    const logout = () => {
+        sessionStorage.clear();
+    }
+
     return (
         <>
             <nav className="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
@@ -103,7 +107,7 @@ const Navbar = () => {
                                     <i className="ti-settings text-primary"></i>
                                     Settings
                                 </Link>
-                                <Link className="dropdown-item" to="/">
+                                <Link onClick={() => logout()} className="dropdown-item" to="/">
                                     <i className="ti-power-off text-primary"></i>
                                     Logout
                                 </Link>
