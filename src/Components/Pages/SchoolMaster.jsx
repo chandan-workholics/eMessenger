@@ -73,7 +73,7 @@ const SchoolMaster = () => {
     };
 
     useEffect(() => {
-        fetchData();
+        fetchData();// eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, rowsPerPage]);
 
     const fetchData = async () => {

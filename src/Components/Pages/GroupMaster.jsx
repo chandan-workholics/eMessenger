@@ -12,6 +12,8 @@ const GroupMaster = () => {
     const [datas, setDatas] = useState({ msg_group_name: '', is_active: '1', added_user_id: '1' })
     const [updateGroup, setUpdateGroup] = useState({});
     const [groupList, setGroupList] = useState([]);
+    const [deleteid, Setdeleteid] = useState('')
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
@@ -23,6 +25,9 @@ const GroupMaster = () => {
     const closeModal = () => {
         setIsModalOpen(false);
         setDatas({ msg_group_name: '', is_active: '1', added_user_id: '' });
+    };
+    const closeDeleteModal = () => {
+        setIsDeleteModalOpen(false);
     };
 
     let name, value;
@@ -49,7 +54,7 @@ const GroupMaster = () => {
     };
 
     useEffect(() => {
-        fetchData();
+        fetchData();// eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage]);
 
     const fetchData = async () => {
@@ -101,7 +106,7 @@ const GroupMaster = () => {
                 <button onClick={() => handleupdateGroup(val)} type="button" className="btn">
                     <i className="fa-solid fa-pen-to-square text-warning"></i>
                 </button>
-                <button onClick={() => handleDelete(1)} type="button" className="btn">
+                <button onClick={() => handleDelete(val?.msg_group_id)} type="button" className="btn">
                     <i className="fa-solid fa-trash-can text-danger"></i>
                 </button>
 
@@ -140,30 +145,25 @@ const GroupMaster = () => {
         }
     };
 
-    const deleteItem = async (id) => {
-        try {
-            const response = await fetch(`http://your-api-url/${id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // Add any authorization headers if required
-                },
-            });
 
-            if (response.ok) {
-                console.log('Item deleted successfully');
-                // Handle successful deletion (e.g., update UI or show a message)
-            } else {
-                console.error('Error deleting the item');
-            }
-        } catch (error) {
-            console.error('Error:', error);
-        }
-    };
 
     const handleDelete = (id) => {
-        deleteItem(id);
+        Setdeleteid(id);
+        setIsDeleteModalOpen(true)
     };
+
+    function deleteItem(id) {
+        callAPI.del(`./msg/deleteGroup/${id}`).then(async (response) => {
+            if (response.status === 200 || response.status === 201) {
+                toast.success('Delete Item Successfully');
+                closeDeleteModal();
+                fetchData();
+            }
+            else {
+                toast.error('something went wrong');
+            }
+        });
+    }
 
     return (
         <>
@@ -373,6 +373,32 @@ const GroupMaster = () => {
                         </div>
                     </div>
                 </div>
+            )}
+
+            {isDeleteModalOpen && (
+                <div className="modal show" style={{ display: 'block', background: '#0000008e' }}>
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header d-flex align-items-center bg-ffe2e5 py-3">
+                                <h3 className="modal-title font-weight-bold text-primary">Warning X</h3>
+                                <button type="button" className="close" onClick={closeDeleteModal}>
+                                    <i class="fa-solid fa-xmark fs-3 text-primary"></i>
+                                </button>
+                            </div>
+                            <div className="modal-body p-3">
+                                <div className="modal-body">
+                                    Do You Want To Delete Permanently
+                                </div>
+                                <div className="modal-footer">
+                                    <button type="button" className="btn btn-info me-3" onClick={() => deleteItem(deleteid)}>Yes</button>
+                                    <button type="button" className="btn btn-info" onClick={closeDeleteModal}>No</button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             )}
         </>
     )

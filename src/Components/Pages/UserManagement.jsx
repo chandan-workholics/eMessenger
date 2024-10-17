@@ -73,6 +73,7 @@ const UserManagement = () => {
         return <Loding />;
     }
 
+    console.log(handlePageChange)
     console.log(error)
     // Table columns
     const columns = [
