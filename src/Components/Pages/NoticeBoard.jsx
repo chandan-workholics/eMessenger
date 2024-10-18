@@ -5,7 +5,7 @@ import Loding from '../Template/Loding';
 import SortableTable from '../Template/SortableTable';
 import callAPI from '../../commonMethod/api';
 import { toast } from 'react-toastify';
-
+import axios from 'axios';
 
 const NoticeBoard = () => {
     const [datas, setDatas] = useState({ title: '', document_type: '', document_link: '', thumbnails: '' })
@@ -29,7 +29,13 @@ const NoticeBoard = () => {
         value = e.target.value;
         setDatas({ ...datas, [name]: value })
     }
-
+    // const handleChange2 = (e) => {
+    //     const { name, value } = e.target;
+    //     setDatas((prevData) => ({
+    //         ...prevData,
+    //         [name]: value,  // Set the value of the specific field in the state
+    //     }));
+    // };
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -105,7 +111,7 @@ const NoticeBoard = () => {
         title: val?.title,
         documentType: val?.document_type,
         documentLink: val?.document_link,
-        thumbnails: (<img src={val?.thumbnails} className='' alt='' style={{ width: '130px', height: '80px', objectFit:'contain' }} />),
+        thumbnails: (<img src={val?.thumbnails} className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} />),
         action: (
             <div>
                 <button onClick={() => handleUpdateNotice(val)} type="button" className="btn">
@@ -130,6 +136,80 @@ const NoticeBoard = () => {
         return <Loding />;
     }
 
+    const handleImageChange = async (e) => {
+        // setShowLoader("block");
+        const formData = new FormData();
+        formData.append("file", e.target.files[0]);
+        var requestOptions = {
+            headers: {
+                "Content-Type": "multipart/form-data",
+              
+            },
+        };
+        try {
+            const fetchdata = axios.post(
+                `http://206.189.130.102:3550/api/v1/admin/imageUpload_Use/imageUpload`,
+                formData,
+                requestOptions
+            );
+            const response = await fetchdata;
+            if (response.status === 200) {
+                toast.success("Data Uploaded Successfully");
+                // setShowLoader("none");
+                //seturl(response?.data?.url);
+                setDatas({
+                    ...datas,
+                    thumbnails: response?.data?.url,
+                });
+            } else {
+            
+                toast.error("Fail To Load");
+            }
+        } catch (error) {
+            // setShowLoader("none");
+            // console.error("Error uploading image:", error);
+            // toast.error(
+            //     "An error occurred while uploading the image. Please try again."
+            // );
+        }
+    };
+    const handlePdfChange = async (e) => {
+        // setShowLoader("block");
+        const formData = new FormData();
+        formData.append("file", e.target.files[0]);
+        var requestOptions = {
+            headers: {
+                "Content-Type": "multipart/form-data",
+              
+            },
+        };
+        try {
+            const fetchdata = axios.post(
+                `http://206.189.130.102:3550/api/v1/admin/pdfUpload_Use/pdfUpload`,
+                formData,
+                requestOptions
+            );
+            const response = await fetchdata;
+            if (response.status === 200) {
+                toast.success("Data Uploaded Successfully");
+                // setShowLoader("none");
+                //seturl(response?.data?.url);
+                setDatas({
+                    ...datas,
+                    document_link: response?.data?.url,
+                });
+            } else {
+            
+                toast.error("Fail To Load");
+            }
+        } catch (error) {
+            // setShowLoader("none");
+            // console.error("Error uploading image:", error);
+            // toast.error(
+            //     "An error occurred while uploading the image. Please try again."
+            // );
+        }
+    };
     console.log(totalPages)
     console.log(error)
 
@@ -196,11 +276,10 @@ const NoticeBoard = () => {
                                                                         onChange={handleChange}
                                                                         required
                                                                     >
-                                                                        <option value="" disabled>Please Select</option>
-                                                                        <option value="jpg">jpg</option>
-                                                                        <option value="doc">Doc</option>
-                                                                        <option value="png">png</option>
-                                                                        <option value="pdf">pdf</option>
+                                                                        <option value="" disabled selected>Please Select</option>
+                                                                        <option value="PDF">PDF</option>
+                                                                        <option value="YOUTUBE">YOUTUBE</option>
+                                                                        <option value="IMAGE">IMAGE</option>
                                                                     </select>
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
@@ -222,9 +301,21 @@ const NoticeBoard = () => {
                                                                         type="file"
                                                                         className="form-control"
                                                                         id="thumbnail"
-                                                                        name="thumbnail"
+                                                                        name="file"
+                                                                        onChange={handleImageChange}
                                                                     />
                                                                 </div>
+                                                               
+                                                               { datas.document_type === "PDF" ? <div className="col-md-4 form-group">
+                                                                    <label htmlFor="thumbnail">Pdf Upload Only <span className="text-danger">*</span></label>
+                                                                    <input
+                                                                        type="file"
+                                                                        className="form-control"
+                                                                        id="thumbnail"
+                                                                        name="file"
+                                                                        onChange={handlePdfChange}
+                                                                    />
+                                                                </div> : ''}
                                                             </div>
                                                             <button type="submit" className="btn btn-primary mr-2" disabled={loading}>
                                                                 {loading ? 'Submitting...' : 'Submit'}

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../Template/Navbar';
-import SidebarSettingPannel from '../Template/SidebarSettingPannel';
 import Sidebar from '../Template/Sidebar';
 import SortableTable from '../Template/SortableTable';
 
@@ -76,7 +75,9 @@ const MessageDraft = () => {
                 <div>
                     <i className="fa-solid fa-pen-to-square text-warning mr-3"></i>
                     <i className="fa-solid fa-trash-can text-danger mr-3"></i>
-                    <i className="fa-solid fa-paper-plane text-success mr-3"></i>
+                    <Link to="/send-message">
+                        <i className="fa-solid fa-paper-plane text-success mr-3"></i>
+                    </Link>
                     <Link to="/chat">
                         <i class="fa-solid fa-comment-dots text-info"></i>
                     </Link>
@@ -115,7 +116,6 @@ const MessageDraft = () => {
                 <Navbar />
 
                 <div className="container-fluid page-body-wrapper">
-                    <SidebarSettingPannel />
 
                     {/* SideBar */}
                     <Sidebar />
