@@ -19,6 +19,7 @@ import Chat from './Components/Pages/Chat.jsx';
 import { interceptor } from './commonMethod/api.js';
 import ProtectedRoute from './commonMethod/ProtectedRoute.jsx';
 import SendMsg from './Components/Pages/SendMsg.jsx';
+import WelcomeMsg from './Components/Pages/WelcomeMsg.jsx';
 
 interceptor();
 
@@ -37,6 +38,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/notice-board" element={<ProtectedRoute element={<NoticeBoard />} />} />
         <Route path="/message-draft" element={<ProtectedRoute element={<MessageDraft />} />} />
         <Route path="/send-message" element={<ProtectedRoute element={<SendMsg />} />} />
+        <Route path="/welcome-message" element={<ProtectedRoute element={<WelcomeMsg />} />} />
         <Route path="/chat" element={<ProtectedRoute element={<Chat />} />} />
         <Route path="/reply-received" element={<ProtectedRoute element={<ReplyReceived />} />} />
         <Route path="/group-master" element={<ProtectedRoute element={<GroupMaster />} />} />

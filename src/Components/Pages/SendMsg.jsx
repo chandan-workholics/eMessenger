@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import Navbar from '../Template/Navbar';
 import Sidebar from '../Template/Sidebar';
 import SortableTable from '../Template/SortableTable';
@@ -9,16 +8,14 @@ const SendMsg = () => {
     // Table columns
     const columns = [
         { label: 'Select', key: 'checkbox' },
-        { label: 'Subject Line & Schools', key: 'subjectLineSchools' },
-        { label: 'Priority', key: 'priority' },
-        { label: 'Show Upto Date & Time', key: 'showUpto' },
-        { label: 'Last Posted Date', key: 'lastPosted' },
-        { label: 'Last Posted By', key: 'lastPostedBy' },
-        { label: 'No. of Recipients', key: 'recipients' },
-        { label: 'Seen', key: 'seen' },
-        { label: 'Respond', key: 'respond' },
-        { label: 'Is Active', key: 'isActive' },
-        { label: 'Action', key: 'action' },
+        { label: 'Student Data Id', key: 'studentDataId' },
+        { label: 'Mobile No.', key: 'mobileNo' },
+        { label: 'School Short Name', key: 'schoolShortName' },
+        { label: 'Scholar No.', key: 'scholarNo' },
+        { label: 'Sended Id', key: 'sendedId' },
+        { label: 'Sended Date', key: 'sendedDate' },
+        { label: 'Is Seen', key: 'isSeen' },
+        { label: 'Is Reply Done', key: 'isReplyDone' },
     ];
 
     // Table data
@@ -26,50 +23,36 @@ const SendMsg = () => {
         {
             checkbox: (
                 <form>
-                    <input type="checkbox" className="form-check-input" />
+                    <div className="d-flex justify-content-center align-items-center">
+                        <input type="checkbox" className="form-check-input" style={{ width: '18px', height: '18px' }} />
+                    </div>
                 </form>
             ),
-            subjectLineSchools: 'Reminder - 2 for Second Term outstanding fee/charges.',
-            priority: '6',
-            showUpto: '2024-10-01',
-            lastPosted: '2024-09-25',
-            lastPostedBy: 'Admin',
-            recipients: 100,
-            seen: 80,
-            respond: 50,
-            isActive: true,
-            action: (
-                <div>
-                    <i className="fa-solid fa-pen-to-square text-warning mr-3"></i>
-                    <i className="fa-solid fa-trash-can text-danger mr-3"></i>
-                    <i className="fa-solid fa-paper-plane text-success mr-3"></i>
-                    <Link to="/chat">
-                        <i className="fa-solid fa-comment-dots text-info"></i>
-                    </Link>
-                </div>
-            ),
+            studentDataId: '26061',
+            mobileNo: '1236547890',
+            schoolShortName: 'APSNR',
+            scholarNo: '785423',
+            sendedId: '',
+            sendedDate: '',
+            isSeen: 'No',
+            isReplyDone: 'No',
         },
         {
-            checkbox: 2,
-            subjectLineSchools: 'Reminder - 2 for Second Term outstanding fee/charges.',
-            priority: '7',
-            showUpto: '2024-10-02',
-            lastPosted: '2024-09-26',
-            lastPostedBy: 'User',
-            recipients: 200,
-            seen: 150,
-            respond: 100,
-            isActive: false,
-            action: (
-                <div>
-                    <i className="fa-solid fa-pen-to-square text-warning mr-3"></i>
-                    <i className="fa-solid fa-trash-can text-danger mr-3"></i>
-                    <i className="fa-solid fa-paper-plane text-success mr-3"></i>
-                    <Link to="/chat">
-                        <i class="fa-solid fa-comment-dots text-info"></i>
-                    </Link>
-                </div>
+            checkbox: (
+                <form>
+                    <div className="d-flex justify-content-center align-items-center">
+                        <input type="checkbox" className="form-check-input" style={{ width: '18px', height: '18px' }} />
+                    </div>
+                </form>
             ),
+            studentDataId: '26061',
+            mobileNo: '1236547890',
+            schoolShortName: 'APSNR',
+            scholarNo: '785423',
+            sendedId: '',
+            sendedDate: '',
+            isSeen: 'No',
+            isReplyDone: 'No',
         },
         // Add more rows as needed for pagination...
     ];
@@ -98,11 +81,17 @@ const SendMsg = () => {
                                 <div className="col-md-12 grid-margin stretch-card">
                                     <div className="card shadow-sm">
                                         <div className="card-body">
-                                            <p className="card-title">Created Message List</p>
+                                            <p className="card-title">Send Message To</p>
                                             <div className="row">
                                                 <div className="col-12">
                                                     <div className="table-responsive">
                                                         <SortableTable columns={columns} data={data} />
+                                                        <div className="d-flex justify-content-center align-items-center">
+                                                            <button className="btn btn-info mr-2">Select All</button>
+                                                            <button className="btn btn-outline-info mr-2">Deselect All</button>
+                                                            <button className="btn btn-light mr-2">Cancel</button>
+                                                            <button type="submit" className="btn btn-success">Send Message</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

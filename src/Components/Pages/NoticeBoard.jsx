@@ -6,6 +6,7 @@ import SortableTable from '../Template/SortableTable';
 import callAPI from '../../commonMethod/api';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const NoticeBoard = () => {
     const [datas, setDatas] = useState({ title: '', document_type: '', document_link: '', thumbnails: '' })
@@ -110,7 +111,7 @@ const NoticeBoard = () => {
         sn: val?.id,
         title: val?.title,
         documentType: val?.document_type,
-        documentLink: val?.document_link,
+        documentLink: (<Link to={val?.document_link} className='text-info' target='_blank'>{val?.document_link}</Link>),
         thumbnails: (<img src={val?.thumbnails} className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} />),
         action: (
             <div>
@@ -143,7 +144,7 @@ const NoticeBoard = () => {
         var requestOptions = {
             headers: {
                 "Content-Type": "multipart/form-data",
-              
+
             },
         };
         try {
@@ -162,7 +163,7 @@ const NoticeBoard = () => {
                     thumbnails: response?.data?.url,
                 });
             } else {
-            
+
                 toast.error("Fail To Load");
             }
         } catch (error) {
@@ -180,7 +181,7 @@ const NoticeBoard = () => {
         var requestOptions = {
             headers: {
                 "Content-Type": "multipart/form-data",
-              
+
             },
         };
         try {
@@ -199,7 +200,7 @@ const NoticeBoard = () => {
                     document_link: response?.data?.url,
                 });
             } else {
-            
+
                 toast.error("Fail To Load");
             }
         } catch (error) {
@@ -305,8 +306,8 @@ const NoticeBoard = () => {
                                                                         onChange={handleImageChange}
                                                                     />
                                                                 </div>
-                                                               
-                                                               { datas.document_type === "PDF" ? <div className="col-md-4 form-group">
+
+                                                                {datas.document_type === "PDF" ? <div className="col-md-4 form-group">
                                                                     <label htmlFor="thumbnail">Pdf Upload Only <span className="text-danger">*</span></label>
                                                                     <input
                                                                         type="file"

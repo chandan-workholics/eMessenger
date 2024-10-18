@@ -202,6 +202,16 @@ const MessageDraft = () => {
                                                                         <option value="4">4</option>
                                                                     </select>
                                                                 </div>
+                                                                <div className="col-md-3 form-group">
+                                                                    <label htmlFor="msgCategory">Add Student<span className="text-danger">*</span></label>
+                                                                    <select className="form-control" id="msgCategory" value={msgCategory} onChange={handleCategoryChange}>
+                                                                        <option value="">Select max 5 Number</option>
+                                                                        <option value="1">1</option>
+                                                                        <option value="2">2</option>
+                                                                        <option value="3">3</option>
+                                                                        <option value="4">4</option>
+                                                                    </select>
+                                                                </div>
                                                             </div>
 
                                                             {/* Conditionally render multi-select inputs based on the selected message category */}
