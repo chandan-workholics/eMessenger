@@ -59,7 +59,7 @@ const GroupMaster = () => {
 
     useEffect(() => {
         fetchData();// eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentPage]);
+    }, [currentPage, rowsPerPage]);
 
     const fetchData = async () => {
         try {
@@ -116,6 +116,10 @@ const GroupMaster = () => {
 
             </div>
         ),
+        addedBy: val.entry_by,
+        addedOn: val.entry_date,
+        editBy: val.entry_by,
+        editOn: val.edit_date,
     })) : [];
 
     const handleupdateGroup = (val) => {
@@ -123,7 +127,7 @@ const GroupMaster = () => {
         openModal();
         setDatas({
             msg_group_name: val.msg_group_name,
-            is_active: val.is_active,
+            is_active: val?.is_active === 1 ? true : false,
             added_user_id: val.added_user_id
         });
     };
@@ -339,7 +343,7 @@ const GroupMaster = () => {
                                                     id="option1"
                                                     autoComplete="off"
                                                     value="1"
-                                                    checked={datas.is_active === '1'}
+                                                    checked={datas.is_active}
                                                     onChange={handleChange}
                                                 /> Active
                                             </label>

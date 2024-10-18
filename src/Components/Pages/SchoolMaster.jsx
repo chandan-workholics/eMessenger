@@ -51,7 +51,7 @@ const SchoolMaster = () => {
         });
     };
 
-    
+
     const closeDeleteModal = () => {
         setIsDeleteModalOpen(false);
     };
@@ -128,13 +128,13 @@ const SchoolMaster = () => {
 
 
     const data = schoolList ? schoolList.map((school) => ({
-        schoolId: school.sch_id,
-        schoolFullName: school.sch_nm,
-        shortName: school.sch_short_nm,
-        isActive: school.is_active ? 'Yes' : 'No',
-        scrollNews: school.scroll_news_text,
-        fontColor: school.text_color,
-        backgroundColor: school.bg_color,
+        schoolId: school?.sch_id,
+        schoolFullName: school?.sch_nm,
+        shortName: school?.sch_short_nm,
+        isActive: school?.is_active === 1 ? true : false,
+        scrollNews: school?.scroll_news_text,
+        fontColor: school?.text_color,
+        backgroundColor: school?.bg_color,
         action: (
             <div>
                 <button onClick={() => handleupdateSchool(school)} type="button" className="btn p-2">
@@ -155,13 +155,19 @@ const SchoolMaster = () => {
         setUpdateSchool(school);
         openModal();
         setDatas({
-            schoolId: school.sch_id,
-            schoolFullName: school.sch_nm,
-            shortName: school.sch_short_nm,
-            isActive: school.is_active ? 'Yes' : 'No',
-            scrollNews: school.scroll_news_text,
-            fontColor: school.text_color,
-            backgroundColor: school.bg_color,
+            sch_id: school.sch_id,
+            sch_nm: school.sch_nm,
+            sch_short_nm: school.sch_short_nm,
+            is_active: school.is_active,
+            address: school.address,
+            contact_no: school.contact_no,
+            website: school.website,
+            email_id: school.email_id,
+            scroll_news_text: school.scroll_news_text,
+            def_msg_ids: school.def_msg_ids,
+            text_color: school.text_color,
+            bg_color: school.bg_color,
+            logo_img: school.logo_img,
         });
     };
 
@@ -512,7 +518,7 @@ const SchoolMaster = () => {
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header d-flex align-items-center bg-ffe2e5 py-3">
-                                <h3 className="modal-title font-weight-bold text-primary">Update Notice Board</h3>
+                                <h4 className="modal-title font-weight-bold text-primary">Update School</h4>
                                 <button type="button" className="close" onClick={closeModal}>
                                     <i class="fa-solid fa-xmark fs-3 text-primary"></i>
                                 </button>
@@ -521,11 +527,11 @@ const SchoolMaster = () => {
                                 <form className="forms-sample" onSubmit={handleUpdate}>
                                     <div className="row">
                                         <div className="col-md-6 form-group">
-                                            <label htmlFor="exampleInputName1">School Full Name <span className="text-danger">*</span></label>
+                                            <label htmlFor="sch_nm">School Full Name <span className="text-danger">*</span></label>
                                             <input
                                                 type="text"
                                                 className="form-control"
-                                                id="exampleInputName1"
+                                                id="sch_nm"
                                                 placeholder="School Full Name"
                                                 name="sch_nm"
                                                 value={datas.sch_nm}
@@ -557,7 +563,7 @@ const SchoolMaster = () => {
                                                         id="option1"
                                                         value="1"
                                                         autoComplete="off"
-                                                        checked={datas.is_active === '1'}
+                                                        checked={datas.is_active}
                                                         onChange={handleChange}
                                                     /> Active
                                                 </label>
@@ -674,7 +680,62 @@ const SchoolMaster = () => {
                                         <div className="col-12">
                                             <h4 className="card-description text-primary font-weight-bolder">Scholar Color</h4>
                                             <div className="row">
-
+                                                <div className="col-md-6 form-group">
+                                                    <label htmlFor="text_color">Text Color</label>
+                                                    <div class="input-group mb-3">
+                                                        <input
+                                                            type="text"
+                                                            class="form-control"
+                                                            placeholder="Pick text color"
+                                                            name='text_color'
+                                                            value={datas.text_color}
+                                                            onChange={handleChange}
+                                                            required
+                                                        />
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text p-0">
+                                                                <input
+                                                                    type="color"
+                                                                    className="h-100 p-0 border-0"
+                                                                    id="text_color"
+                                                                    placeholder=""
+                                                                    name='text_color'
+                                                                    value={datas.text_color}
+                                                                    onChange={handleChange}
+                                                                    required
+                                                                />
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="col-md-6 form-group">
+                                                    <label htmlFor="bg_color">Background Color</label>
+                                                    <div class="input-group mb-3">
+                                                        <input
+                                                            type="text"
+                                                            class="form-control"
+                                                            placeholder="Pick Background color"
+                                                            name='bg_color'
+                                                            value={datas.bg_color}
+                                                            onChange={handleChange}
+                                                            required
+                                                        />
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text p-0">
+                                                                <input
+                                                                    type="color"
+                                                                    className="h-100 p-0 border-0"
+                                                                    id="bg_color"
+                                                                    placeholder=""
+                                                                    name='bg_color'
+                                                                    value={datas.bg_color}
+                                                                    onChange={handleChange}
+                                                                    required
+                                                                />
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <hr />
