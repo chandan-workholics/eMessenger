@@ -105,7 +105,7 @@ const NoticeBoard = () => {
         title: val?.title,
         documentType: val?.document_type,
         documentLink: val?.document_link,
-        thumbnails: val?.thumbnails,
+        thumbnails: (<img src={val?.thumbnails} className='' alt='' style={{ width: '130px', height: '80px', objectFit:'contain' }} />),
         action: (
             <div>
                 <button onClick={() => handleUpdateNotice(val)} type="button" className="btn">
