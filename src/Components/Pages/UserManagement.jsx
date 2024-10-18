@@ -177,8 +177,6 @@ const UserManagement = () => {
                                         <h3 className="font-weight-bold mr-2">User Management</h3>
                                     </div>
                                 </div>
-
-
                                 <div className="col-12 col-md-6 mb-4 mb-xl-0">
                                     <div className="d-flex align-items-center justify-content-end mb-3">
                                         <div className="btn-group" role="group" aria-label="Basic example">
@@ -333,14 +331,6 @@ const UserManagement = () => {
                                                     <div className="card-body">
                                                         <p className="card-title">User List</p>
                                                         <div className="row">
-                                                            <div class="ml-auto col-md-3 form-group">
-                                                                <div class="input-group">
-                                                                    <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" />
-                                                                    <div class="input-group-append">
-                                                                        <button class="btn btn-sm btn-primary px-4" type="button">Filter</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
                                                             <div className="col-12">
                                                                 <div className="table-responsive">
                                                                     <SortableTable columns={columns} data={data} />

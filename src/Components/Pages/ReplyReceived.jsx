@@ -63,7 +63,7 @@ const ReplyReceived = () => {
                         <div className="row">
                             <div className="col-12 col-md-6 mb-md-4 mb-xl-0">
                                 <div className="d-flex align-items-center mb-3">
-                                    <h3 className="font-weight-bold mr-2">Reply Received</h3>
+                                    <h3 className="font-weight-bold mr-2">Inbox</h3>
                                 </div>
                             </div>
                             <div className="col-md-12 grid-margin stretch-card">
@@ -71,20 +71,6 @@ const ReplyReceived = () => {
                                     <div className="card-body">
                                         <p className="card-title">Reply Received List</p>
                                         <div className="row">
-                                            <div className="col-12">
-                                                <form className="forms-sample">
-                                                    <div className="row">
-                                                        <div class="ml-auto col-md-3 form-group">
-                                                            <div class="input-group">
-                                                                <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" />
-                                                                <div class="input-group-append">
-                                                                    <button class="btn btn-sm btn-primary px-4" type="button">Filter</button>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
                                             <div className="col-12">
                                                 <div className="table-responsive">
                                                     <SortableTable columns={columns} data={data} />

@@ -78,7 +78,7 @@ const ImportScholar = () => {
                             <div className="row">
                                 <div className="col-12 col-xl-8 mb-4 mb-xl-0">
                                     <div className="d-flex align-items-center mb-3">
-                                        <h3 className="font-weight-bold mr-2">Scholar Import</h3>
+                                        <h3 className="font-weight-bold mr-2">Import Student</h3>
                                         <h6 className="text-primary font-weight-bold">NEW</h6>
                                     </div>
                                 </div>
@@ -123,7 +123,7 @@ const ImportScholar = () => {
                                 <div className="col-md-12 grid-margin stretch-card">
                                     <div className="card shadow-sm">
                                         <div className="card-body">
-                                            <p className="card-title">Advanced Table</p>
+                                            <p className="card-title">Student List</p>
                                             <div className="row">
                                                 <div className="col-12">
                                                     <div className="table-responsive">

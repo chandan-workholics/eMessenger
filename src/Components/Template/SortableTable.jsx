@@ -2,13 +2,32 @@ import React, { useState, useEffect } from 'react';
 
 const SortableTable = ({ columns, data }) => {
     const [tableData, setTableData] = useState(data || []); // Data state
+    const [filteredData, setFilteredData] = useState(data || []); // Filtered data state
+    const [searchTerm, setSearchTerm] = useState(''); // Search term state
     const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
     const [currentPage, setCurrentPage] = useState(1);
     const rowsPerPage = 10; // Number of rows per page
 
     useEffect(() => {
         setTableData(data); // Update table data when `data` prop changes
+        setFilteredData(data); // Update filtered data when `data` prop changes
     }, [data]);
+
+    // Handle search input change
+    const handleSearchChange = (e) => {
+        const value = e.target.value;
+        setSearchTerm(value);
+
+        // Filter data based on search term
+        const lowercasedFilter = value.toLowerCase();
+        const filteredResults = tableData.filter(item =>
+            columns.some(column =>
+                String(item[column.key]).toLowerCase().includes(lowercasedFilter)
+            )
+        );
+        setFilteredData(filteredResults);
+        setCurrentPage(1); // Reset to first page when searching
+    };
 
     // Function to handle sorting
     const handleSort = (key) => {
@@ -17,14 +36,14 @@ const SortableTable = ({ columns, data }) => {
             direction = 'descending';
         }
 
-        const sortedData = [...tableData].sort((a, b) => {
+        const sortedData = [...filteredData].sort((a, b) => {
             if (a[key] < b[key]) return direction === 'ascending' ? -1 : 1;
             if (a[key] > b[key]) return direction === 'ascending' ? 1 : -1;
             return 0;
         });
 
         setSortConfig({ key, direction });
-        setTableData(sortedData);
+        setFilteredData(sortedData);
     };
 
     // Display the sorting icon
@@ -38,7 +57,7 @@ const SortableTable = ({ columns, data }) => {
     // Paginate the data
     const paginateData = () => {
         const startIndex = (currentPage - 1) * rowsPerPage;
-        return tableData.slice(startIndex, startIndex + rowsPerPage);
+        return filteredData.slice(startIndex, startIndex + rowsPerPage);
     };
 
     // Handle page change
@@ -47,11 +66,26 @@ const SortableTable = ({ columns, data }) => {
     };
 
     // Calculate total number of pages
-    const totalPages = Math.ceil(tableData.length / rowsPerPage);
+    const totalPages = Math.ceil(filteredData.length / rowsPerPage);
 
- 
     return (
         <div>
+            {/* Search Input */}
+            <div className="row w-100">
+                <div class="ml-auto col-md-3 form-group">
+                    <div class="input-group">
+                        <input type="text"
+                            placeholder="Search..."
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                            class="form-control" />
+                        <div class="input-group-append">
+                            <button class="btn btn-sm btn-primary px-4" type="button">Filter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <table id='example' className="display expandable-table table-hover w-100 mb-4">
                 <thead>
                     <tr>
@@ -63,15 +97,23 @@ const SortableTable = ({ columns, data }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {paginateData().map((row, rowIndex) => (
-                        <tr key={rowIndex}>
-                            {columns.map((column) => (
-                                <td key={column.key}>
-                                    {column.key === 'action' ? row[column.key] : row[column.key] !== undefined ? row[column.key] : ''}
-                                </td>
-                            ))}
+                    {filteredData.length === 0 ? (
+                        <tr>
+                            <td colSpan={columns.length} className="text-center">
+                                <strong>Data Not Found</strong>
+                            </td>
                         </tr>
-                    ))}
+                    ) : (
+                        paginateData().map((row, rowIndex) => (
+                            <tr key={rowIndex}>
+                                {columns.map((column) => (
+                                    <td key={column.key}>
+                                        {column.key === 'action' ? row[column.key] : row[column.key] !== undefined ? row[column.key] : ''}
+                                    </td>
+                                ))}
+                            </tr>
+                        ))
+                    )}
                 </tbody>
             </table>
 

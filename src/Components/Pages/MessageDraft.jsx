@@ -125,7 +125,7 @@ const MessageDraft = () => {
                             <div className="row">
                                 <div className="col-12 col-md-6 mb-md-4 mb-xl-0">
                                     <div className="d-flex align-items-center mb-3">
-                                        <h3 className="font-weight-bold mr-2">Message Draft</h3>
+                                        <h3 className="font-weight-bold mr-2">Create Message</h3>
                                     </div>
                                 </div>
 
@@ -156,45 +156,10 @@ const MessageDraft = () => {
                                                 <div className="card shadow-sm">
                                                     <div className="card-body">
                                                         <div className="d-flex align-items-center mb-2">
-                                                            <h4 className="card-title mb-0 mr-2">Message Entry</h4>
+                                                            <h4 className="card-title mb-0 mr-2">New Message</h4>
                                                             <p className="text-danger font-weight-bold mb-0">NEW</p>
                                                         </div>
                                                         <h5 className="card-description text-primary font-weight-bolder mt-3">General Info</h5>
-                                                        {/* <form className="forms-sample">
-                                                            <div className="row">
-                                                                <div className="col-md-3 form-group">
-                                                                    <label htmlFor="priority">Message Category<span className="text-danger">*</span></label>
-                                                                    <select className="form-control" id="msgCategory">
-                                                                        <option>Chat</option>
-                                                                        <option>Group Chat</option>
-                                                                        <option>Display</option>
-                                                                        <option>input</option>
-                                                                    </select>
-                                                                </div>
-                                                                <div className="col-md-3 form-group">
-                                                                    <label htmlFor="subjectLine">Subject Line<span className="text-danger">*</span></label>
-                                                                    <input type="text" className="form-control" id="subjectLine" placeholder="Subject Line" />
-                                                                </div>
-                                                                <div className="col-md-3 form-group">
-                                                                    <label htmlFor="priority">Priority (1-High)<span className="text-danger">*</span></label>
-                                                                    <select className="form-control" id="priority">
-                                                                        {[...Array(10).keys()].map((val) => (
-                                                                            <option key={val + 1}>{val + 1}</option>
-                                                                        ))}
-                                                                    </select>
-                                                                </div>
-                                                                <div className="col-md-3 form-group">
-                                                                    <label htmlFor="showUpto">Show Upto Date & Time <span className="text-danger">*</span></label>
-                                                                    <input type="date" className="form-control" id="showUpto" />
-                                                                </div>
-                                                                <div className="col-md-3 form-group">
-                                                                    <label htmlFor="schools">Schools<span className="text-danger">*</span></label>
-                                                                    <input type="text" className="form-control" id="schools" placeholder="School Names" />
-                                                                </div>
-                                                            </div>
-                                                            <button type="submit" className="btn btn-primary mr-2">Submit</button>
-                                                            <button className="btn btn-light">Cancel</button>
-                                                        </form> */}
                                                         <form className="forms-sample">
                                                             <div className="row">
                                                                 <div className="col-md-3 form-group">
@@ -330,22 +295,8 @@ const MessageDraft = () => {
                                             <div className="col-md-12 grid-margin stretch-card">
                                                 <div className="card shadow-sm">
                                                     <div className="card-body">
-                                                        <p className="card-title">Message List</p>
+                                                        <p className="card-title">Created Message List</p>
                                                         <div className="row">
-                                                            <div className="col-12">
-                                                                <form className="forms-sample">
-                                                                    <div className="row">
-                                                                        <div class="ml-auto col-md-3 form-group">
-                                                                            <div class="input-group">
-                                                                                <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" />
-                                                                                <div class="input-group-append">
-                                                                                    <button class="btn btn-sm btn-primary px-4" type="button">Filter</button>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
                                                             <div className="col-12">
                                                                 <div className="table-responsive">
                                                                     <SortableTable columns={columns} data={data} />

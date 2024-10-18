@@ -168,7 +168,7 @@ const NoticeBoard = () => {
                                                 <div className="card shadow-sm">
                                                     <div className="card-body">
                                                         <div className="d-flex align-items-center mb-3">
-                                                            <h4 className="card-title mb-0 mr-2">Notice Board Content</h4>
+                                                            <h4 className="card-title mb-0 mr-2">Create Notice</h4>
                                                             <p className="text-danger font-weight-bold mb-0">NEW</p>
                                                         </div>
                                                         <form className="forms-sample" onSubmit={handleSubmit}>
@@ -243,14 +243,6 @@ const NoticeBoard = () => {
                                                     <div className="card-body">
                                                         <p className="card-title">Notice List</p>
                                                         <div className="row">
-                                                            <div class="ml-auto col-md-3 form-group">
-                                                                <div class="input-group">
-                                                                    <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" />
-                                                                    <div class="input-group-append">
-                                                                        <button class="btn btn-sm btn-primary px-4" type="button">Filter</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
                                                             <div className="col-12">
                                                                 <div className="table-responsive">
                                                                     <SortableTable columns={columns} data={data} />

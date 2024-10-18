@@ -63,7 +63,7 @@ const Sidebar = () => {
                     <li className="nav-item">
                         <Link className="nav-link" to="/school-master">
                             <i className="fa-solid fa-graduation-cap menu-icon"></i>
-                            <span className="menu-title mr-3">School Master</span>
+                            <span className="menu-title mr-3">School</span>
                         </Link>
                     </li>
                     <p className="text-secondary menu-text mt-2 mb-0">

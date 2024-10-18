@@ -22,7 +22,7 @@ const Calendar = () => {
 
     const renderDaysOfWeek = () => {
         return daysOfWeek.map((day, index) => (
-            <div className="col text-center font-weight-bold py-2" key={index}>
+            <div className="col text-center font-weight-bold py-2 px-2" key={index}>
                 {day}
             </div>
         ));
@@ -98,7 +98,7 @@ const Calendar = () => {
                     </button>
                 </div>
             </div>
-            <div className="card-body">
+            <div className="card-body p-0 p-xl-auto">
                 <div className="row">{renderDaysOfWeek()}</div>
                 {renderCells()}
             </div>

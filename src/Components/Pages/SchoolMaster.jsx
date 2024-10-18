@@ -51,6 +51,7 @@ const SchoolMaster = () => {
         });
     };
 
+    
     const closeDeleteModal = () => {
         setIsDeleteModalOpen(false);
     };
@@ -211,7 +212,6 @@ const SchoolMaster = () => {
 
                 <div className="container-fluid page-body-wrapper">
 
-
                     <Sidebar />
 
                     <div className="main-panel">
@@ -219,8 +219,7 @@ const SchoolMaster = () => {
                             <div className="row">
                                 <div className="col-12 col-md-6 mb-4 mb-xl-0">
                                     <div className="d-flex align-items-center mb-3">
-                                        <h3 className="font-weight-bold mr-2">School Master</h3>
-
+                                        <h3 className="font-weight-bold mr-2">School</h3>
                                     </div>
                                 </div>
                                 <div className="col-12 col-md-6 mb-4 mb-xl-0">
@@ -274,7 +273,6 @@ const SchoolMaster = () => {
                                                                         value={datas.sch_short_nm}
                                                                         onChange={handleChange}
                                                                         required
-
                                                                     />
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
@@ -398,7 +396,62 @@ const SchoolMaster = () => {
                                                             <hr />
                                                             <h4 className="card-description text-primary font-weight-bolder">Scholar Color</h4>
                                                             <div className="row">
-
+                                                                <div className="col-md-6 form-group">
+                                                                    <label htmlFor="text_color">Text Color</label>
+                                                                    <div class="input-group mb-3">
+                                                                        <input
+                                                                            type="text"
+                                                                            class="form-control"
+                                                                            placeholder="Pick text color"
+                                                                            name='text_color'
+                                                                            value={datas.text_color}
+                                                                            onChange={handleChange}
+                                                                            required
+                                                                        />
+                                                                        <div class="input-group-prepend">
+                                                                            <span class="input-group-text p-0">
+                                                                                <input
+                                                                                    type="color"
+                                                                                    className="h-100 p-0 border-0"
+                                                                                    id="text_color"
+                                                                                    placeholder=""
+                                                                                    name='text_color'
+                                                                                    value={datas.text_color}
+                                                                                    onChange={handleChange}
+                                                                                    required
+                                                                                />
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-md-6 form-group">
+                                                                    <label htmlFor="bg_color">Background Color</label>
+                                                                    <div class="input-group mb-3">
+                                                                        <input
+                                                                            type="text"
+                                                                            class="form-control"
+                                                                            placeholder="Pick Background color"
+                                                                            name='bg_color'
+                                                                            value={datas.bg_color}
+                                                                            onChange={handleChange}
+                                                                            required
+                                                                        />
+                                                                        <div class="input-group-prepend">
+                                                                            <span class="input-group-text p-0">
+                                                                                <input
+                                                                                    type="color"
+                                                                                    className="h-100 p-0 border-0"
+                                                                                    id="bg_color"
+                                                                                    placeholder=""
+                                                                                    name='bg_color'
+                                                                                    value={datas.bg_color}
+                                                                                    onChange={handleChange}
+                                                                                    required
+                                                                                />
+                                                                            </span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                             <hr />
                                                             <h4 className="card-description text-primary font-weight-bolder">School Logo</h4>
@@ -427,7 +480,6 @@ const SchoolMaster = () => {
                                                                 </div>
                                                             </div>
                                                         </div>
-
                                                         <nav>
                                                             <ul className="pagination justify-content-end">
                                                                 <li className="page-item">
@@ -634,12 +686,12 @@ const SchoolMaster = () => {
                                         </div>
                                     </div>
                                     <div className="modal-footer pb-0 px-0">
-                                    <div className="d-flex align-items-center">
-                                        <button type="button" className="btn btn-secondary mr-3" onClick={closeModal}>Close</button>
-                                        <button type="submit" className="btn btn-primary" disabled={loading}>
-                                            {loading ? 'Updating...' : 'Update'}
-                                        </button>
-                                    </div>
+                                        <div className="d-flex align-items-center">
+                                            <button type="button" className="btn btn-secondary mr-3" onClick={closeModal}>Close</button>
+                                            <button type="submit" className="btn btn-primary" disabled={loading}>
+                                                {loading ? 'Updating...' : 'Update'}
+                                            </button>
+                                        </div>
                                     </div>
                                 </form>
                             </div>

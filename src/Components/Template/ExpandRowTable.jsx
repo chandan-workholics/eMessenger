@@ -2,12 +2,30 @@ import React, { useState, useEffect } from 'react';
 
 const ExpandRowTable = ({ columns, rows, data }) => {
     const [tableData, setTableData] = useState(data || []); // Data state
+    const [searchTerm, setSearchTerm] = useState(''); // Search term state
+    const [filteredData, setFilteredData] = useState(data || []); // Filtered data state
     const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
     const [expandedRows, setExpandedRows] = useState([]); // Track expanded rows
 
     useEffect(() => {
         setTableData(data); // Update table data when `data` prop changes
+        setFilteredData(data); // Update filtered data when `data` prop changes
     }, [data]);
+
+    // Handle search input change
+    const handleSearchChange = (e) => {
+        const value = e.target.value;
+        setSearchTerm(value);
+
+        // Filter data based on search term
+        const lowercasedFilter = value.toLowerCase();
+        const filteredResults = tableData.filter(item =>
+            columns.some(column =>
+                String(item[column.key]).toLowerCase().includes(lowercasedFilter)
+            )
+        );
+        setFilteredData(filteredResults);
+    };
 
     // Function to handle sorting
     const handleSort = (key) => {
@@ -16,14 +34,14 @@ const ExpandRowTable = ({ columns, rows, data }) => {
             direction = 'descending';
         }
 
-        const sortedData = [...tableData].sort((a, b) => {
+        const sortedData = [...filteredData].sort((a, b) => {
             if (a[key] < b[key]) return direction === 'ascending' ? -1 : 1;
             if (a[key] > b[key]) return direction === 'ascending' ? 1 : -1;
             return 0;
         });
 
         setSortConfig({ key, direction });
-        setTableData(sortedData);
+        setFilteredData(sortedData);
     };
 
     // Display the sorting icon
@@ -45,6 +63,22 @@ const ExpandRowTable = ({ columns, rows, data }) => {
 
     return (
         <div>
+            {/* Search Input */}
+            <div className="row w-100">
+                <div class="ml-auto col-md-3 form-group">
+                    <div class="input-group">
+                        <input type="text"
+                            placeholder="Search..."
+                            value={searchTerm}
+                            onChange={handleSearchChange}
+                            class="form-control" />
+                        <div class="input-group-append">
+                            <button class="btn btn-sm btn-primary px-4" type="button">Filter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <table id='example' className="display expandable-table table-hover w-100 mb-4">
                 <thead>
                     <tr>
@@ -57,49 +91,57 @@ const ExpandRowTable = ({ columns, rows, data }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {tableData.map((row, rowIndex) => (
-                        <React.Fragment key={rowIndex}>
-                            {/* Main Row */}
-                            <tr>
-                                {columns.map((column) => (
-                                    <td key={column.key} className=''>
-                                        {column.key === 'action' ? row[column.key] : row[column.key] !== undefined ? row[column.key].toString() : ''}
-                                    </td>
-                                ))}
-                                <td className='p-0 px-2'>
-                                    {/* Expand/Collapse Button */}
-                                    <button className='border-0 bg-transparent w-100' onClick={() => toggleExpandRow(rowIndex)} style={{ height: '40px' }}>
-                                        {expandedRows.includes(rowIndex) ? <i className="fa-solid fa-angle-up"></i> : <i className="fa-solid fa-angle-down"></i>}
-                                    </button>
-                                </td>
-                            </tr>
-
-                            {/* Expanded Row */}
-                            {expandedRows.includes(rowIndex) && (
-                                <tr className=''>
-                                    <td colSpan={columns.length + 1} style={{ backgroundColor: '#eaeaf1' }} className='rounded-bottom'>
-                                        <div className="expanded-content">
-                                            {/* Render any additional dynamic content for this row */}
-                                            <p><strong>Additional Details:</strong></p>
-                                            <ul>
-                                                <li>School ID: {row.schoolId}</li>
-                                                <li>Full Name: {row.schoolFullName}</li>
-                                                <li>Short Name: {row.shortName}</li>
-                                                <li>Active: {row.isActive}</li>
-                                                <li>Scroll News: {row.scrollNews}</li>
-                                                <li>Font Color: {row.fontColor}</li>
-                                                <li>Background Color: {row.backgroundColor}</li>
-                                                <li>Added By: {row.addedBy}</li>
-                                                <li>Added On: {row.addedOn}</li>
-                                                <li>Edited By: {row.editBy}</li>
-                                                <li>Edited On: {row.editOn}</li>
-                                            </ul>
-                                        </div>
+                    {filteredData.length === 0 ? (
+                        <tr>
+                            <td colSpan={columns.length + 1} className="text-center">
+                                <strong>Data Not Found</strong>
+                            </td>
+                        </tr>
+                    ) : (
+                        filteredData.map((row, rowIndex) => (
+                            <React.Fragment key={rowIndex}>
+                                {/* Main Row */}
+                                <tr>
+                                    {columns.map((column) => (
+                                        <td key={column.key}>
+                                            {column.key === 'action' ? row[column.key] : row[column.key] !== undefined ? row[column.key].toString() : ''}
+                                        </td>
+                                    ))}
+                                    <td className='p-0 px-2'>
+                                        {/* Expand/Collapse Button */}
+                                        <button className='border-0 bg-transparent w-100' onClick={() => toggleExpandRow(rowIndex)} style={{ height: '40px' }}>
+                                            {expandedRows.includes(rowIndex) ? <i className="fa-solid fa-angle-up"></i> : <i className="fa-solid fa-angle-down"></i>}
+                                        </button>
                                     </td>
                                 </tr>
-                            )}
-                        </React.Fragment>
-                    ))}
+
+                                {/* Expanded Row */}
+                                {expandedRows.includes(rowIndex) && (
+                                    <tr>
+                                        <td colSpan={columns.length + 1} style={{ backgroundColor: '#eaeaf1' }} className='rounded-bottom'>
+                                            <div className="expanded-content">
+                                                {/* Render any additional dynamic content for this row */}
+                                                <p><strong>Additional Details:</strong></p>
+                                                <ul>
+                                                    <li>School ID: {row.schoolId}</li>
+                                                    <li>Full Name: {row.schoolFullName}</li>
+                                                    <li>Short Name: {row.shortName}</li>
+                                                    <li>Active: {row.isActive}</li>
+                                                    <li>Scroll News: {row.scrollNews}</li>
+                                                    <li>Font Color: {row.fontColor}</li>
+                                                    <li>Background Color: {row.backgroundColor}</li>
+                                                    <li>Added By: {row.addedBy}</li>
+                                                    <li>Added On: {row.addedOn}</li>
+                                                    <li>Edited By: {row.editBy}</li>
+                                                    <li>Edited On: {row.editOn}</li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )}
+                            </React.Fragment>
+                        ))
+                    )}
                 </tbody>
             </table>
         </div>
