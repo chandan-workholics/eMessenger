@@ -12,7 +12,9 @@ const SubGroupMaster = () => {
     const [datas, setDatas] = useState({ msg_sgroup_name: '', is_active: '1', added_user_id: '1', msg_group_id: '' })
     const [updateSubGroup, setUpdateSubGroup] = useState({});
     const [subGroupList, setSubGroupList] = useState([]);
+
     const [GroupList, setGroupList] = useState([]);
+
     const [deleteid, Setdeleteid] = useState('')
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -42,7 +44,7 @@ const SubGroupMaster = () => {
     const fetchGroupData = async () => {
         try {
             setLoading(true);
-            const response = await callAPI.get(`./msg/getSubGroupDetail?page=1&limit=100`);
+            const response = await callAPI.get(`./msg/getGroupDetail?page=1&limit=100`);
             setGroupList(response.data.data || []);
         } catch (error) {
             setError(error.message);
@@ -184,6 +186,8 @@ const SubGroupMaster = () => {
         });
     }
 
+    console.log(GroupList)
+
     return (
         <>
             <div className="container-scroller">
@@ -245,7 +249,7 @@ const SubGroupMaster = () => {
                                                                         </div>
                                                                         <div className="col-md-3 form-group">
                                                                             <label for="userType">Main Group<span className="text-danger">*</span></label>
-                                                                            <select className="form-control" name='msg_group_id' id="msg_group_id" onChange={handleChange}>
+                                                                            <select className="form-control" name='msg_group_id' onChange={handleChange}>
                                                                                 {GroupList?.map((val) => {
                                                                                     return (
                                                                                         <option value={val?.msg_group_id}>{val?.msg_group_name}</option>
