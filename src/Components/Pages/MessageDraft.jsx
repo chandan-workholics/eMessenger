@@ -11,7 +11,10 @@ const MessageDraft = () => {
     // Handle adding new message fields
     const [loading, setLoading] = useState(true);
     const [schoolList, setSchoolList] = useState([]);
+    const [subgroup, setSubgroup] = useState([]);
     const [school, setschool] = useState([]);
+    const [number, setNumber] = useState([]);
+    const [parentsnumber, setParentsNumber] = useState([]);
 
     const fetchData = async () => {
         try {
@@ -25,10 +28,95 @@ const MessageDraft = () => {
         }
     };
 
+    const fetchSubGroup = async () => {
+        try {
+            setLoading(true);
+            const response = await callAPI.get(`/msg/getSubGroupDetail?page=1&limit=200`);
+            setSubgroup(response.data.data || []);
+        } catch (error) {
+            console.error('Error fetching SubGroupDetail data:', error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchParentsNo = async () => {
+        try {
+            setLoading(true);
+            const response = await callAPI.get(`/scholar/get_MainList_ScholarDetail`);
+            setNumber(response.data.data || []);
+        } catch (error) {
+            console.error('Error fetching ParentsNo data:', error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         fetchData();// eslint-disable-next-line react-hooks/exhaustive-deps
+        fetchSubGroup();// eslint-disable-next-line react-hooks/exhaustive-deps
+        fetchParentsNo();// eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const [datas, setDatas] = useState({
+        subject_text: '',
+        show_upto: '',
+        msg_priority: '1',
+        msg_sgroup_id: '',
+        is_reply_type: '0',
+        is_reply_required_any: '1',
+        is_active: '1',
+        entry_by: '1',
+        school_id: '',
+        message_body: [],
+    })
+
+    let name, value;
+    const handleChange = (e) => {
+        name = e.target.name;
+        value = e.target.value;
+        setDatas({ ...datas, [name]: value })
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await callAPI.post(`./msg/insertMsgData`, {
+                subject_text: datas?.subject_text,
+                show_upto: datas?.show_upto,
+                msg_priority: datas?.msg_priority,
+                msg_sgroup_id: datas?.msg_sgroup_id,
+                is_reply_type: datas?.is_reply_type,
+                is_reply_required_any: datas?.is_reply_required_any,
+                is_active: datas?.is_active,
+                entry_by: datas?.entry_by,
+                school_id: school?.map((val) => val?.sch_id),
+                message_body: [
+                    {
+                        "msg_type": "text-display",
+                        "data_text": "{\"text\":\"(School Name)<br>\\r\\n<br>\\r\\nOSC:_______________<br>\\r\\n<br>\\r\\nDate: ______________<br>\\r\\n<br>\\r\\nTo<br>Dear Parents<br>\\r\\n<br>\\r\\nSubject : Festival Celebration at school.<br>\\r\\n<br>\\r\\nReference : Our earlier Circular No. OSC: CIR/2023-24/____ Dated: ________<br>\\r\\n<br>\\r\\nYou are already delaying the deposition of fee of your ward, now it's our humble request to deposit the fee at the earliest. .<br>\"}",
+                        "order_number": 1,
+                        "is_reply_required": 0
+                    },
+                    {
+                        "msg_type": "TITLE-DISPLAY",
+                        "data_text": "{\"title\":\"*Celebration  (Most important and urgent).\"}",
+                        "order_number": 1,
+                        "is_reply_required": 0
+                    },
+                ],
+            });
+            if (response.status >= 200 && response.status < 300) {
+                fetchData();
+                toast.success('School added successfully');
+            } else {
+                toast.error('Failed to add School');
+            }
+        } catch (error) {
+            console.error('Error submitting form:', error);
+            toast.error('An error occurred while submitting the form');
+        }
+    };
 
     // Handle adding new message fields
 
@@ -112,30 +200,9 @@ const MessageDraft = () => {
                 </div>
             ),
         },
-        {
-            msgId: 2,
-            subjectLineSchools: 'Reminder - 2 for Second Term outstanding fee/charges.',
-            priority: '7',
-            showUpto: '2024-10-02',
-            lastPosted: '2024-09-26',
-            lastPostedBy: 'User',
-            recipients: 200,
-            seen: 150,
-            respond: 100,
-            isActive: false,
-            action: (
-                <div>
-                    <i className="fa-solid fa-pen-to-square text-warning mr-3"></i>
-                    <i className="fa-solid fa-trash-can text-danger mr-3"></i>
-                    <i className="fa-solid fa-paper-plane text-success mr-3"></i>
-                    <Link to="/chat">
-                        <i class="fa-solid fa-comment-dots text-info"></i>
-                    </Link>
-                </div>
-            ),
-        },
-        // Add more rows as needed for pagination...
     ];
+
+    console.log(datas)
 
     return (
         <>
@@ -188,7 +255,7 @@ const MessageDraft = () => {
                                                             <p className="text-danger font-weight-bold mb-0">NEW</p>
                                                         </div>
                                                         <h5 className="card-description text-primary font-weight-bolder mt-3">General Info</h5>
-                                                        <form className="forms-sample">
+                                                        <form className="forms-sample" onSubmit={handleSubmit}>
                                                             <div className="row">
                                                                 <div className="col-md-3 form-group">
                                                                     <label htmlFor="msgCategory">Message Category<span className="text-danger">*</span></label>
@@ -202,11 +269,11 @@ const MessageDraft = () => {
                                                                 </div>
                                                                 <div className="col-md-3 form-group">
                                                                     <label htmlFor="subjectLine">Subject Line<span className="text-danger">*</span></label>
-                                                                    <input type="text" className="form-control" id="subjectLine" placeholder="Subject Line" />
+                                                                    <input type="text" className="form-control" id="subjectLine" placeholder="Subject Line" name='subject_text' value={datas?.subject_text} onChange={handleChange} />
                                                                 </div>
                                                                 <div className="col-md-3 form-group">
                                                                     <label htmlFor="priority">Priority (1-High)<span className="text-danger">*</span></label>
-                                                                    <select className="form-control" id="priority">
+                                                                    <select className="form-control" id="priority" name='msg_priority' value={datas?.msg_priority} onChange={handleChange}>
                                                                         {[...Array(10).keys()].map((val) => (
                                                                             <option key={val + 1}>{val + 1}</option>
                                                                         ))}
@@ -214,7 +281,7 @@ const MessageDraft = () => {
                                                                 </div>
                                                                 <div className="col-md-3 form-group">
                                                                     <label htmlFor="showUpto">Show Upto Date & Time<span className="text-danger">*</span></label>
-                                                                    <input type="date" className="form-control" id="showUpto" />
+                                                                    <input type="date" className="form-control" id="showUpto" name='show_upto' value={datas?.show_upto} onChange={handleChange} />
                                                                 </div>
                                                                 <div className="col-md-3 form-group">
                                                                     <label htmlFor="schools">Schools<span className="text-danger">*</span></label>
@@ -233,23 +300,28 @@ const MessageDraft = () => {
                                                                 </div>
                                                                 <div className="col-md-3 form-group">
                                                                     <label htmlFor="msgCategory">Group/Sub Group<span className="text-danger">*</span></label>
-                                                                    <select className="form-control" id="msgCategory" value={msgCategory} onChange={handleCategoryChange}>
+                                                                    <select className="form-control" id="msgCategory" name='msg_sgroup_id' value={datas?.msg_sgroup_id} onChange={handleChange}>
                                                                         <option value="">Select Group/Sub Group</option>
-                                                                        <option value="1">1</option>
-                                                                        <option value="2">2</option>
-                                                                        <option value="3">3</option>
-                                                                        <option value="4">4</option>
+                                                                        {subgroup?.map((val) => {
+                                                                            return (
+                                                                                <option value={val?.msg_sgroup_id}>{val?.msg_group_mst?.msg_group_name}- {val?.msg_sgroup_name}</option>
+                                                                            )
+                                                                        })}
+
                                                                     </select>
                                                                 </div>
                                                                 <div className="col-md-3 form-group">
                                                                     <label htmlFor="msgCategory">Add Student<span className="text-danger">*</span></label>
-                                                                    <select className="form-control" id="msgCategory" value={msgCategory} onChange={handleCategoryChange}>
-                                                                        <option value="">Select max 5 Number</option>
-                                                                        <option value="1">1</option>
-                                                                        <option value="2">2</option>
-                                                                        <option value="3">3</option>
-                                                                        <option value="4">4</option>
-                                                                    </select>
+                                                                    <Multiselect className='inputHead'
+                                                                        onRemove={(event) => {
+                                                                            console.log(event);
+                                                                        }}
+                                                                        onSelect={(event) => {
+                                                                            setParentsNumber(event);
+                                                                        }}
+                                                                        options={number}
+                                                                        displayValue="student_family_mobile_number"
+                                                                        showCheckbox />
                                                                 </div>
                                                             </div>
 
