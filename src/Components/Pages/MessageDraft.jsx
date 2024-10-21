@@ -159,6 +159,28 @@ const MessageDraft = () => {
         }
     };
 
+    //geting
+    const [messageList, setMessageList] = useState([]);
+    const [totalPages, setTotalPages] = useState(0);
+    const rowsPerPage = 10;
+
+    const fetchListData = async () => {
+        try {
+            setLoading(true);
+            const response = await callAPI.get(`./msg/getMsgDetail?page=1&limit=50`);
+            setMessageList(response.data.data || []);
+            setTotalPages(Math.ceil(response?.data?.pagination?.totalRecords / rowsPerPage));
+        } catch (error) {
+            console.error('Error fetching notice data:', error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchListData();
+    }, []);
+
     // Table columns
     const columns = [
         { label: 'Msg ID', key: 'msgId' },
@@ -175,32 +197,32 @@ const MessageDraft = () => {
     ];
 
     // Table data
-    const data = [
-        {
-            msgId: 1,
-            subjectLineSchools: 'Reminder - 2 for Second Term outstanding fee/charges.',
-            priority: '6',
-            showUpto: '2024-10-01',
-            lastPosted: '2024-09-25',
-            lastPostedBy: 'Admin',
-            recipients: 100,
-            seen: 80,
-            respond: 50,
-            isActive: true,
-            action: (
-                <div>
-                    <i className="fa-solid fa-pen-to-square text-warning mr-3"></i>
-                    <i className="fa-solid fa-trash-can text-danger mr-3"></i>
-                    <Link to="/send-message">
-                        <i className="fa-solid fa-paper-plane text-success mr-3"></i>
-                    </Link>
-                    <Link to="/chat">
-                        <i class="fa-solid fa-comment-dots text-info"></i>
-                    </Link>
-                </div>
-            ),
-        },
-    ];
+    const data = messageList ? messageList?.map((val) => ({
+        msgId: val?.msg_id,
+        subjectLineSchools: val?.subject_text,
+        priority: val?.msg_priority,
+        showUpto: val?.show_upto,
+        lastPosted: val?.entry_date,
+        lastPostedBy: val?.entry_by,
+        recipients: 'Na',
+        seen: 'Na',
+        respond: 'Na',
+        isActive: val?.is_active,
+        action: (
+            <div>
+                <i className="fa-solid fa-pen-to-square text-warning mr-3"></i>
+                <i className="fa-solid fa-trash-can text-danger mr-3"></i>
+                <Link to="/send-message">
+                    <i className="fa-solid fa-paper-plane text-success mr-3"></i>
+                </Link>
+                <Link to="/chat">
+                    <i class="fa-solid fa-comment-dots text-info"></i>
+                </Link>
+            </div>
+        ),
+    })) : [];
+
+    //geting
 
     console.log(datas)
 
