@@ -6,15 +6,15 @@ import SortableTable from '../Template/SortableTable';
 import callAPI from '../../commonMethod/api';
 import { toast } from 'react-toastify';
 
-const WelcomeMsg = () => {
-    
+const AppScrollNews = () => {
+
     const [datas, setDatas] = useState({ detail: '' });
-    const [updateWelcomeMsg, setUpdateWelcomeMsg] = useState({});
+    const [updateAppScrollNews, setUpdateAppScrollNews] = useState({});
     const [deleteid, Setdeleteid] = useState('')
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [welcomeMsglList, setWelcomeMsgList] = useState([]);
+    const [appScrollNewsList, setappScrollNewsList] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
     const [error, setError] = useState(null);
     const rowsPerPage = 10;
@@ -41,9 +41,9 @@ const WelcomeMsg = () => {
         setLoading(true);
         setError(null);
         try {
-            callAPI.post(`./welcomemsg/createAppTopWelcomeMsg`, datas).then(async (response) => {
+            callAPI.post(`./appScrollerMsg/createScrollerData`, datas).then(async (response) => {
                 if (response.status === 201 || response.status === 200) {
-                    toast.success("Welcome Message Added Successfully");
+                    toast.success("App Scroll News Added Successfully");
                     setLoading(false);
                     fetchData();
                 } else {
@@ -53,7 +53,7 @@ const WelcomeMsg = () => {
             });
         } catch (error) {
             setLoading(false);
-            console.error('Error adding welcome message:', error.message);
+            console.error('Error adding App Scroll News:', error.message);
         }
     };
 
@@ -64,8 +64,8 @@ const WelcomeMsg = () => {
     const fetchData = async () => {
         try {
             setLoading(true);
-            const response = await callAPI.get(`./welcomemsg/appTopWelcomeMsg`);
-            setWelcomeMsgList(response.data.data || []);
+            const response = await callAPI.get(`./appScrollerMsg/getAppScrollerMsgDetail`);
+            setappScrollNewsList(response.data.data || []);
             setTotalPages(Math.ceil(response?.data?.pagination?.totalRecords / rowsPerPage));
         } catch (error) {
             console.error('Error fetching welcome messgae data:', error.message);
@@ -75,28 +75,28 @@ const WelcomeMsg = () => {
     };
 
     const columns = [
-        { label: 'Id', key: 'welcome_id' },
+        { label: 'Id', key: 'scroller_id' },
         { label: 'Detail', key: 'detail' },
         { label: 'Action', key: 'action' }
     ];
 
-    const data = welcomeMsglList ? welcomeMsglList?.map((val) => ({
-        welcome_id: val?.welcome_id,
+    const data = appScrollNewsList ? appScrollNewsList?.map((val) => ({
+        scroller_id: val?.scroller_id,
         detail: val?.detail,
         action: (
             <div>
-                <button onClick={() => handleUpdateWelcomeMsg(val)} type="button" className="btn p-2">
+                <button onClick={() => handleupdateAppScrollNews(val)} type="button" className="btn p-2">
                     <i className="fa-solid fa-pen-to-square text-warning"></i>
                 </button>
-                <button onClick={() => handleDelete(val?.welcome_id)} type="button" className="btn p-2">
+                <button onClick={() => handleDelete(val?.scroller_id)} type="button" className="btn p-2">
                     <i className="fa-solid fa-trash-can text-danger"></i>
                 </button>
             </div>
         ),
     })) : [];
 
-    const handleUpdateWelcomeMsg = (val) => {
-        setUpdateWelcomeMsg(val);
+    const handleupdateAppScrollNews = (val) => {
+        setUpdateAppScrollNews(val);
         openModal();
         setDatas({
             detail: val.detail
@@ -108,9 +108,9 @@ const WelcomeMsg = () => {
         setLoading(true);
         setError(null);
         try {
-            await callAPI.put(`./welcomemsg/updateAppTopWelcomeMsg/${updateWelcomeMsg.welcome_id}`, datas).then((response) => {
+            await callAPI.put(`./appScrollerMsg/updateScrollerData/${updateAppScrollNews.scroller_id}`, datas).then((response) => {
                 if (response.status === 201 || response.status === 200) {
-                    toast.success("Welcome Message Updated Successfully");
+                    toast.success("App Scroll News Updated Successfully");
                     closeModal();
                     fetchData();
                 } else {
@@ -118,7 +118,7 @@ const WelcomeMsg = () => {
                 }
             });
         } catch (error) {
-            setError('Error updating welcome message: ' + error.message);
+            setError('Error updating app scroll news: ' + error.message);
         } finally {
             setLoading(false);
         }
@@ -130,7 +130,7 @@ const WelcomeMsg = () => {
     };
 
     function deleteItem(id) {
-        callAPI.del(`./welcomemsg/deleteAppTopWelcomeMsg/${id}`).then(async (response) => {
+        callAPI.del(`./appScrollerMsg/deleteScrollerData/${id}`).then(async (response) => {
             if (response.status === 200 || response.status === 201) {
                 toast.success('Delete Item Successfully');
                 closeDeleteModal();
@@ -148,7 +148,7 @@ const WelcomeMsg = () => {
 
     console.log(totalPages)
     console.log(error)
-    console.log('update welcome', updateWelcomeMsg)
+    console.log('update App News', updateAppScrollNews)
 
     return (
         <>
@@ -166,7 +166,7 @@ const WelcomeMsg = () => {
                             <div className="row">
                                 <div className="col-12 col-md-6 mb-md-4 mb-xl-0">
                                     <div className="d-flex align-items-center mb-3">
-                                        <h3 className="font-weight-bold mr-2">Welcome Message</h3>
+                                        <h3 className="font-weight-bold mr-2">App Scroll News Message</h3>
                                     </div>
                                 </div>
 
@@ -197,7 +197,7 @@ const WelcomeMsg = () => {
                                                 <div className="card shadow-sm">
                                                     <div className="card-body">
                                                         <div className="d-flex align-items-center mb-2">
-                                                            <h4 className="card-title mb-0 mr-2">New Welcome Message</h4>
+                                                            <h4 className="card-title mb-0 mr-2">News Message</h4>
                                                             <p className="text-danger font-weight-bold mb-0">NEW</p>
                                                         </div>
                                                         <form className="forms-sample" onSubmit={handleSubmit}>
@@ -234,7 +234,7 @@ const WelcomeMsg = () => {
                                             <div className="col-md-12 grid-margin stretch-card">
                                                 <div className="card shadow-sm">
                                                     <div className="card-body">
-                                                        <p className="card-title">Welcome Message List</p>
+                                                        <p className="card-title">App Scroll News List</p>
                                                         <div className="row">
                                                             <div className="col-12">
                                                                 <div className="table-responsive">
@@ -328,4 +328,4 @@ const WelcomeMsg = () => {
     )
 }
 
-export default WelcomeMsg
+export default AppScrollNews

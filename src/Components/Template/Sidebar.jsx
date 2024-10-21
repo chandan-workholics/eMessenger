@@ -39,6 +39,12 @@ const Sidebar = () => {
                             <span className="menu-title mr-3">Welcome Message</span>
                         </Link>
                     </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/app-scroll-news">
+                            <i className="fa-solid fa-chalkboard menu-icon"></i>
+                            <span className="menu-title mr-3">App Scroll News</span>
+                        </Link>
+                    </li>
                     <p className="text-secondary menu-text mt-2 mb-0">
                         <span>MASTER</span> <i className="fas fa-ellipsis-h"></i>
                     </p>
