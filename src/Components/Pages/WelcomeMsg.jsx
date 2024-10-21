@@ -107,7 +107,7 @@ const WelcomeMsg = () => {
         setLoading(true);
         setError(null);
         try {
-            await callAPI.put(`./welcomemsg/updateAppTopWelcomeMsg/${updateWelcomeMsg.id}`, datas).then((response) => {
+            await callAPI.put(`./welcomemsg/updateAppTopWelcomeMsg/${updateWelcomeMsg.welcome_id}`, datas).then((response) => {
                 if (response.status === 201 || response.status === 200) {
                     toast.success("Welcome Message Updated Successfully");
                     closeModal();
@@ -147,6 +147,7 @@ const WelcomeMsg = () => {
 
     console.log(totalPages)
     console.log(error)
+    console.log('update welcome', updateWelcomeMsg)
 
     return (
         <>
