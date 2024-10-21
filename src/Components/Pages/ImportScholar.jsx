@@ -134,6 +134,8 @@ const ImportScholar = () => {
                                                                     <th>Mobile Number</th>
                                                                     <th>School Short Name</th>
                                                                     <th>Student Name</th>
+                                                                    <th>Student DOB</th>
+                                                                    <th>Student Email</th>
                                                                     <th>Student Id</th>
                                                                 </tr>
                                                             </thead>
@@ -144,6 +146,8 @@ const ImportScholar = () => {
                                                                         <td>{val.mobile_no}</td>
                                                                         <td>{val.sch_short_nm}</td>
                                                                         <td>{val.student_name || ''}</td>
+                                                                        <td></td>
+                                                                        <td></td>
                                                                         <td>{val.scholar_no}</td>
                                                                     </tr>
                                                                 ))}
