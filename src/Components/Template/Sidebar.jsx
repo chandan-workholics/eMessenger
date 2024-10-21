@@ -55,6 +55,12 @@ const Sidebar = () => {
                         </Link>
                     </li>
                     <li className="nav-item">
+                        <Link className="nav-link" to="/fees-master">
+                            <i className="fa-solid fa-file-import menu-icon"></i>
+                            <span className="menu-title mr-3">Fees Master</span>
+                        </Link>
+                    </li>
+                    <li className="nav-item">
                         <Link className="nav-link" to="/group-master">
                             <i className="fa-solid fa-user-group menu-icon"></i>
                             <span className="menu-title mr-3">Group</span>

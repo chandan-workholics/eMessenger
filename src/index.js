@@ -21,6 +21,7 @@ import ProtectedRoute from './commonMethod/ProtectedRoute.jsx';
 import SendMsg from './Components/Pages/SendMsg.jsx';
 import WelcomeMsg from './Components/Pages/WelcomeMsg.jsx';
 import AppScrollNews from './Components/Pages/AppScrollNews.jsx';
+import FeesMaster from './Components/Pages/FeesMaster.jsx';
 
 interceptor();
 
@@ -43,6 +44,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/app-scroll-news" element={<ProtectedRoute element={<AppScrollNews />} />} />
         <Route path="/chat" element={<ProtectedRoute element={<Chat />} />} />
         <Route path="/reply-received" element={<ProtectedRoute element={<ReplyReceived />} />} />
+        <Route path="/fees-master" element={<ProtectedRoute element={<FeesMaster />} />} />
         <Route path="/group-master" element={<ProtectedRoute element={<GroupMaster />} />} />
         <Route path="/sub-group" element={<ProtectedRoute element={<SubGroupMaster />} />} />
         <Route path="/user-management" element={<ProtectedRoute element={<UserManagement />} />} />
