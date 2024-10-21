@@ -30,13 +30,7 @@ const NoticeBoard = () => {
         value = e.target.value;
         setDatas({ ...datas, [name]: value })
     }
-    // const handleChange2 = (e) => {
-    //     const { name, value } = e.target;
-    //     setDatas((prevData) => ({
-    //         ...prevData,
-    //         [name]: value,  // Set the value of the specific field in the state
-    //     }));
-    // };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -75,7 +69,6 @@ const NoticeBoard = () => {
             setLoading(false);
         }
     };
-
 
     const handleUpdate = async (e) => {
         e.preventDefault();
