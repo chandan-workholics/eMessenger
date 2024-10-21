@@ -1,10 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../Template/Navbar';
 import Sidebar from '../Template/Sidebar';
 import SortableTable from '../Template/SortableTable';
+import callAPI from '../../commonMethod/api.js';
+import Multiselect from "multiselect-react-dropdown";
+import { toast } from 'react-toastify';
 
 const MessageDraft = () => {
+    // Handle adding new message fields
+    const [loading, setLoading] = useState(true);
+    const [schoolList, setSchoolList] = useState([]);
+    const [school, setschool] = useState([]);
+
+    const fetchData = async () => {
+        try {
+            setLoading(true);
+            const response = await callAPI.get(`/school/getSchool?page=1&limit=200`);
+            setSchoolList(response.data.data || []);
+        } catch (error) {
+            console.error('Error fetching school data:', error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();// eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+
+    // Handle adding new message fields
+
+
 
     const [msgCategory, setMsgCategory] = useState('');
     const [displayFields, setDisplayFields] = useState([]);
@@ -190,7 +218,18 @@ const MessageDraft = () => {
                                                                 </div>
                                                                 <div className="col-md-3 form-group">
                                                                     <label htmlFor="schools">Schools<span className="text-danger">*</span></label>
-                                                                    <input type="text" className="form-control" id="schools" placeholder="School Names" />
+
+                                                                    <Multiselect className='inputHead'
+                                                                        onRemove={(event) => {
+                                                                            console.log(event);
+                                                                        }}
+                                                                        onSelect={(event) => {
+                                                                            setschool(event);
+                                                                        }}
+                                                                        options={schoolList}
+                                                                        displayValue="sch_nm"
+                                                                        showCheckbox />
+
                                                                 </div>
                                                                 <div className="col-md-3 form-group">
                                                                     <label htmlFor="msgCategory">Group/Sub Group<span className="text-danger">*</span></label>
