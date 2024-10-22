@@ -126,8 +126,15 @@ const MessageDraft = () => {
     const [displayFields, setDisplayFields] = useState([]);
     const [inputFields, setInputFields] = useState([]);
 
-    const handleCategoryChange = (e) => {
-        setMsgCategory(e.target.value);
+    const handleCategoryChange = (event) => {
+        const { value, checked } = event.target;
+        if (checked) {
+            // Add the category to the array
+            setMsgCategory(prevCategories => [...prevCategories, value]);
+        } else {
+            // Remove the category from the array
+            setMsgCategory(prevCategories => prevCategories.filter(category => category !== value));
+        }
     };
 
     // Handle adding new display input fields
@@ -279,21 +286,34 @@ const MessageDraft = () => {
                                                         <h5 className="card-description text-primary font-weight-bolder mt-3">General Info</h5>
                                                         <form className="forms-sample" onSubmit={handleSubmit}>
                                                             <div className="row">
-                                                                <div className="col-md-3 form-group">
+                                                                <div className="col-md-4 form-group">
                                                                     <label htmlFor="msgCategory">Message Category<span className="text-danger">*</span></label>
-                                                                    <select className="form-control" id="msgCategory" value={msgCategory} onChange={handleCategoryChange}>
-                                                                        <option value="">Select Category</option>
-                                                                        <option value="Chat">Chat</option>
-                                                                        <option value="Group Chat">Group Chat</option>
-                                                                        <option value="Display">Display</option>
-                                                                        <option value="Input">Input</option>
-                                                                    </select>
+                                                                    <div className="d-flex justify-content-between form-control border-0">
+                                                                        <div className="custom-control custom-checkbox">
+                                                                            <input type="checkbox" className="custom-control-input" id="Chat" value="Chat" onChange={handleCategoryChange} />
+                                                                            <label className="custom-control-label" htmlFor="Chat">Chat</label>
+                                                                        </div>
+                                                                        <div className="custom-control custom-checkbox">
+                                                                            <input type="checkbox" className="custom-control-input" id="GroupChat" value="Group Chat" onChange={handleCategoryChange} />
+                                                                            <label className="custom-control-label" htmlFor="GroupChat">Group Chat</label>
+                                                                        </div>
+                                                                        <div className="custom-control custom-checkbox">
+                                                                            <input type="checkbox" className="custom-control-input" id="Display" value="Display" onChange={handleCategoryChange} />
+                                                                            <label className="custom-control-label" htmlFor="Display">Display</label>
+                                                                        </div>
+                                                                        <div className="custom-control custom-checkbox">
+                                                                            <input type="checkbox" className="custom-control-input" id="Input" value="Input" onChange={handleCategoryChange} />
+                                                                            <label className="custom-control-label" htmlFor="Input">Input</label>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div className="col-md-3 form-group">
+                                                            </div>
+                                                            <div className="row">
+                                                                <div className="col-md-4 form-group">
                                                                     <label htmlFor="subjectLine">Subject Line<span className="text-danger">*</span></label>
                                                                     <input type="text" className="form-control" id="subjectLine" placeholder="Subject Line" name='subject_text' value={datas?.subject_text} onChange={handleChange} />
                                                                 </div>
-                                                                <div className="col-md-3 form-group">
+                                                                <div className="col-md-4 form-group">
                                                                     <label htmlFor="priority">Priority (1-High)<span className="text-danger">*</span></label>
                                                                     <select className="form-control" id="priority" name='msg_priority' value={datas?.msg_priority} onChange={handleChange}>
                                                                         {[...Array(10).keys()].map((val) => (
@@ -301,13 +321,12 @@ const MessageDraft = () => {
                                                                         ))}
                                                                     </select>
                                                                 </div>
-                                                                <div className="col-md-3 form-group">
+                                                                <div className="col-md-4 form-group">
                                                                     <label htmlFor="showUpto">Show Upto Date & Time<span className="text-danger">*</span></label>
                                                                     <input type="date" className="form-control" id="showUpto" name='show_upto' value={datas?.show_upto} onChange={handleChange} />
                                                                 </div>
-                                                                <div className="col-md-3 form-group">
+                                                                <div className="col-md-4 form-group">
                                                                     <label htmlFor="schools">Schools<span className="text-danger">*</span></label>
-
                                                                     <Multiselect className='inputHead'
                                                                         onRemove={(event) => {
                                                                             console.log(event);
@@ -318,9 +337,8 @@ const MessageDraft = () => {
                                                                         options={schoolList}
                                                                         displayValue="sch_nm"
                                                                         showCheckbox />
-
                                                                 </div>
-                                                                <div className="col-md-3 form-group">
+                                                                <div className="col-md-4 form-group">
                                                                     <label htmlFor="msgCategory">Group/Sub Group<span className="text-danger">*</span></label>
                                                                     <select className="form-control" id="msgCategory" name='msg_sgroup_id' value={datas?.msg_sgroup_id} onChange={handleChange}>
                                                                         <option value="">Select Group/Sub Group</option>
@@ -332,7 +350,7 @@ const MessageDraft = () => {
 
                                                                     </select>
                                                                 </div>
-                                                                <div className="col-md-3 form-group">
+                                                                <div className="col-md-4 form-group">
                                                                     <label htmlFor="msgCategory">Add Student<span className="text-danger">*</span></label>
                                                                     <Multiselect className='inputHead'
                                                                         onRemove={(event) => {
@@ -348,11 +366,12 @@ const MessageDraft = () => {
                                                             </div>
 
                                                             {/* Conditionally render multi-select inputs based on the selected message category */}
-                                                            {msgCategory === 'Display' && (
-                                                                <div className="row">
+                                                            <div className="row">
+                                                                {msgCategory.includes('Display') && (
                                                                     <div className="col-md-6 form-group">
                                                                         <label htmlFor="displayOptions">Display Options</label>
-                                                                        <select className="form-control" id="displayOptions" multiple onChange={handleDisplayOptionsChange}>
+                                                                        <select className="form-control" id="displayOptions" onChange={handleDisplayOptionsChange}>
+                                                                            <option value="" selected disabled>Select Display Options</option>
                                                                             <option value="TitleDisplay">Title Display</option>
                                                                             <option value="TextDisplay">Text Display</option>
                                                                             <option value="LinkDisplay">Link Display</option>
@@ -360,14 +379,13 @@ const MessageDraft = () => {
                                                                             <option value="ImageDisplay">Image Display</option>
                                                                         </select>
                                                                     </div>
-                                                                </div>
-                                                            )}
+                                                                )}
 
-                                                            {msgCategory === 'Input' && (
-                                                                <div className="row">
+                                                                {msgCategory.includes('Input') && (
                                                                     <div className="col-md-6 form-group">
                                                                         <label htmlFor="inputOptions">Input Options</label>
-                                                                        <select className="form-control" id="inputOptions" multiple onChange={handleInputOptionsChange}>
+                                                                        <select className="form-control" id="inputOptions" onChange={handleInputOptionsChange}>
+                                                                            <option value="" selected disabled>Select Input Options</option>
                                                                             <option value="Text">Option Input</option>
                                                                             <option value="Number">Checkbox Input</option>
                                                                             <option value="Dropdown">Textbox Input</option>
@@ -376,60 +394,64 @@ const MessageDraft = () => {
                                                                             <option value="Dropdown">File Input</option>
                                                                         </select>
                                                                     </div>
-                                                                </div>
-                                                            )}
+                                                                )}
+                                                            </div>
 
                                                             {/* Display additional fields dynamically based on the selected options */}
                                                             <div className="row">
                                                                 {/* Display Options Fields */}
-                                                                {displayFields.map((field) => (
-                                                                    <div key={field.id} className="col-md-6 form-group">
-                                                                        <label>{field.type} {field.type === 'Title Display' ? 'Text' : field.type === 'Text Display' ? 'Text' : 'Text'}</label>
-                                                                        <div className="d-flex align-items-end">
-                                                                            <input
-                                                                                type={field.type === 'Title Display' || field.type === 'Text Display' || field.type === 'Link Display' || field.type === 'Youtube Display' || field.type === 'Image Display' ? 'text' : ''}
-                                                                                className="form-control"
-                                                                                placeholder={`Enter ${field.type} Text`}
-                                                                            />
-                                                                            <button
-                                                                                type="button"
-                                                                                className="btn border-0"
-                                                                                onClick={() => deleteField(field.id, 'display')}
-                                                                            >
-                                                                                <i class="fa-solid fa-trash-can text-danger"></i>
-                                                                            </button>
+                                                                <div className="col-md-6">
+                                                                    {displayFields.map((field) => (
+                                                                        <div key={field.id} className="col-12 form-group">
+                                                                            <label>{field.type} {field.type === 'Title Display' ? 'Text' : field.type === 'Text Display' ? 'Text' : 'Text'}</label>
+                                                                            <div className="d-flex align-items-end">
+                                                                                <input
+                                                                                    type={field.type === 'Title Display' || field.type === 'Text Display' || field.type === 'Link Display' || field.type === 'Youtube Display' || field.type === 'Image Display' ? 'text' : ''}
+                                                                                    className="form-control"
+                                                                                    placeholder={`Enter ${field.type} Text`}
+                                                                                />
+                                                                                <button
+                                                                                    type="button"
+                                                                                    className="btn border-0"
+                                                                                    onClick={() => deleteField(field.id, 'display')}
+                                                                                >
+                                                                                    <i class="fa-solid fa-trash-can text-danger"></i>
+                                                                                </button>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                ))}
+                                                                    ))}
+                                                                </div>
 
                                                                 {/* Input Options Fields */}
-                                                                {inputFields.map((field) => (
-                                                                    <div key={field.id} className="col-md-6 form-group">
-                                                                        <label>{field.type} Input</label>
-                                                                        <div className="d-flex align-items-end">
-                                                                            {field.type === 'Text' && (
-                                                                                <input type="text" className="form-control" placeholder="Enter Text" />
-                                                                            )}
-                                                                            {field.type === 'Number' && (
-                                                                                <input type="number" className="form-control" placeholder="Enter Number" />
-                                                                            )}
-                                                                            {field.type === 'Dropdown' && (
-                                                                                <select className="form-control">
-                                                                                    <option value="Option 1">Option 1</option>
-                                                                                    <option value="Option 2">Option 2</option>
-                                                                                    <option value="Option 3">Option 3</option>
-                                                                                </select>
-                                                                            )}
-                                                                            <button
-                                                                                type="button"
-                                                                                className="btn border-0"
-                                                                                onClick={() => deleteField(field.id, 'input')}
-                                                                            >
-                                                                                <i class="fa-solid fa-trash-can text-danger"></i>
-                                                                            </button>
+                                                                <div className="col-md-6">
+                                                                    {inputFields.map((field) => (
+                                                                        <div key={field.id} className="col-12 form-group">
+                                                                            <label>{field.type} Input</label>
+                                                                            <div className="d-flex align-items-end">
+                                                                                {field.type === 'Text' && (
+                                                                                    <input type="text" className="form-control" placeholder="Enter Text" />
+                                                                                )}
+                                                                                {field.type === 'Number' && (
+                                                                                    <input type="number" className="form-control" placeholder="Enter Number" />
+                                                                                )}
+                                                                                {field.type === 'Dropdown' && (
+                                                                                    <select className="form-control">
+                                                                                        <option value="Option 1">Option 1</option>
+                                                                                        <option value="Option 2">Option 2</option>
+                                                                                        <option value="Option 3">Option 3</option>
+                                                                                    </select>
+                                                                                )}
+                                                                                <button
+                                                                                    type="button"
+                                                                                    className="btn border-0"
+                                                                                    onClick={() => deleteField(field.id, 'input')}
+                                                                                >
+                                                                                    <i class="fa-solid fa-trash-can text-danger"></i>
+                                                                                </button>
+                                                                            </div>
                                                                         </div>
-                                                                    </div>
-                                                                ))}
+                                                                    ))}
+                                                                </div>
                                                             </div>
 
                                                             {/* Submit and Cancel buttons */}
