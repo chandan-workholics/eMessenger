@@ -123,17 +123,11 @@ const ExpandRowTable = ({ columns, rows, data }) => {
                                                 {/* Render any additional dynamic content for this row */}
                                                 <p><strong>Additional Details:</strong></p>
                                                 <ul>
-                                                    <li>School ID: {row.schoolId}</li>
-                                                    <li>Full Name: {row.schoolFullName}</li>
-                                                    <li>Short Name: {row.shortName}</li>
-                                                    <li>Active: {row.isActive}</li>
-                                                    <li>Scroll News: {row.scrollNews}</li>
-                                                    <li>Font Color: {row.fontColor}</li>
-                                                    <li>Background Color: {row.backgroundColor}</li>
-                                                    <li>Added By: {row.addedBy}</li>
-                                                    <li>Added On: {row.addedOn}</li>
-                                                    <li>Edited By: {row.editBy}</li>
-                                                    <li>Edited On: {row.editOn}</li>
+                                                {rows.map((rows, idx) => (
+                                                        <li key={idx}>
+                                                            <strong>{rows.label}:</strong> {rows.key}
+                                                        </li>
+                                                    ))}
                                                 </ul>
                                             </div>
                                         </td>
