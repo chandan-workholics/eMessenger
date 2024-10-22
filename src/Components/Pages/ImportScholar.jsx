@@ -3,7 +3,9 @@ import Navbar from '../Template/Navbar';
 import SidebarSettingPannel from '../Template/SidebarSettingPannel';
 import Sidebar from '../Template/Sidebar';
 import Loding from '../Template/Loding';
+import { toast } from 'react-toastify';
 import * as XLSX from 'xlsx';
+import axios from 'axios';
 
 const ImportScholar = () => {
     const token = sessionStorage.getItem('token');
@@ -16,30 +18,30 @@ const ImportScholar = () => {
 
     const rowsPerPage = 10;
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                const response = await fetch(`${URL}/scholar/getScholarDetail?page=${currentPage}&limit=${rowsPerPage}`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch(`${URL}/scholar/getScholarDetail?page=${currentPage}&limit=${rowsPerPage}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
                 }
-                const result = await response.json();
-                setImportStudent(result.data);
-                setTotalPages(Math.ceil(result.totalCount / rowsPerPage));
-            } catch (error) {
-                setError(error.message);
-            } finally {
-                setLoading(false);
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-        };
+            const result = await response.json();
+            setImportStudent(result.data);
+            setTotalPages(Math.ceil(result.totalCount / rowsPerPage));
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchData();// eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage]);
 
@@ -55,6 +57,58 @@ const ImportScholar = () => {
         XLSX.utils.book_append_sheet(wb, ws, 'Scholar Data');
         XLSX.writeFile(wb, 'Scholar_Data.xlsx');
     };
+
+
+    // upload excel data 
+    const [excelData, setExcelData] = useState([]);
+
+    const handleFileUpload = (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = (event) => {
+            const binaryStr = event.target.result;
+            const workbook = XLSX.read(binaryStr, { type: 'binary' });
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+            setExcelData(worksheet);
+        };
+
+        reader.readAsBinaryString(file);
+    };
+
+    // Function to submit data to API
+    const handleSubmit = async () => {
+        if (excelData.length === 0) {
+            toast.error('Please upload a valid Excel file.');
+            return;
+        }
+
+        try {
+            const response = await axios.post('http://206.189.130.102:3550/api/scholar/insertScholarRecord', {
+                data: excelData,
+            }, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+
+                }
+            });
+            if (response.status === 200) {
+                toast.success('Data imported successfully!');
+                fetchData();
+            } else {
+                toast.error('Failed to import data.');
+            }
+        } catch (error) {
+            toast.error('An error occurred while uploading the data.');
+            console.error(error);
+        }
+    };
+
+
+
+    // upload excel data 
 
     if (loading) {
         return <Loding />;
@@ -84,9 +138,9 @@ const ImportScholar = () => {
                                 <div className="col-12 grid-margin stretch-card">
                                     <div className="card shadow-sm">
                                         <div className="card-body">
-                                            <form className="row forms-sample">
+                                            <div className="row forms-sample">
                                                 <div className="col-md-4">
-                                                    <div className="form-group">
+                                                    {/* <div className="form-group">
                                                         <label>File upload</label>
                                                         <input type="file" className="file-upload-default" />
                                                         <div className="input-group col-xs-12">
@@ -95,7 +149,7 @@ const ImportScholar = () => {
                                                                 <button className="file-upload-browse btn btn-primary" type="button">Upload</button>
                                                             </span>
                                                         </div>
-                                                    </div>
+                                                    </div> */}
                                                     <div className="form-check form-check-flat form-check-primary mb-4">
                                                         <label className="form-check-label">
                                                             Is Column Title in First Row?
@@ -110,10 +164,14 @@ const ImportScholar = () => {
                                                             <i className="input-helper"></i>
                                                         </label>
                                                     </div>
-                                                    <button type="submit" className="btn btn-primary mr-2">Import</button>
+                                                    <input type="file" accept=".xlsx, .xls" onChange={handleFileUpload} />
+                                                    <button type="submit" className="btn btn-primary mr-2" onClick={handleSubmit}>
+                                                        Import
+                                                    </button>
+
                                                     <button type="submit" className="btn btn-success mr-2" onClick={exportToExcel}>Export to Excel</button>
                                                 </div>
-                                            </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
