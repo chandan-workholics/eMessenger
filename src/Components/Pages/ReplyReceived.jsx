@@ -1,11 +1,36 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react'
 import Navbar from '../Template/Navbar';
-import SidebarSettingPannel from '../Template/SidebarSettingPannel';
 import Sidebar from '../Template/Sidebar';
-import SortableTable from '../Template/SortableTable';
+import Loding from '../Template/Loding';
+import ExpandRowTable from '../Template/ExpandRowTable';
+import callAPI from '../../commonMethod/api.js';
+import { toast } from 'react-toastify';
 
 const ReplyReceived = () => {
 
+    const [messageList, setMessageList] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const rowsPerPage = 50;
+
+    useEffect(() => {
+        fetchData();// eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentPage, rowsPerPage]);
+
+    const fetchData = async () => {
+        try {
+            setLoading(true);
+            const response = await callAPI.get(`/msg/getAllReplyMessages?page=${currentPage}&limit=${rowsPerPage}`);
+            setMessageList(response.data.data || []);
+            setTotalPages(Math.ceil(response?.data?.pagination?.totalRecords / rowsPerPage));
+        } catch (error) {
+            console.error('Error fetching school data:', error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     // Table columns
     const columns = [
@@ -17,35 +42,43 @@ const ReplyReceived = () => {
         { label: 'School', key: 'school' },
         { label: 'Student Id', key: 'studentId' },
         { label: 'Sent', key: 'sent' },
-        { label: 'Received Data', key: 'receivedData' },
+    ];
+
+    const rows = [
+        { label: 'Reply Msg Id', key: 'replyMsgId' },
+        { label: 'Msg Body Id', key: 'msgBodyId' },
+        { label: 'Msg Type', key: 'msgType' },
+        { label: 'Data', key: 'dataReplyText' },
+        { label: 'Added By', key: 'addedBy' },
+        { label: 'Added On', key: 'addedOn' },
+        { label: 'Edit By', key: 'editBy' },
+        { label: 'Edit On', key: 'editOn' },
     ];
 
     // Table data
-    const data = [
-        {
-            reqId: 101,
-            msgId: 111,
-            received: '21-Aug-2024 04:20PM',
-            subject: 'Student detail form',
-            mobileNo: '1234567890',
-            school: 'SOAG',
-            studentId: 61400178,
-            sent: '21-Aug-2024 04:18PM',
-            receivedData: 'Data',
-        },
-        {
-            reqId: 110,
-            msgId: 121,
-            received: '21-Aug-2024 04:18PM',
-            subject: 'Stream & Subject Selection Form for Class XI',
-            mobileNo: '0987654321',
-            school: 'APSNR',
-            studentId: 61400125,
-            sent: '21-Aug-2024 04:18PM',
-            receivedData: 'Data',
-        },
-        // Add more rows as needed for pagination...
-    ];
+    const data = messageList ? messageList.map((val) => ({
+        reqId: 101,
+        msgId: val?.msg_id,
+        received: val?.reply_date_time,
+        subject: val?.message.subject_text,
+        mobileNo: val?.mobile_no,
+        school: val?.schools[0].sch_short_nm,
+        studentId: val?.student_main_id,
+        sent: val?.sendedMessage.sended_date,
+        replyMsgId: val?.replyBodies.replied_msg_id,
+        msgBodyId: val?.replyBodies.msg_body_id,
+        msgType: val?.replyBodies.msg_type,
+        dataReplyText: val?.replyBodies.data_reply_text,
+        addedBy: val.entry_by,
+        addedOn: val.entry_date,
+        editBy: val.entry_by,
+        editOn: val.edit_date,
+    })) : [];
+
+    if (loading) {
+        return <Loding />;
+    }
+    console.log(error)
 
     return (
         <div className="container-scroller">
@@ -53,7 +86,6 @@ const ReplyReceived = () => {
             <Navbar />
 
             <div className="container-fluid page-body-wrapper">
-                <SidebarSettingPannel />
 
                 {/* SideBar */}
                 <Sidebar />
@@ -73,7 +105,7 @@ const ReplyReceived = () => {
                                         <div className="row">
                                             <div className="col-12">
                                                 <div className="table-responsive">
-                                                    <SortableTable columns={columns} data={data} />
+                                                    <ExpandRowTable columns={columns} rows={rows} data={data} />
                                                 </div>
                                             </div>
                                         </div>
