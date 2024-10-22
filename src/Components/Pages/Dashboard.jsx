@@ -1,10 +1,31 @@
-import React from 'react'
-import Navbar from '../Template/Navbar'
-import Sidebar from '../Template/Sidebar'
-import Footer from '../Template/Footer'
-import Calendar from '../Template/Calendar'
+import React, { useEffect, useState } from 'react';
+import Navbar from '../Template/Navbar';
+import Sidebar from '../Template/Sidebar';
+import Footer from '../Template/Footer';
+import Calendar from '../Template/Calendar';
+import axios from 'axios';
 
 const Dashboard = () => {
+
+    const [data, setData] = useState({
+        studentTotalRows: 0,
+        distinctMobileCount: 0,
+        msgTotalRows: 0,
+        sendedMsg_this_month: 0,
+        replyMsg_this_month: 0
+    });
+
+    useEffect(() => {
+        // Fetch data from API
+        axios.get('http://206.189.130.102:3550/api/combine/dashboardcount')  // Replace with your actual API endpoint
+            .then(response => {
+                setData(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching the data', error);
+            });
+    }, []);
+
     return (
         <>
             <div className="container-scroller">
@@ -12,8 +33,6 @@ const Dashboard = () => {
                 <Navbar />
 
                 <div className="container-fluid page-body-wrapper">
-                    {/*----- SidebarSettingPannel -----*/}
-                    {/* <SidebarSettingPannel /> */}
 
                     {/*----- SideBar -----*/}
                     <Sidebar />
@@ -43,50 +62,50 @@ const Dashboard = () => {
                                         <div className="card bg-white">
                                             <div className="card-body pb-0">
                                                 <div className="col-md-12 p-0 transparent">
-                                                    <div className="row">
-                                                        <div className="col-md-6 mb-4 stretch-card transparent">
-                                                            <div className="card bg-fff4de">
-                                                                <div className="card-body">
-                                                                    <h4 className="mb-3 text-ffad44">Users (Sign Ups)</h4>
-                                                                    <p className="fs-30 mb-2 text-ffad44">7252</p>
-                                                                    <p>Count of all active Users/Parents</p>
+                                                        <div className="row">
+                                                            <div className="col-md-6 mb-4 stretch-card transparent">
+                                                                <div className="card bg-fff4de">
+                                                                    <div className="card-body">
+                                                                        <h4 className="mb-3 text-ffad44">Users (Sign Ups)</h4>
+                                                                        <p className="fs-30 mb-2 text-ffad44">{data.studentTotalRows}</p>
+                                                                        <p>Count of all active Users/Parents</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-md-6 mb-4 stretch-card transparent">
+                                                                <div className="card bg-e2fff6">
+                                                                    <div className="card-body">
+                                                                        <h4 className="mb-3 text-25c997">Sent (This Month)</h4>
+                                                                        <p className="fs-30 mb-2 text-25c997">{data.sendedMsg_this_month}</p>
+                                                                        <p>Sent Msg. Count</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-md-6 mb-4 stretch-card transparent">
+                                                                <div className="card bg-ffe2e5">
+                                                                    <div className="card-body">
+                                                                        <h4 className="mb-3 text-f64e60">Reply (This Month)</h4>
+                                                                        <p className="fs-30 mb-2 text-f64e60">{data.replyMsg_this_month}</p>
+                                                                        <p>Sent Msg. Reply Count</p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div className="col-md-6 mb-4 stretch-card transparent">
+                                                                <div className="card bg-e1f0ff">
+                                                                    <div className="card-body">
+                                                                        <h4 className="mb-3 text-3699ff">Mobile Nos.(All)</h4>
+                                                                        <p className="fs-30 mb-2 text-3699ff">{data.distinctMobileCount}</p>
+                                                                        <p>Scholar Data Table Rows Count</p>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                        <div className="col-md-6 mb-4 stretch-card transparent">
-                                                            <div className="card bg-e2fff6">
-                                                                <div className="card-body">
-                                                                    <h4 className="mb-3 text-25c997">Sent (This Month)</h4>
-                                                                    <p className="fs-30 mb-2 text-25c997">19945</p>
-                                                                    <p>Sent Msg. Count</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="col-md-6 mb-4 stretch-card transparent">
-                                                            <div className="card bg-ffe2e5">
-                                                                <div className="card-body">
-                                                                    <h4 className="mb-3 text-f64e60">Reply (This Month)</h4>
-                                                                    <p className="fs-30 mb-2 text-f64e60">0</p>
-                                                                    <p>Sent Msg. Reply Count</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div className="col-md-6 mb-4 stretch-card transparent">
-                                                            <div className="card bg-e1f0ff">
-                                                                <div className="card-body">
-                                                                    <h4 className="mb-3 text-3699ff">Mobile Nos.(All)</h4>
-                                                                    <p className="fs-30 mb-2 text-3699ff">26351</p>
-                                                                    <p>Scholar Data Table Rows Count</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                              
+
                                 <div className="col-md-4 grid-margin stretch-card">
                                     <Calendar />
                                 </div>
@@ -342,18 +361,17 @@ const Dashboard = () => {
                                     </div>
                                 </div>
                             </div>
-                          
                         </div>
-                        
 
-                        
+
+
                         <Footer />
                     </div>
-                  
+
                 </div>
-               
+
             </div>
-           
+
         </>
     )
 }

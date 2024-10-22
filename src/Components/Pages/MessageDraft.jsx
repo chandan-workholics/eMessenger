@@ -367,6 +367,9 @@ const MessageDraft = () => {
 
                                                             {/* Conditionally render multi-select inputs based on the selected message category */}
                                                             <div className="row">
+                                                                <div className="col-12">
+                                                                    <h5 className="card-description text-primary font-weight-bolder mt-3">Add New Row In Body</h5>
+                                                                </div>
                                                                 {msgCategory.includes('Display') && (
                                                                     <div className="col-md-6 form-group">
                                                                         <label htmlFor="displayOptions">Display Options</label>
