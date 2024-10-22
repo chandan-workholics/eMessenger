@@ -166,6 +166,8 @@ const MessageDraft = () => {
         }
     };
 
+
+
     //geting
     const [messageList, setMessageList] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
@@ -285,29 +287,7 @@ const MessageDraft = () => {
                                                         </div>
                                                         <h5 className="card-description text-primary font-weight-bolder mt-3">General Info</h5>
                                                         <form className="forms-sample" onSubmit={handleSubmit}>
-                                                            <div className="row">
-                                                                <div className="col-md-4 form-group">
-                                                                    <label htmlFor="msgCategory">Message Category<span className="text-danger">*</span></label>
-                                                                    <div className="d-flex justify-content-between form-control border-0">
-                                                                        <div className="custom-control custom-checkbox">
-                                                                            <input type="checkbox" className="custom-control-input" id="Chat" value="Chat" onChange={handleCategoryChange} />
-                                                                            <label className="custom-control-label" htmlFor="Chat">Chat</label>
-                                                                        </div>
-                                                                        <div className="custom-control custom-checkbox">
-                                                                            <input type="checkbox" className="custom-control-input" id="GroupChat" value="Group Chat" onChange={handleCategoryChange} />
-                                                                            <label className="custom-control-label" htmlFor="GroupChat">Group Chat</label>
-                                                                        </div>
-                                                                        <div className="custom-control custom-checkbox">
-                                                                            <input type="checkbox" className="custom-control-input" id="Display" value="Display" onChange={handleCategoryChange} />
-                                                                            <label className="custom-control-label" htmlFor="Display">Display</label>
-                                                                        </div>
-                                                                        <div className="custom-control custom-checkbox">
-                                                                            <input type="checkbox" className="custom-control-input" id="Input" value="Input" onChange={handleCategoryChange} />
-                                                                            <label className="custom-control-label" htmlFor="Input">Input</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+
                                                             <div className="row">
                                                                 <div className="col-md-4 form-group">
                                                                     <label htmlFor="subjectLine">Subject Line<span className="text-danger">*</span></label>
@@ -366,6 +346,32 @@ const MessageDraft = () => {
                                                             </div>
 
                                                             {/* Conditionally render multi-select inputs based on the selected message category */}
+
+                                                            <div className="row">
+                                                                <div className="col-md-4 form-group">
+                                                                    <label htmlFor="msgCategory">Message Category<span className="text-danger">*</span></label>
+                                                                    <div className="d-flex justify-content-between form-control border-0">
+                                                                        <div className="custom-control custom-checkbox">
+                                                                            <input type="checkbox" className="custom-control-input" id="Chat" value="Chat" onChange={handleCategoryChange} />
+                                                                            <label className="custom-control-label" htmlFor="Chat">Chat</label>
+                                                                        </div>
+                                                                        <div className="custom-control custom-checkbox">
+                                                                            <input type="checkbox" className="custom-control-input" id="GroupChat" value="Group Chat" onChange={handleCategoryChange} />
+                                                                            <label className="custom-control-label" htmlFor="GroupChat">Group Chat</label>
+                                                                        </div>
+                                                                        <div className="custom-control custom-checkbox">
+                                                                            <input type="checkbox" className="custom-control-input" id="Display" value="Display" onChange={handleCategoryChange} />
+                                                                            <label className="custom-control-label" htmlFor="Display">Display</label>
+                                                                        </div>
+                                                                        <div className="custom-control custom-checkbox">
+                                                                            <input type="checkbox" className="custom-control-input" id="Input" value="Input" onChange={handleCategoryChange} />
+                                                                            <label className="custom-control-label" htmlFor="Input">Input</label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+
                                                             <div className="row">
                                                                 {msgCategory.includes('Display') && (
                                                                     <div className="col-md-6 form-group">
@@ -386,12 +392,12 @@ const MessageDraft = () => {
                                                                         <label htmlFor="inputOptions">Input Options</label>
                                                                         <select className="form-control" id="inputOptions" onChange={handleInputOptionsChange}>
                                                                             <option value="" selected disabled>Select Input Options</option>
-                                                                            <option value="Text">Option Input</option>
-                                                                            <option value="Number">Checkbox Input</option>
-                                                                            <option value="Dropdown">Textbox Input</option>
-                                                                            <option value="Dropdown">Textarea Input</option>
-                                                                            <option value="Dropdown">Camera Input</option>
-                                                                            <option value="Dropdown">File Input</option>
+                                                                            <option value="Option">Option Input</option>
+                                                                            <option value="Checkbox">Checkbox Input</option>
+                                                                            <option value="Textbox">Textbox Input</option>
+                                                                            <option value="Textarea">Textarea Input</option>
+                                                                            <option value="Camera">Camera Input</option>
+                                                                            <option value="File">File Input</option>
                                                                         </select>
                                                                     </div>
                                                                 )}
@@ -403,13 +409,25 @@ const MessageDraft = () => {
                                                                 <div className="col-md-6">
                                                                     {displayFields.map((field) => (
                                                                         <div key={field.id} className="col-12 form-group">
-                                                                            <label>{field.type} {field.type === 'Title Display' ? 'Text' : field.type === 'Text Display' ? 'Text' : 'Text'}</label>
+                                                                            <label>{field.type} Output</label>
                                                                             <div className="d-flex align-items-end">
-                                                                                <input
-                                                                                    type={field.type === 'Title Display' || field.type === 'Text Display' || field.type === 'Link Display' || field.type === 'Youtube Display' || field.type === 'Image Display' ? 'text' : ''}
-                                                                                    className="form-control"
-                                                                                    placeholder={`Enter ${field.type} Text`}
-                                                                                />
+                                                                                {field.type === 'TitleDisplay' && (
+                                                                                    <input type="text" className="form-control" />
+                                                                                )}
+                                                                                {field.type === 'TextDisplay' && (
+                                                                                    <input type="text" className="form-control" />
+                                                                                )}
+                                                                                {field.type === 'LinkDisplay' && (
+                                                                                    <input type="text" className="form-control" />
+                                                                                )}
+                                                                                {field.type === 'YoutubeDisplay' && (
+                                                                                    <input type="text" className="form-control" />
+                                                                                )}
+                                                                                {field.type === 'ImageDisplay' && (
+                                                                                    <input type="text" className="form-control" />
+                                                                                )}
+
+
                                                                                 <button
                                                                                     type="button"
                                                                                     className="btn border-0"
@@ -428,19 +446,54 @@ const MessageDraft = () => {
                                                                         <div key={field.id} className="col-12 form-group">
                                                                             <label>{field.type} Input</label>
                                                                             <div className="d-flex align-items-end">
-                                                                                {field.type === 'Text' && (
-                                                                                    <input type="text" className="form-control" placeholder="Enter Text" />
+                                                                                {field.type === 'Option' && (
+                                                                                    <>
+                                                                                        <label htmlFor="">Title:</label>
+                                                                                        <input type="text" class="form-control" />
+                                                                                        <input type="radio" className="form-control" />
+                                                                                    </>
                                                                                 )}
-                                                                                {field.type === 'Number' && (
-                                                                                    <input type="number" className="form-control" placeholder="Enter Number" />
+                                                                                {field.type === 'Checkbox' && (
+                                                                                    <>
+                                                                                        <label htmlFor="">Title:</label>
+                                                                                        <input type="text" class="form-control" />
+                                                                                        <input type="checkbox" className="form-control" />
+                                                                                    </>
+
                                                                                 )}
-                                                                                {field.type === 'Dropdown' && (
-                                                                                    <select className="form-control">
-                                                                                        <option value="Option 1">Option 1</option>
-                                                                                        <option value="Option 2">Option 2</option>
-                                                                                        <option value="Option 3">Option 3</option>
-                                                                                    </select>
+                                                                                {field.type === 'Textbox' && (
+                                                                                    <>
+                                                                                        <label htmlFor="">Title:</label>
+                                                                                        <input type="text" class="form-control" />
+                                                                                        <input type="text" className="form-control" />
+                                                                                    </>
+
                                                                                 )}
+                                                                                {field.type === 'Textarea' && (
+                                                                                    <>
+                                                                                        <label htmlFor="">Title:</label>
+                                                                                        <input type="text" class="form-control" />
+                                                                                        <input type="textarea" rows="5" className="form-control" />
+                                                                                    </>
+
+                                                                                )}
+                                                                                {field.type === 'Camera' && (
+                                                                                    <>
+                                                                                        <label htmlFor="">Title:</label>
+                                                                                        <input type="text" class="form-control" />
+                                                                                        <input type="file" className="form-control" />
+                                                                                    </>
+
+                                                                                )}
+                                                                                {field.type === 'File' && (
+                                                                                    <>
+                                                                                        <label htmlFor="">Title:</label>
+                                                                                        <input type="text" class="form-control" />
+                                                                                        <input type="file" className="form-control" />
+                                                                                    </>
+
+                                                                                )}
+
                                                                                 <button
                                                                                     type="button"
                                                                                     className="btn border-0"
@@ -463,6 +516,9 @@ const MessageDraft = () => {
                                             </div>
                                         </div>
                                     </div>
+
+
+
 
                                     <div className="tab-pane fade" id="list" role="tabpanel" aria-labelledby="list-tab">
                                         {/* Message list */}
