@@ -114,8 +114,6 @@ const ImportScholar = () => {
         return <Loding />;
     }
 
-
-
     return (
         <>
             <div className="container-scroller">
