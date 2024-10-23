@@ -79,34 +79,31 @@ const MessageDraft = () => {
     }
 
 
-
-
-
     const [displayFields, setDisplayFields] = useState([]);
     const [inputFields, setInputFields] = useState([]);
 
     const handleDisplayOptionsChange = (e) => {
         const selectedOptions = [...e.target.selectedOptions].map(option => option.value);
         const newDisplayFields = selectedOptions.map(option => ({
-            id: Date.now() + Math.random(), // Consider using UUID for unique id
+            id: Date.now() + Math.random(),
             type: option,
-            value: '', // Initialize value to track user input
+            value: '',
         }));
         setDisplayFields([...displayFields, ...newDisplayFields]);
-        e.target.value = ''; // Reset the select field
+        e.target.value = '';
     };
 
     const handleInputOptionsChange = (e) => {
         const selectedOptions = [...e.target.selectedOptions].map(option => option.value);
         const newInputFields = selectedOptions.map(option => ({
-            id: Date.now() + Math.random(), // Consider using UUID for unique id 
+            id: Date.now() + Math.random(),
             type: option,
-            title: '', // Initialize title for input fields
-            options: '', // Initialize options for select-type inputs
-            placeholder: '', // Initialize placeholder for text inputs
+            title: '',
+            options: '',
+            placeholder: '',
         }));
         setInputFields([...inputFields, ...newInputFields]);
-        e.target.value = ''; // Reset the select field
+        e.target.value = '';
     };
 
     const deleteField = (id, fieldType) => {
@@ -120,32 +117,32 @@ const MessageDraft = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Prepare data for the API request
+
         const messageBody = [
             ...displayFields.map((field, index) => {
                 let dataText = {};
                 switch (field.type) {
-                    case 'Title':
-                        dataText = { title: field.value || '' }; // Use actual input value
+                    case 'TITLE':
+                        dataText = { title: field.value || '' };
                         break;
-                    case 'Text':
-                        dataText = { text: field.value || '' }; // Use actual input value
+                    case 'TEXT':
+                        dataText = { text: field.value || '' };
                         break;
-                    case 'Link':
-                        dataText = { link: field.value || '' }; // Add link as needed
+                    case 'LINK':
+                        dataText = { link: field.value || '' };
                         break;
-                    case 'Youtube':
-                        dataText = { link: field.value || '' }; // Add link as needed
+                    case 'YOUTUBE':
+                        dataText = { link: field.value || '' };
                         break;
-                    case 'Image':
-                        dataText = { link: field.value || '' }; // Use actual input value
+                    case 'IMAGE':
+                        dataText = { link: field.value || '' };
                         break;
                     default:
                         break;
                 }
                 return {
-                    msg_type: `${field.type.toLowerCase()}-display`, // Convert to lowercase
-                    data_text: JSON.stringify(dataText), // Stringify the data text
+                    msg_type: `${field.type}-DISPLAY`,
+                    data_text: JSON.stringify(dataText),
                     order_number: index + 1,
                     is_reply_required: 0,
                 };
@@ -153,28 +150,28 @@ const MessageDraft = () => {
             ...inputFields.map((field, index) => {
                 let dataText = {};
                 switch (field.type) {
-                    case 'Option':
-                        dataText = { title: field.title || '', options: field.options || '' }; // Use actual input values
+                    case 'OPTION':
+                        dataText = { title: field.title || '', options: field.options || '' };
                         break;
-                    case 'Checkbox':
-                        dataText = { title: field.title || '', options: field.options || '' }; // Use actual input values
+                    case 'CHECKBOX':
+                        dataText = { title: field.title || '', options: field.options || '' };
                         break;
-                    case 'Textbox':
-                        dataText = { title: field.title || '', placeholder: field.placeholder || '' }; // Use actual input values
+                    case 'TEXTBOX':
+                        dataText = { title: field.title || '', placeholder: field.placeholder || '' };
                         break;
-                    case 'Textarea':
-                        dataText = { title: field.title || '', placeholder: field.placeholder || '' }; // Use actual input values
+                    case 'TEXTAREA':
+                        dataText = { title: field.title || '', placeholder: field.placeholder || '' };
                         break;
-                    case 'Camera':
+                    case 'CAMERA':
                     case 'File':
-                        dataText = { title: field.title || '' }; // Use actual input values
+                        dataText = { title: field.title || '' };
                         break;
                     default:
                         break;
                 }
                 return {
-                    msg_type: `${field.type.toLowerCase()}-input`, // Convert to lowercase
-                    data_text: JSON.stringify(dataText), // Stringify the data text
+                    msg_type: `${field.type}-INPUT`,
+                    data_text: JSON.stringify(dataText),
                     order_number: displayFields.length + index + 1,
                     is_reply_required: 1,
                 };
@@ -196,7 +193,6 @@ const MessageDraft = () => {
             });
             if (response.status >= 200 && response.status < 300) {
                 toast.success('Message submitted successfully');
-                // Clear the fields if needed
                 setDisplayFields([]);
                 setInputFields([]);
             } else {
@@ -207,7 +203,6 @@ const MessageDraft = () => {
             toast.error('An error occurred while submitting the form');
         }
     };
-
 
 
     //geting
@@ -392,23 +387,23 @@ const MessageDraft = () => {
                                                                     <label htmlFor="displayOptions">Display Options</label>
                                                                     <select className="form-control" id="displayOptions" onChange={handleDisplayOptionsChange}>
                                                                         <option value="" disabled>Select Display Options</option>
-                                                                        <option value="Title">Title Display</option>
-                                                                        <option value="Text">Text Display</option>
-                                                                        <option value="Link">Link Display</option>
-                                                                        <option value="Youtube">Youtube Display</option>
-                                                                        <option value="Image">Image Display</option>
+                                                                        <option value="TITLE">Title Display</option>
+                                                                        <option value="TEXT">Text Display</option>
+                                                                        <option value="LINK">Link Display</option>
+                                                                        <option value="YOUTUBE">Youtube Display</option>
+                                                                        <option value="IMAGE">Image Display</option>
                                                                     </select>
                                                                 </div>
                                                                 <div className="col-md-6 form-group">
                                                                     <label htmlFor="inputOptions">Input Options</label>
                                                                     <select className="form-control" id="inputOptions" onChange={handleInputOptionsChange}>
                                                                         <option value="" disabled>Select Input Options</option>
-                                                                        <option value="Option">Option Input</option>
-                                                                        <option value="Checkbox">Checkbox Input</option>
-                                                                        <option value="Textbox">Textbox Input</option>
-                                                                        <option value="Textarea">Textarea Input</option>
-                                                                        <option value="Camera">Camera Input</option>
-                                                                        <option value="File">File Input</option>
+                                                                        <option value="OPTION">Option Input</option>
+                                                                        <option value="CHECKBOX">Checkbox Input</option>
+                                                                        <option value="TEXTBOX">Textbox Input</option>
+                                                                        <option value="TEXTAREA">Textarea Input</option>
+                                                                        <option value="CAMERA">Camera Input</option>
+                                                                        <option value="FILE">File Input</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -461,7 +456,7 @@ const MessageDraft = () => {
                                                                                 />
 
 
-                                                                                {(field.type === 'Option' || field.type === 'Checkbox') && (
+                                                                                {(field.type === 'OPTION' || field.type === 'CHECKBOX') && (
                                                                                     <input
                                                                                         type="text"
                                                                                         className="form-control mb-2"
@@ -476,7 +471,7 @@ const MessageDraft = () => {
                                                                                     />
                                                                                 )}
 
-                                                                                {field.type === 'Textbox' && (
+                                                                                {field.type === 'TEXTBOX' && (
                                                                                     <input
                                                                                         type="text"
                                                                                         className="form-control mb-2"
@@ -491,7 +486,7 @@ const MessageDraft = () => {
                                                                                     />
                                                                                 )}
 
-                                                                                {field.type === 'Textarea' && (
+                                                                                {field.type === 'TEXTAREA' && (
                                                                                     <input
                                                                                         type="text"
                                                                                         className="form-control mb-2"
