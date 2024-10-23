@@ -1,9 +1,78 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import Navbar from '../Template/Navbar';
 import Sidebar from '../Template/Sidebar';
 import SortableTable from '../Template/SortableTable';
+import callAPI from '../../commonMethod/api.js';
+import { toast } from 'react-toastify';
 
 const SendMsg = () => {
+    let { id } = useParams();
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [studentList, setStudentList] = useState([]);
+    const [totalPages, setTotalPages] = useState(0);
+    const [selectedIds, setSelectedIds] = useState([]);
+    const rowsPerPage = 10;
+
+    const fetchListData = async () => {
+        try {
+            setLoading(true);
+            const response = await callAPI.get(`./scholar/getlist_main_student_detail?page=1&limit=200`);
+            setStudentList(response.data.data || []);
+            setTotalPages(Math.ceil(response?.data?.pagination?.totalRecords / rowsPerPage));
+        } catch (error) {
+            console.error('Error fetching student data:', error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchListData();
+    }, []);
+
+    const handleSelectAll = () => {
+        const allIds = studentList.map((student) => student.student_number);
+        setSelectedIds(allIds);
+    };
+
+    const handleDeselectAll = () => {
+        setSelectedIds([]);
+    };
+
+    const handleCheckboxChange = (scholarNo) => {
+        if (selectedIds.includes(scholarNo)) {
+            setSelectedIds(selectedIds.filter((id) => id !== scholarNo));
+        } else {
+            setSelectedIds([...selectedIds, scholarNo]);
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        if (selectedIds.length === 0) {
+            toast.error("No students selected!");
+            return;
+        }
+
+        setLoading(true);
+        setError(null);
+        try {
+            const idsString = selectedIds.join(',');
+            const response = await callAPI.get(`./msg/SentMsgToScholarData?new_msg_id=${id}&admin_id=115&selected_ids=${idsString}`);
+
+            if (response.status === 201 || response.status === 200) {
+                toast.success("Message Sent Successfully");
+            } else {
+                setError(response.message || 'Something went wrong');
+            }
+        } catch (error) {
+            console.error('Error sending message:', error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     // Table columns
     const columns = [
@@ -19,43 +88,27 @@ const SendMsg = () => {
     ];
 
     // Table data
-    const data = [
-        {
-            checkbox: (
-                <form>
-                    <div className="d-flex justify-content-center align-items-center">
-                        <input type="checkbox" className="form-check-input" style={{ width: '18px', height: '18px' }} />
-                    </div>
-                </form>
-            ),
-            studentDataId: '26061',
-            mobileNo: '1236547890',
-            schoolShortName: 'APSNR',
-            scholarNo: '785423',
-            sendedId: '',
-            sendedDate: '',
-            isSeen: 'No',
-            isReplyDone: 'No',
-        },
-        {
-            checkbox: (
-                <form>
-                    <div className="d-flex justify-content-center align-items-center">
-                        <input type="checkbox" className="form-check-input" style={{ width: '18px', height: '18px' }} />
-                    </div>
-                </form>
-            ),
-            studentDataId: '26061',
-            mobileNo: '1236547890',
-            schoolShortName: 'APSNR',
-            scholarNo: '785423',
-            sendedId: '',
-            sendedDate: '',
-            isSeen: 'No',
-            isReplyDone: 'No',
-        },
-        // Add more rows as needed for pagination...
-    ];
+    const data = studentList.map((val) => ({
+        checkbox: (
+            <div className="d-flex justify-content-center align-items-center">
+                <input
+                    type="checkbox"
+                    className="form-check-input"
+                    style={{ width: '18px', height: '18px' }}
+                    checked={selectedIds.includes(val.student_number)}
+                    onChange={() => handleCheckboxChange(val.student_number)}
+                />
+            </div>
+        ),
+        studentDataId: val?.student_main_id,
+        mobileNo: val?.student_family_mobile_number,
+        schoolShortName: 'Na',
+        scholarNo: val?.student_number,
+        sendedId: 'Na',
+        sendedDate: 'Na',
+        isSeen: 'Na',
+        isReplyDone: 'Na',
+    }));
 
     return (
         <>
@@ -64,7 +117,6 @@ const SendMsg = () => {
                 <Navbar />
 
                 <div className="container-fluid page-body-wrapper">
-
                     {/* SideBar */}
                     <Sidebar />
 
@@ -86,11 +138,27 @@ const SendMsg = () => {
                                                 <div className="col-12">
                                                     <div className="table-responsive">
                                                         <SortableTable columns={columns} data={data} />
-                                                        <div className="d-flex justify-content-center align-items-center">
-                                                            <button className="btn btn-info mr-2">Select All</button>
-                                                            <button className="btn btn-outline-info mr-2">Deselect All</button>
+                                                        <div className="d-flex justify-content-center align-items-center mt-3">
+                                                            <button
+                                                                className="btn btn-info mr-2"
+                                                                onClick={handleSelectAll}
+                                                            >
+                                                                Select All
+                                                            </button>
+                                                            <button
+                                                                className="btn btn-outline-info mr-2"
+                                                                onClick={handleDeselectAll}
+                                                            >
+                                                                Deselect All
+                                                            </button>
                                                             <button className="btn btn-light mr-2">Cancel</button>
-                                                            <button type="submit" className="btn btn-success">Send Message</button>
+                                                            <button
+                                                                type="submit"
+                                                                className="btn btn-success"
+                                                                onClick={handleSubmit}
+                                                            >
+                                                                Send Message
+                                                            </button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -104,7 +172,7 @@ const SendMsg = () => {
                 </div>
             </div>
         </>
-    )
-}
+    );
+};
 
-export default SendMsg
+export default SendMsg;

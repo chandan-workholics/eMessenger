@@ -53,10 +53,10 @@ const MessageDraft = () => {
     };
 
     useEffect(() => {
-        fetchData();// eslint-disable-next-line react-hooks/exhaustive-deps
-        fetchSubGroup();// eslint-disable-next-line react-hooks/exhaustive-deps
-        fetchParentsNo();// eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+        fetchData();
+        fetchSubGroup();
+        fetchParentsNo();
+    }, []);// eslint-disable-next-line react-hooks/exhaustive-deps
 
     const [datas, setDatas] = useState({
         subject_text: '',
@@ -77,7 +77,6 @@ const MessageDraft = () => {
         value = e.target.value;
         setDatas({ ...datas, [name]: value })
     }
-
 
     const [displayFields, setDisplayFields] = useState([]);
     const [inputFields, setInputFields] = useState([]);
@@ -116,8 +115,6 @@ const MessageDraft = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-
         const messageBody = [
             ...displayFields.map((field, index) => {
                 let dataText = {};
@@ -177,7 +174,6 @@ const MessageDraft = () => {
                 };
             }),
         ];
-
         try {
             const response = await callAPI.post('./msg/insertMsgData', {
                 subject_text: datas?.subject_text,
@@ -255,16 +251,7 @@ const MessageDraft = () => {
         respond: 'Na',
         isActive: val?.is_active,
         action: (
-            <div>
-                <i className="fa-solid fa-pen-to-square text-warning mr-3"></i>
-                <i className="fa-solid fa-trash-can text-danger mr-3"></i>
-                <Link to="/send-message">
-                    <i className="fa-solid fa-paper-plane text-success mr-3"></i>
-                </Link>
-                <Link to="/chat">
-                    <i class="fa-solid fa-comment-dots text-info"></i>
-                </Link>
-            </div>
+            <div><i className="fa-solid fa-trash-can text-danger mr-3"></i><Link to={`/send-message/${val?.msg_id}`}> <i className="fa-solid fa-paper-plane text-success mr-3"></i></Link> </div>
         ),
     })) : [];
 
@@ -357,9 +344,9 @@ const MessageDraft = () => {
                                                                     <label htmlFor="msgCategory">Group/Sub Group<span className="text-danger">*</span></label>
                                                                     <select className="form-control" id="msgCategory" name='msg_sgroup_id' value={datas?.msg_sgroup_id} onChange={handleChange}>
                                                                         <option value="">Select Group/Sub Group</option>
-                                                                        {subgroup?.map((val) => {
+                                                                        {subgroup?.map((val, index) => {
                                                                             return (
-                                                                                <option value={val?.msg_sgroup_id}>{val?.msg_group_mst?.msg_group_name}- {val?.msg_sgroup_name}</option>
+                                                                                <option key={index} value={val?.msg_sgroup_id}>{val?.msg_group_mst?.msg_group_name}- {val?.msg_sgroup_name}</option>
                                                                             )
                                                                         })}
 

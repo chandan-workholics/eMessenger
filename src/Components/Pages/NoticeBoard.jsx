@@ -131,7 +131,6 @@ const NoticeBoard = () => {
     }
 
     const handleImageChange = async (e) => {
-        // setShowLoader("block");
         const formData = new FormData();
         formData.append("file", e.target.files[0]);
         var requestOptions = {
@@ -149,8 +148,6 @@ const NoticeBoard = () => {
             const response = await fetchdata;
             if (response.status === 200) {
                 toast.success("Data Uploaded Successfully");
-                // setShowLoader("none");
-                //seturl(response?.data?.url);
                 setDatas({
                     ...datas,
                     thumbnails: response?.data?.url,
@@ -160,21 +157,15 @@ const NoticeBoard = () => {
                 toast.error("Fail To Load");
             }
         } catch (error) {
-            // setShowLoader("none");
-            // console.error("Error uploading image:", error);
-            // toast.error(
-            //     "An error occurred while uploading the image. Please try again."
-            // );
+
         }
     };
     const handlePdfChange = async (e) => {
-        // setShowLoader("block");
         const formData = new FormData();
         formData.append("file", e.target.files[0]);
         var requestOptions = {
             headers: {
                 "Content-Type": "multipart/form-data",
-
             },
         };
         try {
@@ -186,8 +177,7 @@ const NoticeBoard = () => {
             const response = await fetchdata;
             if (response.status === 200) {
                 toast.success("Data Uploaded Successfully");
-                // setShowLoader("none");
-                //seturl(response?.data?.url);
+
                 setDatas({
                     ...datas,
                     document_link: response?.data?.url,
@@ -197,11 +187,6 @@ const NoticeBoard = () => {
                 toast.error("Fail To Load");
             }
         } catch (error) {
-            // setShowLoader("none");
-            // console.error("Error uploading image:", error);
-            // toast.error(
-            //     "An error occurred while uploading the image. Please try again."
-            // );
         }
     };
     console.log(totalPages)
@@ -245,7 +230,7 @@ const NoticeBoard = () => {
                                                             <h4 className="card-title mb-0 mr-2">Create Notice</h4>
                                                             <p className="text-danger font-weight-bold mb-0">NEW</p>
                                                         </div>
-                                                        <form className="forms-sample" onSubmit={handleSubmit}>
+                                                        <div className="forms-sample" >
                                                             <h4 className="card-description text-primary font-weight-bolder">Primary Info</h4>
                                                             <div className="row">
                                                                 <div className="col-md-4 form-group">
@@ -277,7 +262,7 @@ const NoticeBoard = () => {
                                                                     </select>
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
-                                                                    <label htmlFor="document_link">Document Link <span className="text-danger">*</span></label>
+                                                                    <label htmlFor="document_link">Document Link </label>
                                                                     <input
                                                                         type="text"
                                                                         className="form-control"
@@ -286,7 +271,7 @@ const NoticeBoard = () => {
                                                                         value={datas.document_link}
                                                                         onChange={handleChange}
                                                                         placeholder="Enter Document Link"
-                                                                        required
+
                                                                     />
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
@@ -311,11 +296,11 @@ const NoticeBoard = () => {
                                                                     />
                                                                 </div> : ''}
                                                             </div>
-                                                            <button type="submit" className="btn btn-primary mr-2" disabled={loading}>
+                                                            <button type="submit" className="btn btn-primary mr-2" onClick={handleSubmit} disabled={loading}>
                                                                 {loading ? 'Submitting...' : 'Submit'}
                                                             </button>
                                                             <button className="btn btn-light" type="reset">Cancel</button>
-                                                        </form>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -410,7 +395,7 @@ const NoticeBoard = () => {
                                                 className="form-control"
                                                 id="thumbnail"
                                                 name="thumbnail"
-
+                                                onChange={handleImageChange}
                                             />
                                         </div>
                                     </div>

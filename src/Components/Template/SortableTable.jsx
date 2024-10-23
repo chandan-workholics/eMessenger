@@ -72,15 +72,15 @@ const SortableTable = ({ columns, data }) => {
         <div>
             {/* Search Input */}
             <div className="row w-100">
-                <div class="ml-auto col-md-3 form-group">
-                    <div class="input-group">
+                <div className="ml-auto col-md-3 form-group">
+                    <div className="input-group">
                         <input type="text"
                             placeholder="Search..."
                             value={searchTerm}
                             onChange={handleSearchChange}
-                            class="form-control" />
-                        {/* <div class="input-group-append">
-                            <button class="btn btn-sm btn-primary px-4" type="button">Filter</button>
+                            className="form-control" />
+                        {/* <div className="input-group-append">
+                            <button className="btn btn-sm btn-primary px-4" type="button">Filter</button>
                         </div> */}
                     </div>
                 </div>
