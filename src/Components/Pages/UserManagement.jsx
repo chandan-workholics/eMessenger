@@ -54,6 +54,20 @@ const UserManagement = () => {
         }
     };
 
+    const getAppUserList = async () => {
+        try {
+            setLoading(true);
+            const response = await callAPI.get(`./scholar/get_full_list_app_active_users_list?page=1&limit=20&active=1&otpVerified=1`);
+            setUserData(response?.data);
+            setTotalPages(Math.ceil(response?.data?.pagination?.totalPages / rowsPerPage));
+        } catch (error) {
+            console.error('Error fetching data:', error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
     useEffect(() => {
         getAdminData();
         getAppUserList();
@@ -165,18 +179,6 @@ const UserManagement = () => {
     }
 
 
-    const getAppUserList = async () => {
-        try {
-            setLoading(true);
-            const response = await callAPI.get(`./scholar/get_full_list_app_active_users_list?page=1&limit=20&active=1&otpVerified=1`);
-            setUserData(response?.data);
-            setTotalPages(Math.ceil(response?.data?.pagination?.totalPages / rowsPerPage));
-        } catch (error) {
-            console.error('Error fetching data:', error.message);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     // Table columns
     const appColumns = [
