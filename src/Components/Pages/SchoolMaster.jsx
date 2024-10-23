@@ -5,7 +5,7 @@ import Loding from '../Template/Loding';
 import ExpandRowTable from '../Template/ExpandRowTable';
 import callAPI from '../../commonMethod/api.js';
 import { toast } from 'react-toastify';
-
+import axios from 'axios';
 const SchoolMaster = () => {
     const [datas, setDatas] = useState({
         sch_nm: '',
@@ -51,7 +51,43 @@ const SchoolMaster = () => {
         });
     };
 
+    const handleImageChange = async (e) => {
+        // setShowLoader("block");
+        const formData = new FormData();
+        formData.append("file", e.target.files[0]);
+        var requestOptions = {
+            headers: {
+                "Content-Type": "multipart/form-data",
 
+            },
+        };
+        try {
+            const fetchdata = axios.post(
+                `http://206.189.130.102:3550/api/v1/admin/imageUpload_Use/imageUpload`,
+                formData,
+                requestOptions
+            );
+            const response = await fetchdata;
+            if (response.status === 200) {
+                toast.success("Data Uploaded Successfully");
+                // setShowLoader("none");
+                //seturl(response?.data?.url);
+                setDatas({
+                    ...datas,
+                    logo_img: response?.data?.url,
+                });
+            } else {
+
+                toast.error("Fail To Load");
+            }
+        } catch (error) {
+            // setShowLoader("none");
+            // console.error("Error uploading image:", error);
+            // toast.error(
+            //     "An error occurred while uploading the image. Please try again."
+            // );
+        }
+    };
     const closeDeleteModal = () => {
         setIsDeleteModalOpen(false);
     };
@@ -366,7 +402,7 @@ const SchoolMaster = () => {
                                                                 </div>
                                                             </div>
                                                             <hr />
-                                                            <h4 className="card-description text-primary font-weight-bolder">App Top Scrolled News</h4>
+                                                            {/* <h4 className="card-description text-primary font-weight-bolder">App Top Scrolled News</h4>
                                                             <div className="row">
                                                                 <div className="col-md-6 form-group">
                                                                     <label htmlFor="exampleTextarea1">Scroll News</label>
@@ -382,7 +418,7 @@ const SchoolMaster = () => {
                                                                     ></textarea>
                                                                 </div>
                                                             </div>
-                                                            <hr />
+                                                            <hr /> */}
                                                             <h4 className="card-description text-primary font-weight-bolder">App Default Welcome Message IDs [ Comma(,) seprated ]</h4>
                                                             <div className="row">
                                                                 <div className="col-md-6 form-group">
@@ -462,7 +498,15 @@ const SchoolMaster = () => {
                                                             <hr />
                                                             <h4 className="card-description text-primary font-weight-bolder">School Logo</h4>
                                                             <div className="row">
-
+                                                                <div className="col-md-4 form-group">
+                                                                    <input
+                                                                        type="file"
+                                                                        className="form-control"
+                                                                        id="schoolLogo"
+                                                                        name="file"
+                                                                        onChange={handleImageChange}
+                                                                    />
+                                                                </div>
                                                             </div>
 
                                                             <button type="submit" className="btn btn-primary mr-2">Submit</button>
@@ -639,7 +683,7 @@ const SchoolMaster = () => {
                                             </div>
                                         </div>
                                         <hr />
-                                        <div className="col-12">
+                                        {/* <div className="col-12">
                                             <h4 className="card-description text-primary font-weight-bolder">App Top Scrolled News</h4>
                                             <div className="row">
                                                 <div className="col-md-12 form-group">
@@ -657,7 +701,7 @@ const SchoolMaster = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <hr />
+                                        <hr /> */}
                                         <div className="col-12">
                                             <h4 className="card-description text-primary font-weight-bolder">App Default Welcome Message IDs [ Comma(,) seprated ]</h4>
                                             <div className="row">
@@ -742,7 +786,15 @@ const SchoolMaster = () => {
                                         <div className="col-12">
                                             <h4 className="card-description text-primary font-weight-bolder">School Logo</h4>
                                             <div className="row">
-
+                                                <div className="col-12 form-group">
+                                                    <input
+                                                        type="file"
+                                                        className="form-control"
+                                                        id="schoolLogo"
+                                                        name="file"
+                                                        onChange={handleImageChange}
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
