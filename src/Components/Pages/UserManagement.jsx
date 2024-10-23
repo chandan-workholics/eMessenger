@@ -67,11 +67,6 @@ const UserManagement = () => {
         }
     };
 
-
-    useEffect(() => {
-        getAdminData();
-    }, [currentPage]);
-
     const getAdminData = async () => {
         try {
             setLoading(true);
@@ -84,6 +79,11 @@ const UserManagement = () => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        getAdminData();
+        getAppUserList();
+    }, [currentPage]);
 
     const handlePageChange = (page) => {
         if (page > 0 && page <= totalPages) {
@@ -176,27 +176,6 @@ const UserManagement = () => {
             }
         });
     }
-
-<<<<<<< HEAD
-    useEffect(() => {
-        getAdminData();
-    }, [currentPage]);
-    
-    const getAppUserList = async () => {
-        try {
-            setLoading(true);
-            const response = await callAPI.get(`./scholar/get_full_list_app_active_users_list?page=1&limit=20&active=1&otpVerified=1`);
-            setUserData(response?.data);
-            setTotalPages(Math.ceil(response?.data?.pagination?.totalPages / rowsPerPage));
-        } catch (error) {
-            console.error('Error fetching data:', error.message);
-        } finally {
-            setLoading(false);
-        }
-    };
-=======
-
->>>>>>> 3dbc338d3d21728046743afb1fc0c4b960567714
 
     // Table columns
     const appColumns = [
