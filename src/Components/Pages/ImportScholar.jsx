@@ -140,16 +140,18 @@ const ImportScholar = () => {
                                         <div className="card-body">
                                             <div className="row forms-sample">
                                                 <div className="col-md-4">
-                                                    {/* <div className="form-group">
+                                                    <div className="form-group">
                                                         <label>File upload</label>
                                                         <input type="file" className="file-upload-default" />
                                                         <div className="input-group col-xs-12">
-                                                            <input type="file" className="form-control file-upload-info" disabled="" placeholder="Upload Image" />
+                                                            <input type="file" className="form-control file-upload-info"
+                                                                placeholder="Upload File" accept=".xlsx, .xls"
+                                                                onChange={handleFileUpload} />
                                                             <span className="input-group-append">
-                                                                <button className="file-upload-browse btn btn-primary" type="button">Upload</button>
+                                                                <button type="submit" className="btn btn-primary file-upload-browse" onClick={handleSubmit}>Import</button>
                                                             </span>
                                                         </div>
-                                                    </div> */}
+                                                    </div>
                                                     <div className="form-check form-check-flat form-check-primary mb-4">
                                                         <label className="form-check-label">
                                                             Is Column Title in First Row?
@@ -164,7 +166,7 @@ const ImportScholar = () => {
                                                             <i className="input-helper"></i>
                                                         </label>
                                                     </div>
-                                                    <input type="file" accept=".xlsx, .xls" onChange={handleFileUpload} />
+
                                                     <button type="submit" className="btn btn-primary mr-2" onClick={handleSubmit}>
                                                         Import
                                                     </button>

@@ -224,9 +224,9 @@ const MessageDraft = () => {
                 <Link to="/send-message">
                     <i className="fa-solid fa-paper-plane text-success mr-3"></i>
                 </Link>
-                <Link to="/chat">
+                {/* <Link to="/chat">
                     <i class="fa-solid fa-comment-dots text-info"></i>
-                </Link>
+                </Link> */}
             </div>
         ),
     })) : [];
