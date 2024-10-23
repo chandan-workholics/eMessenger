@@ -79,9 +79,9 @@ const SortableTable = ({ columns, data }) => {
                             value={searchTerm}
                             onChange={handleSearchChange}
                             class="form-control" />
-                        <div class="input-group-append">
+                        {/* <div class="input-group-append">
                             <button class="btn btn-sm btn-primary px-4" type="button">Filter</button>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

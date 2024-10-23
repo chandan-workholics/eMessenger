@@ -11,6 +11,7 @@ const UserManagement = () => {
     const [datas, setDatas] = useState({ full_name: '', adminuser_name: '', admin_password: '', is_active: '', admin_type: '', mobile_no: '', added_admin_id: '1', parent_admin_id: '' })
     const [updateUserManagement, setUpdateUserManagement] = useState({});
     const [admindata, setAdminData] = useState()
+    const [userData, setUserData] = useState()
     const [deleteid, Setdeleteid] = useState('')
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -55,6 +56,7 @@ const UserManagement = () => {
 
     useEffect(() => {
         getAdminData();
+        getAppUserList();
     }, [currentPage]);
 
     const getAdminData = async () => {
@@ -161,6 +163,45 @@ const UserManagement = () => {
             }
         });
     }
+
+
+    const getAppUserList = async () => {
+        try {
+            setLoading(true);
+            const response = await callAPI.get(`./scholar/get_full_list_app_active_users_list?page=1&limit=20&active=1&otpVerified=1`);
+            setUserData(response?.data);
+            setTotalPages(Math.ceil(response?.data?.pagination?.totalPages / rowsPerPage));
+        } catch (error) {
+            console.error('Error fetching data:', error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // Table columns
+    const appColumns = [
+        { label: 'User ID', key: 'userId' },
+        { label: 'Mobile No.', key: 'mobileNo' },
+        { label: 'Is Active', key: 'isActive' },
+        { label: 'Activated Time', key: 'activatedTime' },
+        { label: 'Last Visit Time', key: 'lastVisitTime' },
+        { label: 'Mobile Id', key: 'mobileId' },
+        { label: 'Mobile Type', key: 'mobileType' },
+        { label: 'App Version', key: 'appVersion' },
+        { label: 'Ip Address', key: 'ipAddress' }
+    ];
+
+    const appUserData = userData ? userData?.data?.map((val) => ({
+        userId: val?.parents_id,
+        mobileNo: val?.mobile_no,
+        isActive: val?.is_active,
+        activatedTime: val?.active_datetime,
+        lastVisitTime: val?.last_visit_on,
+        mobileId: val?.mobile_uuid,
+        mobileType: val?.model,
+        appVersion: val?.version,
+        ipAddress: val?.ip_address,
+    })) : [];
 
     return (
         <>
@@ -370,14 +411,6 @@ const UserManagement = () => {
                                                                                 <option>OTP Not Verified</option>
                                                                             </select>
                                                                         </div>
-                                                                        <div className="col-md-3 form-group">
-                                                                            <label for="userType">App Type <span className="text-danger">*</span></label>
-                                                                            <select className="form-control" id="userType">
-                                                                                <option>All</option>
-                                                                                <option>APS</option>
-                                                                                <option>e-Messenger</option>
-                                                                            </select>
-                                                                        </div>
                                                                         <div className="col-md-3 d-flex align-items-center">
                                                                             <div className="">
                                                                                 <button type="submit" className="btn btn-primary mr-2">Filter</button>
@@ -388,6 +421,7 @@ const UserManagement = () => {
                                                             </div>
                                                             <div className="col-12">
                                                                 <div className="table-responsive">
+                                                                    <SortableTable columns={appColumns} data={appUserData} />
                                                                 </div>
                                                             </div>
                                                         </div>
