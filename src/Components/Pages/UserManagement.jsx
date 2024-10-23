@@ -56,7 +56,6 @@ const UserManagement = () => {
 
     useEffect(() => {
         getAdminData();
-        getAppUserList();
     }, [currentPage]);
 
     const getAdminData = async () => {
@@ -164,7 +163,10 @@ const UserManagement = () => {
         });
     }
 
-
+    useEffect(() => {
+        getAdminData();
+    }, [currentPage]);
+    
     const getAppUserList = async () => {
         try {
             setLoading(true);
