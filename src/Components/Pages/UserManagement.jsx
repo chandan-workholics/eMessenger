@@ -67,12 +67,6 @@ const UserManagement = () => {
         }
     };
 
-
-    useEffect(() => {
-        getAdminData();
-        getAppUserList();
-    }, [currentPage]);
-
     const getAdminData = async () => {
         try {
             setLoading(true);
@@ -85,6 +79,11 @@ const UserManagement = () => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        getAdminData();
+        getAppUserList();
+    }, [currentPage]);
 
     const handlePageChange = (page) => {
         if (page > 0 && page <= totalPages) {
@@ -177,8 +176,6 @@ const UserManagement = () => {
             }
         });
     }
-
-
 
     // Table columns
     const appColumns = [
