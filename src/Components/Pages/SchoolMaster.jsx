@@ -52,15 +52,9 @@ const SchoolMaster = () => {
     };
 
     const handleImageChange = async (e) => {
-        // setShowLoader("block");
         const formData = new FormData();
         formData.append("file", e.target.files[0]);
-        var requestOptions = {
-            headers: {
-                "Content-Type": "multipart/form-data",
-
-            },
-        };
+        var requestOptions = { headers: { "Content-Type": "multipart/form-data", }, };
         try {
             const fetchdata = axios.post(
                 `http://206.189.130.102:3550/api/v1/admin/imageUpload_Use/imageUpload`,
@@ -70,8 +64,6 @@ const SchoolMaster = () => {
             const response = await fetchdata;
             if (response.status === 200) {
                 toast.success("Data Uploaded Successfully");
-                // setShowLoader("none");
-                //seturl(response?.data?.url);
                 setDatas({
                     ...datas,
                     logo_img: response?.data?.url,
@@ -81,11 +73,6 @@ const SchoolMaster = () => {
                 toast.error("Fail To Load");
             }
         } catch (error) {
-            // setShowLoader("none");
-            // console.error("Error uploading image:", error);
-            // toast.error(
-            //     "An error occurred while uploading the image. Please try again."
-            // );
         }
     };
     const closeDeleteModal = () => {
@@ -115,9 +102,7 @@ const SchoolMaster = () => {
         }
     };
 
-    useEffect(() => {
-        fetchData();// eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentPage, rowsPerPage]);
+
 
     const fetchData = async () => {
         try {
@@ -131,6 +116,10 @@ const SchoolMaster = () => {
             setLoading(false);
         }
     };
+
+    useEffect(() => {
+        fetchData();// eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentPage, rowsPerPage]);
 
     const handlePageChange = (page) => {
         if (page > 0 && page <= totalPages) {
