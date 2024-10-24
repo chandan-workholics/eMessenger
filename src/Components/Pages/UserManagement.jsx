@@ -131,10 +131,12 @@ const UserManagement = () => {
         setUpdateUserManagement(val);
         openModal();
         setDatas({
-            fullName: val.full_name,
-            userName: val.adminuser_name,
-            userType: val.admin_type,
-            mobileNo: val.mobile_no,
+            full_name: val.full_name,
+            adminuser_name: val.adminuser_name,
+            admin_password: val.admin_password,
+            mobile_no: val.mobile_no,
+            admin_type: val.admin_type,
+            is_active: val.is_active,
         });
     };
 
@@ -194,8 +196,8 @@ const UserManagement = () => {
         userId: val?.parents_id,
         mobileNo: val?.mobile_no,
         isActive: val?.is_active,
-        activatedTime: val?.active_datetime? new Date(val?.active_datetime).toLocaleDateString('en-GB') : '', // Format date,
-        lastVisitTime: val?.last_visit_on? new Date(val?.last_visit_on).toLocaleDateString('en-GB') : '', // Format date,,
+        activatedTime: val?.active_datetime ? new Date(val?.active_datetime).toLocaleDateString('en-GB') : '', // Format date,
+        lastVisitTime: val?.last_visit_on ? new Date(val?.last_visit_on).toLocaleDateString('en-GB') : '', // Format date,,
         mobileId: val?.mobile_uuid,
         mobileType: val?.model,
         appVersion: val?.version,
@@ -305,6 +307,7 @@ const UserManagement = () => {
                                                                         <div className="col-md-6 form-group">
                                                                             <label for="userType">User Type <span className="text-danger">*</span></label>
                                                                             <select className="form-control" id="userType" name='admin_type' value={datas.admin_type} onChange={handleChange}>
+                                                                                <option value='' selected disabled>Select Option</option>
                                                                                 <option value='admin'>Admin</option>
                                                                                 <option value='management'>Management</option>
                                                                                 <option value='user'>User</option>
@@ -313,6 +316,7 @@ const UserManagement = () => {
                                                                         <div className="col-md-6 form-group">
                                                                             <label for="userType">Schools <span className="text-danger">*</span></label>
                                                                             <select className="form-control" id="userType" name=''>
+                                                                                <option value='' selected disabled>Select Option</option>
                                                                                 <option>Admin</option>
                                                                                 <option>Management</option>
                                                                                 <option>User</option>
@@ -322,6 +326,7 @@ const UserManagement = () => {
                                                                         <div className="col-md-6 form-group">
                                                                             <label for="userType">Reporting/Incharge <span className="text-danger">*</span></label>
                                                                             <select className="form-control" id="userType" name='parent_admin_id' value={datas.parent_admin_id} onChange={handleChange}>
+                                                                                <option value='' selected disabled>Select Option</option>
                                                                                 <option value={1}>Admin</option>
                                                                                 <option value={2}>Management</option>
                                                                                 <option value={3}>User</option>
@@ -504,6 +509,7 @@ const UserManagement = () => {
                                         <div className="col-md-6 form-group">
                                             <label for="userType">User Type <span className="text-danger">*</span></label>
                                             <select className="form-control" id="userType" name='admin_type' value={datas.admin_type} onChange={handleChange}>
+                                                <option value='' selected disabled>Select Option</option>
                                                 <option value='admin'>Admin</option>
                                                 <option value='management'>Management</option>
                                                 <option value='user'>User</option>
@@ -512,6 +518,7 @@ const UserManagement = () => {
                                         <div className="col-md-6 form-group">
                                             <label for="userType">Schools <span className="text-danger">*</span></label>
                                             <select className="form-control" id="userType" name=''>
+                                                <option value='' selected disabled>Select Option</option>
                                                 <option>Admin</option>
                                                 <option>Management</option>
                                                 <option>User</option>
@@ -521,6 +528,7 @@ const UserManagement = () => {
                                         <div className="col-md-6 form-group">
                                             <label for="userType">Reporting/Incharge <span className="text-danger">*</span></label>
                                             <select className="form-control" id="userType" name='parent_admin_id' value={datas.parent_admin_id} onChange={handleChange}>
+                                                <option value='' selected disabled>Select Option</option>
                                                 <option value={1}>Admin</option>
                                                 <option value={2}>Management</option>
                                                 <option value={3}>User</option>

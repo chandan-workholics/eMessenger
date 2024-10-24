@@ -7,7 +7,7 @@ import callAPI from '../../commonMethod/api';
 import { toast } from 'react-toastify';
 
 const WelcomeMsg = () => {
-    
+
     const [datas, setDatas] = useState({ detail: '' });
     const [updateWelcomeMsg, setUpdateWelcomeMsg] = useState({});
     const [deleteid, Setdeleteid] = useState('')
@@ -17,6 +17,7 @@ const WelcomeMsg = () => {
     const [welcomeMsglList, setWelcomeMsgList] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
     const [error, setError] = useState(null);
+    const [length, setLength] = useState(0);
     const rowsPerPage = 10;
 
     const openModal = () => setIsModalOpen(true);
@@ -66,6 +67,7 @@ const WelcomeMsg = () => {
             setLoading(true);
             const response = await callAPI.get(`./welcomemsg/appTopWelcomeMsg`);
             setWelcomeMsgList(response.data.data || []);
+            setLength(response?.data?.data?.length == null ? 0 : response?.data?.data?.length)
             setTotalPages(Math.ceil(response?.data?.pagination?.totalRecords / rowsPerPage));
         } catch (error) {
             console.error('Error fetching welcome messgae data:', error.message);
@@ -148,7 +150,7 @@ const WelcomeMsg = () => {
 
     console.log(totalPages)
     console.log(error)
-    console.log('update welcome', updateWelcomeMsg)
+    console.log('update welcome message', updateWelcomeMsg)
 
     return (
         <>
@@ -166,82 +168,57 @@ const WelcomeMsg = () => {
                             <div className="row">
                                 <div className="col-12 col-md-6 mb-md-4 mb-xl-0">
                                     <div className="d-flex align-items-center mb-3">
-                                        <h3 className="font-weight-bold mr-2">Welcome Message</h3>
+                                        <h3 className="font-weight-bold mr-2">Welcome Message {length}</h3>
                                     </div>
                                 </div>
+                            </div>
 
-                                <div className="col-12 col-md-6 mb-md-4 mb-xl-0">
-                                    <div className="d-md-flex align-items-center justify-content-end mb-3">
-                                        <div className="btn-group" role="group" aria-label="Basic example">
-                                            <ul className="nav nav-tabs" id="myTab" role="tablist">
-                                                <li className="nav-item" role="presentation">
-                                                    <a className="nav-link active" id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="true">
-                                                        Add
-                                                    </a>
-                                                </li>
-                                                <li className="nav-item" role="presentation">
-                                                    <a className="nav-link" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">
-                                                        List
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="tab-content border-0 p-0 w-100" id="myTabContent">
-                                    <div className="tab-pane fade show active" id="add" role="tabpanel" aria-labelledby="add-tab">
-                                        {/* Form for adding messages */}
-                                        <div className="row">
-                                            <div className="col-12 grid-margin stretch-card">
-                                                <div className="card shadow-sm">
-                                                    <div className="card-body">
-                                                        <div className="d-flex align-items-center mb-2">
-                                                            <h4 className="card-title mb-0 mr-2">New Welcome Message</h4>
-                                                            <p className="text-danger font-weight-bold mb-0">NEW</p>
-                                                        </div>
-                                                        <form className="forms-sample" onSubmit={handleSubmit}>
-                                                            <div className="row">
-                                                                <div className="col-md-6 form-group">
-                                                                    <label htmlFor="detail">Create Message</label>
-                                                                    <textarea
-                                                                        className="form-control"
-                                                                        id="detail"
-                                                                        rows="5"
-                                                                        placeholder="Please Create Message"
-                                                                        name='detail'
-                                                                        value={datas.detail}
-                                                                        onChange={handleChange}
-                                                                        required
-                                                                    ></textarea>
-                                                                </div>
-                                                            </div>
-                                                            {/* Submit and Cancel buttons */}
-                                                            <button type="submit" className="btn btn-primary mr-2" disabled={loading}>
-                                                                {loading ? 'Submitting...' : 'Submit'}
-                                                            </button>
-                                                            <button className="btn btn-light" type="reset">Cancel</button>
-                                                        </form>
+                            {/* Form for adding messages */}
+                           {length === 0 ? <div className="row">
+                                <div className="col-12 grid-margin stretch-card">
+                                    <div className="card shadow-sm">
+                                        <div className="card-body">
+                                            <div className="d-flex align-items-center mb-2">
+                                                <h4 className="card-title mb-0 mr-2">New Welcome Message</h4>
+                                                <p className="text-danger font-weight-bold mb-0">NEW</p>
+                                            </div>
+                                            <form className="forms-sample" onSubmit={handleSubmit}>
+                                                <div className="row">
+                                                    <div className="col-md-6 form-group">
+                                                        <label htmlFor="detail">Create Message</label>
+                                                        <textarea
+                                                            className="form-control"
+                                                            id="detail"
+                                                            rows="5"
+                                                            placeholder="Please Create Message"
+                                                            name='detail'
+                                                            value={datas.detail}
+                                                            onChange={handleChange}
+                                                            required
+                                                        ></textarea>
                                                     </div>
                                                 </div>
-                                            </div>
+                                                {/* Submit and Cancel buttons */}
+                                                <button type="submit" className="btn btn-primary mr-2" disabled={loading}>
+                                                    {loading ? 'Submitting...' : 'Submit'}
+                                                </button>
+                                                <button className="btn btn-light" type="reset">Cancel</button>
+                                            </form>
                                         </div>
                                     </div>
-
-                                    <div className="tab-pane fade" id="list" role="tabpanel" aria-labelledby="list-tab">
-                                        {/* Message list */}
-                                        <div className="row">
-                                            <div className="col-md-12 grid-margin stretch-card">
-                                                <div className="card shadow-sm">
-                                                    <div className="card-body">
-                                                        <p className="card-title">Welcome Message List</p>
-                                                        <div className="row">
-                                                            <div className="col-12">
-                                                                <div className="table-responsive">
-                                                                    <SortableTable columns={columns} data={data} />
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                                </div>
+                            </div> : null}
+                            
+                            {/* Message list */}
+                            <div className="row">
+                                <div className="col-md-12 grid-margin stretch-card">
+                                    <div className="card shadow-sm">
+                                        <div className="card-body">
+                                            <p className="card-title">Welcome Message List</p>
+                                            <div className="row">
+                                                <div className="col-12">
+                                                    <div className="table-responsive">
+                                                        <SortableTable columns={columns} data={data} />
                                                     </div>
                                                 </div>
                                             </div>

@@ -17,6 +17,7 @@ const AppScrollNews = () => {
     const [appScrollNewsList, setappScrollNewsList] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
     const [error, setError] = useState(null);
+    const [length, setLength] = useState(0);
     const rowsPerPage = 10;
 
     const openModal = () => setIsModalOpen(true);
@@ -66,6 +67,7 @@ const AppScrollNews = () => {
             setLoading(true);
             const response = await callAPI.get(`./appScrollerMsg/getAppScrollerMsgDetail`);
             setappScrollNewsList(response.data.data || []);
+            setLength(response?.data?.data?.length == null ? 0 : response?.data?.data?.length)
             setTotalPages(Math.ceil(response?.data?.pagination?.totalRecords / rowsPerPage));
         } catch (error) {
             console.error('Error fetching welcome messgae data:', error.message);
@@ -169,79 +171,53 @@ const AppScrollNews = () => {
                                         <h3 className="font-weight-bold mr-2">App Scroll News Message</h3>
                                     </div>
                                 </div>
-
-                                <div className="col-12 col-md-6 mb-md-4 mb-xl-0">
-                                    <div className="d-md-flex align-items-center justify-content-end mb-3">
-                                        <div className="btn-group" role="group" aria-label="Basic example">
-                                            <ul className="nav nav-tabs" id="myTab" role="tablist">
-                                                <li className="nav-item" role="presentation">
-                                                    <a className="nav-link active" id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="true">
-                                                        Add
-                                                    </a>
-                                                </li>
-                                                <li className="nav-item" role="presentation">
-                                                    <a className="nav-link" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">
-                                                        List
-                                                    </a>
-                                                </li>
-                                            </ul>
+                            </div>
+                            {/* Form for adding messages */}
+                            {length === 0 ? <div className="row">
+                                <div className="col-12 grid-margin stretch-card">
+                                    <div className="card shadow-sm">
+                                        <div className="card-body">
+                                            <div className="d-flex align-items-center mb-2">
+                                                <h4 className="card-title mb-0 mr-2">News Message</h4>
+                                                <p className="text-danger font-weight-bold mb-0">NEW</p>
+                                            </div>
+                                            <form className="forms-sample" onSubmit={handleSubmit}>
+                                                <div className="row">
+                                                    <div className="col-md-6 form-group">
+                                                        <label htmlFor="detail">Create Message</label>
+                                                        <textarea
+                                                            className="form-control"
+                                                            id="detail"
+                                                            rows="5"
+                                                            placeholder="Please Create Message"
+                                                            name='detail'
+                                                            value={datas.detail}
+                                                            onChange={handleChange}
+                                                            required
+                                                        ></textarea>
+                                                    </div>
+                                                </div>
+                                                {/* Submit and Cancel buttons */}
+                                                <button type="submit" className="btn btn-primary mr-2" disabled={loading}>
+                                                    {loading ? 'Submitting...' : 'Submit'}
+                                                </button>
+                                                <button className="btn btn-light" type="reset">Cancel</button>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
+                            </div> : null}
 
-                                <div className="tab-content border-0 p-0 w-100" id="myTabContent">
-                                    <div className="tab-pane fade show active" id="add" role="tabpanel" aria-labelledby="add-tab">
-                                        {/* Form for adding messages */}
-                                        <div className="row">
-                                            <div className="col-12 grid-margin stretch-card">
-                                                <div className="card shadow-sm">
-                                                    <div className="card-body">
-                                                        <div className="d-flex align-items-center mb-2">
-                                                            <h4 className="card-title mb-0 mr-2">News Message</h4>
-                                                            <p className="text-danger font-weight-bold mb-0">NEW</p>
-                                                        </div>
-                                                        <form className="forms-sample" onSubmit={handleSubmit}>
-                                                            <div className="row">
-                                                                <div className="col-md-6 form-group">
-                                                                    <label htmlFor="detail">Create Message</label>
-                                                                    <textarea
-                                                                        className="form-control"
-                                                                        id="detail"
-                                                                        rows="5"
-                                                                        placeholder="Please Create Message"
-                                                                        name='detail'
-                                                                        value={datas.detail}
-                                                                        onChange={handleChange}
-                                                                        required
-                                                                    ></textarea>
-                                                                </div>
-                                                            </div>
-                                                            {/* Submit and Cancel buttons */}
-                                                            <button type="submit" className="btn btn-primary mr-2" disabled={loading}>
-                                                                {loading ? 'Submitting...' : 'Submit'}
-                                                            </button>
-                                                            <button className="btn btn-light" type="reset">Cancel</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="tab-pane fade" id="list" role="tabpanel" aria-labelledby="list-tab">
-                                        {/* Message list */}
-                                        <div className="row">
-                                            <div className="col-md-12 grid-margin stretch-card">
-                                                <div className="card shadow-sm">
-                                                    <div className="card-body">
-                                                        <p className="card-title">App Scroll News List</p>
-                                                        <div className="row">
-                                                            <div className="col-12">
-                                                                <div className="table-responsive">
-                                                                    <SortableTable columns={columns} data={data} />
-                                                                </div>
-                                                            </div>
-                                                        </div>
+                            {/* Message list */}
+                            <div className="row">
+                                <div className="col-md-12 grid-margin stretch-card">
+                                    <div className="card shadow-sm">
+                                        <div className="card-body">
+                                            <p className="card-title">App Scroll News List</p>
+                                            <div className="row">
+                                                <div className="col-12">
+                                                    <div className="table-responsive">
+                                                        <SortableTable columns={columns} data={data} />
                                                     </div>
                                                 </div>
                                             </div>
@@ -255,75 +231,79 @@ const AppScrollNews = () => {
             </div>
 
             {/* Modal Start */}
-            {isModalOpen && (
-                <div className="modal show" style={{ display: 'block', background: '#0000008e' }}>
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header d-flex align-items-center bg-ffe2e5 py-3">
-                                <h3 className="modal-title font-weight-bold text-primary">Update Notice Board</h3>
-                                <button type="button" className="close" onClick={closeModal}>
-                                    <i class="fa-solid fa-xmark fs-3 text-primary"></i>
-                                </button>
-                            </div>
-                            <div className="modal-body p-3">
-                                <form className="forms-sample" onSubmit={handleUpdate}>
-                                    <div className="modal-body p-0">
-                                        <div className="form-group">
-                                            <label htmlFor="detail">Update Message</label>
-                                            <textarea
-                                                className="form-control"
-                                                id="detail"
-                                                rows="5"
-                                                placeholder="Please Create Message"
-                                                name='detail'
-                                                value={datas.detail}
-                                                onChange={handleChange}
-                                                required
-                                            ></textarea>
+            {
+                isModalOpen && (
+                    <div className="modal show" style={{ display: 'block', background: '#0000008e' }}>
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header d-flex align-items-center bg-ffe2e5 py-3">
+                                    <h3 className="modal-title font-weight-bold text-primary">Update Notice Board</h3>
+                                    <button type="button" className="close" onClick={closeModal}>
+                                        <i class="fa-solid fa-xmark fs-3 text-primary"></i>
+                                    </button>
+                                </div>
+                                <div className="modal-body p-3">
+                                    <form className="forms-sample" onSubmit={handleUpdate}>
+                                        <div className="modal-body p-0">
+                                            <div className="form-group">
+                                                <label htmlFor="detail">Update Message</label>
+                                                <textarea
+                                                    className="form-control"
+                                                    id="detail"
+                                                    rows="5"
+                                                    placeholder="Please Create Message"
+                                                    name='detail'
+                                                    value={datas.detail}
+                                                    onChange={handleChange}
+                                                    required
+                                                ></textarea>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="modal-footer p-0 border-0">
-                                        <div className="d-flex align-items-center">
-                                            <button type="button" className="btn btn-secondary mr-3" onClick={closeModal}>Close</button>
-                                            <button type="submit" className="btn btn-primary" disabled={loading}>
-                                                {loading ? 'Updating...' : 'Update'}
-                                            </button>
+                                        <div className="modal-footer p-0 border-0">
+                                            <div className="d-flex align-items-center">
+                                                <button type="button" className="btn btn-secondary mr-3" onClick={closeModal}>Close</button>
+                                                <button type="submit" className="btn btn-primary" disabled={loading}>
+                                                    {loading ? 'Updating...' : 'Update'}
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
-                                </form>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )
+            }
             {/* Modal End */}
 
-            {isDeleteModalOpen && (
-                <div className="modal show" style={{ display: 'block', background: '#0000008e' }}>
-                    <div className="modal-dialog">
-                        <div className="modal-content">
-                            <div className="modal-header d-flex align-items-center bg-ffe2e5 py-3">
-                                <h4 className="modal-title font-weight-bold text-primary">Warning!</h4>
-                                <button type="button" className="close" onClick={closeDeleteModal}>
-                                    <i class="fa-solid fa-xmark fs-3 text-primary"></i>
-                                </button>
-                            </div>
-                            <div className="modal-body p-3">
-                                <div className="modal-body">
-                                    <h5 className="text-primary text-center">Do you want to permanently delete?</h5>
-                                    <img src="images/deleteWarning.png" alt="" className="w-100 m-auto" />
+            {
+                isDeleteModalOpen && (
+                    <div className="modal show" style={{ display: 'block', background: '#0000008e' }}>
+                        <div className="modal-dialog">
+                            <div className="modal-content">
+                                <div className="modal-header d-flex align-items-center bg-ffe2e5 py-3">
+                                    <h4 className="modal-title font-weight-bold text-primary">Warning!</h4>
+                                    <button type="button" className="close" onClick={closeDeleteModal}>
+                                        <i class="fa-solid fa-xmark fs-3 text-primary"></i>
+                                    </button>
                                 </div>
-                                <div className="modal-footer pb-0">
-                                    <div className="d-flex align-items-center">
-                                        <button type="button" className="btn btn-danger mr-3" onClick={() => deleteItem(deleteid)}>Yes</button>
-                                        <button type="button" className="btn btn-outline-danger" onClick={closeDeleteModal}>No</button>
+                                <div className="modal-body p-3">
+                                    <div className="modal-body">
+                                        <h5 className="text-primary text-center">Do you want to permanently delete?</h5>
+                                        <img src="images/deleteWarning.png" alt="" className="w-100 m-auto" />
+                                    </div>
+                                    <div className="modal-footer pb-0">
+                                        <div className="d-flex align-items-center">
+                                            <button type="button" className="btn btn-danger mr-3" onClick={() => deleteItem(deleteid)}>Yes</button>
+                                            <button type="button" className="btn btn-outline-danger" onClick={closeDeleteModal}>No</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )
+            }
         </>
     )
 }

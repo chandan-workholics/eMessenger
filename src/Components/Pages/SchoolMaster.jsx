@@ -138,7 +138,6 @@ const SchoolMaster = () => {
         { label: 'School Full Name', key: 'schoolFullName' },
         { label: 'Short Name', key: 'shortName' },
         { label: 'Is Active', key: 'isActive' },
-        { label: 'Scroll News', key: 'scrollNews' },
         { label: 'Font Color', key: 'fontColor' },
         { label: 'Background Color', key: 'backgroundColor' },
         { label: 'Action', key: 'action' },
@@ -157,7 +156,6 @@ const SchoolMaster = () => {
         schoolFullName: school?.sch_nm,
         shortName: school?.sch_short_nm,
         isActive: school?.is_active === 1 ? true : false,
-        scrollNews: school?.scroll_news_text,
         fontColor: school?.text_color,
         backgroundColor: school?.bg_color,
         action: (
@@ -188,8 +186,6 @@ const SchoolMaster = () => {
             contact_no: school.contact_no,
             website: school.website,
             email_id: school.email_id,
-            scroll_news_text: school.scroll_news_text,
-            def_msg_ids: school.def_msg_ids,
             text_color: school.text_color,
             bg_color: school.bg_color,
             logo_img: school.logo_img,
@@ -408,7 +404,7 @@ const SchoolMaster = () => {
                                                                 </div>
                                                             </div>
                                                             <hr /> */}
-                                                            <h4 className="card-description text-primary font-weight-bolder">App Default Welcome Message IDs [ Comma(,) seprated ]</h4>
+                                                            {/* <h4 className="card-description text-primary font-weight-bolder">App Default Welcome Message IDs [ Comma(,) seprated ]</h4>
                                                             <div className="row">
                                                                 <div className="col-md-6 form-group">
                                                                     <label htmlFor="exampleInputName1">Message IDs</label>
@@ -424,7 +420,7 @@ const SchoolMaster = () => {
                                                                     />
                                                                 </div>
                                                             </div>
-                                                            <hr />
+                                                            <hr /> */}
                                                             <h4 className="card-description text-primary font-weight-bolder">Scholar Color</h4>
                                                             <div className="row">
                                                                 <div className="col-md-6 form-group">
@@ -691,7 +687,7 @@ const SchoolMaster = () => {
                                             </div>
                                         </div>
                                         <hr /> */}
-                                        <div className="col-12">
+                                        {/* <div className="col-12">
                                             <h4 className="card-description text-primary font-weight-bolder">App Default Welcome Message IDs [ Comma(,) seprated ]</h4>
                                             <div className="row">
                                                 <div className="col-md-12 form-group">
@@ -709,7 +705,7 @@ const SchoolMaster = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <hr />
+                                        <hr /> */}
                                         <div className="col-12">
                                             <h4 className="card-description text-primary font-weight-bolder">Scholar Color</h4>
                                             <div className="row">

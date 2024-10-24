@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../Template/Navbar';
-import SidebarSettingPannel from '../Template/SidebarSettingPannel';
 import Sidebar from '../Template/Sidebar';
 import Loding from '../Template/Loding';
 import { toast } from 'react-toastify';
@@ -15,7 +14,6 @@ const ImportScholar = () => {
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-
     const rowsPerPage = 10;
 
     const fetchData = async () => {
@@ -106,10 +104,6 @@ const ImportScholar = () => {
         }
     };
 
-
-
-    // upload excel data 
-
     if (loading) {
         return <Loding />;
     }
@@ -121,7 +115,6 @@ const ImportScholar = () => {
                 <Navbar />
 
                 <div className="container-fluid page-body-wrapper">
-                    <SidebarSettingPannel />
 
                     <Sidebar />
 
@@ -147,12 +140,12 @@ const ImportScholar = () => {
                                                             <input type="file" className="form-control file-upload-info"
                                                                 placeholder="Upload File" accept=".xlsx, .xls"
                                                                 onChange={handleFileUpload} />
-                                                            <span className="input-group-append">
+                                                            {/* <span className="input-group-append">
                                                                 <button type="submit" className="btn btn-primary file-upload-browse" onClick={handleSubmit}>Import</button>
-                                                            </span>
+                                                            </span> */}
                                                         </div>
                                                     </div>
-                                                    <div className="form-check form-check-flat form-check-primary mb-4">
+                                                    {/* <div className="form-check form-check-flat form-check-primary mb-4">
                                                         <label className="form-check-label">
                                                             Is Column Title in First Row?
                                                             <input type="checkbox" className="form-check-input" />
@@ -165,7 +158,7 @@ const ImportScholar = () => {
                                                             <input type="checkbox" className="form-check-input" />
                                                             <i className="input-helper"></i>
                                                         </label>
-                                                    </div>
+                                                    </div> */}
 
                                                     <button type="submit" className="btn btn-primary mr-2" onClick={handleSubmit}>
                                                         Import
@@ -203,9 +196,9 @@ const ImportScholar = () => {
                                                                         <td>{(currentPage - 1) * rowsPerPage + index + 1}</td>
                                                                         <td>{val.mobile_no}</td>
                                                                         <td>{val.sch_short_nm}</td>
-                                                                        <td>{val.student_name || ''}</td>
-                                                                        <td></td>
-                                                                        <td></td>
+                                                                        <td>{val.student_name || "Not Available"}</td>
+                                                                        <td>{val.scholar_dob}</td>
+                                                                        <td>{val.scholar_email}</td>
                                                                         <td>{val.scholar_no}</td>
                                                                     </tr>
                                                                 ))}
