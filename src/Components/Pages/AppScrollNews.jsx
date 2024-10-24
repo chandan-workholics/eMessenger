@@ -83,7 +83,7 @@ const AppScrollNews = () => {
     ];
 
     const data = appScrollNewsList ? appScrollNewsList?.map((val) => ({
-        scroller_id: val?.scroller_id,
+        scroller_id: 1,
         detail: val?.detail,
         action: (
             <div>

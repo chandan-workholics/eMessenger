@@ -83,7 +83,7 @@ const WelcomeMsg = () => {
     ];
 
     const data = welcomeMsglList ? welcomeMsglList?.map((val) => ({
-        welcome_id: val?.welcome_id,
+        welcome_id: 1,
         detail: val?.detail,
         action: (
             <div>
@@ -168,7 +168,7 @@ const WelcomeMsg = () => {
                             <div className="row">
                                 <div className="col-12 col-md-6 mb-md-4 mb-xl-0">
                                     <div className="d-flex align-items-center mb-3">
-                                        <h3 className="font-weight-bold mr-2">Welcome Message {length}</h3>
+                                        <h3 className="font-weight-bold mr-2">Welcome Message</h3>
                                     </div>
                                 </div>
                             </div>
