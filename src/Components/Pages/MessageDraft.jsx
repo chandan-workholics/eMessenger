@@ -15,6 +15,8 @@ const MessageDraft = () => {
     const [number, setNumber] = useState([]);
     const [parentsnumber, setParentsNumber] = useState([]);
 
+    const [deleteid, Setdeleteid] = useState('')
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const fetchData = async () => {
         try {
@@ -80,6 +82,18 @@ const MessageDraft = () => {
 
     const [displayFields, setDisplayFields] = useState([]);
     const [inputFields, setInputFields] = useState([]);
+    const [msgCategory, setMsgCategory] = useState('');
+
+    const handleCategoryChange = (event) => {
+        const { value, checked } = event.target;
+        if (checked) {
+            // Add the category to the array
+            setMsgCategory(prevCategories => [...prevCategories, value]);
+        } else {
+            // Remove the category from the array
+            setMsgCategory(prevCategories => prevCategories.filter(category => category !== value));
+        }
+    };
 
     const handleDisplayOptionsChange = (e) => {
         const selectedOptions = [...e.target.selectedOptions].map(option => option.value);
@@ -191,6 +205,7 @@ const MessageDraft = () => {
                 toast.success('Message submitted successfully');
                 setDisplayFields([]);
                 setInputFields([]);
+                fetchListData();
             } else {
                 toast.error('Failed to submit the message');
             }
@@ -223,6 +238,42 @@ const MessageDraft = () => {
         fetchListData();
     }, []);
 
+
+    const closeDeleteModal = () => {
+        setIsDeleteModalOpen(false);
+    };
+
+    const handleDelete = (id) => {
+        Setdeleteid(id);
+        setIsDeleteModalOpen(true)
+    };
+
+    function deleteItem(id) {
+        callAPI.del(`./msg/delete_web_single_msg_master?msg_id=${id}`).then(async (response) => {
+            if (response.status === 200 || response.status === 201) {
+                toast.success('Delete Item Successfully');
+                closeDeleteModal();
+                fetchListData();
+            }
+            else {
+                toast.error('something went wrong');
+            }
+        });
+    }
+
+    const handleToggleStatus = async (msgId, isActive) => {
+        try {
+            const response = await callAPI.get(`./msg/toggleMessageStatus?msg_id=${msgId}`);
+
+            if (response.status === 200) {
+                toast.success(`Message status toggled successfully to ${isActive === 1 ? 'Inactive' : 'Active'}`);
+                fetchListData();
+            }
+        } catch (error) {
+            console.error("Error toggling message status:", error);
+        }
+    };
+
     // Table columns
     const columns = [
         { label: 'Msg ID', key: 'msgId' },
@@ -243,7 +294,7 @@ const MessageDraft = () => {
         msgId: val?.msg_id,
         subjectLineSchools: val?.subject_text,
         priority: val?.msg_priority,
-        showUpto: val?.show_upto,
+        showUpto: val?.show_upto ? new Date(val?.show_upto).toLocaleDateString('en-GB') : '', // Format date,
         lastPosted: val?.entry_date,
         lastPostedBy: val?.entry_by,
         recipients: 'Na',
@@ -251,7 +302,15 @@ const MessageDraft = () => {
         respond: 'Na',
         isActive: val?.is_active,
         action: (
-            <div><i className="fa-solid fa-trash-can text-danger mr-3"></i><Link to={`/send-message/${val?.msg_id}`}> <i className="fa-solid fa-paper-plane text-success mr-3"></i></Link> </div>
+            <div>
+                {/* {val?.is_active === 1 ? <button onClick={() => handleDelete(val?.msg_id)} type="button" className="btn p-2">
+                    <i className="fa-solid fa-trash-can text-danger"></i>
+                </button> : ''} */}
+                {val?.is_active === 1 ? <Link to={`/send-message/${val?.msg_id}`}> <i className="fa-solid fa-paper-plane text-success mr-3"></i></Link> : ''}
+                <button onClick={() => handleToggleStatus(val?.msg_id, val?.is_active)} type="button" className="btn p-2">
+                    {val?.is_active === 1 ? 'Deactivate' : 'Activate'}
+                </button>
+            </div>
         ),
     })) : [];
 
@@ -353,46 +412,87 @@ const MessageDraft = () => {
                                                                     </select>
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
-                                                                    <label htmlFor="msgCategory">Add Student<span className="text-danger">*</span></label>
-                                                                    <Multiselect className='inputHead'
+                                                                    <label htmlFor="msgCategory">Add Student <span className="text-danger">(dont select more then 5 numbers)</span> </label>
+
+
+                                                                    <Multiselect
+                                                                        className='inputHead'
                                                                         onRemove={(event) => {
                                                                             console.log(event);
+                                                                            setParentsNumber(event);
                                                                         }}
                                                                         onSelect={(event) => {
-                                                                            setParentsNumber(event);
+                                                                            if (event.length <= 5) {
+                                                                                setParentsNumber(event);
+                                                                            } else {
+                                                                                alert("You can only select a maximum of 5 numbers.");
+                                                                            }
                                                                         }}
                                                                         options={number}
                                                                         displayValue="student_family_mobile_number"
-                                                                        showCheckbox />
+                                                                        selectedValues={parentsnumber}
+                                                                        showCheckbox
+                                                                    />
+
+
                                                                 </div>
                                                             </div>
 
                                                             {/* Conditionally render multi-select inputs based on the selected message category */}
 
+
                                                             <div className="row">
-                                                                <div className="col-md-6 form-group">
-                                                                    <label htmlFor="displayOptions">Display Options</label>
-                                                                    <select className="form-control" id="displayOptions" onChange={handleDisplayOptionsChange}>
-                                                                        <option value="" disabled>Select Display Options</option>
-                                                                        <option value="TITLE">Title Display</option>
-                                                                        <option value="TEXT">Text Display</option>
-                                                                        <option value="LINK">Link Display</option>
-                                                                        <option value="YOUTUBE">Youtube Display</option>
-                                                                        <option value="IMAGE">Image Display</option>
-                                                                    </select>
+                                                                <div className="col-md-4 form-group">
+                                                                    <label htmlFor="msgCategory">Message Category<span className="text-danger">*</span></label>
+                                                                    <div className="d-flex justify-content-between form-control border-0">
+                                                                        <div className="custom-control custom-checkbox">
+                                                                            <input type="checkbox" className="custom-control-input" id="Chat" value="Chat" onChange={handleCategoryChange} />
+                                                                            <label className="custom-control-label" htmlFor="Chat">Chat</label>
+                                                                        </div>
+                                                                        <div className="custom-control custom-checkbox">
+                                                                            <input type="checkbox" className="custom-control-input" id="GroupChat" value="Group Chat" onChange={handleCategoryChange} />
+                                                                            <label className="custom-control-label" htmlFor="GroupChat">Group Chat</label>
+                                                                        </div>
+                                                                        <div className="custom-control custom-checkbox">
+                                                                            <input type="checkbox" className="custom-control-input" id="Display" value="Display" onChange={handleCategoryChange} />
+                                                                            <label className="custom-control-label" htmlFor="Display">Display</label>
+                                                                        </div>
+                                                                        <div className="custom-control custom-checkbox">
+                                                                            <input type="checkbox" className="custom-control-input" id="Input" value="Input" onChange={handleCategoryChange} />
+                                                                            <label className="custom-control-label" htmlFor="Input">Input</label>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div className="col-md-6 form-group">
-                                                                    <label htmlFor="inputOptions">Input Options</label>
-                                                                    <select className="form-control" id="inputOptions" onChange={handleInputOptionsChange}>
-                                                                        <option value="" disabled>Select Input Options</option>
-                                                                        <option value="OPTION">Option Input</option>
-                                                                        <option value="CHECKBOX">Checkbox Input</option>
-                                                                        <option value="TEXTBOX">Textbox Input</option>
-                                                                        <option value="TEXTAREA">Textarea Input</option>
-                                                                        <option value="CAMERA">Camera Input</option>
-                                                                        <option value="FILE">File Input</option>
-                                                                    </select>
-                                                                </div>
+                                                            </div>
+
+                                                            <div className="row">
+                                                                {msgCategory.includes('Display') && (
+                                                                    <div className="col-md-6 form-group">
+                                                                        <label htmlFor="displayOptions">Display Options</label>
+                                                                        <select className="form-control" id="displayOptions" onChange={handleDisplayOptionsChange}>
+                                                                            <option value="" disabled selected hidden>Select Display Options</option>
+                                                                            <option value="TITLE">Title Display</option>
+                                                                            <option value="TEXT">Text Display</option>
+                                                                            <option value="LINK">Link Display</option>
+                                                                            <option value="YOUTUBE">Youtube Display</option>
+                                                                            <option value="IMAGE">Image Display</option>
+                                                                        </select>
+                                                                    </div>
+                                                                )}
+                                                                {msgCategory.includes('Input') && (
+                                                                    <div className="col-md-6 form-group">
+                                                                        <label htmlFor="inputOptions">Input Options</label>
+                                                                        <select className="form-control" id="inputOptions" onChange={handleInputOptionsChange}>
+                                                                            <option value="" disabled selected hidden>Select Input Options</option>
+                                                                            <option value="OPTION">Option Input</option>
+                                                                            <option value="CHECKBOX">Checkbox Input</option>
+                                                                            <option value="TEXTBOX">Textbox Input</option>
+                                                                            <option value="TEXTAREA">Textarea Input</option>
+                                                                            <option value="CAMERA">Camera Input</option>
+                                                                            <option value="FILE">File Input</option>
+                                                                        </select>
+                                                                    </div>
+                                                                )}
                                                             </div>
 
                                                             <div className="row">
@@ -538,6 +638,33 @@ const MessageDraft = () => {
                                             </div>
                                         </div>
                                     </div>
+
+                                    {isDeleteModalOpen && (
+                                        <div className="modal show" style={{ display: 'block', background: '#0000008e' }}>
+                                            <div className="modal-dialog">
+                                                <div className="modal-content">
+                                                    <div className="modal-header d-flex align-items-center bg-ffe2e5 py-3">
+                                                        <h4 className="modal-title font-weight-bold text-primary">Warning!</h4>
+                                                        <button type="button" className="close" onClick={closeDeleteModal}>
+                                                            <i class="fa-solid fa-xmark fs-3 text-primary"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div className="modal-body p-3">
+                                                        <div className="modal-body">
+                                                            <h5 className="text-primary text-center">Do you want to permanently delete?</h5>
+                                                            <img src="images/deleteWarning.png" alt="" className="w-100 m-auto" />
+                                                        </div>
+                                                        <div className="modal-footer pb-0">
+                                                            <div className="d-flex align-items-center">
+                                                                <button type="button" className="btn btn-danger mr-3" onClick={() => deleteItem(deleteid)}>Yes</button>
+                                                                <button type="button" className="btn btn-outline-danger" onClick={closeDeleteModal}>No</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
 
 
                                 </div>
