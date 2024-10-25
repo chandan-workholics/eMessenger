@@ -16,6 +16,7 @@ const UserManagement = () => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const rowsPerPage = 10;
@@ -90,7 +91,7 @@ const UserManagement = () => {
     const getAdminData = async () => {
         try {
             setLoading(true);
-            const response = await callAPI.get(`./admin/getAllAdmin?page=1&limit=50`);
+            const response = await callAPI.get(`./admin/getAllAdmin?page=${currentPage}&limit=${rowsPerPage}`);
             setAdminData(response?.data);
             setTotalPages(Math.ceil(response?.data?.pagination?.totalPages / rowsPerPage));
         } catch (error) {
@@ -115,7 +116,7 @@ const UserManagement = () => {
         return <Loding />;
     }
 
-    console.log(handlePageChange)
+
     console.log(error)
     // Table columns
     const columns = [
@@ -402,6 +403,31 @@ const UserManagement = () => {
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <nav>
+                                                            <ul className="pagination justify-content-end">
+                                                                <li className="page-item">
+                                                                    <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}
+                                                                        disabled={currentPage === 1}>Previous</button>
+                                                                </li>
+                                                                {Array.from({ length: totalPages }, (_, index) => (
+                                                                    <li
+                                                                        key={index + 1}
+                                                                        className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}
+                                                                    >
+                                                                        <button
+                                                                            className="page-link"
+                                                                            onClick={() => handlePageChange(index + 1)}
+                                                                        >
+                                                                            {index + 1}
+                                                                        </button>
+                                                                    </li>
+                                                                ))}
+                                                                <li className="page-item">
+                                                                    <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}
+                                                                        disabled={currentPage === totalPages}>Next</button>
+                                                                </li>
+                                                            </ul>
+                                                        </nav>
                                                     </div>
                                                 </div>
                                             </div>
@@ -450,7 +476,33 @@ const UserManagement = () => {
                                                                     <SortableTable columns={appColumns} data={appUserData} />
                                                                 </div>
                                                             </div>
+
                                                         </div>
+                                                        <nav>
+                                                            <ul className="pagination justify-content-end">
+                                                                <li className="page-item">
+                                                                    <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}
+                                                                        disabled={currentPage === 1}>Previous</button>
+                                                                </li>
+                                                                {Array.from({ length: totalPages }, (_, index) => (
+                                                                    <li
+                                                                        key={index + 1}
+                                                                        className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}
+                                                                    >
+                                                                        <button
+                                                                            className="page-link"
+                                                                            onClick={() => handlePageChange(index + 1)}
+                                                                        >
+                                                                            {index + 1}
+                                                                        </button>
+                                                                    </li>
+                                                                ))}
+                                                                <li className="page-item">
+                                                                    <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}
+                                                                        disabled={currentPage === totalPages}>Next</button>
+                                                                </li>
+                                                            </ul>
+                                                        </nav>
                                                     </div>
                                                 </div>
                                             </div>

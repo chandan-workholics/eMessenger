@@ -148,25 +148,8 @@ const ImportScholar = () => {
                                                             <input type="file" className="form-control file-upload-info"
                                                                 placeholder="Upload File" accept=".xlsx, .xls"
                                                                 onChange={handleFileUpload} />
-                                                            {/* <span className="input-group-append">
-                                                                <button type="submit" className="btn btn-primary file-upload-browse" onClick={handleSubmit}>Import</button>
-                                                            </span> */}
                                                         </div>
                                                     </div>
-                                                    {/* <div className="form-check form-check-flat form-check-primary mb-4">
-                                                        <label className="form-check-label">
-                                                            Is Column Title in First Row?
-                                                            <input type="checkbox" className="form-check-input" />
-                                                            <i className="input-helper"></i>
-                                                        </label>
-                                                    </div>
-                                                    <div className="form-check form-check-flat form-check-primary mb-4">
-                                                        <label className="form-check-label">
-                                                            Is Delete All Old Record First?
-                                                            <input type="checkbox" className="form-check-input" />
-                                                            <i className="input-helper"></i>
-                                                        </label>
-                                                    </div> */}
 
                                                     <button type="submit" className="btn btn-primary mr-2" onClick={handleSubmit}>
                                                         Import
@@ -223,9 +206,22 @@ const ImportScholar = () => {
                                                         <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}
                                                             disabled={currentPage === 1}>Previous</button>
                                                     </li>
-                                                    <li className="page-item">
+                                                    {/* <li className="page-item">
                                                         <button className="page-link">{currentPage} of {totalPages}</button>
-                                                    </li>
+                                                    </li> */}
+                                                    {Array.from({ length: totalPages }, (_, index) => (
+                                                        <li
+                                                            key={index + 1}
+                                                            className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}
+                                                        >
+                                                            <button
+                                                                className="page-link"
+                                                                onClick={() => handlePageChange(index + 1)}
+                                                            >
+                                                                {index + 1}
+                                                            </button>
+                                                        </li>
+                                                    ))}
                                                     <li className="page-item">
                                                         <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}
                                                             disabled={currentPage === totalPages}>Next</button>

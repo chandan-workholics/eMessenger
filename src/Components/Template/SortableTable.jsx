@@ -61,12 +61,12 @@ const SortableTable = ({ columns, data }) => {
     };
 
     // Handle page change
-    const handlePageChange = (pageNumber) => {
-        setCurrentPage(pageNumber);
-    };
+    // const handlePageChange = (pageNumber) => {
+    //     setCurrentPage(pageNumber);
+    // };
 
     // Calculate total number of pages
-    const totalPages = Math.ceil(filteredData.length / rowsPerPage);
+    // const totalPages = Math.ceil(filteredData.length / rowsPerPage);
 
     return (
         <div>
@@ -118,7 +118,7 @@ const SortableTable = ({ columns, data }) => {
             </table>
 
             {/* Pagination controls */}
-            <nav>
+            {/* <nav>
                 <ul className="pagination justify-content-end">
                     <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                         <button
@@ -154,7 +154,7 @@ const SortableTable = ({ columns, data }) => {
                         </button>
                     </li>
                 </ul>
-            </nav>
+            </nav> */}
         </div>
     );
 };

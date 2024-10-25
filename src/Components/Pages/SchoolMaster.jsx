@@ -522,9 +522,22 @@ const SchoolMaster = () => {
                                                                     <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}
                                                                         disabled={currentPage === 1}>Previous</button>
                                                                 </li>
-                                                                <li className="page-item">
+                                                                {/* <li className="page-item">
                                                                     <button className="page-link">{currentPage} of {totalPages}</button>
-                                                                </li>
+                                                                </li> */}
+                                                                {Array.from({ length: totalPages }, (_, index) => (
+                                                                    <li
+                                                                        key={index + 1}
+                                                                        className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}
+                                                                    >
+                                                                        <button
+                                                                            className="page-link"
+                                                                            onClick={() => handlePageChange(index + 1)}
+                                                                        >
+                                                                            {index + 1}
+                                                                        </button>
+                                                                    </li>
+                                                                ))}
                                                                 <li className="page-item">
                                                                     <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}
                                                                         disabled={currentPage === totalPages}>Next</button>

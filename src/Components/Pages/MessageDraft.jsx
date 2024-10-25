@@ -16,6 +16,12 @@ const MessageDraft = () => {
     const [school, setschool] = useState([]);
     const [number, setNumber] = useState([]);
     const [parentsnumber, setParentsNumber] = useState([]);
+    const [messageList, setMessageList] = useState([]);
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const rowsPerPage = 10;
+
 
     const fetchData = async () => {
         try {
@@ -247,16 +253,15 @@ const MessageDraft = () => {
 
 
     //geting
-    const [messageList, setMessageList] = useState([]);
-    const [totalPages, setTotalPages] = useState(0);
-    const rowsPerPage = 10;
+
+
 
     const fetchListData = async () => {
         try {
             setLoading(true);
-            const response = await callAPI.get(`./msg/getMsgDetail?page=1&limit=50`);
+            const response = await callAPI.get(`./msg/getMsgDetail?page=${currentPage}&limit=${rowsPerPage}`);
             setMessageList(response.data.data || []);
-            setTotalPages(Math.ceil(response?.data?.pagination?.totalRecords / rowsPerPage));
+            setTotalPages(Math.ceil(response?.data?.pagination?.totalPages));
         } catch (error) {
             console.error('Error fetching notice data:', error.message);
         } finally {
@@ -265,8 +270,8 @@ const MessageDraft = () => {
     };
 
     useEffect(() => {
-        fetchListData();
-    }, []);
+        fetchListData();// eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentPage]);
 
     const handleToggleStatus = async (msgId, isActive) => {
         try {
@@ -323,12 +328,19 @@ const MessageDraft = () => {
     tomorrow.setDate(tomorrow.getDate() + 1); // Set to tomorrow
     const minDate = tomorrow.toISOString().split('T')[0]; // Get tomorrow's date in YYYY-MM-DD format
 
+
+
+    const handlePageChange = (page) => {
+        if (page > 0 && page <= totalPages) {
+            setCurrentPage(page);
+        }
+    };
     // Use min={minDate} in your input
     if (loading) {
         return <Loding />;
     }
 
-    console.log(totalPages)
+
 
     return (
         <>
@@ -355,12 +367,12 @@ const MessageDraft = () => {
                                         <div className="btn-group" role="group" aria-label="Basic example">
                                             <ul className="nav nav-tabs" id="myTab" role="tablist">
                                                 <li className="nav-item" role="presentation">
-                                                    <a className="nav-link active" id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="true">
+                                                    <a className="nav-link " id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="true">
                                                         Add
                                                     </a>
                                                 </li>
                                                 <li className="nav-item" role="presentation">
-                                                    <a className="nav-link" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">
+                                                    <a className="nav-link active" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">
                                                         List
                                                     </a>
                                                 </li>
@@ -370,7 +382,7 @@ const MessageDraft = () => {
                                 </div>
 
                                 <div className="tab-content border-0 p-0 w-100" id="myTabContent">
-                                    <div className="tab-pane fade show active" id="add" role="tabpanel" aria-labelledby="add-tab">
+                                    <div className="tab-pane fade " id="add" role="tabpanel" aria-labelledby="add-tab">
                                         {/* Form for adding messages */}
                                         <div className="row">
                                             <div className="col-12 grid-margin stretch-card">
@@ -646,7 +658,7 @@ const MessageDraft = () => {
                                     </div>
 
 
-                                    <div className="tab-pane fade" id="list" role="tabpanel" aria-labelledby="list-tab">
+                                    <div className="tab-pane fade show active" id="list" role="tabpanel" aria-labelledby="list-tab">
                                         <div className="row">
                                             <div className="col-md-12 grid-margin stretch-card">
                                                 <div className="card shadow-sm">
@@ -659,6 +671,31 @@ const MessageDraft = () => {
                                                                 </div>
                                                             </div>
                                                         </div>
+                                                        <nav>
+                                                            <ul className="pagination justify-content-end">
+                                                                <li className="page-item">
+                                                                    <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}
+                                                                        disabled={currentPage === 1}>Previous</button>
+                                                                </li>
+                                                                {Array.from({ length: totalPages }, (_, index) => (
+                                                                    <li
+                                                                        key={index + 1}
+                                                                        className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}
+                                                                    >
+                                                                        <button
+                                                                            className="page-link"
+                                                                            onClick={() => handlePageChange(index + 1)}
+                                                                        >
+                                                                            {index + 1}
+                                                                        </button>
+                                                                    </li>
+                                                                ))}
+                                                                <li className="page-item">
+                                                                    <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}
+                                                                        disabled={currentPage === totalPages}>Next</button>
+                                                                </li>
+                                                            </ul>
+                                                        </nav>
                                                     </div>
                                                 </div>
                                             </div>
