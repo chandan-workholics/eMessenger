@@ -122,7 +122,7 @@ const NoticeBoard = () => {
         openModal();
         setDatas({
             title: val.title,
-            document_type: val.document_type,
+            document_type: val.document_link,
             document_link: val.document_link,
             thumbnails: val.thumbnails
         });
