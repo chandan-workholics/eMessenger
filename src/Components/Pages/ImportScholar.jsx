@@ -10,6 +10,7 @@ const ImportScholar = () => {
     const token = sessionStorage.getItem('token');
     const URL = process.env.REACT_APP_URL;
     const [importStudent, setImportStudent] = useState([]);
+    const [importStudenttwo, setImportStudenttwo] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
@@ -26,11 +27,20 @@ const ImportScholar = () => {
                     'Content-Type': 'application/json'
                 }
             });
+            const responsetwo = await fetch(`${URL}/scholar/getScholarDetail?page=1&limit=2000`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const result = await response.json();
+            const resulttwo = await responsetwo.json();
             setImportStudent(result.data);
+            setImportStudenttwo(resulttwo.data);
             setTotalPages(Math.ceil(result.totalCount / rowsPerPage));
         } catch (error) {
             setError(error.message);
@@ -50,7 +60,7 @@ const ImportScholar = () => {
     };
 
     const exportToExcel = () => {
-        const ws = XLSX.utils.json_to_sheet(importStudent);
+        const ws = XLSX.utils.json_to_sheet(importStudenttwo);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Scholar Data');
         XLSX.writeFile(wb, 'Scholar_Data.xlsx');
@@ -81,7 +91,6 @@ const ImportScholar = () => {
             toast.error('Please upload a valid Excel file.');
             return;
         }
-
         try {
             const response = await axios.post('http://206.189.130.102:3550/api/scholar/insertScholarRecord', {
                 data: excelData,
@@ -89,7 +98,6 @@ const ImportScholar = () => {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
-
                 }
             });
             if (response.status === 200) {

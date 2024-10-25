@@ -10,6 +10,7 @@ const FeesMaster = () => {
     const token = sessionStorage.getItem('token');
     const URL = process.env.REACT_APP_URL;
     const [importFeeStudent, setImportFeeStudent] = useState([]);
+    const [importStudenttwo, setImportStudenttwo] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
@@ -26,11 +27,20 @@ const FeesMaster = () => {
                     'Content-Type': 'application/json'
                 }
             });
+            const responsetwo = await fetch(`${URL}/scholar/getScholarDetail?page=1&limit=2000`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const result = await response.json();
+            const resulttwo = await responsetwo.json();
             setImportFeeStudent(result.data);
+            setImportStudenttwo(resulttwo.data);
             setTotalPages(Math.ceil(result.totalCount / rowsPerPage));
         } catch (error) {
             setError(error.message);
@@ -50,7 +60,7 @@ const FeesMaster = () => {
     };
 
     const exportToExcel = () => {
-        const ws = XLSX.utils.json_to_sheet(importFeeStudent);
+        const ws = XLSX.utils.json_to_sheet(importStudenttwo);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Scholar Data');
         XLSX.writeFile(wb, 'Scholar_Data.xlsx');
@@ -200,7 +210,7 @@ const FeesMaster = () => {
                                                                         <td>{val.outstandingfees}</td>
                                                                         <td>{val.duedate}</td>
                                                                         <td>{val.feesstatus}</td>
-                                                                        <td>{val.createdAt}</td>
+                                                                        <td>{new Date(val.createdAt).toLocaleDateString('en-GB')}</td>
                                                                     </tr>
                                                                 ))}
                                                             </tbody>

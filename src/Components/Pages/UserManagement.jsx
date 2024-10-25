@@ -21,6 +21,9 @@ const UserManagement = () => {
     const rowsPerPage = 10;
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+    const [activeFilter, setActiveFilter] = useState('All');
+    const [otpVerifiedFilter, setOtpVerifiedFilter] = useState('All');
+
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => {
         setIsModalOpen(false);
@@ -57,7 +60,7 @@ const UserManagement = () => {
     const getAppUserList = async () => {
         try {
             setLoading(true);
-            const response = await callAPI.get(`./scholar/get_full_list_app_active_users_list?page=1&limit=20&active=1&otpVerified=1`);
+            const response = await callAPI.get(`./scholar/get_full_list_app_active_users_list?page=1&limit=${rowsPerPage}&active=${activeFilter !== 'All' ? (activeFilter === 'Active' ? 1 : 0) : ''}&otpVerified=${otpVerifiedFilter !== 'All' ? (otpVerifiedFilter === 'OTP Verified' ? 1 : 0) : ''}`);
             setUserData(response?.data);
             setTotalPages(Math.ceil(response?.data?.pagination?.totalPages / rowsPerPage));
         } catch (error) {
@@ -66,6 +69,23 @@ const UserManagement = () => {
             setLoading(false);
         }
     };
+
+
+
+    const handleFilterChange = (e) => {
+        const { id, value } = e.target;
+        if (id === "activeFilter") {
+            setActiveFilter(value);
+        } else if (id === "otpVerifiedFilter") {
+            setOtpVerifiedFilter(value);
+        }
+    };
+
+    const handleFilterSubmit = (e) => {
+        e.preventDefault(); // Prevent default form submission
+        getAppUserList(); // Call the function to fetch the filtered list
+    };
+
 
     const getAdminData = async () => {
         try {
@@ -82,7 +102,7 @@ const UserManagement = () => {
 
     useEffect(() => {
         getAdminData();
-        getAppUserList();
+        getAppUserList();// eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage]);
 
     const handlePageChange = (page) => {
@@ -224,13 +244,13 @@ const UserManagement = () => {
                                         <div className="btn-group" role="group" aria-label="Basic example">
                                             <ul className="nav nav-tabs" id="myTab" role="tablist">
                                                 <li className="nav-item" role="presentation">
-                                                    <a className="nav-link active" id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="true">Add</a>
+                                                    <a className="nav-link " id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="true">Add</a>
                                                 </li>
                                                 <li className="nav-item" role="presentation">
                                                     <a className="nav-link" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">List</a>
                                                 </li>
                                                 <li className="nav-item" role="presentation">
-                                                    <a className="nav-link" id="appUsersList-tab" data-toggle="tab" href="#appUsersList" role="tab" aria-controls="appUsersList" aria-selected="false">App Users List</a>
+                                                    <a className="nav-link active" id="appUsersList-tab" data-toggle="tab" href="#appUsersList" role="tab" aria-controls="appUsersList" aria-selected="false">App Users List</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -238,7 +258,7 @@ const UserManagement = () => {
                                 </div>
 
                                 <div className="tab-content border-0 p-0 w-100" id="myTabContent">
-                                    <div className="tab-pane fade show active" id="add" role="tabpanel" aria-labelledby="add-tab">
+                                    <div className="tab-pane fade " id="add" role="tabpanel" aria-labelledby="add-tab">
                                         <div className="row">
                                             <div className="col-12 grid-margin stretch-card">
                                                 <div className="card shadow-sm">
@@ -388,7 +408,7 @@ const UserManagement = () => {
                                         </div>
                                     </div>
 
-                                    <div className="tab-pane fade" id="appUsersList" role="tabpanel" aria-labelledby="appUsersList-tab">
+                                    <div className="tab-pane fade show active" id="appUsersList" role="tabpanel" aria-labelledby="appUsersList-tab">
                                         <div className="row">
                                             <div className="col-md-12 grid-margin stretch-card">
                                                 <div className="card shadow-sm">
@@ -397,19 +417,21 @@ const UserManagement = () => {
 
                                                         <div className="row">
                                                             <div className="col-12">
-                                                                <form className="forms-sample">
+                                                                <div className="forms-sample">
                                                                     <div className="row">
                                                                         <div className="col-md-3 form-group">
-                                                                            <label for="userType">Is Active<span className="text-danger">*</span></label>
-                                                                            <select className="form-control" id="userType">
+                                                                            <label htmlFor="activeFilter">Is Active<span className="text-danger">*</span></label>
+                                                                            <select className="form-control" id="activeFilter" onChange={handleFilterChange}>
+                                                                                <option>Select</option>
                                                                                 <option>All</option>
                                                                                 <option>Active</option>
                                                                                 <option>Inactive</option>
                                                                             </select>
                                                                         </div>
                                                                         <div className="col-md-3 form-group">
-                                                                            <label for="userType">Is OTP Verified<span className="text-danger">*</span></label>
-                                                                            <select className="form-control" id="userType">
+                                                                            <label htmlFor="otpVerifiedFilter">Is OTP Verified<span className="text-danger">*</span></label>
+                                                                            <select className="form-control" id="otpVerifiedFilter" onChange={handleFilterChange}>
+                                                                                <option>Select</option>
                                                                                 <option>All</option>
                                                                                 <option>OTP Verified</option>
                                                                                 <option>OTP Not Verified</option>
@@ -417,11 +439,11 @@ const UserManagement = () => {
                                                                         </div>
                                                                         <div className="col-md-3 d-flex align-items-center">
                                                                             <div className="">
-                                                                                <button type="submit" className="btn btn-primary mr-2">Filter</button>
+                                                                                <button type="submit" onClick={handleFilterSubmit} className="btn btn-primary mr-2">Filter</button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
-                                                                </form>
+                                                                </div>
                                                             </div>
                                                             <div className="col-12">
                                                                 <div className="table-responsive">

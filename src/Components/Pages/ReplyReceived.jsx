@@ -14,8 +14,6 @@ const ReplyReceived = () => {
     const [totalPages, setTotalPages] = useState(0);
     const rowsPerPage = 10;
 
-
-
     const fetchData = async () => {
         try {
             setLoading(true);
@@ -47,14 +45,14 @@ const ReplyReceived = () => {
     ];
 
     const rows = [
-        { label: 'Reply Msg Id', key: 'replyMsgId' },
-        { label: 'Msg Body Id', key: 'msgBodyId' },
-        { label: 'Msg Type', key: 'msgType' },
-        { label: 'Data', key: 'dataReplyText' },
-        { label: 'Added By', key: 'addedBy' },
-        { label: 'Added On', key: 'addedOn' },
-        { label: 'Edit By', key: 'editBy' },
-        { label: 'Edit On', key: 'editOn' },
+        { label: 'Req ID', key: 'reqId' },
+        { label: 'Msg ID', key: 'msgId' },
+        { label: 'Received', key: 'received' },
+        { label: 'Subject', key: 'subject' },
+        { label: 'Mobile no.', key: 'mobileNo' },
+        { label: 'School', key: 'school' },
+        { label: 'Student Id', key: 'studentId' },
+        { label: 'Sent', key: 'sent' },
     ];
 
     // Table data
@@ -81,6 +79,8 @@ const ReplyReceived = () => {
         return <Loding />;
     }
 
+    console.log(setCurrentPage)
+    console.log(totalPages)
 
     return (
         <div className="container-scroller">

@@ -5,9 +5,7 @@ import Sidebar from '../Template/Sidebar';
 import SortableTable from '../Template/SortableTable';
 import callAPI from '../../commonMethod/api.js';
 import Multiselect from "multiselect-react-dropdown";
-import Loding from '../Template/Loding';
 import { toast } from 'react-toastify';
-import axios from 'axios';
 
 const MessageDraft = () => {
     const [loading, setLoading] = useState(true);
@@ -16,6 +14,9 @@ const MessageDraft = () => {
     const [school, setschool] = useState([]);
     const [number, setNumber] = useState([]);
     const [parentsnumber, setParentsNumber] = useState([]);
+
+    const [deleteid, Setdeleteid] = useState('')
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const fetchData = async () => {
         try {
@@ -65,7 +66,7 @@ const MessageDraft = () => {
         msg_priority: '1',
         msg_sgroup_id: '',
         is_reply_type: '0',
-        is_reply_required_any: '0',
+        is_reply_required_any: '1',
         is_active: '1',
         entry_by: '1',
         school_id: '',
@@ -83,43 +84,13 @@ const MessageDraft = () => {
     const [inputFields, setInputFields] = useState([]);
     const [msgCategory, setMsgCategory] = useState('');
 
-    const handleImageChange = async (e, fieldId) => {
-        const formData = new FormData();
-        formData.append("file", e.target.files[0]);
-
-        var requestOptions = {
-            headers: {
-                "Content-Type": "multipart/form-data",
-            },
-        };
-        try {
-            const fetchdata = await axios.post(
-                `http://206.189.130.102:3550/api/v1/admin/imageUpload_Use/imageUpload`,
-                formData,
-                requestOptions
-            );
-            if (fetchdata.status === 200) {
-                toast.success("Data Uploaded Successfully");
-                const imageUrl = fetchdata.data.url;
-                const updatedFields = displayFields.map((field) =>
-                    field.id === fieldId ? { ...field, linkValue: imageUrl } : field
-                );
-                setDisplayFields(updatedFields);
-            } else {
-                toast.error("Failed to load");
-            }
-        } catch (error) {
-            toast.error("An error occurred during the upload.");
-            console.error("Error uploading image:", error);
-        }
-    };
-
-
     const handleCategoryChange = (event) => {
         const { value, checked } = event.target;
         if (checked) {
+            // Add the category to the array
             setMsgCategory(prevCategories => [...prevCategories, value]);
         } else {
+            // Remove the category from the array
             setMsgCategory(prevCategories => prevCategories.filter(category => category !== value));
         }
     };
@@ -175,7 +146,7 @@ const MessageDraft = () => {
                         dataText = { link: field.value || '' };
                         break;
                     case 'IMAGE':
-                        dataText = { link: field.value || field.linkValue || '' };
+                        dataText = { link: field.value || '' };
                         break;
                     default:
                         break;
@@ -224,7 +195,7 @@ const MessageDraft = () => {
                 msg_priority: datas?.msg_priority,
                 msg_sgroup_id: datas?.msg_sgroup_id,
                 is_reply_type: datas?.is_reply_type,
-                is_reply_required_any: msgCategory.includes('Input') ? '1' : '0',
+                is_reply_required_any: datas?.is_reply_required_any,
                 is_active: datas?.is_active,
                 entry_by: datas?.entry_by,
                 school_id: school?.map((val) => val?.sch_id),
@@ -234,7 +205,6 @@ const MessageDraft = () => {
                 toast.success('Message submitted successfully');
                 setDisplayFields([]);
                 setInputFields([]);
-                setDatas('');
                 fetchListData();
             } else {
                 toast.error('Failed to submit the message');
@@ -267,6 +237,29 @@ const MessageDraft = () => {
     useEffect(() => {
         fetchListData();
     }, []);
+
+
+    const closeDeleteModal = () => {
+        setIsDeleteModalOpen(false);
+    };
+
+    const handleDelete = (id) => {
+        Setdeleteid(id);
+        setIsDeleteModalOpen(true)
+    };
+
+    function deleteItem(id) {
+        callAPI.del(`./msg/delete_web_single_msg_master?msg_id=${id}`).then(async (response) => {
+            if (response.status === 200 || response.status === 201) {
+                toast.success('Delete Item Successfully');
+                closeDeleteModal();
+                fetchListData();
+            }
+            else {
+                toast.error('something went wrong');
+            }
+        });
+    }
 
     const handleToggleStatus = async (msgId, isActive) => {
         try {
@@ -310,6 +303,9 @@ const MessageDraft = () => {
         isActive: val?.is_active,
         action: (
             <div>
+                {/* {val?.is_active === 1 ? <button onClick={() => handleDelete(val?.msg_id)} type="button" className="btn p-2">
+                    <i className="fa-solid fa-trash-can text-danger"></i>
+                </button> : ''} */}
                 {val?.is_active === 1 ? <Link to={`/send-message/${val?.msg_id}`}> <i className="fa-solid fa-paper-plane text-success mr-3"></i></Link> : ''}
                 <button onClick={() => handleToggleStatus(val?.msg_id, val?.is_active)} type="button" className="btn p-2">
                     {val?.is_active === 1 ? 'Deactivate' : 'Activate'}
@@ -319,16 +315,6 @@ const MessageDraft = () => {
     })) : [];
 
     //geting
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1); // Set to tomorrow
-    const minDate = tomorrow.toISOString().split('T')[0]; // Get tomorrow's date in YYYY-MM-DD format
-
-    // Use min={minDate} in your input
-    if (loading) {
-        return <Loding />;
-    }
-
-    console.log(totalPages)
 
     return (
         <>
@@ -386,11 +372,11 @@ const MessageDraft = () => {
                                                             <div className="row">
                                                                 <div className="col-md-4 form-group">
                                                                     <label htmlFor="subjectLine">Subject Line<span className="text-danger">*</span></label>
-                                                                    <input type="text" className="form-control" id="subjectLine" placeholder="Subject Line" required name='subject_text' value={datas?.subject_text} onChange={handleChange} />
+                                                                    <input type="text" className="form-control" id="subjectLine" placeholder="Subject Line" name='subject_text' value={datas?.subject_text} onChange={handleChange} />
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
                                                                     <label htmlFor="priority">Priority (1-High)<span className="text-danger">*</span></label>
-                                                                    <select className="form-control" id="priority" name='msg_priority' required value={datas?.msg_priority} onChange={handleChange}>
+                                                                    <select className="form-control" id="priority" name='msg_priority' value={datas?.msg_priority} onChange={handleChange}>
                                                                         {[...Array(10).keys()].map((val) => (
                                                                             <option key={val + 1}>{val + 1}</option>
                                                                         ))}
@@ -398,16 +384,7 @@ const MessageDraft = () => {
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
                                                                     <label htmlFor="showUpto">Show Upto Date & Time<span className="text-danger">*</span></label>
-                                                                    <input
-                                                                        type="date"
-                                                                        className="form-control"
-                                                                        id="showUpto"
-                                                                        name='show_upto'
-                                                                        value={datas?.show_upto}
-                                                                        onChange={handleChange}
-                                                                        required
-                                                                        min={minDate}
-                                                                    />
+                                                                    <input type="date" className="form-control" id="showUpto" name='show_upto' value={datas?.show_upto} onChange={handleChange} />
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
                                                                     <label htmlFor="schools">Schools<span className="text-danger">*</span></label>
@@ -418,7 +395,6 @@ const MessageDraft = () => {
                                                                         onSelect={(event) => {
                                                                             setschool(event);
                                                                         }}
-                                                                        required
                                                                         options={schoolList}
                                                                         displayValue="sch_nm"
                                                                         showCheckbox />
@@ -538,15 +514,6 @@ const MessageDraft = () => {
                                                                                         setDisplayFields(updatedFields);
                                                                                     }}
                                                                                 />
-
-                                                                                {(field.type === 'IMAGE') && (
-                                                                                    <input
-                                                                                        type="file"
-                                                                                        className="form-control"
-                                                                                        accept="image/*"
-                                                                                        onChange={(e) => handleImageChange(e, field.id)} // Pass field ID to handleImageChange
-                                                                                    />
-                                                                                )}
                                                                                 <button type="button" className="btn border-0" onClick={() => deleteField(field.id, 'display')}>
                                                                                     <i className="fa-solid fa-trash-can text-danger"></i>
                                                                                 </button>
@@ -636,8 +603,12 @@ const MessageDraft = () => {
 
                                                             </div>
 
-                                                            <button type="submit" className="btn btn-primary mr-2">Submit</button>
 
+
+
+                                                            {/* Submit and Cancel buttons */}
+                                                            <button type="submit" className="btn btn-primary mr-2">Submit</button>
+                                                            <button className="btn btn-light">Cancel</button>
                                                         </form>
                                                     </div>
                                                 </div>
@@ -646,7 +617,10 @@ const MessageDraft = () => {
                                     </div>
 
 
+
+
                                     <div className="tab-pane fade" id="list" role="tabpanel" aria-labelledby="list-tab">
+                                        {/* Message list */}
                                         <div className="row">
                                             <div className="col-md-12 grid-margin stretch-card">
                                                 <div className="card shadow-sm">
@@ -664,6 +638,33 @@ const MessageDraft = () => {
                                             </div>
                                         </div>
                                     </div>
+
+                                    {isDeleteModalOpen && (
+                                        <div className="modal show" style={{ display: 'block', background: '#0000008e' }}>
+                                            <div className="modal-dialog">
+                                                <div className="modal-content">
+                                                    <div className="modal-header d-flex align-items-center bg-ffe2e5 py-3">
+                                                        <h4 className="modal-title font-weight-bold text-primary">Warning!</h4>
+                                                        <button type="button" className="close" onClick={closeDeleteModal}>
+                                                            <i class="fa-solid fa-xmark fs-3 text-primary"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div className="modal-body p-3">
+                                                        <div className="modal-body">
+                                                            <h5 className="text-primary text-center">Do you want to permanently delete?</h5>
+                                                            <img src="images/deleteWarning.png" alt="" className="w-100 m-auto" />
+                                                        </div>
+                                                        <div className="modal-footer pb-0">
+                                                            <div className="d-flex align-items-center">
+                                                                <button type="button" className="btn btn-danger mr-3" onClick={() => deleteItem(deleteid)}>Yes</button>
+                                                                <button type="button" className="btn btn-outline-danger" onClick={closeDeleteModal}>No</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
 
 
                                 </div>

@@ -172,6 +172,7 @@ const SchoolMaster = () => {
         addedOn: school.entry_date,
         editBy: school.entry_by,
         editOn: school.edit_date,
+        schoolLogo: <img src={school.logo_img} className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} />,
     })) : [];
 
     const handleupdateSchool = (school) => {

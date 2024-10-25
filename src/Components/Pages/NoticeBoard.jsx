@@ -105,7 +105,7 @@ const NoticeBoard = () => {
         title: val?.title,
         documentType: val?.document_type,
         documentLink: (<Link to={val?.document_link} className='text-info' target='_blank'>{val?.document_link}</Link>),
-        thumbnails: (<img src={val?.thumbnails} className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} />),
+        thumbnails: (val?.document_type !== 'pdf' ? <img src={val?.thumbnails} className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} /> : <img src='http://206.189.130.102:3550/Uploads/image/1729838073596-1729838073596.png' className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} />),
         action: (
             <div>
                 <button onClick={() => handleUpdateNotice(val)} type="button" className="btn">

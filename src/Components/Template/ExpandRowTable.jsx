@@ -1,23 +1,20 @@
 import React, { useState, useEffect } from 'react';
 
 const ExpandRowTable = ({ columns, rows, data }) => {
-    const [tableData, setTableData] = useState(data || []); // Data state
-    const [searchTerm, setSearchTerm] = useState(''); // Search term state
-    const [filteredData, setFilteredData] = useState(data || []); // Filtered data state
+    const [tableData, setTableData] = useState(data || []);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredData, setFilteredData] = useState(data || []);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
-    const [expandedRows, setExpandedRows] = useState([]); // Track expanded rows
+    const [expandedRows, setExpandedRows] = useState([]);
 
     useEffect(() => {
-        setTableData(data); // Update table data when `data` prop changes
-        setFilteredData(data); // Update filtered data when `data` prop changes
+        setTableData(data);
+        setFilteredData(data);
     }, [data]);
 
-    // Handle search input change
     const handleSearchChange = (e) => {
         const value = e.target.value;
         setSearchTerm(value);
-
-        // Filter data based on search term
         const lowercasedFilter = value.toLowerCase();
         const filteredResults = tableData.filter(item =>
             columns.some(column =>
@@ -27,7 +24,6 @@ const ExpandRowTable = ({ columns, rows, data }) => {
         setFilteredData(filteredResults);
     };
 
-    // Function to handle sorting
     const handleSort = (key) => {
         let direction = 'ascending';
         if (sortConfig.key === key && sortConfig.direction === 'ascending') {
@@ -44,7 +40,6 @@ const ExpandRowTable = ({ columns, rows, data }) => {
         setFilteredData(sortedData);
     };
 
-    // Display the sorting icon
     const getSortIcon = (key) => {
         if (sortConfig.key !== key) return null;
         return sortConfig.direction === 'ascending'
@@ -52,7 +47,6 @@ const ExpandRowTable = ({ columns, rows, data }) => {
             : <i className="fa-solid fa-arrow-up-wide-short"></i>;
     };
 
-    // Toggle the expanded state of a row
     const toggleExpandRow = (rowIndex) => {
         if (expandedRows.includes(rowIndex)) {
             setExpandedRows(expandedRows.filter((index) => index !== rowIndex));
@@ -63,18 +57,14 @@ const ExpandRowTable = ({ columns, rows, data }) => {
 
     return (
         <div>
-            {/* Search Input */}
             <div className="row w-100">
-                <div class="ml-auto col-md-3 form-group">
-                    <div class="input-group">
+                <div className="ml-auto col-md-3 form-group">
+                    <div className="input-group">
                         <input type="text"
                             placeholder="Search..."
                             value={searchTerm}
                             onChange={handleSearchChange}
-                            class="form-control" />
-                        {/* <div class="input-group-append">
-                            <button class="btn btn-sm btn-primary px-4" type="button">Filter</button>
-                        </div> */}
+                            className="form-control" />
                     </div>
                 </div>
             </div>
@@ -87,7 +77,7 @@ const ExpandRowTable = ({ columns, rows, data }) => {
                                 {column.label} {getSortIcon(column.key)}
                             </th>
                         ))}
-                        <th></th> {/* Column for Expand/Collapse button */}
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -100,7 +90,6 @@ const ExpandRowTable = ({ columns, rows, data }) => {
                     ) : (
                         filteredData.map((row, rowIndex) => (
                             <React.Fragment key={rowIndex}>
-                                {/* Main Row */}
                                 <tr>
                                     {columns.map((column) => (
                                         <td key={column.key}>
@@ -108,24 +97,20 @@ const ExpandRowTable = ({ columns, rows, data }) => {
                                         </td>
                                     ))}
                                     <td className='p-0 px-2'>
-                                        {/* Expand/Collapse Button */}
                                         <button className='border-0 bg-transparent w-100' onClick={() => toggleExpandRow(rowIndex)} style={{ height: '40px' }}>
                                             {expandedRows.includes(rowIndex) ? <i className="fa-solid fa-angle-up"></i> : <i className="fa-solid fa-angle-down"></i>}
                                         </button>
                                     </td>
                                 </tr>
-
-                                {/* Expanded Row */}
                                 {expandedRows.includes(rowIndex) && (
                                     <tr>
                                         <td colSpan={columns.length + 1} style={{ backgroundColor: '#eaeaf1' }} className='rounded-bottom'>
                                             <div className="expanded-content">
-                                                {/* Render any additional dynamic content for this row */}
                                                 <p><strong>Additional Details:</strong></p>
                                                 <ul>
-                                                {rows.map((rows, idx) => (
+                                                    {Object.entries(row).map(([key, value], idx) => (
                                                         <li key={idx}>
-                                                            <strong>{rows.label}:</strong> {rows.key}
+                                                            <strong>{key}:</strong> {value !== undefined ? value : 'N/A'}
                                                         </li>
                                                     ))}
                                                 </ul>
