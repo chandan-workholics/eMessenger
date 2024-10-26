@@ -17,6 +17,7 @@ const MessageDraft = () => {
     const [number, setNumber] = useState([]);
     const [parentsnumber, setParentsNumber] = useState([]);
     const [messageList, setMessageList] = useState([]);
+    const [chattype, setchattype] = useState('');
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
@@ -123,6 +124,7 @@ const MessageDraft = () => {
 
     const handleCategoryChange = (event) => {
         const { value, checked } = event.target;
+        setchattype(event.target.value)
         if (checked) {
             setMsgCategory(prevCategories => [...prevCategories, value]);
         } else {
@@ -228,12 +230,14 @@ const MessageDraft = () => {
                 subject_text: datas?.subject_text,
                 show_upto: datas?.show_upto,
                 msg_priority: datas?.msg_priority,
+                msg_chat_type: chattype,
                 msg_sgroup_id: datas?.msg_sgroup_id,
                 is_reply_type: datas?.is_reply_type,
                 is_reply_required_any: msgCategory.includes('Input') ? '1' : '0',
                 is_active: datas?.is_active,
                 entry_by: datas?.entry_by,
                 school_id: school?.map((val) => val?.sch_id),
+                five_mobile_number: parentsnumber,
                 message_body: messageBody
             });
             if (response.status >= 200 && response.status < 300) {
@@ -454,19 +458,28 @@ const MessageDraft = () => {
                                                                     <Multiselect
                                                                         className='inputHead'
                                                                         onRemove={(event) => {
-                                                                            console.log(event);
-                                                                            setParentsNumber(event);
+                                                                            const updatedParents = parentsnumber.filter(parent =>
+                                                                                !event.some(removed => removed.student_family_mobile_number === parent.mobile_no)
+                                                                            );
+                                                                            setParentsNumber(updatedParents);
                                                                         }}
                                                                         onSelect={(event) => {
                                                                             if (event.length <= 5) {
-                                                                                setParentsNumber(event);
+                                                                                const newParents = event.map(num => ({
+                                                                                    student_main_id: num.student_main_id, // Make sure this key exists in your options
+                                                                                    mobile_no: parseInt(num.student_family_mobile_number, 10) // Ensure this key exists
+                                                                                }));
+                                                                                setParentsNumber(newParents);
                                                                             } else {
                                                                                 alert("You can only select a maximum of 5 numbers.");
                                                                             }
                                                                         }}
                                                                         options={number}
                                                                         displayValue="student_family_mobile_number"
-                                                                        selectedValues={parentsnumber}
+                                                                        selectedValues={parentsnumber.map(parent => ({
+                                                                            student_family_mobile_number: parent.mobile_no, // Ensure the display value matches
+                                                                            student_main_id: parent.student_main_id // Include main ID if needed
+                                                                        }))}
                                                                         showCheckbox
                                                                     />
 
@@ -482,19 +495,19 @@ const MessageDraft = () => {
                                                                     <label htmlFor="msgCategory">Message Category<span className="text-danger">*</span></label>
                                                                     <div className="d-flex justify-content-between form-control border-0">
                                                                         <div className="custom-control custom-checkbox">
-                                                                            <input type="checkbox" className="custom-control-input" id="Chat" value="Chat" onChange={handleCategoryChange} />
+                                                                            <input type="checkbox" className="custom-control-input" id="Chat" value="CHAT" onChange={handleCategoryChange} />
                                                                             <label className="custom-control-label" htmlFor="Chat">Chat</label>
                                                                         </div>
                                                                         <div className="custom-control custom-checkbox">
-                                                                            <input type="checkbox" className="custom-control-input" id="GroupChat" value="Group Chat" onChange={handleCategoryChange} />
+                                                                            <input type="checkbox" className="custom-control-input" id="GroupChat" value="GROUPCHAT" onChange={handleCategoryChange} />
                                                                             <label className="custom-control-label" htmlFor="GroupChat">Group Chat</label>
                                                                         </div>
                                                                         <div className="custom-control custom-checkbox">
-                                                                            <input type="checkbox" className="custom-control-input" id="Display" value="Display" onChange={handleCategoryChange} />
+                                                                            <input type="checkbox" className="custom-control-input" id="Display" value="DISPLAY" onChange={handleCategoryChange} />
                                                                             <label className="custom-control-label" htmlFor="Display">Display</label>
                                                                         </div>
                                                                         <div className="custom-control custom-checkbox">
-                                                                            <input type="checkbox" className="custom-control-input" id="Input" value="Input" onChange={handleCategoryChange} />
+                                                                            <input type="checkbox" className="custom-control-input" id="Input" value="INPUT" onChange={handleCategoryChange} />
                                                                             <label className="custom-control-label" htmlFor="Input">Input</label>
                                                                         </div>
                                                                     </div>
@@ -502,7 +515,7 @@ const MessageDraft = () => {
                                                             </div>
 
                                                             <div className="row">
-                                                                {msgCategory.includes('Display') && (
+                                                                {msgCategory.includes('DISPLAY') && (
                                                                     <div className="col-md-6 form-group">
                                                                         <label htmlFor="displayOptions">Display Options</label>
                                                                         <select className="form-control" id="displayOptions" onChange={handleDisplayOptionsChange}>
@@ -515,7 +528,7 @@ const MessageDraft = () => {
                                                                         </select>
                                                                     </div>
                                                                 )}
-                                                                {msgCategory.includes('Input') && (
+                                                                {msgCategory.includes('INPUT') && (
                                                                     <div className="col-md-6 form-group">
                                                                         <label htmlFor="inputOptions">Input Options</label>
                                                                         <select className="form-control" id="inputOptions" onChange={handleInputOptionsChange}>
