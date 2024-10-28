@@ -233,7 +233,7 @@ const MessageDraft = () => {
                 msg_chat_type: chattype,
                 msg_sgroup_id: datas?.msg_sgroup_id,
                 is_reply_type: datas?.is_reply_type,
-                is_reply_required_any: msgCategory.includes('Input') ? '1' : '0',
+                is_reply_required_any: msgCategory.includes('INPUT') ? 1 : 0,
                 is_active: datas?.is_active,
                 entry_by: datas?.entry_by,
                 school_id: school?.map((val) => val?.sch_id),
