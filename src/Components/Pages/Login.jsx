@@ -36,10 +36,9 @@ const Login = () => {
 
 
             if (response.ok) {
-
                 sessionStorage.setItem('token', data.token);
                 sessionStorage.setItem('admin_id', data.admin_id);
-                sessionStorage.setItem('userProfileImage', data.schoolDetails[0]?.logo_img);
+                // sessionStorage.setItem('userProfileImage', data.schoolDetails[0]?.logo_img);
                 navigate('/dashboard');
             } else {
 
