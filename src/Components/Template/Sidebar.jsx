@@ -30,7 +30,7 @@ const Sidebar = () => {
                     <li className="nav-item">
                         <Link className="nav-link" to="/notice-board">
                             <i className="fa-solid fa-chalkboard menu-icon"></i>
-                            <span className="menu-title mr-3">Notice Board</span>
+                            <span className="menu-title mr-3">Welcome Message</span>
                         </Link>
                     </li>
                     <li className="nav-item">

@@ -5,10 +5,21 @@ import SortableTable from '../Template/SortableTable';
 import Loding from '../Template/Loding';
 import { toast } from 'react-toastify';
 import callAPI from '../../commonMethod/api';
+import Multiselect from "multiselect-react-dropdown";
 
 const UserManagement = () => {
 
-    const [datas, setDatas] = useState({ full_name: '', adminuser_name: '', admin_password: '', is_active: '', admin_type: '', mobile_no: '', added_admin_id: '1', parent_admin_id: '' })
+    const [datas, setDatas] = useState({
+        full_name: '',
+        adminuser_name: '',
+        admin_password: '',
+        is_active: '',
+        admin_type: '',
+        mobile_no: '',
+        school_id: '',
+        added_admin_id: '1',
+        parent_admin_id: '',
+    })
     const [updateUserManagement, setUpdateUserManagement] = useState({});
     const [admindata, setAdminData] = useState()
     const [userData, setUserData] = useState()
@@ -16,7 +27,8 @@ const UserManagement = () => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    const [schoolList, setSchoolList] = useState([]);
+    const [school, setschool] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const rowsPerPage = 10;
@@ -25,10 +37,35 @@ const UserManagement = () => {
     const [activeFilter, setActiveFilter] = useState('All');
     const [otpVerifiedFilter, setOtpVerifiedFilter] = useState('All');
 
+    const fetchData = async () => {
+        try {
+            setLoading(true);
+            const response = await callAPI.get(`/school/getSchool?page=1&limit=200`);
+            setSchoolList(response.data.data || []);
+        } catch (error) {
+            console.error('Error fetching school data:', error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+    useEffect(() => {
+        fetchData();
+    }, []);// eslint-disable-next-line react-hooks/exhaustive-deps
+
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => {
         setIsModalOpen(false);
-        setDatas({ full_name: '', adminuser_name: '', admin_password: '', is_active: '', admin_type: '', mobile_no: '', added_admin_id: '1', parent_admin_id: '' });
+        setDatas({
+            full_name: '',
+            adminuser_name: '',
+            admin_password: '',
+            is_active: '',
+            admin_type: '',
+            mobile_no: '',
+            added_admin_id: '1',
+            parent_admin_id: '',
+            school_id: '',
+        });
     };
 
     const closeDeleteModal = () => {
@@ -156,6 +193,7 @@ const UserManagement = () => {
             adminuser_name: val.adminuser_name,
             admin_password: val.admin_password,
             mobile_no: val.mobile_no,
+            school_id: val.school_id,
             admin_type: val.admin_type,
             is_active: val.is_active,
         });
@@ -335,14 +373,18 @@ const UserManagement = () => {
                                                                             </select>
                                                                         </div>
                                                                         <div className="col-md-6 form-group">
-                                                                            <label for="userType">Schools <span className="text-danger">*</span></label>
-                                                                            <select className="form-control" id="userType" name=''>
-                                                                                <option value='' selected disabled>Select Option</option>
-                                                                                <option>Admin</option>
-                                                                                <option>Management</option>
-                                                                                <option>User</option>
-                                                                                <option>LBF</option>
-                                                                            </select>
+                                                                            <label htmlFor="schools">Schools<span className="text-danger">*</span></label>
+                                                                            <Multiselect className='inputHead'
+                                                                                onRemove={(event) => {
+                                                                                    console.log(event);
+                                                                                }}
+                                                                                onSelect={(event) => {
+                                                                                    setschool(event);
+                                                                                }}
+                                                                                required
+                                                                                options={schoolList}
+                                                                                displayValue="sch_nm"
+                                                                                showCheckbox />
                                                                         </div>
                                                                         <div className="col-md-6 form-group">
                                                                             <label for="userType">Reporting/Incharge <span className="text-danger">*</span></label>

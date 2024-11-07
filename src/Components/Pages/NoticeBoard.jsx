@@ -211,7 +211,7 @@ const NoticeBoard = () => {
                             <div className="row">
                                 <div className="col-12 col-md-6 mb-4 mb-xl-0">
                                     <div className="d-flex align-items-center mb-3">
-                                        <h3 className="font-weight-bold mr-2">Notice Board</h3>
+                                        <h3 className="font-weight-bold mr-2">Welcome Message</h3>
                                     </div>
                                 </div>
                                 <div className="col-12 col-md-6 mb-4 mb-xl-0">
@@ -235,7 +235,7 @@ const NoticeBoard = () => {
                                                 <div className="card shadow-sm">
                                                     <div className="card-body">
                                                         <div className="d-flex align-items-center mb-3">
-                                                            <h4 className="card-title mb-0 mr-2">Create Notice</h4>
+                                                            <h4 className="card-title mb-0 mr-2">Create Welcome Message</h4>
                                                             <p className="text-danger font-weight-bold mb-0">NEW</p>
                                                         </div>
                                                         <div className="forms-sample" >
@@ -319,7 +319,7 @@ const NoticeBoard = () => {
                                             <div className="col-md-12 grid-margin stretch-card">
                                                 <div className="card shadow-sm">
                                                     <div className="card-body">
-                                                        <p className="card-title">Notice List</p>
+                                                        <p className="card-title">Welcome Message List</p>
                                                         <div className="row">
                                                             <div className="col-12">
                                                                 <div className="table-responsive">
@@ -370,7 +370,7 @@ const NoticeBoard = () => {
                     <div className="modal-dialog">
                         <div className="modal-content">
                             <div className="modal-header d-flex align-items-center bg-ffe2e5 py-3">
-                                <h3 className="modal-title font-weight-bold text-primary">Update Notice Board</h3>
+                                <h3 className="modal-title font-weight-bold text-primary">Update Welcome Message</h3>
                                 <button type="button" className="close" onClick={closeModal}>
                                     <i class="fa-solid fa-xmark fs-3 text-primary"></i>
                                 </button>

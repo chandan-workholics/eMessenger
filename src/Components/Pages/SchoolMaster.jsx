@@ -144,6 +144,7 @@ const SchoolMaster = () => {
     ];
 
     const rows = [
+        { label: 'App Scroll News', key: 'appScrollNews' },
         { label: 'Added By', key: 'addedBy' },
         { label: 'Added On', key: 'addedOn' },
         { label: 'Edit By', key: 'editBy' },
@@ -168,6 +169,7 @@ const SchoolMaster = () => {
                 </button>
             </div>
         ),
+        appScrollNews: school.scroll_news_text,
         addedBy: school.entry_by,
         addedOn: school.entry_date,
         editBy: school.entry_by,
@@ -187,6 +189,7 @@ const SchoolMaster = () => {
             contact_no: school.contact_no,
             website: school.website,
             email_id: school.email_id,
+            scroll_news_text: school.scroll_news_text,
             text_color: school.text_color,
             bg_color: school.bg_color,
             logo_img: school.logo_img,
@@ -388,7 +391,7 @@ const SchoolMaster = () => {
                                                                 </div>
                                                             </div>
                                                             <hr />
-                                                            {/* <h4 className="card-description text-primary font-weight-bolder">App Top Scrolled News</h4>
+                                                            <h4 className="card-description text-primary font-weight-bolder">App Top Scrolled News</h4>
                                                             <div className="row">
                                                                 <div className="col-md-6 form-group">
                                                                     <label htmlFor="exampleTextarea1">Scroll News</label>
@@ -404,7 +407,7 @@ const SchoolMaster = () => {
                                                                     ></textarea>
                                                                 </div>
                                                             </div>
-                                                            <hr /> */}
+                                                            <hr />
                                                             {/* <h4 className="card-description text-primary font-weight-bolder">App Default Welcome Message IDs [ Comma(,) seprated ]</h4>
                                                             <div className="row">
                                                                 <div className="col-md-6 form-group">
@@ -682,7 +685,7 @@ const SchoolMaster = () => {
                                             </div>
                                         </div>
                                         <hr />
-                                        {/* <div className="col-12">
+                                        <div className="col-12">
                                             <h4 className="card-description text-primary font-weight-bolder">App Top Scrolled News</h4>
                                             <div className="row">
                                                 <div className="col-md-12 form-group">
@@ -700,7 +703,7 @@ const SchoolMaster = () => {
                                                 </div>
                                             </div>
                                         </div>
-                                        <hr /> */}
+                                        <hr />
                                         {/* <div className="col-12">
                                             <h4 className="card-description text-primary font-weight-bolder">App Default Welcome Message IDs [ Comma(,) seprated ]</h4>
                                             <div className="row">
