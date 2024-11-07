@@ -82,12 +82,22 @@ const UserManagement = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await callAPI.post(`./admin/createAdmin`, datas);
+            const response = await callAPI.post(`./admin/createAdmin`, {
+                full_name: datas.full_name,
+                adminuser_name: datas.adminuser_name,
+                admin_password: datas.admin_password,
+                is_active: datas.is_active,
+                admin_type: datas.admin_type,
+                mobile_no: datas.mobile_no,
+                added_admin_id: datas.added_admin_id,
+                parent_admin_id: datas.parent_admin_id,
+                school_id: school?.map((val) => val?.sch_id),
+            });
             if (response.status >= 200 && response.status < 300) {
                 getAdminData();
                 toast.success('User added successfully');
             } else {
-                toast.error('Failed to add User');
+                toast.error(response?.message);
             }
         } catch (error) {
             console.error('Error submitting form:', error);

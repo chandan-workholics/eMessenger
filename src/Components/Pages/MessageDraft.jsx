@@ -122,15 +122,22 @@ const MessageDraft = () => {
     };
 
 
+    // const handleCategoryChange = (event) => {
+    //     const { value, checked } = event.target;
+    //     setchattype(event.target.value)
+    //     if (checked) {
+    //         setMsgCategory(prevCategories => [...prevCategories, value]);
+    //     } else {
+    //         setMsgCategory(prevCategories => prevCategories.filter(category => category !== value));
+    //     }
+    // };
+
     const handleCategoryChange = (event) => {
-        const { value, checked } = event.target;
-        setchattype(event.target.value)
-        if (checked) {
-            setMsgCategory(prevCategories => [...prevCategories, value]);
-        } else {
-            setMsgCategory(prevCategories => prevCategories.filter(category => category !== value));
-        }
+        const { value } = event.target;
+        setchattype(value); // Set the chat type based on selected value
+        setMsgCategory([value]); // Update `msgCategory` to contain only the selected value
     };
+
 
     const handleDisplayOptionsChange = (e) => {
         const selectedOptions = [...e.target.selectedOptions].map(option => option.value);
@@ -490,12 +497,12 @@ const MessageDraft = () => {
                                                             {/* Conditionally render multi-select inputs based on the selected message category */}
 
 
-                                                            <div className="row">
+                                                            {/* <div className="row">
                                                                 <div className="col-md-4 form-group">
                                                                     <label htmlFor="msgCategory">Message Category<span className="text-danger">*</span></label>
                                                                     <div className="d-flex justify-content-between form-control border-0">
                                                                         <div className="custom-control custom-checkbox">
-                                                                            <input type="checkbox" className="custom-control-input" id="Chat" value="CHAT" onChange={handleCategoryChange} />
+                                                                            <input type="checkbox" className="custom-control-input" id="Chat" value="INDIVIDUALCHAT" onChange={handleCategoryChange} />
                                                                             <label className="custom-control-label" htmlFor="Chat">Chat</label>
                                                                         </div>
                                                                         <div className="custom-control custom-checkbox">
@@ -512,7 +519,71 @@ const MessageDraft = () => {
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                            </div> */}
+
+
+                                                            <div className="row">
+                                                                <div className="col-md-4 form-group">
+                                                                    <label htmlFor="msgCategory">
+                                                                        Message Category<span className="text-danger">*</span>
+                                                                    </label>
+                                                                    <div className="d-flex justify-content-between form-control border-0">
+                                                                        <div className="custom-control custom-radio">
+                                                                            <input
+                                                                                type="radio"
+                                                                                className="custom-control-input"
+                                                                                id="Chat"
+                                                                                name="msgCategory"
+                                                                                value="INDIVIDUALCHAT"
+                                                                                onChange={handleCategoryChange}
+                                                                            />
+                                                                            <label className="custom-control-label" htmlFor="Chat">
+                                                                                Chat
+                                                                            </label>
+                                                                        </div>
+                                                                        <div className="custom-control custom-radio">
+                                                                            <input
+                                                                                type="radio"
+                                                                                className="custom-control-input"
+                                                                                id="GroupChat"
+                                                                                name="msgCategory"
+                                                                                value="GROUPCHAT"
+                                                                                onChange={handleCategoryChange}
+                                                                            />
+                                                                            <label className="custom-control-label" htmlFor="GroupChat">
+                                                                                Group Chat
+                                                                            </label>
+                                                                        </div>
+                                                                        <div className="custom-control custom-radio">
+                                                                            <input
+                                                                                type="radio"
+                                                                                className="custom-control-input"
+                                                                                id="Display"
+                                                                                name="msgCategory"
+                                                                                value="DISPLAY"
+                                                                                onChange={handleCategoryChange}
+                                                                            />
+                                                                            <label className="custom-control-label" htmlFor="Display">
+                                                                                Display
+                                                                            </label>
+                                                                        </div>
+                                                                        <div className="custom-control custom-radio">
+                                                                            <input
+                                                                                type="radio"
+                                                                                className="custom-control-input"
+                                                                                id="Input"
+                                                                                name="msgCategory"
+                                                                                value="INPUT"
+                                                                                onChange={handleCategoryChange}
+                                                                            />
+                                                                            <label className="custom-control-label" htmlFor="Input">
+                                                                                Input
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
+
 
                                                             <div className="row">
                                                                 {msgCategory.includes('DISPLAY') && (
