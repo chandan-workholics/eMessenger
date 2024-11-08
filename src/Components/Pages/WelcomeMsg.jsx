@@ -174,7 +174,7 @@ const WelcomeMsg = () => {
                             </div>
 
                             {/* Form for adding messages */}
-                           {length === 0 ? <div className="row">
+                          <div className="row">
                                 <div className="col-12 grid-margin stretch-card">
                                     <div className="card shadow-sm">
                                         <div className="card-body">
@@ -207,7 +207,7 @@ const WelcomeMsg = () => {
                                         </div>
                                     </div>
                                 </div>
-                            </div> : null}
+                            </div> 
                             
                             {/* Message list */}
                             <div className="row">

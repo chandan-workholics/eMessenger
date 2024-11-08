@@ -29,6 +29,7 @@ const UserManagement = () => {
     const [error, setError] = useState(null);
     const [schoolList, setSchoolList] = useState([]);
     const [school, setschool] = useState([]);
+    const [editschool, seteditschool] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const rowsPerPage = 10;
@@ -203,9 +204,9 @@ const UserManagement = () => {
             adminuser_name: val.adminuser_name,
             admin_password: val.admin_password,
             mobile_no: val.mobile_no,
-            school_id: val.school_id,
             admin_type: val.admin_type,
             is_active: val.is_active,
+            school_id: editschool?.map((val) => val?.sch_id),
         });
     };
 
@@ -214,7 +215,7 @@ const UserManagement = () => {
         setLoading(true);
         setError(null);
         try {
-            await callAPI.put(`./admin/updateProfileDetail/${updateUserManagement.added_admin_id}`, datas).then((response) => {
+            await callAPI.put(`./admin/updateProfileDetail/${updateUserManagement.admin_id}`, datas).then((response) => {
                 if (response.status === 201 || response.status === 200) {
                     toast.success("User Updated Successfully");
                     closeModal();
@@ -273,6 +274,8 @@ const UserManagement = () => {
         ipAddress: val?.ip_address,
     })) : [];
 
+
+   
     return (
         <>
             <div className="container-scroller">
@@ -396,16 +399,22 @@ const UserManagement = () => {
                                                                                 displayValue="sch_nm"
                                                                                 showCheckbox />
                                                                         </div>
-                                                                        <div className="col-md-6 form-group">
-                                                                            <label for="userType">Reporting/Incharge <span className="text-danger">*</span></label>
-                                                                            <select className="form-control" id="userType" name='parent_admin_id' value={datas.parent_admin_id} onChange={handleChange}>
-                                                                                <option value='' selected disabled>Select Option</option>
-                                                                                <option value={1}>Admin</option>
-                                                                                <option value={2}>Management</option>
-                                                                                <option value={3}>User</option>
-                                                                                <option value={4}>LBF</option>
-                                                                            </select>
-                                                                        </div>
+                                                                        {datas.admin_type === "user" && (
+                                                                            <div className="col-md-6 form-group">
+                                                                                <label for="userType">Reporting/Incharge <span className="text-danger">*</span></label>
+                                                                                <select className="form-control" id="userType" name='parent_admin_id' value={datas.parent_admin_id} onChange={handleChange}>
+                                                                                    <option value='' selected disabled>Select Option</option>
+                                                                                    {admindata?.data?.map((val) => {
+                                                                                        return (
+                                                                                            <>
+                                                                                                <option value={val?.admin_id}>{val?.full_name}</option>
+                                                                                            </>
+                                                                                        )
+                                                                                    })}
+
+                                                                                </select>
+                                                                            </div>
+                                                                        )}
 
                                                                         <div className="col-md-6 form-group">
                                                                             <label htmlFor="userType">Status</label><br />
@@ -642,14 +651,18 @@ const UserManagement = () => {
                                             </select>
                                         </div>
                                         <div className="col-md-6 form-group">
-                                            <label for="userType">Schools <span className="text-danger">*</span></label>
-                                            <select className="form-control" id="userType" name=''>
-                                                <option value='' selected disabled>Select Option</option>
-                                                <option>Admin</option>
-                                                <option>Management</option>
-                                                <option>User</option>
-                                                <option>LBF</option>
-                                            </select>
+                                            <label htmlFor="schools">Schools<span className="text-danger">*</span></label>
+                                            <Multiselect className='inputHead'
+                                                onRemove={(event) => {
+                                                    console.log(event);
+                                                }}
+                                                onSelect={(event) => {
+                                                    seteditschool(event);
+                                                }}
+                                                required
+                                                options={schoolList}
+                                                displayValue="sch_nm"
+                                                showCheckbox />
                                         </div>
                                         <div className="col-md-6 form-group">
                                             <label for="userType">Reporting/Incharge <span className="text-danger">*</span></label>

@@ -33,7 +33,7 @@ const Sidebar = () => {
                             <span className="menu-title mr-3">Welcome Message</span>
                         </Link>
                     </li>
-                    <li className="nav-item">
+                    {/* <li className="nav-item">
                         <Link className="nav-link" to="/welcome-message">
                             <i className="fa-solid fa-chalkboard menu-icon"></i>
                             <span className="menu-title mr-3">Welcome Message</span>
@@ -44,7 +44,7 @@ const Sidebar = () => {
                             <i className="fa-solid fa-chalkboard menu-icon"></i>
                             <span className="menu-title mr-3">App Scroll News</span>
                         </Link>
-                    </li>
+                    </li> */}
                     <p className="text-secondary menu-text mt-2 mb-0">
                         <span>MASTER</span> <i className="fas fa-ellipsis-h"></i>
                     </p>
