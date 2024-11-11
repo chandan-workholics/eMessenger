@@ -15,8 +15,6 @@ const ImportScholar = () => {
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const [selectedStudents, setSelectedStudents] = useState([]);
-    const [welcomeMessage, setWelcomeMessage] = useState('');
     const rowsPerPage = 10;
 
     const fetchData = async () => {
@@ -52,12 +50,13 @@ const ImportScholar = () => {
     };
 
     useEffect(() => {
-        fetchData(); // eslint-disable-next-line react-hooks/exhaustive-deps
+        fetchData();// eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage]);
 
     const handlePageChange = (page) => {
         if (page > 0 && page <= totalPages) {
-            setCurrentPage(page);
+            setCurrentPage(page)
+                ;
         }
     };
 
@@ -68,8 +67,10 @@ const ImportScholar = () => {
         XLSX.writeFile(wb, 'Scholar_Data.xlsx');
     };
 
-    // File upload state and handling
+
+    // upload excel data 
     const [excelData, setExcelData] = useState([]);
+
     const handleFileUpload = (e) => {
         const file = e.target.files[0];
         const reader = new FileReader();
@@ -85,15 +86,17 @@ const ImportScholar = () => {
         reader.readAsBinaryString(file);
     };
 
+    // Function to submit data to API
     const handleSubmit = async () => {
         if (excelData.length === 0) {
             toast.error('Please upload a valid Excel file.');
             return;
         }
         try {
-            const response = await axios.post(`${URL}/scholar/insertScholarRecord`, {
+            const response = await axios.post('http://206.189.130.102:3550/api/scholar/insertScholarRecord', {
                 data: excelData,
             }, {
+                method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 }
@@ -106,73 +109,6 @@ const ImportScholar = () => {
             }
         } catch (error) {
             toast.error('An error occurred while uploading the data.');
-            console.error(error);
-        }
-    };
-
-    const handleCheckboxChange = (scholarNo) => {
-        setSelectedStudents(prevSelected =>
-            prevSelected.includes(scholarNo)
-                ? prevSelected.filter(no => no !== scholarNo)
-                : [...prevSelected, scholarNo]
-        );
-    };
-
-    const handleSelectAll = (e) => {
-        if (e.target.checked) {
-            const allScholarNos = importStudent.map(student => student.scholar_no);
-            setSelectedStudents(allScholarNos);
-        } else {
-            setSelectedStudents([]);
-        }
-    };
-
-    const sendWelcomeMessage = async () => {
-        if (selectedStudents.length === 0) {
-            toast.error('Please select at least one student.');
-            return;
-        }
-        if (welcomeMessage.trim() === '') {
-            toast.error('Please enter a welcome message.');
-            return;
-        }
-        try {
-            const response = await axios.post(`${URL}/scholar/bulk_Update_ScholarRecord`, {
-                scholarNos: selectedStudents,
-                noticeMsg: welcomeMessage
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                }
-            });
-            if (response.status === 200) {
-                toast.success('Welcome message sent successfully!');
-            } else {
-                toast.error('Failed to send welcome message.');
-            }
-        } catch (error) {
-            toast.error('An error occurred while sending the message.');
-            console.error(error);
-        }
-    };
-
-    const sendWelcomeMessagetwo = async () => {
-        try {
-            const response = await axios.post(`${URL}/scholar/bulk_Update_ScholarRecord`, {
-                scholarNos: selectedStudents,
-                noticeMsg: ''
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                }
-            });
-            if (response.status === 200) {
-                toast.success('Welcome message sent successfully!');
-            } else {
-                toast.error('Failed to send welcome message.');
-            }
-        } catch (error) {
-            toast.error('An error occurred while sending the message.');
             console.error(error);
         }
     };
@@ -191,6 +127,7 @@ const ImportScholar = () => {
                     <div className="main-panel">
                         <div className="content-wrapper">
                             <div className="row">
+
                                 <div className="col-12 col-xl-8 mb-4 mb-xl-0">
                                     <div className="d-flex align-items-center mb-3">
                                         <h3 className="font-weight-bold mr-2">Import Student</h3>
@@ -220,77 +157,47 @@ const ImportScholar = () => {
                                     </div>
                                 </div>
 
-                                <div className="col-12 grid-margin stretch-card">
-                                    <div className="card shadow-sm">
-                                        <div className="card-body">
-                                            <div className="form-group">
-                                                <label>Notice Message</label>
-                                                <textarea
-                                                    className="form-control"
-                                                    rows="3"
-                                                    placeholder="Enter your notice message"
-                                                    value={welcomeMessage}
-                                                    onChange={(e) => setWelcomeMessage(e.target.value)}
-                                                />
-                                            </div>
-                                            <button type="button" className="btn btn-primary mr-2" onClick={sendWelcomeMessage}>
-                                                Send Notice Message
-                                            </button>
-                                            <button type="button" className="btn btn-primary mr-2" onClick={sendWelcomeMessagetwo}>
-                                                Delete
-                                            </button>
-                                        </div>
-
-                                    </div>
-                                </div>
 
                                 <div className="col-md-12 grid-margin stretch-card">
                                     <div className="card shadow-sm">
                                         <div className="card-body">
                                             <p className="card-title">Student List</p>
-                                            <div className="table-responsive">
-                                                <table className="table table-hover" style={{ width: '100%' }}>
-                                                    <thead>
-                                                        <tr>
-                                                            <th>
-                                                                <input
-                                                                    type="checkbox"
-                                                                    onChange={handleSelectAll}
-                                                                    checked={selectedStudents.length === importStudent.length}
-                                                                />
-                                                            </th>
-                                                            <th>S.No</th>
-                                                            <th>Mobile Number</th>
-                                                            <th>School Short Name</th>
-                                                            <th>Student Name</th>
-                                                            <th>Student DOB</th>
-                                                            <th>Student Email</th>
-                                                            <th>Student Id</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        {importStudent.map((val, index) => (
-                                                            <tr key={val.id}>
-                                                                <td>
-                                                                    <input
-                                                                        type="checkbox"
-                                                                        checked={selectedStudents.includes(val.scholar_no)}
-                                                                        onChange={() => handleCheckboxChange(val.scholar_no)}
-                                                                    />
-                                                                </td>
-                                                                <td>{(currentPage - 1) * rowsPerPage + index + 1}</td>
-                                                                <td>{val.mobile_no}</td>
-                                                                <td>{val.sch_short_nm}</td>
-                                                                <td>{val.student_name || "Not Available"}</td>
-                                                                <td>{val.scholar_dob}</td>
-                                                                <td>{val.scholar_email}</td>
-                                                                <td>{val.scholar_no}</td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
+                                            <div className="row">
+                                                <div className="col-12">
+                                                    <div className="table-responsive">
+                                                        <table className="table table-hover" style={{ width: '100%' }}>
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>S.No</th>
+                                                                    <th>Mobile Number</th>
+                                                                    <th>School Short Name</th>
+                                                                    <th>Student Name</th>
+                                                                    <th>Student DOB</th>
+                                                                    <th>Student Email</th>
+                                                                    <th>Notice Message</th>
+                                                                    <th>Student Id</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                {importStudent.map((val, index) => (
+                                                                    <tr key={val.id}>
+                                                                        <td>{(currentPage - 1) * rowsPerPage + index + 1}</td>
+                                                                        <td>{val.mobile_no}</td>
+                                                                        <td>{val.sch_short_nm}</td>
+                                                                        <td>{val.student_name || "Not Available"}</td>
+                                                                        <td>{val.scholar_dob}</td>
+                                                                        <td>{val.scholar_email}</td>
+                                                                        <td>{val.noticeMsg}</td>
+                                                                        <td>{val.scholar_no}</td>
+                                                                    </tr>
+                                                                ))}
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            {/* Pagination */}
+
+
                                             <nav>
                                                 <ul className="pagination justify-content-end">
                                                     <li className="page-item">
@@ -316,10 +223,13 @@ const ImportScholar = () => {
                                                     </li>
                                                 </ul>
                                             </nav>
+
+                                            {error && <div className="alert alert-danger">{error}</div>}
                                         </div>
+
+
                                     </div>
                                 </div>
-
 
                             </div>
                         </div>

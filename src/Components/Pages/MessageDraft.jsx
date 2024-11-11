@@ -88,6 +88,8 @@ const MessageDraft = () => {
 
     const [displayFields, setDisplayFields] = useState([]);
     const [inputFields, setInputFields] = useState([]);
+    const [chatFields, setChatFields] = useState([]);
+    const [groupchatFields, setGroupChatFields] = useState([]);
     const [msgCategory, setMsgCategory] = useState('');
 
     const handleImageChange = async (e, fieldId) => {
@@ -163,11 +165,43 @@ const MessageDraft = () => {
         e.target.value = '';
     };
 
+    const handleChatOptionsChange = (e) => {
+        const selectedOptions = [...e.target.selectedOptions].map(option => option.value);
+        const newChatFields = selectedOptions.map(option => ({
+            id: Date.now() + Math.random(),
+            type: option,
+            title: '',
+            options: '',
+            placeholder: '',
+        }));
+        setChatFields([...chatFields, ...newChatFields]);
+        e.target.value = '';
+    };
+
+    const handleGroupChatOptionsChange = (e) => {
+        const selectedOptions = [...e.target.selectedOptions].map(option => option.value);
+        const newGroupChatFields = selectedOptions.map(option => ({
+            id: Date.now() + Math.random(),
+            type: option,
+            title: '',
+            options: '',
+            placeholder: '',
+        }));
+        setGroupChatFields([...groupchatFields, ...newGroupChatFields]);
+        e.target.value = '';
+    };
+
     const deleteField = (id, fieldType) => {
         if (fieldType === 'display') {
             setDisplayFields(displayFields.filter(field => field.id !== id));
         } else if (fieldType === 'input') {
             setInputFields(inputFields.filter(field => field.id !== id));
+        }
+        else if (fieldType === 'chat') {
+            setChatFields(chatFields.filter(field => field.id !== id));
+        }
+        else if (fieldType === 'groupchat') {
+            setGroupChatFields(groupchatFields.filter(field => field.id !== id));
         }
     };
 
@@ -205,6 +239,21 @@ const MessageDraft = () => {
             ...inputFields.map((field, index) => {
                 let dataText = {};
                 switch (field.type) {
+                    case 'TITLE':
+                        dataText = { title: field.value || '' };
+                        break;
+                    case 'TEXT':
+                        dataText = { text: field.value || '' };
+                        break;
+                    case 'LINK':
+                        dataText = { link: field.value || '' };
+                        break;
+                    case 'YOUTUBE':
+                        dataText = { link: field.value || '' };
+                        break;
+                    case 'IMAGE':
+                        dataText = { link: field.value || field.linkValue || '' };
+                        break;
                     case 'OPTION':
                         dataText = { title: field.title || '', options: field.options || '' };
                         break;
@@ -228,6 +277,94 @@ const MessageDraft = () => {
                     msg_type: `${field.type}-INPUT`,
                     data_text: JSON.stringify(dataText),
                     order_number: displayFields.length + index + 1,
+                    is_reply_required: 1,
+                };
+            }),
+            ...chatFields.map((field, index) => {
+                let dataText = {};
+                switch (field.type) {
+                    case 'TITLE':
+                        dataText = { title: field.title || 'heelo' };
+                        break;
+                    case 'TEXT':
+                        dataText = { text: field.title || '' };
+                        break;
+                    case 'LINK':
+                        dataText = { link: field.title || '' };
+                        break;
+                    case 'YOUTUBE':
+                        dataText = { link: field.title || '' };
+                        break;
+                    case 'IMAGE':
+                        dataText = { link: field.title || field.linkValue || '' };
+                        break;
+                    case 'OPTION':
+                        dataText = { title: field.title || '', options: field.options || '' };
+                        break;
+                    case 'CHECKBOX':
+                        dataText = { title: field.title || '', options: field.options || '' };
+                        break;
+                    case 'TEXTBOX':
+                        dataText = { title: field.title || '', placeholder: field.placeholder || '' };
+                        break;
+                    case 'TEXTAREA':
+                        dataText = { title: field.title || '', placeholder: field.placeholder || '' };
+                        break;
+                    case 'CAMERA':
+                    case 'File':
+                        dataText = { title: field.title || '' };
+                        break;
+                    default:
+                        break;
+                }
+                return {
+                    msg_type: `${field.type}-INDIVIDUALCHAT`,
+                    data_text: JSON.stringify(dataText),
+                    order_number: chatFields.length + index + 1,
+                    is_reply_required: 1,
+                };
+            }),
+            ...groupchatFields.map((field, index) => {
+                let dataText = {};
+                switch (field.type) {
+                    case 'TITLE':
+                        dataText = { title: field.title || '' };
+                        break;
+                    case 'TEXT':
+                        dataText = { text: field.title || '' };
+                        break;
+                    case 'LINK':
+                        dataText = { link: field.title || '' };
+                        break;
+                    case 'YOUTUBE':
+                        dataText = { link: field.title || '' };
+                        break;
+                    case 'IMAGE':
+                        dataText = { link: field.title || field.linkValue || '' };
+                        break;
+                    case 'OPTION':
+                        dataText = { title: field.title || '', options: field.options || '' };
+                        break;
+                    case 'CHECKBOX':
+                        dataText = { title: field.title || '', options: field.options || '' };
+                        break;
+                    case 'TEXTBOX':
+                        dataText = { title: field.title || '', placeholder: field.placeholder || '' };
+                        break;
+                    case 'TEXTAREA':
+                        dataText = { title: field.title || '', placeholder: field.placeholder || '' };
+                        break;
+                    case 'CAMERA':
+                    case 'File':
+                        dataText = { title: field.title || '' };
+                        break;
+                    default:
+                        break;
+                }
+                return {
+                    msg_type: `${field.type}-GROUPCHAT`,
+                    data_text: JSON.stringify(dataText),
+                    order_number: groupchatFields.length + index + 1,
                     is_reply_required: 1,
                 };
             }),
@@ -352,6 +489,7 @@ const MessageDraft = () => {
     }
 
 
+    console.log(chatFields)
 
     return (
         <>
@@ -497,29 +635,7 @@ const MessageDraft = () => {
                                                             {/* Conditionally render multi-select inputs based on the selected message category */}
 
 
-                                                            {/* <div className="row">
-                                                                <div className="col-md-4 form-group">
-                                                                    <label htmlFor="msgCategory">Message Category<span className="text-danger">*</span></label>
-                                                                    <div className="d-flex justify-content-between form-control border-0">
-                                                                        <div className="custom-control custom-checkbox">
-                                                                            <input type="checkbox" className="custom-control-input" id="Chat" value="INDIVIDUALCHAT" onChange={handleCategoryChange} />
-                                                                            <label className="custom-control-label" htmlFor="Chat">Chat</label>
-                                                                        </div>
-                                                                        <div className="custom-control custom-checkbox">
-                                                                            <input type="checkbox" className="custom-control-input" id="GroupChat" value="GROUPCHAT" onChange={handleCategoryChange} />
-                                                                            <label className="custom-control-label" htmlFor="GroupChat">Group Chat</label>
-                                                                        </div>
-                                                                        <div className="custom-control custom-checkbox">
-                                                                            <input type="checkbox" className="custom-control-input" id="Display" value="DISPLAY" onChange={handleCategoryChange} />
-                                                                            <label className="custom-control-label" htmlFor="Display">Display</label>
-                                                                        </div>
-                                                                        <div className="custom-control custom-checkbox">
-                                                                            <input type="checkbox" className="custom-control-input" id="Input" value="INPUT" onChange={handleCategoryChange} />
-                                                                            <label className="custom-control-label" htmlFor="Input">Input</label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div> */}
+                                                          
 
 
                                                             <div className="row">
@@ -586,6 +702,44 @@ const MessageDraft = () => {
 
 
                                                             <div className="row">
+                                                                {msgCategory.includes('INDIVIDUALCHAT') && (
+                                                                    <div className="col-md-6 form-group">
+                                                                        <label htmlFor="inputOptions">Chat Options</label>
+                                                                        <select className="form-control" id="chatOptions" onChange={handleChatOptionsChange}>
+                                                                            <option value="" disabled selected hidden>Select Input Options</option>
+                                                                            <option value="TITLE">Title Display</option>
+                                                                            <option value="TEXT">Text Display</option>
+                                                                            <option value="LINK">Link Display</option>
+                                                                            <option value="YOUTUBE">Youtube Display</option>
+                                                                            <option value="IMAGE">Image Display</option>
+                                                                            <option value="OPTION">Option Input</option>
+                                                                            <option value="CHECKBOX">Checkbox Input</option>
+                                                                            <option value="TEXTBOX">Textbox Input</option>
+                                                                            <option value="TEXTAREA">Textarea Input</option>
+                                                                            <option value="CAMERA">Camera Input</option>
+                                                                            <option value="FILE">File Input</option>
+                                                                        </select>
+                                                                    </div>
+                                                                )}
+                                                                {msgCategory.includes('GROUPCHAT') && (
+                                                                    <div className="col-md-6 form-group">
+                                                                        <label htmlFor="inputOptions">Group Chat Options</label>
+                                                                        <select className="form-control" id="groupchatOptions" onChange={handleGroupChatOptionsChange}>
+                                                                            <option value="" disabled selected hidden>Select Input Options</option>
+                                                                            <option value="TITLE">Title Display</option>
+                                                                            <option value="TEXT">Text Display</option>
+                                                                            <option value="LINK">Link Display</option>
+                                                                            <option value="YOUTUBE">Youtube Display</option>
+                                                                            <option value="IMAGE">Image Display</option>
+                                                                            <option value="OPTION">Option Input</option>
+                                                                            <option value="CHECKBOX">Checkbox Input</option>
+                                                                            <option value="TEXTBOX">Textbox Input</option>
+                                                                            <option value="TEXTAREA">Textarea Input</option>
+                                                                            <option value="CAMERA">Camera Input</option>
+                                                                            <option value="FILE">File Input</option>
+                                                                        </select>
+                                                                    </div>
+                                                                )}
                                                                 {msgCategory.includes('DISPLAY') && (
                                                                     <div className="col-md-6 form-group">
                                                                         <label htmlFor="displayOptions">Display Options</label>
@@ -604,6 +758,11 @@ const MessageDraft = () => {
                                                                         <label htmlFor="inputOptions">Input Options</label>
                                                                         <select className="form-control" id="inputOptions" onChange={handleInputOptionsChange}>
                                                                             <option value="" disabled selected hidden>Select Input Options</option>
+                                                                            <option value="TITLE">Title Display</option>
+                                                                            <option value="TEXT">Text Display</option>
+                                                                            <option value="LINK">Link Display</option>
+                                                                            <option value="YOUTUBE">Youtube Display</option>
+                                                                            <option value="IMAGE">Image Display</option>
                                                                             <option value="OPTION">Option Input</option>
                                                                             <option value="CHECKBOX">Checkbox Input</option>
                                                                             <option value="TEXTBOX">Textbox Input</option>
@@ -721,6 +880,162 @@ const MessageDraft = () => {
                                                                                     type="button"
                                                                                     className="btn border-0 mt-2"
                                                                                     onClick={() => deleteField(field.id, 'input')}
+                                                                                >
+                                                                                    <i className="fa-solid fa-trash-can text-danger"></i>
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    ))}
+
+                                                                </div>
+
+                                                                <div className="col-md-6">
+                                                                    {chatFields.map((field) => (
+                                                                        <div key={field.id} className="col-12 form-group">
+                                                                            <label>{field.type} Input</label>
+                                                                            <div className="d-flex flex-column align-items-start">
+
+                                                                                <input
+                                                                                    type="text"
+                                                                                    className="form-control mb-2"
+                                                                                    placeholder={`Enter title for ${field.type}`}
+                                                                                    value={field.title || ''}
+                                                                                    onChange={(e) => {
+                                                                                        const updatedFields = chatFields.map((f) =>
+                                                                                            f.id === field.id ? { ...f, title: e.target.value } : f
+                                                                                        );
+                                                                                        setChatFields(updatedFields);
+                                                                                    }}
+                                                                                />
+
+
+                                                                                {(field.type === 'OPTION' || field.type === 'CHECKBOX') && (
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        className="form-control mb-2"
+                                                                                        placeholder={`Enter options for ${field.type} (e.g. Option1;Option2)`}
+                                                                                        value={field.options || ''}
+                                                                                        onChange={(e) => {
+                                                                                            const updatedFields = chatFields.map((f) =>
+                                                                                                f.id === field.id ? { ...f, options: e.target.value } : f
+                                                                                            );
+                                                                                            setChatFields(updatedFields);
+                                                                                        }}
+                                                                                    />
+                                                                                )}
+
+                                                                                {field.type === 'TEXTBOX' && (
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        className="form-control mb-2"
+                                                                                        placeholder="Enter placeholder for Textbox"
+                                                                                        value={field.placeholder || ''}
+                                                                                        onChange={(e) => {
+                                                                                            const updatedFields = chatFields.map((f) =>
+                                                                                                f.id === field.id ? { ...f, placeholder: e.target.value } : f
+                                                                                            );
+                                                                                            setChatFields(updatedFields);
+                                                                                        }}
+                                                                                    />
+                                                                                )}
+
+                                                                                {field.type === 'TEXTAREA' && (
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        className="form-control mb-2"
+                                                                                        placeholder="Enter placeholder for Textarea"
+                                                                                        value={field.placeholder || ''}
+                                                                                        onChange={(e) => {
+                                                                                            const updatedFields = chatFields.map((f) =>
+                                                                                                f.id === field.id ? { ...f, placeholder: e.target.value } : f
+                                                                                            );
+                                                                                            setChatFields(updatedFields);
+                                                                                        }}
+                                                                                    />
+                                                                                )}
+
+                                                                                <button
+                                                                                    type="button"
+                                                                                    className="btn border-0 mt-2"
+                                                                                    onClick={() => deleteField(field.id, 'chat')}
+                                                                                >
+                                                                                    <i className="fa-solid fa-trash-can text-danger"></i>
+                                                                                </button>
+                                                                            </div>
+                                                                        </div>
+                                                                    ))}
+
+                                                                </div>
+
+                                                                <div className="col-md-6">
+                                                                    {groupchatFields.map((field) => (
+                                                                        <div key={field.id} className="col-12 form-group">
+                                                                            <label>{field.type} Input</label>
+                                                                            <div className="d-flex flex-column align-items-start">
+
+                                                                                <input
+                                                                                    type="text"
+                                                                                    className="form-control mb-2"
+                                                                                    placeholder={`Enter title for ${field.type}`}
+                                                                                    value={field.title || ''}
+                                                                                    onChange={(e) => {
+                                                                                        const updatedFields = groupchatFields.map((f) =>
+                                                                                            f.id === field.id ? { ...f, title: e.target.value } : f
+                                                                                        );
+                                                                                        setGroupChatFields(updatedFields);
+                                                                                    }}
+                                                                                />
+
+
+                                                                                {(field.type === 'OPTION' || field.type === 'CHECKBOX') && (
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        className="form-control mb-2"
+                                                                                        placeholder={`Enter options for ${field.type} (e.g. Option1;Option2)`}
+                                                                                        value={field.options || ''}
+                                                                                        onChange={(e) => {
+                                                                                            const updatedFields = groupchatFields.map((f) =>
+                                                                                                f.id === field.id ? { ...f, options: e.target.value } : f
+                                                                                            );
+                                                                                            setGroupChatFields(updatedFields);
+                                                                                        }}
+                                                                                    />
+                                                                                )}
+
+                                                                                {field.type === 'TEXTBOX' && (
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        className="form-control mb-2"
+                                                                                        placeholder="Enter placeholder for Textbox"
+                                                                                        value={field.placeholder || ''}
+                                                                                        onChange={(e) => {
+                                                                                            const updatedFields = groupchatFields.map((f) =>
+                                                                                                f.id === field.id ? { ...f, placeholder: e.target.value } : f
+                                                                                            );
+                                                                                            setGroupChatFields(updatedFields);
+                                                                                        }}
+                                                                                    />
+                                                                                )}
+
+                                                                                {field.type === 'TEXTAREA' && (
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        className="form-control mb-2"
+                                                                                        placeholder="Enter placeholder for Textarea"
+                                                                                        value={field.placeholder || ''}
+                                                                                        onChange={(e) => {
+                                                                                            const updatedFields = groupchatFields.map((f) =>
+                                                                                                f.id === field.id ? { ...f, placeholder: e.target.value } : f
+                                                                                            );
+                                                                                            setGroupChatFields(updatedFields);
+                                                                                        }}
+                                                                                    />
+                                                                                )}
+
+                                                                                <button
+                                                                                    type="button"
+                                                                                    className="btn border-0 mt-2"
+                                                                                    onClick={() => deleteField(field.id, 'groupchat')}
                                                                                 >
                                                                                     <i className="fa-solid fa-trash-can text-danger"></i>
                                                                                 </button>
