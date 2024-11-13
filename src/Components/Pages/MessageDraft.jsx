@@ -598,8 +598,6 @@ const MessageDraft = () => {
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
                                                                     <label htmlFor="msgCategory">Add Student <span className="text-danger">(dont select more then 5 numbers)</span> </label>
-
-
                                                                     <Multiselect
                                                                         className='inputHead'
                                                                         onRemove={(event) => {
@@ -627,16 +625,10 @@ const MessageDraft = () => {
                                                                         }))}
                                                                         showCheckbox
                                                                     />
-
-
                                                                 </div>
                                                             </div>
 
                                                             {/* Conditionally render multi-select inputs based on the selected message category */}
-
-
-                                                          
-
 
                                                             <div className="row">
                                                                 <div className="col-md-4 form-group">
@@ -808,10 +800,7 @@ const MessageDraft = () => {
                                                                             </div>
                                                                         </div>
                                                                     ))}
-                                                                </div>
-
-
-                                                                <div className="col-md-6">
+                                                                    
                                                                     {inputFields.map((field) => (
                                                                         <div key={field.id} className="col-12 form-group">
                                                                             <label>{field.type} Input</label>
