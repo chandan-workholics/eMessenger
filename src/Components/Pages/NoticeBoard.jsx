@@ -219,10 +219,10 @@ const NoticeBoard = () => {
                                         <div className="btn-group" role="group" aria-label="Basic example">
                                             <ul className="nav nav-tabs" id="myTab" role="tablist">
                                                 <li className="nav-item" role="presentation">
-                                                    <a className="nav-link" id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="true">Add</a>
+                                                    <a className="nav-link px-4" id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="true">Add</a>
                                                 </li>
                                                 <li className="nav-item" role="presentation">
-                                                    <a className="nav-link active" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">List</a>
+                                                    <a className="nav-link px-4 active" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">List</a>
                                                 </li>
                                             </ul>
                                         </div>

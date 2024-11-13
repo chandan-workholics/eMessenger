@@ -22,6 +22,7 @@ import SendMsg from './Components/Pages/SendMsg.jsx';
 import WelcomeMsg from './Components/Pages/WelcomeMsg.jsx';
 import AppScrollNews from './Components/Pages/AppScrollNews.jsx';
 import FeesMaster from './Components/Pages/FeesMaster.jsx';
+import EditCreatedMsg from './Components/Pages/EditCreatedMsg.jsx';
 
 interceptor();
 
@@ -39,6 +40,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/messages" element={<ProtectedRoute element={<Messages />} />} />
         <Route path="/notice-board" element={<ProtectedRoute element={<NoticeBoard />} />} />
         <Route path="/message-draft" element={<ProtectedRoute element={<MessageDraft />} />} />
+        <Route path="/edit-created-message" element={<ProtectedRoute element={<EditCreatedMsg />} />} />
         <Route path="/send-message/:id" element={<ProtectedRoute element={<SendMsg />} />} />
         <Route path="/welcome-message" element={<ProtectedRoute element={<WelcomeMsg />} />} />
         <Route path="/app-scroll-news" element={<ProtectedRoute element={<AppScrollNews />} />} />

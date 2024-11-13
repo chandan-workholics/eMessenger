@@ -460,12 +460,21 @@ const MessageDraft = () => {
         recipients: 'Na',
         seen: 'Na',
         respond: 'Na',
-        isActive: val?.is_active,
+        isActive: (
+            <div className="">
+                <button onClick={() => handleToggleStatus(val?.msg_id, val?.is_active)} type="button" className="btn p-2">
+                    {val?.is_active === 1 ? 'Deactivate' : 'Activate'}
+                </button>
+            </div>
+        ),
         action: (
             <div>
                 {val?.is_active === 1 ? <Link to={`/send-message/${val?.msg_id}`}> <i className="fa-solid fa-paper-plane text-success mr-3"></i></Link> : ''}
-                <button onClick={() => handleToggleStatus(val?.msg_id, val?.is_active)} type="button" className="btn p-2">
-                    {val?.is_active === 1 ? 'Deactivate' : 'Activate'}
+                <Link to='/edit-created-message' className="btn p-2">
+                    <i className="fa-solid fa-pen-to-square text-warning"></i>
+                </Link>
+                <button type="button" className="btn p-2">
+                    <i className="fa-solid fa-trash-can text-danger"></i>
                 </button>
             </div>
         ),
@@ -512,16 +521,16 @@ const MessageDraft = () => {
                                 </div>
 
                                 <div className="col-12 col-md-6 mb-md-4 mb-xl-0">
-                                    <div className="d-md-flex align-items-center justify-content-end mb-3">
+                                    <div className="d-flex align-items-center justify-content-end mb-3">
                                         <div className="btn-group" role="group" aria-label="Basic example">
                                             <ul className="nav nav-tabs" id="myTab" role="tablist">
                                                 <li className="nav-item" role="presentation">
-                                                    <a className="nav-link " id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="true">
+                                                    <a className="nav-link px-4" id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="true">
                                                         Add
                                                     </a>
                                                 </li>
                                                 <li className="nav-item" role="presentation">
-                                                    <a className="nav-link active" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">
+                                                    <a className="nav-link px-4 active" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">
                                                         List
                                                     </a>
                                                 </li>
@@ -543,6 +552,68 @@ const MessageDraft = () => {
                                                         </div>
                                                         <h5 className="card-description text-primary font-weight-bolder mt-3">General Info</h5>
                                                         <form className="forms-sample" onSubmit={handleSubmit}>
+
+                                                            <div className="row">
+                                                                <div className="col-md-4 form-group">
+                                                                    <label htmlFor="msgCategory">
+                                                                        Message Category<span className="text-danger">*</span>
+                                                                    </label>
+                                                                    <div className="d-flex justify-content-between form-control border-0">
+                                                                        <div className="custom-control custom-radio">
+                                                                            <input
+                                                                                type="radio"
+                                                                                className="custom-control-input"
+                                                                                id="Chat"
+                                                                                name="msgCategory"
+                                                                                value="INDIVIDUALCHAT"
+                                                                                onChange={handleCategoryChange}
+                                                                            />
+                                                                            <label className="custom-control-label" htmlFor="Chat">
+                                                                                Chat
+                                                                            </label>
+                                                                        </div>
+                                                                        <div className="custom-control custom-radio">
+                                                                            <input
+                                                                                type="radio"
+                                                                                className="custom-control-input"
+                                                                                id="GroupChat"
+                                                                                name="msgCategory"
+                                                                                value="GROUPCHAT"
+                                                                                onChange={handleCategoryChange}
+                                                                            />
+                                                                            <label className="custom-control-label" htmlFor="GroupChat">
+                                                                                Group Chat
+                                                                            </label>
+                                                                        </div>
+                                                                        <div className="custom-control custom-radio">
+                                                                            <input
+                                                                                type="radio"
+                                                                                className="custom-control-input"
+                                                                                id="Display"
+                                                                                name="msgCategory"
+                                                                                value="DISPLAY"
+                                                                                onChange={handleCategoryChange}
+                                                                            />
+                                                                            <label className="custom-control-label" htmlFor="Display">
+                                                                                Display
+                                                                            </label>
+                                                                        </div>
+                                                                        <div className="custom-control custom-radio">
+                                                                            <input
+                                                                                type="radio"
+                                                                                className="custom-control-input"
+                                                                                id="Input"
+                                                                                name="msgCategory"
+                                                                                value="INPUT"
+                                                                                onChange={handleCategoryChange}
+                                                                            />
+                                                                            <label className="custom-control-label" htmlFor="Input">
+                                                                                Input
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
 
                                                             <div className="row">
                                                                 <div className="col-md-4 form-group">
@@ -631,79 +702,22 @@ const MessageDraft = () => {
                                                             {/* Conditionally render multi-select inputs based on the selected message category */}
 
                                                             <div className="row">
-                                                                <div className="col-md-4 form-group">
-                                                                    <label htmlFor="msgCategory">
-                                                                        Message Category<span className="text-danger">*</span>
-                                                                    </label>
-                                                                    <div className="d-flex justify-content-between form-control border-0">
-                                                                        <div className="custom-control custom-radio">
-                                                                            <input
-                                                                                type="radio"
-                                                                                className="custom-control-input"
-                                                                                id="Chat"
-                                                                                name="msgCategory"
-                                                                                value="INDIVIDUALCHAT"
-                                                                                onChange={handleCategoryChange}
-                                                                            />
-                                                                            <label className="custom-control-label" htmlFor="Chat">
-                                                                                Chat
-                                                                            </label>
-                                                                        </div>
-                                                                        <div className="custom-control custom-radio">
-                                                                            <input
-                                                                                type="radio"
-                                                                                className="custom-control-input"
-                                                                                id="GroupChat"
-                                                                                name="msgCategory"
-                                                                                value="GROUPCHAT"
-                                                                                onChange={handleCategoryChange}
-                                                                            />
-                                                                            <label className="custom-control-label" htmlFor="GroupChat">
-                                                                                Group Chat
-                                                                            </label>
-                                                                        </div>
-                                                                        <div className="custom-control custom-radio">
-                                                                            <input
-                                                                                type="radio"
-                                                                                className="custom-control-input"
-                                                                                id="Display"
-                                                                                name="msgCategory"
-                                                                                value="DISPLAY"
-                                                                                onChange={handleCategoryChange}
-                                                                            />
-                                                                            <label className="custom-control-label" htmlFor="Display">
-                                                                                Display
-                                                                            </label>
-                                                                        </div>
-                                                                        <div className="custom-control custom-radio">
-                                                                            <input
-                                                                                type="radio"
-                                                                                className="custom-control-input"
-                                                                                id="Input"
-                                                                                name="msgCategory"
-                                                                                value="INPUT"
-                                                                                onChange={handleCategoryChange}
-                                                                            />
-                                                                            <label className="custom-control-label" htmlFor="Input">
-                                                                                Input
-                                                                            </label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-
-                                                            <div className="row">
                                                                 {msgCategory.includes('INDIVIDUALCHAT') && (
                                                                     <div className="col-md-6 form-group">
                                                                         <label htmlFor="inputOptions">Chat Options</label>
                                                                         <select className="form-control" id="chatOptions" onChange={handleChatOptionsChange}>
-                                                                            <option value="" disabled selected hidden>Select Input Options</option>
+                                                                            <option value="" selected>Select Input Options</option>
+                                                                            <option value="" disabled></option>
+                                                                            <hr className='py-3' />
+                                                                            <option value="" disabled></option>
                                                                             <option value="TITLE">Title Display</option>
                                                                             <option value="TEXT">Text Display</option>
                                                                             <option value="LINK">Link Display</option>
                                                                             <option value="YOUTUBE">Youtube Display</option>
                                                                             <option value="IMAGE">Image Display</option>
+                                                                            <option value="" disabled></option>
+                                                                            <hr className='py-3' />
+                                                                            <option value="" disabled></option>
                                                                             <option value="OPTION">Option Input</option>
                                                                             <option value="CHECKBOX">Checkbox Input</option>
                                                                             <option value="TEXTBOX">Textbox Input</option>
@@ -717,12 +731,18 @@ const MessageDraft = () => {
                                                                     <div className="col-md-6 form-group">
                                                                         <label htmlFor="inputOptions">Group Chat Options</label>
                                                                         <select className="form-control" id="groupchatOptions" onChange={handleGroupChatOptionsChange}>
-                                                                            <option value="" disabled selected hidden>Select Input Options</option>
+                                                                            <option value="" selected>Select Input Options</option>
+                                                                            <option value="" disabled></option>
+                                                                            <hr className='py-3' />
+                                                                            <option value="" disabled></option>
                                                                             <option value="TITLE">Title Display</option>
                                                                             <option value="TEXT">Text Display</option>
                                                                             <option value="LINK">Link Display</option>
                                                                             <option value="YOUTUBE">Youtube Display</option>
                                                                             <option value="IMAGE">Image Display</option>
+                                                                            <option value="" disabled></option>
+                                                                            <hr className='py-3' />
+                                                                            <option value="" disabled></option>
                                                                             <option value="OPTION">Option Input</option>
                                                                             <option value="CHECKBOX">Checkbox Input</option>
                                                                             <option value="TEXTBOX">Textbox Input</option>
@@ -736,7 +756,10 @@ const MessageDraft = () => {
                                                                     <div className="col-md-6 form-group">
                                                                         <label htmlFor="displayOptions">Display Options</label>
                                                                         <select className="form-control" id="displayOptions" onChange={handleDisplayOptionsChange}>
-                                                                            <option value="" disabled selected hidden>Select Display Options</option>
+                                                                            <option value="" selected>Select Display Options</option>
+                                                                            <option value="" disabled></option>
+                                                                            <hr className='py-3' />
+                                                                            <option value="" disabled></option>
                                                                             <option value="TITLE">Title Display</option>
                                                                             <option value="TEXT">Text Display</option>
                                                                             <option value="LINK">Link Display</option>
@@ -749,12 +772,18 @@ const MessageDraft = () => {
                                                                     <div className="col-md-6 form-group">
                                                                         <label htmlFor="inputOptions">Input Options</label>
                                                                         <select className="form-control" id="inputOptions" onChange={handleInputOptionsChange}>
-                                                                            <option value="" disabled selected hidden>Select Input Options</option>
+                                                                            <option value="" selected>Select Input Options</option>
+                                                                            <option value="" disabled></option>
+                                                                            <hr className='py-3' />
+                                                                            <option value="" disabled></option>
                                                                             <option value="TITLE">Title Display</option>
                                                                             <option value="TEXT">Text Display</option>
                                                                             <option value="LINK">Link Display</option>
                                                                             <option value="YOUTUBE">Youtube Display</option>
                                                                             <option value="IMAGE">Image Display</option>
+                                                                            <option value="" disabled></option>
+                                                                            <hr className='py-3' />
+                                                                            <option value="" disabled></option>
                                                                             <option value="OPTION">Option Input</option>
                                                                             <option value="CHECKBOX">Checkbox Input</option>
                                                                             <option value="TEXTBOX">Textbox Input</option>
@@ -767,11 +796,10 @@ const MessageDraft = () => {
                                                             </div>
 
                                                             <div className="row">
-
                                                                 <div className="col-md-6">
                                                                     {displayFields.map((field) => (
                                                                         <div key={field.id} className="col-12 form-group">
-                                                                            <label>{field.type} Output</label>
+                                                                            <label>{field.type} DISPLAY</label>
                                                                             <div className="d-flex align-items-end">
                                                                                 <input
                                                                                     type="text"
@@ -800,11 +828,11 @@ const MessageDraft = () => {
                                                                             </div>
                                                                         </div>
                                                                     ))}
-                                                                    
+
                                                                     {inputFields.map((field) => (
                                                                         <div key={field.id} className="col-12 form-group">
-                                                                            <label>{field.type} Input</label>
-                                                                            <div className="d-flex flex-column align-items-start">
+                                                                            <label>{field.type} INPUT</label>
+                                                                            <div className="d-flex flex-column align-items-end">
 
                                                                                 <input
                                                                                     type="text"
@@ -876,12 +904,9 @@ const MessageDraft = () => {
                                                                         </div>
                                                                     ))}
 
-                                                                </div>
-
-                                                                <div className="col-md-6">
                                                                     {chatFields.map((field) => (
                                                                         <div key={field.id} className="col-12 form-group">
-                                                                            <label>{field.type} Input</label>
+                                                                            <label>{field.type} INPUT</label>
                                                                             <div className="d-flex flex-column align-items-start">
 
                                                                                 <input
@@ -954,12 +979,9 @@ const MessageDraft = () => {
                                                                         </div>
                                                                     ))}
 
-                                                                </div>
-
-                                                                <div className="col-md-6">
                                                                     {groupchatFields.map((field) => (
                                                                         <div key={field.id} className="col-12 form-group">
-                                                                            <label>{field.type} Input</label>
+                                                                            <label>{field.type} INPUT</label>
                                                                             <div className="d-flex flex-column align-items-start">
 
                                                                                 <input
@@ -1031,9 +1053,7 @@ const MessageDraft = () => {
                                                                             </div>
                                                                         </div>
                                                                     ))}
-
                                                                 </div>
-
                                                             </div>
 
                                                             <button type="submit" className="btn btn-primary mr-2">Submit</button>
