@@ -16,7 +16,57 @@ const EditCreatedMsg = () => {
     const [number, setNumber] = useState([]);
     const [parentsnumber, setParentsNumber] = useState([]);
     const [chattype, setchattype] = useState('');
-    const { msg_id } = useParams();
+    const [error, setError] = useState(null);
+    // const [updateMessage, setUpdateMessage] = useState({});
+    const { msg_group_id } = useParams();
+    const [updateMessage, setUpdateMessage] = useState(null);
+    const [msgData, setMsgData] = useState(null);
+
+    const [datas, setDatas] = useState({
+        subject_text: '',
+        show_upto: '',
+        msg_priority: '1',
+        msg_sgroup_id: '',
+        is_reply_type: '0',
+        is_reply_required_any: '0',
+        is_active: '1',
+        entry_by: '1',
+        school_id: '',
+        message_body: [],
+    })
+
+    const handleUpdateSchool = (val) => {
+        setUpdateMessage(val);
+        setDatas({
+            subject_text: val.subject_text || '',
+            show_upto: val.show_upto || '',
+            msg_priority: val.msg_priority || '1',
+            msg_sgroup_id: val.msg_sgroup_id || '',
+            is_reply_type: val.is_reply_type || '0',
+            is_reply_required_any: val.is_reply_required_any || '0',
+            is_active: val.is_active || '1',
+            entry_by: val.entry_by || '1',
+            school_id: val.school_id || '',
+            message_body: []
+        });
+    };
+
+    useEffect(() => {
+        const fetchSendedData = async () => {
+            try {
+                const response = await callAPI.get(`/msg/get_MessageGroupData/${msg_group_id}`);
+                const val = response.data; // Assuming response data is in this structure
+                setMsgData(val);
+                handleUpdateSchool(val);
+            } catch (error) {
+                console.error("Error fetching message data:", error);
+            }
+        };
+
+        fetchSendedData();
+    }, [msg_group_id]);
+
+
 
     const fetchData = async () => {
         try {
@@ -60,48 +110,36 @@ const EditCreatedMsg = () => {
         fetchParentsNo();
     }, []);// eslint-disable-next-line react-hooks/exhaustive-deps
 
-    const [datas, setDatas] = useState({
-        subject_text: '',
-        show_upto: '',
-        msg_priority: '1',
-        msg_sgroup_id: '',
-        is_reply_type: '0',
-        is_reply_required_any: '0',
-        is_active: '1',
-        entry_by: '1',
-        school_id: '',
-        message_body: [],
-    })
 
-    useEffect(() => {
-        const fetchItemData = async () => {
-            try {
-                const response = await axios.get(`http://192.168.29.201/api/${msg_id}`);
-                setDatas(response.data);
-            } catch (error) {
-                console.error('Error fetching item data:', error);
-            }
-        };
-        fetchItemData();
-    }, [msg_id]);
+
+
 
     let name, value;
     const handleChange = (e) => {
         name = e.target.name;
         value = e.target.value;
+        // setDatas((prevData) => ({ ...prevData, [name]: value }));
         setDatas({ ...datas, [name]: value })
     }
 
-    const handleUpdate = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await axios.put(`http://192.168.29.201/api/${msg_id}`, datas);
-            console.log('Item updated:', response.data);
-            // Optionally, navigate to another page or display success message
-        } catch (error) {
-            console.error('Error updating item:', error);
-        }
-    };
+    // const handleMsgUpdate = async (e) => {
+    //     e.preventDefault();
+    //     setLoading(true);
+    //     setError(null);
+    //     try {
+    //         await callAPI.put(`./msg/updateMessageGroupData/${updateMessage.msg_group_id}`, datas).then((response) => {
+    //             if (response.status === 201 || response.status === 200) {
+    //                 toast.success("message Updated Successfully");
+    //             } else {
+    //                 setError(response.message || 'Something went wrong');
+    //             }
+    //         });
+    //     } catch (error) {
+    //         setError('Error updating message: ' + error.message);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
     const [displayFields, setDisplayFields] = useState([]);
     const [inputFields, setInputFields] = useState([]);
@@ -158,6 +196,14 @@ const EditCreatedMsg = () => {
         e.target.value = '';
     };
 
+    const handleFieldChange = (id, value) => {
+        setDisplayFields(prevFields =>
+            prevFields.map(field =>
+                field.id === id ? { ...field, value } : field
+            )
+        );
+    };
+
     const handleInputOptionsChange = (e) => {
         const selectedOptions = [...e.target.selectedOptions].map(option => option.value);
         const newInputFields = selectedOptions.map(option => ({
@@ -211,7 +257,7 @@ const EditCreatedMsg = () => {
         }
     };
 
-    const handleSubmit = async (e) => {
+    const handleUpdate = async (e) => {
         e.preventDefault();
         const messageBody = [
             ...displayFields.map((field, index) => {
@@ -376,17 +422,17 @@ const EditCreatedMsg = () => {
             }),
         ];
         try {
-            const response = await callAPI.post('./msg/insertMsgData', {
-                subject_text: datas?.subject_text,
-                show_upto: datas?.show_upto,
-                msg_priority: datas?.msg_priority,
+            const response = await callAPI.put(`./msg/updateMessageGroupData/${updateMessage.msg_group_id}`, {
+                subject_text: datas.subject_text,
+                show_upto: datas.show_upto,
+                msg_priority: datas.msg_priority,
                 msg_chat_type: chattype,
-                msg_sgroup_id: datas?.msg_sgroup_id,
-                is_reply_type: datas?.is_reply_type,
-                is_reply_required_any: msgCategory.includes('INPUT') ? 1 : 0,
-                is_active: datas?.is_active,
-                entry_by: datas?.entry_by,
-                school_id: school?.map((val) => val?.sch_id),
+                msg_sgroup_id: datas.msg_sgroup_id,
+                is_reply_type: datas.is_reply_type,
+                is_reply_required_any: msgCategory.includes("INPUT") ? "1" : "0",
+                is_active: datas.is_active,
+                entry_by: datas.entry_by,
+                school_id: schoolList.map(val => val.sch_id),
                 five_mobile_number: parentsnumber,
                 message_body: messageBody
             });
@@ -415,7 +461,8 @@ const EditCreatedMsg = () => {
     }
 
 
-    console.log(chatFields)
+    console.log(datas);
+    console.log(error);
 
     return (
         <>
@@ -445,14 +492,13 @@ const EditCreatedMsg = () => {
                                                     <p className="text-danger font-weight-bold mb-0">NEW</p>
                                                 </div>
                                                 <h5 className="card-description text-primary font-weight-bolder mt-3">General Info</h5>
-                                                <form className="forms-sample" onSubmit={handleSubmit}>
-
+                                                <form className="forms-sample" onSubmit={handleUpdate}>
                                                     <div className="row">
                                                         <div className="col-md-4 form-group">
                                                             <label htmlFor="msgCategory">
-                                                                Message Category<span className="text-danger">*</span>
+                                                                Message Category<span className="text-danger"></span>
                                                             </label>
-                                                            <div className="d-flex justify-content-between form-control border-0">
+                                                            {/* <div className="d-flex justify-content-between form-control border-0">
                                                                 <div className="custom-control custom-radio">
                                                                     <input
                                                                         type="radio"
@@ -505,6 +551,9 @@ const EditCreatedMsg = () => {
                                                                         Input
                                                                     </label>
                                                                 </div>
+                                                            </div> */}
+                                                            <div className="">
+                                                                <label>{datas?.data?.msg_chat_type}</label>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -516,7 +565,7 @@ const EditCreatedMsg = () => {
                                                         </div>
                                                         <div className="col-md-4 form-group">
                                                             <label htmlFor="priority">Priority (1-High)<span className="text-danger">*</span></label>
-                                                            <select className="form-control" id="priority" name='msg_priority' required value={datas?.msg_priority} onChange={handleChange}>
+                                                            <select className="form-control" id="priority" name='msg_priority' required onChange={handleChange}>
                                                                 {[...Array(10).keys()].map((val) => (
                                                                     <option key={val + 1}>{val + 1}</option>
                                                                 ))}
@@ -551,7 +600,7 @@ const EditCreatedMsg = () => {
                                                         </div>
                                                         <div className="col-md-4 form-group">
                                                             <label htmlFor="msgCategory">Group/Sub Group<span className="text-danger">*</span></label>
-                                                            <select className="form-control" id="msgCategory" name='msg_sgroup_id' value={datas?.msg_sgroup_id} onChange={handleChange}>
+                                                            <select className="form-control" id="msgCategory" name='msg_sgroup_id' onChange={handleChange}>
                                                                 <option value="">Select Group/Sub Group</option>
                                                                 {subgroup?.map((val, index) => {
                                                                     return (
@@ -700,12 +749,13 @@ const EditCreatedMsg = () => {
                                                                             className="form-control"
                                                                             placeholder={`Enter ${field.type}`}
                                                                             value={field.value || ''}
-                                                                            onChange={(e) => {
-                                                                                const updatedFields = displayFields.map((f) =>
-                                                                                    f.id === field.id ? { ...f, value: e.target.value } : f
-                                                                                );
-                                                                                setDisplayFields(updatedFields);
-                                                                            }}
+                                                                            // onChange={(e) => {
+                                                                            //     const updatedFields = displayFields.map((f) =>
+                                                                            //         f.id === field.id ? { ...f, value: e.target.value } : f
+                                                                            //     );
+                                                                            //     setDisplayFields(updatedFields);
+                                                                            // }}
+                                                                            onChange={(e) => handleFieldChange(field.id, e.target.value)}
                                                                         />
 
                                                                         {(field.type === 'IMAGE') && (

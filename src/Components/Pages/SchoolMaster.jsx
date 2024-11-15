@@ -211,7 +211,7 @@ const SchoolMaster = () => {
                 }
             });
         } catch (error) {
-            setError('Error updating notice: ' + error.message);
+            setError('Error updating school: ' + error.message);
         } finally {
             setLoading(false);
         }

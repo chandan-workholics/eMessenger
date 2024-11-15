@@ -18,6 +18,8 @@ const MessageDraft = () => {
     const [parentsnumber, setParentsNumber] = useState([]);
     const [messageList, setMessageList] = useState([]);
     const [chattype, setchattype] = useState('');
+    const [deleteid, Setdeleteid] = useState('')
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
@@ -399,7 +401,6 @@ const MessageDraft = () => {
         }
     };
 
-
     //geting
 
 
@@ -470,10 +471,10 @@ const MessageDraft = () => {
         action: (
             <div>
                 {val?.is_active === 1 ? <Link to={`/send-message/${val?.msg_id}`}> <i className="fa-solid fa-paper-plane text-success mr-3"></i></Link> : ''}
-                <Link to='/edit-created-message' className="btn p-2">
+                <Link to={`/edit-created-message/${val?.msg_id}`} className="btn p-2">
                     <i className="fa-solid fa-pen-to-square text-warning"></i>
                 </Link>
-                <button type="button" className="btn p-2">
+                <button onClick={() => handleDelete(val?.msg_id)} type="button" className="btn p-2">
                     <i className="fa-solid fa-trash-can text-danger"></i>
                 </button>
             </div>
@@ -497,8 +498,29 @@ const MessageDraft = () => {
         return <Loding />;
     }
 
-
     console.log(chatFields)
+
+    const closeDeleteModal = () => {
+        setIsDeleteModalOpen(false);
+    };
+
+    const handleDelete = (id) => {
+        Setdeleteid(id);
+        setIsDeleteModalOpen(true)
+    };
+
+    function deleteItem(id) {
+        callAPI.del(`./msg/delete_MessageGroupData/${id}`).then(async (response) => {
+            if (response.status === 200 || response.status === 201) {
+                toast.success('Delete Item Successfully');
+                closeDeleteModal();
+                fetchData();
+            }
+            else {
+                toast.error('something went wrong');
+            }
+        });
+    }
 
     return (
         <>
@@ -1109,14 +1131,39 @@ const MessageDraft = () => {
                                             </div>
                                         </div>
                                     </div>
-
-
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {isDeleteModalOpen && (
+                <div className="modal show" style={{ display: 'block', background: '#0000008e' }}>
+                    <div className="modal-dialog">
+                        <div className="modal-content">
+                            <div className="modal-header d-flex align-items-center bg-ffe2e5 py-3">
+                                <h4 className="modal-title font-weight-bold text-primary">Warning!</h4>
+                                <button type="button" className="close" onClick={closeDeleteModal}>
+                                    <i class="fa-solid fa-xmark fs-3 text-primary"></i>
+                                </button>
+                            </div>
+                            <div className="modal-body p-3">
+                                <div className="modal-body">
+                                    <h5 className="text-primary text-center">Do you want to permanently delete?</h5>
+                                    <img src="images/deleteWarning.png" alt="" className="w-100 m-auto" />
+                                </div>
+                                <div className="modal-footer pb-0">
+                                    <div className="d-flex align-items-center">
+                                        <button type="button" className="btn btn-danger mr-3" onClick={() => deleteItem(deleteid)}>Yes</button>
+                                        <button type="button" className="btn btn-outline-danger" onClick={closeDeleteModal}>No</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </>
     );
 };

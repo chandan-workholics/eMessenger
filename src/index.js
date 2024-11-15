@@ -40,7 +40,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/messages" element={<ProtectedRoute element={<Messages />} />} />
         <Route path="/notice-board" element={<ProtectedRoute element={<NoticeBoard />} />} />
         <Route path="/message-draft" element={<ProtectedRoute element={<MessageDraft />} />} />
-        <Route path="/edit-created-message" element={<ProtectedRoute element={<EditCreatedMsg />} />} />
+        <Route path="/edit-created-message/:msg_group_id" element={<ProtectedRoute element={<EditCreatedMsg />} />} />
         <Route path="/send-message/:id" element={<ProtectedRoute element={<SendMsg />} />} />
         <Route path="/welcome-message" element={<ProtectedRoute element={<WelcomeMsg />} />} />
         <Route path="/app-scroll-news" element={<ProtectedRoute element={<AppScrollNews />} />} />
