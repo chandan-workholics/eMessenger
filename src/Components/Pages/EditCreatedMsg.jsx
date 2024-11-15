@@ -6,9 +6,11 @@ import Multiselect from "multiselect-react-dropdown";
 import Loding from '../Template/Loding';
 import { toast } from 'react-toastify';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 const EditCreatedMsg = () => {
+    const location = useLocation();
+    const { id } = location.state
     const [loading, setLoading] = useState(true);
     const [schoolList, setSchoolList] = useState([]);
     const [subgroup, setSubgroup] = useState([]);
@@ -18,7 +20,7 @@ const EditCreatedMsg = () => {
     const [chattype, setchattype] = useState('');
     const [error, setError] = useState(null);
     // const [updateMessage, setUpdateMessage] = useState({});
-    const { msg_group_id } = useParams();
+
     const [updateMessage, setUpdateMessage] = useState(null);
     const [msgData, setMsgData] = useState(null);
 
@@ -54,8 +56,8 @@ const EditCreatedMsg = () => {
     useEffect(() => {
         const fetchSendedData = async () => {
             try {
-                const response = await callAPI.get(`/msg/get_MessageGroupData/${msg_group_id}`);
-                const val = response.data; // Assuming response data is in this structure
+                const response = await callAPI.get(`/msg/get_MessageGroupData/${id}`);
+                const val = response.data;
                 setMsgData(val);
                 handleUpdateSchool(val);
             } catch (error) {
@@ -64,7 +66,7 @@ const EditCreatedMsg = () => {
         };
 
         fetchSendedData();
-    }, [msg_group_id]);
+    }, [id]);
 
 
 
@@ -422,7 +424,8 @@ const EditCreatedMsg = () => {
             }),
         ];
         try {
-            const response = await callAPI.put(`./msg/updateMessageGroupData/${updateMessage.msg_group_id}`, {
+            const response = await callAPI.put(`./msg/updateMessageGroupData/`, {
+                msg_id: updateMessage.msg_group_id,
                 subject_text: datas.subject_text,
                 show_upto: datas.show_upto,
                 msg_priority: datas.msg_priority,
@@ -441,7 +444,6 @@ const EditCreatedMsg = () => {
                 setDisplayFields([]);
                 setInputFields([]);
                 setDatas('');
-                // fetchListData();
             } else {
                 toast.error('Failed to submit the message');
             }
@@ -459,10 +461,6 @@ const EditCreatedMsg = () => {
     if (loading) {
         return <Loding />;
     }
-
-
-    console.log(datas);
-    console.log(error);
 
     return (
         <>
@@ -561,7 +559,7 @@ const EditCreatedMsg = () => {
                                                     <div className="row">
                                                         <div className="col-md-4 form-group">
                                                             <label htmlFor="subjectLine">Subject Line<span className="text-danger">*</span></label>
-                                                            <input type="text" className="form-control" id="subjectLine" placeholder="Subject Line" required name='subject_text' value={datas?.subject_text} onChange={handleChange} />
+                                                            <input type="text" className="form-control" id="subjectLine" placeholder="Subject Line" required name='subject_text' value={msgData?.data?.subject_text} onChange={handleChange} />
                                                         </div>
                                                         <div className="col-md-4 form-group">
                                                             <label htmlFor="priority">Priority (1-High)<span className="text-danger">*</span></label>
