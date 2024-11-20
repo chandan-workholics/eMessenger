@@ -441,7 +441,6 @@ const MessageDraft = () => {
         { label: 'Subject Line & Schools', key: 'subjectLineSchools' },
         { label: 'Priority', key: 'priority' },
         { label: 'Show Upto Date & Time', key: 'showUpto' },
-        { label: 'Last Posted Date', key: 'lastPosted' },
         { label: 'Last Posted By', key: 'lastPostedBy' },
         { label: 'No. of Recipients', key: 'recipients' },
         { label: 'Seen', key: 'seen' },
@@ -456,7 +455,6 @@ const MessageDraft = () => {
         subjectLineSchools: val?.subject_text,
         priority: val?.msg_priority,
         showUpto: val?.show_upto ? new Date(val?.show_upto).toLocaleDateString('en-GB') : '', // Format date,
-        lastPosted: val?.entry_date,
         lastPostedBy: val?.entry_by,
         recipients: 'Na',
         seen: 'Na',
@@ -493,12 +491,10 @@ const MessageDraft = () => {
             setCurrentPage(page);
         }
     };
-    // Use min={minDate} in your input
+
     if (loading) {
         return <Loding />;
     }
-
-    console.log(chatFields)
 
     const closeDeleteModal = () => {
         setIsDeleteModalOpen(false);
@@ -514,7 +510,7 @@ const MessageDraft = () => {
             if (response.status === 200 || response.status === 201) {
                 toast.success('Delete Item Successfully');
                 closeDeleteModal();
-                fetchData();
+                fetchListData();
             }
             else {
                 toast.error('something went wrong');
