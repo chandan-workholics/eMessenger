@@ -581,7 +581,6 @@ const MessageDraft = () => {
 
                                                             <div className="row">
                                                                 <div className="col-md-6">
-
                                                                     {inputFields.map((field) => (
                                                                         <div key={field.id} className="col-12 form-group">
                                                                             <label>{field.type} </label>
@@ -599,6 +598,7 @@ const MessageDraft = () => {
                                                                                         setInputFields(updatedFields);
                                                                                     }}
                                                                                 />
+
 
                                                                                 {(field.type === 'OPTION' || field.type === 'CHECKBOX') && (
                                                                                     <input
@@ -650,7 +650,7 @@ const MessageDraft = () => {
                                                                                         type="file"
                                                                                         className="form-control"
                                                                                         accept="image/*"
-                                                                                        onChange={(e) => handleImageChange(e, field.id)}
+                                                                                        onChange={(e) => handleImageChange(e, field.id)} // Pass field ID to handleImageChange
                                                                                     />
                                                                                 )}
 

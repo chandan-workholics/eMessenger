@@ -5,7 +5,7 @@ import callAPI from '../../commonMethod/api.js';
 import Multiselect from "multiselect-react-dropdown";
 import Loding from '../Template/Loding';
 import { toast } from 'react-toastify';
-import { useLocation,useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const EditCreatedMsg = () => {
     const location = useLocation();
@@ -91,13 +91,6 @@ const EditCreatedMsg = () => {
         };
         fetchData();
     }, []);// eslint-disable-next-line react-hooks/exhaustive-deps
-
-    // let name, value;
-    // const handleChange = (e) => {
-    //     name = e.target.name;
-    //     value = e.target.value;
-    //     setDatas({ ...datas, [name]: value })
-    // }
 
     const handleChange = (e) => {
         const { name, value } = e.target;
