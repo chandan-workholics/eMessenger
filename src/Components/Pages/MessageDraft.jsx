@@ -526,8 +526,8 @@ const MessageDraft = () => {
                                                                         onSelect={(event) => {
                                                                             if (event.length <= 5) {
                                                                                 const newParents = event.map(num => ({
-                                                                                    student_main_id: num.student_main_id, // Make sure this key exists in your options
-                                                                                    mobile_no: parseInt(num.student_family_mobile_number, 10) // Ensure this key exists
+                                                                                    student_main_id: num.student_main_id,
+                                                                                    mobile_no: parseInt(num.student_family_mobile_number, 10)
                                                                                 }));
                                                                                 setParentsNumber(newParents);
                                                                             } else {
@@ -537,8 +537,8 @@ const MessageDraft = () => {
                                                                         options={number}
                                                                         displayValue="student_family_mobile_number"
                                                                         selectedValues={parentsnumber.map(parent => ({
-                                                                            student_family_mobile_number: parent.mobile_no, // Ensure the display value matches
-                                                                            student_main_id: parent.student_main_id // Include main ID if needed
+                                                                            student_family_mobile_number: parent.mobile_no,
+                                                                            student_main_id: parent.student_main_id
                                                                         }))}
                                                                         showCheckbox
                                                                     />
@@ -666,6 +666,8 @@ const MessageDraft = () => {
                                                                     ))}
                                                                 </div>
                                                             </div>
+
+                                                            {/* Conditionally render multi-select inputs based on the selected message category */}
 
                                                             <button type="submit" className="btn btn-primary mr-2">Submit</button>
 
