@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
 import Navbar from '../Template/Navbar';
 import Sidebar from '../Template/Sidebar';
 import SortableTable from '../Template/SortableTable';
 import callAPI from '../../commonMethod/api.js';
 import { toast } from 'react-toastify';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const SendMsg = () => {
-    let { id } = useParams();
+    const location = useLocation()
+    const { id } = location.state
+    const navigate = useNavigate()
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [studentList, setStudentList] = useState([]);
@@ -64,6 +66,7 @@ const SendMsg = () => {
 
             if (response.status === 201 || response.status === 200) {
                 toast.success("Message Sent Successfully");
+                navigate(-1)
             } else {
                 setError(response.message || 'Something went wrong');
             }

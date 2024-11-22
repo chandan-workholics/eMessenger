@@ -41,7 +41,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/notice-board" element={<ProtectedRoute element={<NoticeBoard />} />} />
         <Route path="/message-draft" element={<ProtectedRoute element={<MessageDraft />} />} />
         <Route path="/edit-created-message" element={<ProtectedRoute element={<EditCreatedMsg />} />} />
-        <Route path="/send-message/:id" element={<ProtectedRoute element={<SendMsg />} />} />
+        <Route path="/send-message" element={<ProtectedRoute element={<SendMsg />} />} />
         <Route path="/welcome-message" element={<ProtectedRoute element={<WelcomeMsg />} />} />
         <Route path="/app-scroll-news" element={<ProtectedRoute element={<AppScrollNews />} />} />
         <Route path="/chat" element={<ProtectedRoute element={<Chat />} />} />

@@ -1,6 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+const logout = () => {
+    sessionStorage.clear();
+}
+
 const Sidebar = () => {
     return (
         <>
@@ -94,7 +98,7 @@ const Sidebar = () => {
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link" to="/">
+                        <Link className="nav-link" onClick={() => logout()} to="/">
                             <i className="fa-solid fa-arrow-right-from-bracket menu-icon"></i>
                             <span className="menu-title mr-3">Logout</span>
                         </Link>

@@ -8,6 +8,7 @@ import Multiselect from "multiselect-react-dropdown";
 import Loding from '../Template/Loding';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const MessageDraft = () => {
     const [loading, setLoading] = useState(true);
@@ -296,7 +297,7 @@ const MessageDraft = () => {
         ),
         action: (
             <div>
-                {val?.is_active === 1 ? <Link to={`/send-message/${val?.msg_id}`}> <i className="fa-solid fa-paper-plane text-success mr-3"></i></Link> : ''}
+                {val?.is_active === 1 ? <Link to={`/send-message`} state={{ id: val?.msg_id }}> <i className="fa-solid fa-paper-plane text-success mr-3"></i></Link> : ''}
                 <Link to={`/edit-created-message`} state={{ id: val?.msg_id }} className="btn p-2">
                     <i className="fa-solid fa-pen-to-square text-warning"></i>
                 </Link>
@@ -345,6 +346,20 @@ const MessageDraft = () => {
             }
         });
     }
+
+
+    // Handle the drag-and-drop action
+    const onDragEnd = (result) => {
+        const { destination, source } = result;
+
+        if (!destination) return;
+
+        const reorderedFields = Array.from(inputFields);
+        const [movedItem] = reorderedFields.splice(source.index, 1);
+        reorderedFields.splice(destination.index, 0, movedItem);
+
+        setInputFields(reorderedFields);
+    };
 
     return (
         <>
@@ -582,88 +597,115 @@ const MessageDraft = () => {
                                                             <div className="row">
                                                                 <div className="col-md-6">
 
-                                                                    {inputFields.map((field) => (
-                                                                        <div key={field.id} className="col-12 form-group">
-                                                                            <label>{field.type} </label>
-                                                                            <div className="d-flex flex-column align-items-start">
-
-                                                                                <input
-                                                                                    type="text"
-                                                                                    className="form-control mb-2"
-                                                                                    placeholder={`Enter title for ${field.type}`}
-                                                                                    value={field.title || ''}
-                                                                                    onChange={(e) => {
-                                                                                        const updatedFields = inputFields.map((f) =>
-                                                                                            f.id === field.id ? { ...f, title: e.target.value } : f
-                                                                                        );
-                                                                                        setInputFields(updatedFields);
-                                                                                    }}
-                                                                                />
-
-                                                                                {(field.type === 'OPTION' || field.type === 'CHECKBOX') && (
-                                                                                    <input
-                                                                                        type="text"
-                                                                                        className="form-control mb-2"
-                                                                                        placeholder={`Enter options for ${field.type} (e.g. Option1;Option2)`}
-                                                                                        value={field.options || ''}
-                                                                                        onChange={(e) => {
-                                                                                            const updatedFields = inputFields.map((f) =>
-                                                                                                f.id === field.id ? { ...f, options: e.target.value } : f
-                                                                                            );
-                                                                                            setInputFields(updatedFields);
-                                                                                        }}
-                                                                                    />
-                                                                                )}
-
-                                                                                {field.type === 'TEXTBOX' && (
-                                                                                    <input
-                                                                                        type="text"
-                                                                                        className="form-control mb-2"
-                                                                                        placeholder="Enter placeholder for Textbox"
-                                                                                        value={field.placeholder || ''}
-                                                                                        onChange={(e) => {
-                                                                                            const updatedFields = inputFields.map((f) =>
-                                                                                                f.id === field.id ? { ...f, placeholder: e.target.value } : f
-                                                                                            );
-                                                                                            setInputFields(updatedFields);
-                                                                                        }}
-                                                                                    />
-                                                                                )}
-
-                                                                                {field.type === 'TEXTAREA' && (
-                                                                                    <input
-                                                                                        type="text"
-                                                                                        className="form-control mb-2"
-                                                                                        placeholder="Enter placeholder for Textarea"
-                                                                                        value={field.placeholder || ''}
-                                                                                        onChange={(e) => {
-                                                                                            const updatedFields = inputFields.map((f) =>
-                                                                                                f.id === field.id ? { ...f, placeholder: e.target.value } : f
-                                                                                            );
-                                                                                            setInputFields(updatedFields);
-                                                                                        }}
-                                                                                    />
-                                                                                )}
-
-                                                                                {(field.type === 'IMAGE') && (
-                                                                                    <input
-                                                                                        type="file"
-                                                                                        className="form-control"
-                                                                                        accept="image/*"
-                                                                                        onChange={(e) => handleImageChange(e, field.id)}
-                                                                                    />
-                                                                                )}
-
-                                                                                <button
-                                                                                    type="button"
-                                                                                    className="btn border-0 mt-2"
-                                                                                    onClick={() => deleteField(field.id)}
+                                                                    <DragDropContext onDragEnd={onDragEnd}>
+                                                                        <Droppable droppableId="droppable">
+                                                                            {(provided) => (
+                                                                                <div
+                                                                                    className="row"
+                                                                                    ref={provided.innerRef}
+                                                                                    {...provided.droppableProps}
                                                                                 >
-                                                                                    <i className="fa-solid fa-trash-can text-danger"></i>
-                                                                                </button>
-                                                                            </div>
-                                                                        </div>
-                                                                    ))}
+                                                                                    {inputFields.map((field, index) => (
+                                                                                        <Draggable key={field.id} draggableId={field.id.toString()} index={index}>
+                                                                                            {(provided) => (
+                                                                                                <div
+                                                                                                    ref={provided.innerRef}
+                                                                                                    {...provided.draggableProps}
+                                                                                                    {...provided.dragHandleProps}
+                                                                                                    className="col-12 form-group"
+                                                                                                >
+                                                                                                    <label>{field.type}</label>
+                                                                                                    <div className="d-flex flex-column align-items-start">
+                                                                                                        <input
+                                                                                                            type="text"
+                                                                                                            className="form-control mb-2"
+                                                                                                            placeholder={`Enter title for ${field.type}`}
+                                                                                                            value={field.title || ''}
+                                                                                                            onChange={(e) => {
+                                                                                                                const updatedFields = inputFields.map((f) =>
+                                                                                                                    f.id === field.id ? { ...f, title: e.target.value } : f
+                                                                                                                );
+                                                                                                                setInputFields(updatedFields);
+                                                                                                            }}
+                                                                                                        />
+
+                                                                                                        {/* Handling 'OPTION' or 'CHECKBOX' input types */}
+                                                                                                        {(field.type === 'OPTION' || field.type === 'CHECKBOX') && (
+                                                                                                            <input
+                                                                                                                type="text"
+                                                                                                                className="form-control mb-2"
+                                                                                                                placeholder={`Enter options for ${field.type} (e.g. Option1;Option2)`}
+                                                                                                                value={field.options || ''}
+                                                                                                                onChange={(e) => {
+                                                                                                                    const updatedFields = inputFields.map((f) =>
+                                                                                                                        f.id === field.id ? { ...f, options: e.target.value } : f
+                                                                                                                    );
+                                                                                                                    setInputFields(updatedFields);
+                                                                                                                }}
+                                                                                                            />
+                                                                                                        )}
+
+                                                                                                        {/* Handling 'TEXTBOX' input type */}
+                                                                                                        {field.type === 'TEXTBOX' && (
+                                                                                                            <input
+                                                                                                                type="text"
+                                                                                                                className="form-control mb-2"
+                                                                                                                placeholder="Enter placeholder for Textbox"
+                                                                                                                value={field.placeholder || ''}
+                                                                                                                onChange={(e) => {
+                                                                                                                    const updatedFields = inputFields.map((f) =>
+                                                                                                                        f.id === field.id ? { ...f, placeholder: e.target.value } : f
+                                                                                                                    );
+                                                                                                                    setInputFields(updatedFields);
+                                                                                                                }}
+                                                                                                            />
+                                                                                                        )}
+
+                                                                                                        {/* Handling 'TEXTAREA' input type */}
+                                                                                                        {field.type === 'TEXTAREA' && (
+                                                                                                            <input
+                                                                                                                type="text"
+                                                                                                                className="form-control mb-2"
+                                                                                                                placeholder="Enter placeholder for Textarea"
+                                                                                                                value={field.placeholder || ''}
+                                                                                                                onChange={(e) => {
+                                                                                                                    const updatedFields = inputFields.map((f) =>
+                                                                                                                        f.id === field.id ? { ...f, placeholder: e.target.value } : f
+                                                                                                                    );
+                                                                                                                    setInputFields(updatedFields);
+                                                                                                                }}
+                                                                                                            />
+                                                                                                        )}
+
+                                                                                                        {/* Handling 'IMAGE' input type */}
+                                                                                                        {field.type === 'IMAGE' && (
+                                                                                                            <input
+                                                                                                                type="file"
+                                                                                                                className="form-control"
+                                                                                                                accept="image/*"
+                                                                                                                onChange={(e) => handleImageChange(e, field.id)}
+                                                                                                            />
+                                                                                                        )}
+
+                                                                                                        {/* Delete button */}
+                                                                                                        <button
+                                                                                                            type="button"
+                                                                                                            className="btn border-0 mt-2"
+                                                                                                            onClick={() => deleteField(field.id)}
+                                                                                                        >
+                                                                                                            <i className="fa-solid fa-trash-can text-danger"></i>
+                                                                                                        </button>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            )}
+                                                                                        </Draggable>
+                                                                                    ))}
+                                                                                    {provided.placeholder}
+                                                                                </div>
+                                                                            )}
+                                                                        </Droppable>
+                                                                    </DragDropContext>
+
                                                                 </div>
                                                             </div>
 

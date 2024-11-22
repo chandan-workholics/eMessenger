@@ -36,30 +36,65 @@ const EditCreatedMsg = () => {
     }, [id]);
 
     const handleUpdateSchool = (val) => {
+        // const existingFields = val.data.msg_bodies.map((msg) => {
+        //     // Parse the `data_text` string into a JSON object
+        //     const parsedDataText = JSON.parse(msg.data_text);
+
+        //     // Dynamically set the title based on the available keys in parsedDataText
+        //     let title = '';
+        //     if (parsedDataText.text) {
+        //         title = parsedDataText.text; // Use 'text' field if available
+        //     } else if (parsedDataText.title) {
+        //         title = parsedDataText.title; // Use 'title' field if available
+        //     }
+
+        //     return {
+        //         id: Date.now() + Math.random(), // Generate a unique ID
+        //         type: msg.msg_type.split('-')[0], // Extract type from `msg_type`
+        //         title: title, // Dynamically set the title
+        //         options: parsedDataText.options || '', // Ensure `options` is included if present
+        //         placeholder: parsedDataText.placeholder || '', // For TEXTBOX and TEXTAREA
+        //         linkValue: parsedDataText.link || '', // For IMAGE or LINK
+        //         link: parsedDataText.link || '', // Additional `link` field
+        //         isReplyRequired: msg.is_reply_required, // Include `is_reply_required`
+        //         order: msg.ordersno, // Include `ordersno`
+        //     };
+        // });
+
         const existingFields = val.data.msg_bodies.map((msg) => {
             // Parse the `data_text` string into a JSON object
             const parsedDataText = JSON.parse(msg.data_text);
 
-            // Dynamically set the title based on the available keys in parsedDataText
-            let title = '';
-            if (parsedDataText.text) {
-                title = parsedDataText.text; // Use 'text' field if available
-            } else if (parsedDataText.title) {
-                title = parsedDataText.title; // Use 'title' field if available
+            // Dynamically set the title or text based on available fields in parsedDataText
+            let title = parsedDataText.title || parsedDataText.text || ''; // Fallback to empty string if not available
+            let linkValue = parsedDataText.link || ''; // Default to empty if no link
+            let placeholder = parsedDataText.placeholder || ''; // Default placeholder if empty
+            let options = parsedDataText.options || ''; // Default options if empty
+
+            // Dynamically set the type based on msg_type
+            let type = msg.msg_type.split('-')[0]; // Extract the type from the msg_type
+
+            // Handle the special cases for LINK, IMAGE, YOUTUBE, CAMERA, and FILE
+            if (type === "LINK" || type === "YOUTUBE" || type === "IMAGE") {
+                // Use link as the value for these types, as they may have 'link' in data_text
+                title = parsedDataText.link || ''; // Ensure that it uses link for these types
+            } else if (type === "CAMERA" || type === "FILE") {
+                title = parsedDataText.title || '';
             }
 
             return {
                 id: Date.now() + Math.random(), // Generate a unique ID
-                type: msg.msg_type.split('-')[0], // Extract type from `msg_type`
-                title: title, // Dynamically set the title
-                options: parsedDataText.options || '', // Ensure `options` is included if present
-                placeholder: parsedDataText.placeholder || '', // For TEXTBOX and TEXTAREA
-                linkValue: parsedDataText.link || '', // For IMAGE or LINK
-                link: parsedDataText.link || '', // Additional `link` field
+                type: type, // The type is already extracted
+                title: title, // Dynamically set the title or link
+                options: options, // Include `options` if present
+                placeholder: placeholder, // For TEXTBOX and TEXTAREA, include placeholder
+                linkValue: linkValue, // Use `link` for LINK, YOUTUBE, IMAGE, CAMERA, and FILE types
                 isReplyRequired: msg.is_reply_required, // Include `is_reply_required`
                 order: msg.ordersno, // Include `ordersno`
             };
         });
+
+
 
         const parsedParents = val.data.five_mobile_number
             ? JSON.parse(val.data.five_mobile_number).map((parent) => ({
