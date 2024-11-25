@@ -419,8 +419,8 @@ const MessageDraft = () => {
                                                                     <label htmlFor="msgCategory">
                                                                         Message Category<span className="text-danger">*</span>
                                                                     </label>
-                                                                    <div className="d-flex justify-content-between form-control border-0">
-                                                                        <div className="custom-control custom-radio">
+                                                                    <div className="d-flex form-control border-0 px-0">
+                                                                        <div className="custom-control custom-radio mr-3">
                                                                             <input
                                                                                 type="radio"
                                                                                 className="custom-control-input"
@@ -429,11 +429,11 @@ const MessageDraft = () => {
                                                                                 value="INDIVIDUALCHAT"
                                                                                 onChange={handleCategoryChange}
                                                                             />
-                                                                            <label className="custom-control-label me-2" htmlFor="Chat">
+                                                                            <label className="custom-control-label" htmlFor="Chat">
                                                                                 Chat
                                                                             </label>
                                                                         </div>
-                                                                        <div className="custom-control custom-radio">
+                                                                        <div className="custom-control custom-radio mr-3">
                                                                             <input
                                                                                 type="radio"
                                                                                 className="custom-control-input"
@@ -442,11 +442,11 @@ const MessageDraft = () => {
                                                                                 value="GROUPCHAT"
                                                                                 onChange={handleCategoryChange}
                                                                             />
-                                                                            <label className="custom-control-label me-2" htmlFor="GroupChat">
+                                                                            <label className="custom-control-label" htmlFor="GroupChat">
                                                                                 Group Chat
                                                                             </label>
                                                                         </div>
-                                                                        <div className="custom-control custom-radio">
+                                                                        <div className="custom-control custom-radio mr-3">
                                                                             <input
                                                                                 type="radio"
                                                                                 className="custom-control-input"
@@ -455,11 +455,11 @@ const MessageDraft = () => {
                                                                                 value="DISPLAY"
                                                                                 onChange={handleCategoryChange}
                                                                             />
-                                                                            <label className="custom-control-label me-2" htmlFor="Display">
+                                                                            <label className="custom-control-label" htmlFor="Display">
                                                                                 Display
                                                                             </label>
                                                                         </div>
-                                                                        <div className="custom-control custom-radio">
+                                                                        <div className="custom-control custom-radio mr-3">
                                                                             <input
                                                                                 type="radio"
                                                                                 className="custom-control-input"
@@ -468,7 +468,7 @@ const MessageDraft = () => {
                                                                                 value="INPUT"
                                                                                 onChange={handleCategoryChange}
                                                                             />
-                                                                            <label className="custom-control-label me-2" htmlFor="Input">
+                                                                            <label className="custom-control-label" htmlFor="Input">
                                                                                 Input
                                                                             </label>
                                                                         </div>
