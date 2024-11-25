@@ -34,35 +34,9 @@ const EditCreatedMsg = () => {
     }, [id]);
 
     const handleUpdateSchool = (val) => {
-        // const existingFields = val.data.msg_bodies.map((msg) => {
-        //     // Parse the `data_text` string into a JSON object
-        //     const parsedDataText = JSON.parse(msg.data_text);
-
-        //     // Dynamically set the title based on the available keys in parsedDataText
-        //     let title = '';
-        //     if (parsedDataText.text) {
-        //         title = parsedDataText.text; // Use 'text' field if available
-        //     } else if (parsedDataText.title) {
-        //         title = parsedDataText.title; // Use 'title' field if available
-        //     }
-
-        //     return {
-        //         id: Date.now() + Math.random(), // Generate a unique ID
-        //         type: msg.msg_type.split('-')[0], // Extract type from `msg_type`
-        //         title: title, // Dynamically set the title
-        //         options: parsedDataText.options || '', // Ensure `options` is included if present
-        //         placeholder: parsedDataText.placeholder || '', // For TEXTBOX and TEXTAREA
-        //         linkValue: parsedDataText.link || '', // For IMAGE or LINK
-        //         link: parsedDataText.link || '', // Additional `link` field
-        //         isReplyRequired: msg.is_reply_required, // Include `is_reply_required`
-        //         order: msg.ordersno, // Include `ordersno`
-        //     };
-        // });
-
         const existingFields = val.data.msg_bodies.map((msg) => {
             // Parse the `data_text` string into a JSON object
             const parsedDataText = JSON.parse(msg.data_text);
-
             // Dynamically set the title or text based on available fields in parsedDataText
             let title = parsedDataText.title || parsedDataText.text || ''; // Fallback to empty string if not available
             let linkValue = parsedDataText.link || ''; // Default to empty if no link
@@ -92,8 +66,6 @@ const EditCreatedMsg = () => {
             };
         });
 
-
-
         const parsedParents = val.data.five_mobile_number
             ? JSON.parse(val.data.five_mobile_number).map((parent) => ({
                 student_main_id: parent.student_main_id,
@@ -116,11 +88,9 @@ const EditCreatedMsg = () => {
             five_mobile_number: parsedParents,
             message_body: val.data.msg_bodies || [],
         });
-
         setInputFields(existingFields);
         setParentsNumber(parsedParents);
     };
-
 
     const handleInputOptionsChange = (e) => {
         const selectedOptions = [...e.target.selectedOptions].map(option => option.value);
@@ -287,7 +257,6 @@ const EditCreatedMsg = () => {
                         <div className="content-wrapper">
                             <div className="row">
 
-
                                 <div className="col-12 grid-margin stretch-card">
                                     <div className="card shadow-sm">
                                         <div className="card-body">
@@ -308,8 +277,6 @@ const EditCreatedMsg = () => {
                                                         </div>
                                                     </div>
                                                 </div>
-
-
 
                                                 {/* ................................................upper div............................................ */}
 
