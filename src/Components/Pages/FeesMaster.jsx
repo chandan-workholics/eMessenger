@@ -173,7 +173,7 @@ const FeesMaster = () => {
                                                             <thead>
                                                                 <tr>
                                                                     <th>Id</th>
-                                                                    <th>Student ID</th>
+                                                                    <th>Scholar No.</th>
                                                                     <th>Session</th>
                                                                     <th>Term</th>
                                                                     <th>Outstanding Fee</th>
