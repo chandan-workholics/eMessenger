@@ -149,6 +149,13 @@ const ImportScholar = () => {
                                                                 onChange={handleFileUpload} />
                                                         </div>
                                                     </div>
+                                                    <div className="form-group">
+                                                        <div class="form-check">
+                                                            <label>Is Delete All Old Record Fist ?</label>
+                                                            {/* <label class="form-check-label" for="exampleCheck1"></label> */}
+                                                            <input type="checkbox" class="form-check-input ml-2" id="exampleCheck1" />
+                                                        </div>
+                                                    </div>
                                                     <button type="submit" className="btn btn-primary mr-2" onClick={handleSubmit}> Import  </button>
                                                     <button type="submit" className="btn btn-success mr-2" onClick={exportToExcel}>Export to Excel</button>
                                                 </div>

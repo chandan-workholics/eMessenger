@@ -18,7 +18,7 @@ const Login = () => {
 
 
         if (!adminuser_name || !admin_password) {
-            setError('Please enter both adminuser_name and admin_password.');
+            setError('Please enter both adminuser name and password.');
             return;
         }
 
@@ -42,7 +42,7 @@ const Login = () => {
                 navigate('/dashboard');
             } else {
 
-                setError(data.message || 'Invalid adminuser_name or admin_password.');
+                setError(data.message || 'Invalid adminuser name or password.');
             }
         } catch (error) {
             setError('An error occurred. Please try again later.');
@@ -74,7 +74,7 @@ const Login = () => {
                                                     type="test"
                                                     className="form-control form-control-lg"
                                                     id="exampleInputEmail1"
-                                                    placeholder="adminuser_name"
+                                                    placeholder="Enter user name"
                                                     value={adminuser_name}
                                                     onChange={(e) => setadminuser_name(e.target.value)}
                                                 />
@@ -84,7 +84,7 @@ const Login = () => {
                                                     type="admin_password"
                                                     className="form-control form-control-lg"
                                                     id="exampleInputadmin_password1"
-                                                    placeholder="admin_password"
+                                                    placeholder="Enter password"
                                                     value={admin_password}
                                                     onChange={(e) => setadmin_password(e.target.value)}
                                                 />
