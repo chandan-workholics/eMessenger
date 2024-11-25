@@ -15,7 +15,13 @@ const ImportScholar = () => {
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
+    const [action, setAction] = useState('insert_only');
     const rowsPerPage = 10;
+
+    const handleCheckboxChange = (e) => {
+        // Update action state based on whether checkbox is checked or not
+        setAction(e.target.checked ? 'delete_and_import' : 'insert_only');
+    };
 
     const fetchData = async () => {
         setLoading(true);
@@ -94,6 +100,7 @@ const ImportScholar = () => {
         }
         try {
             const response = await axios.post('http://206.189.130.102:3550/api/scholar/insertScholarRecord', {
+                action: action,
                 data: excelData,
             }, {
                 method: 'POST',
@@ -150,10 +157,14 @@ const ImportScholar = () => {
                                                         </div>
                                                     </div>
                                                     <div className="form-group">
-                                                        <div class="form-check">
-                                                            <label>Is Delete All Old Record Fist ?</label>
-                                                            {/* <label class="form-check-label" for="exampleCheck1"></label> */}
-                                                            <input type="checkbox" class="form-check-input ml-2" id="exampleCheck1" />
+                                                        <div className="form-check">
+                                                            <label>Is Delete All Old Record First?</label>
+                                                            <input
+                                                                type="checkbox"
+                                                                className="form-check-input ml-2"
+                                                                id="exampleCheck1"
+                                                                onChange={handleCheckboxChange} // Set action on checkbox change
+                                                            />
                                                         </div>
                                                     </div>
                                                     <button type="submit" className="btn btn-primary mr-2" onClick={handleSubmit}> Import  </button>
