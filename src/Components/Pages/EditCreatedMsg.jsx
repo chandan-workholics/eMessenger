@@ -16,8 +16,6 @@ const EditCreatedMsg = () => {
     const [schoolList, setSchoolList] = useState([]);
     const [subgroup, setSubgroup] = useState([]);
     const [number, setNumber] = useState([]);
-
-
     const [parentsnumber, setParentsNumber] = useState([]);
     const [inputFields, setInputFields] = useState([]);
     const [datas, setDatas] = useState({ msg_id: '', subject_text: '', show_upto: '', msg_priority: '1', msg_chat_type: '', msg_sgroup_id: '', is_reply_type: 0, is_reply_required_any: 0, is_active: 1, entry_by: 1, school_id: [], five_mobile_number: '', message_body: [], })
@@ -455,10 +453,10 @@ const EditCreatedMsg = () => {
                                                                 </>)}
                                                         </select>
                                                     </div>
+                                                </div>
 
-
+                                                <div className="row">
                                                     <div className="col-md-6">
-
                                                         {inputFields.map((field) => (
                                                             <div key={field.id} className="col-12 form-group">
                                                                 <label>{field.type}</label>
@@ -536,8 +534,6 @@ const EditCreatedMsg = () => {
                                                                 </div>
                                                             </div>
                                                         ))}
-
-
                                                     </div>
                                                 </div>
 
