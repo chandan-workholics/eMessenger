@@ -13,10 +13,15 @@ const FeesMaster = () => {
     const [importStudenttwo, setImportStudenttwo] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    const [action, setAction] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const rowsPerPage = 10;
+
+    const handleCheckboxChange = (e) => {
+        // Update action state based on whether checkbox is checked or not
+        setAction(e.target.checked ? true : false);
+    };
 
     const fetchData = async () => {
         setLoading(true);
@@ -78,13 +83,33 @@ const FeesMaster = () => {
             const binaryStr = event.target.result;
             const workbook = XLSX.read(binaryStr, { type: 'binary' });
             const sheetName = workbook.SheetNames[0];
-            const worksheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-            setExcelData(worksheet);
+            const worksheet = workbook.Sheets[sheetName];
+
+            // Convert the sheet data to JSON
+            let jsonData = XLSX.utils.sheet_to_json(worksheet, {
+                raw: false, // Parse date as text
+                dateNF: 'yyyy-mm-dd', // Optional: specify a date format
+            });
+
+            // Handle date conversion explicitly (if needed)
+            jsonData = jsonData.map(row => {
+                const convertedRow = { ...row };
+
+                // Check if a date field exists and convert it
+                if (convertedRow.duedate && !isNaN(convertedRow.duedate)) {
+                    convertedRow.duedate = new Date(Math.round((convertedRow.duedate - 25569) * 86400 * 1000))
+                        .toISOString()
+                        .split('T')[0]; // Convert to yyyy-mm-dd
+                }
+
+                return convertedRow;
+            });
+
+            setExcelData(jsonData);
         };
 
         reader.readAsBinaryString(file);
     };
-
     // Function to submit data to API
     const handleSubmit = async () => {
         if (excelData.length === 0) {
@@ -93,13 +118,13 @@ const FeesMaster = () => {
         }
 
         try {
-            const response = await axios.post('http://206.189.130.102:3550/api/scholar/insertScholarRecord', {
+            const response = await axios.post('http://206.189.130.102:3550/api/fees/addfeesDisplay', {
+                deleteExisting: action,
                 data: excelData,
             }, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
-
                 }
             });
             if (response.status === 200) {
@@ -152,6 +177,17 @@ const FeesMaster = () => {
                                                                 onChange={handleFileUpload} />
                                                         </div>
                                                     </div>
+                                                    <div className="form-group">
+                                                        <div className="form-check">
+                                                            <label>Is Delete All Old Record First?</label>
+                                                            <input
+                                                                type="checkbox"
+                                                                className="form-check-input ml-2"
+                                                                id="exampleCheck1"
+                                                                onChange={handleCheckboxChange} // Set action on checkbox change
+                                                            />
+                                                        </div>
+                                                    </div>
                                                     <button type="submit" className="btn btn-primary mr-2" onClick={handleSubmit}>
                                                         Import
                                                     </button>
@@ -178,7 +214,7 @@ const FeesMaster = () => {
                                                                     <th>Term</th>
                                                                     <th>Outstanding Fee</th>
                                                                     <th>Due Date</th>
-                                                                    <th>Status</th>
+                                                                    <th> Fees Status</th>
                                                                     <th>Created At</th>
                                                                 </tr>
                                                             </thead>
