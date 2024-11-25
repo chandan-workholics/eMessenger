@@ -59,20 +59,20 @@ const ReplyReceived = () => {
     const data = messageList ? messageList.map((val, index) => ({
         reqId: index + 1,
         msgId: val?.msg_id,
-        received: val?.reply_date_time ? new Date(val.reply_date_time).toLocaleDateString('en-GB') : '', // Format date
-        subject: val?.message.subject_text,
+        received: val?.reply_date_time ? new Date(val?.reply_date_time).toLocaleDateString('en-GB') : '', // Format date
+        subject: val?.message?.subject_text || '',
         mobileNo: val?.mobile_no,
-        school: val?.schools[0].sch_short_nm,
+        school: val?.schools[0]?.sch_short_nm,
         studentId: val?.student_main_id,
-        sent: val?.sendedMessage.sended_date ? new Date(val.sendedMessage.sended_date).toLocaleDateString('en-GB') : '', // Format date
-        replyMsgId: val?.replyBodies.replied_msg_id,
-        msgBodyId: val?.replyBodies.msg_body_id,
-        msgType: val?.replyBodies.msg_type,
-        dataReplyText: val?.replyBodies.data_reply_text,
-        addedBy: val.entry_by,
-        addedOn: val?.entry_date ? new Date(val.entry_date).toLocaleDateString('en-GB') : '', // Format date
+        sent: val?.sendedMessage?.sended_date ? new Date(val?.sendedMessage?.sended_date).toLocaleDateString('en-GB') : '', // Format date
+        replyMsgId: val?.replyBodies?.replied_msg_id,
+        msgBodyId: val?.replyBodies?.msg_body_id,
+        msgType: val?.replyBodies?.msg_type,
+        dataReplyText: val?.replyBodies?.data_reply_text,
+        addedBy: val?.entry_by,
+        addedOn: val?.entry_date ? new Date(val?.entry_date).toLocaleDateString('en-GB') : '', // Format date
         editBy: val.entry_by,
-        editOn: val?.edit_date ? new Date(val.edit_date).toLocaleDateString('en-GB') : '', // Format date
+        editOn: val?.edit_date ? new Date(val?.edit_date).toLocaleDateString('en-GB') : '', // Format date
     })) : [];
 
     if (loading) {
