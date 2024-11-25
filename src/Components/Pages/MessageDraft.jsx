@@ -415,7 +415,7 @@ const MessageDraft = () => {
                                                         <form className="forms-sample" onSubmit={handleSubmit}>
 
                                                             <div className="row">
-                                                                <div className="col-md-4 form-group">
+                                                                <div className="col-md-12 form-group">
                                                                     <label htmlFor="msgCategory">
                                                                         Message Category<span className="text-danger">*</span>
                                                                     </label>
@@ -429,7 +429,7 @@ const MessageDraft = () => {
                                                                                 value="INDIVIDUALCHAT"
                                                                                 onChange={handleCategoryChange}
                                                                             />
-                                                                            <label className="custom-control-label" htmlFor="Chat">
+                                                                            <label className="custom-control-label me-2" htmlFor="Chat">
                                                                                 Chat
                                                                             </label>
                                                                         </div>
@@ -442,7 +442,7 @@ const MessageDraft = () => {
                                                                                 value="GROUPCHAT"
                                                                                 onChange={handleCategoryChange}
                                                                             />
-                                                                            <label className="custom-control-label" htmlFor="GroupChat">
+                                                                            <label className="custom-control-label me-2" htmlFor="GroupChat">
                                                                                 Group Chat
                                                                             </label>
                                                                         </div>
@@ -455,7 +455,7 @@ const MessageDraft = () => {
                                                                                 value="DISPLAY"
                                                                                 onChange={handleCategoryChange}
                                                                             />
-                                                                            <label className="custom-control-label" htmlFor="Display">
+                                                                            <label className="custom-control-label me-2" htmlFor="Display">
                                                                                 Display
                                                                             </label>
                                                                         </div>
@@ -468,7 +468,7 @@ const MessageDraft = () => {
                                                                                 value="INPUT"
                                                                                 onChange={handleCategoryChange}
                                                                             />
-                                                                            <label className="custom-control-label" htmlFor="Input">
+                                                                            <label className="custom-control-label me-2" htmlFor="Input">
                                                                                 Input
                                                                             </label>
                                                                         </div>
