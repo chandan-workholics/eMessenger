@@ -85,8 +85,29 @@ const ImportScholar = () => {
             const binaryStr = event.target.result;
             const workbook = XLSX.read(binaryStr, { type: 'binary' });
             const sheetName = workbook.SheetNames[0];
-            const worksheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-            setExcelData(worksheet);
+            const worksheet = workbook.Sheets[sheetName];
+
+            // Convert the sheet data to JSON
+            let jsonData = XLSX.utils.sheet_to_json(worksheet, {
+                raw: false, // Parse date as text
+                dateNF: 'yyyy-mm-dd', // Optional: specify a date format
+            });
+
+            // Handle date conversion explicitly (if needed)
+            jsonData = jsonData.map(row => {
+                const convertedRow = { ...row };
+
+                // Check if a date field exists and convert it
+                if (convertedRow.duedate && !isNaN(convertedRow.duedate)) {
+                    convertedRow.duedate = new Date(Math.round((convertedRow.duedate - 25569) * 86400 * 1000))
+                        .toISOString()
+                        .split('T')[0]; // Convert to yyyy-mm-dd
+                }
+
+                return convertedRow;
+            });
+
+            setExcelData(jsonData);
         };
 
         reader.readAsBinaryString(file);
