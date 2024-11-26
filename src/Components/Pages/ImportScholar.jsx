@@ -218,16 +218,16 @@ const ImportScholar = () => {
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-                                                                {importStudent.map((val, index) => (
-                                                                    <tr key={val.id}>
+                                                                {importStudent?.map((val, index) => (
+                                                                    <tr key={val?.id}>
                                                                         <td>{(currentPage - 1) * rowsPerPage + index + 1}</td>
-                                                                        <td>{val.mobile_no}</td>
-                                                                        <td>{val.sch_short_nm}</td>
-                                                                        <td>{val.student_name || "Not Available"}</td>
-                                                                        <td>{val.scholar_dob}</td>
-                                                                        <td>{val.scholar_email}</td>
-                                                                        <td>{val.noticeMsg}</td>
-                                                                        <td>{val.scholar_no}</td>
+                                                                        <td>{val?.mobile_no}</td>
+                                                                        <td>{val?.sch_short_nm}</td>
+                                                                        <td>{val?.student_name || "Not Available"}</td>
+                                                                        <td>{val?.scholar_dob}</td>
+                                                                        <td>{val?.scholar_email}</td>
+                                                                        <td>{val?.noticeMsg}</td>
+                                                                        <td>{val?.scholar_no}</td>
                                                                     </tr>
                                                                 ))}
                                                             </tbody>
