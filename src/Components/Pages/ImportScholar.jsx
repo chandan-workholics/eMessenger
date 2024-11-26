@@ -112,7 +112,6 @@ const ImportScholar = () => {
 
         reader.readAsBinaryString(file);
     };
-
     // Function to submit data to API
     const handleSubmit = async () => {
         if (excelData.length === 0) {
