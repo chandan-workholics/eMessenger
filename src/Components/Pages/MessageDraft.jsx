@@ -21,6 +21,7 @@ const MessageDraft = () => {
     const [chattype, setchattype] = useState('');
     const [deleteid, Setdeleteid] = useState('')
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [replyrequired, setReplyrequired] = useState(0);
 
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
@@ -102,6 +103,12 @@ const MessageDraft = () => {
 
 
     const handleInputOptionsChange = (e) => {
+        const selectedValue = e.target.value;
+        // Check for specific values and set reply required accordingly
+        if (selectedValue === "OPTION" || selectedValue === "CHECKBOX" || selectedValue === "TEXTBOX" || selectedValue === "TEXTAREA" || selectedValue === "CAMERA" || selectedValue === "FILE") {
+            setReplyrequired(1);  // Set reply required for specific options
+        } 
+
         const selectedOptions = [...e.target.selectedOptions].map(option => option.value);
         const newInputFields = selectedOptions.map(option => ({
             id: Date.now() + Math.random(),
@@ -208,7 +215,7 @@ const MessageDraft = () => {
                 msg_chat_type: chattype,
                 msg_sgroup_id: datas?.msg_sgroup_id,
                 is_reply_type: datas?.is_reply_type,
-                is_reply_required_any: msgCategory.includes('INPUT') ? 1 : 0,
+                is_reply_required_any: replyrequired === 1 ? 1 : 0,
                 is_active: datas?.is_active,
                 entry_by: datas?.entry_by,
                 school_id: school?.map((val) => val?.sch_id),
@@ -361,6 +368,7 @@ const MessageDraft = () => {
         setInputFields(reorderedFields);
     };
 
+    console.log(replyrequired)
     return (
         <>
             <div className="container-scroller">
