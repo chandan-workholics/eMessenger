@@ -7,27 +7,27 @@
 /* Background-Color */
 
 .bg-fff4de {
-  background-color: #fff4de;
+  background-color: #fff4de !important;
 }
 
 .bg-e2fff6 {
-  background-color: #e2fff6;
+  background-color: #e2fff6 !important;
 }
 
 .bg-ffe2e5 {
-  background-color: #ffe2e5;
+  background-color: #ffe2e5 !important;
 }
 
 .bg-e1f0ff {
-  background-color: #e1f0ff;
+  background-color: #e1f0ff !important;
 }
 
 .bg-E9F9FF {
-  background-color: #E9F9FF;
+  background-color: #E9F9FF  !important;
 }
 
 .bg-263F53 {
-  background-color: #263F53;
+  background-color: #263F53 !important;
 }
 
 /* Text-Color */
@@ -61,6 +61,16 @@
 
 .icon-data-list p {
   line-height: 15px;
+}
+
+.page-body-wrapper{
+  padding-top: 37px !important;
+}
+
+@media screen and (max-width: 991px) {
+  .sidebar-icon-only .sidebar-offcanvas {
+      left: 0px;
+  }
 }
 
 /* Modal CSS */
@@ -103,6 +113,7 @@
   border-radius: 10px;
   -webkit-box-shadow: inset 0 0 6px #cacaca;
 }
+
 
 
 /*================================== Dashboard Page CSS start ==================================*/
