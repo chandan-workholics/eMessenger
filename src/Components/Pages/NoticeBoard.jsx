@@ -159,6 +159,7 @@ const NoticeBoard = () => {
                 setDatas({
                     ...datas,
                     thumbnails: response?.data?.url,
+                    document_link: response?.data?.url,
                 });
             } else {
 
