@@ -256,7 +256,7 @@ const UserManagement = () => {
         { label: 'Is Active', key: 'isActive' },
         { label: 'Activated Time', key: 'activatedTime' },
         { label: 'Last Visit Time', key: 'lastVisitTime' },
-        { label: 'Mobile Id', key: 'mobileId' },
+
         { label: 'Mobile Type', key: 'mobileType' },
         { label: 'App Version', key: 'appVersion' },
         { label: 'Ip Address', key: 'ipAddress' }
@@ -268,14 +268,14 @@ const UserManagement = () => {
         isActive: val?.is_active,
         activatedTime: val?.active_datetime ? new Date(val?.active_datetime).toLocaleDateString('en-GB') : '', // Format date,
         lastVisitTime: val?.last_visit_on ? new Date(val?.last_visit_on).toLocaleDateString('en-GB') : '', // Format date,,
-        mobileId: val?.mobile_uuid,
-        mobileType: val?.model,
-        appVersion: val?.version,
-        ipAddress: val?.ip_address,
+
+        mobileType: val?.mobile_platform,
+        appVersion: val?.mobile_info,
+        ipAddress: val?.mobile_uuid,
     })) : [];
 
 
-   
+
     return (
         <>
             <div className="container-scroller">
