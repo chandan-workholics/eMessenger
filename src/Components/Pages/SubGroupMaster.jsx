@@ -126,7 +126,7 @@ const SubGroupMaster = () => {
         subGroupId: val?.msg_sgroup_id,
         msg_sgroup_name: val?.msg_sgroup_name,
         msg_group_name: val?.msg_group_mst?.msg_group_name,
-        is_active: val?.is_active === 1 ? true : false,
+        is_active: val?.is_active === 1 ? 'Yes' : 'No',
         action: (
             <div>
                 <button onClick={() => handleupdateGroup(val)} type="button" className="btn p-2">

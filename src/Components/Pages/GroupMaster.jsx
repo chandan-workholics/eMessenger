@@ -105,7 +105,7 @@ const GroupMaster = () => {
     const data = groupList ? groupList.map((val) => ({
         groupId: val?.msg_group_id,
         msg_group_name: val?.msg_group_name,
-        is_active: val?.is_active === 1 ? true : false,
+        is_active: val?.is_active === 1 ? 'Yes' : 'No',
         action: (
             <div>
                 <button onClick={() => handleupdateGroup(val)} type="button" className="btn p-2">
@@ -117,10 +117,7 @@ const GroupMaster = () => {
 
             </div>
         ),
-        addedBy: val.entry_by,
-        addedOn: val.entry_date,
-        editBy: val.entry_by,
-        editOn: val.edit_date,
+       
     })) : [];
 
     const handleupdateGroup = (val) => {

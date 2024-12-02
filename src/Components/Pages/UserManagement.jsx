@@ -183,7 +183,7 @@ const UserManagement = () => {
         userName: val?.adminuser_name,
         userType: val?.admin_type,
         mobileNo: val?.mobile_no,
-        isActive: true,
+        isActive: val?.is_active == 1 ? "Yes" : "No",
         action: (
             <div>
                 <button onClick={() => handleupdateUser(val)} type="button" className="btn p-2">
@@ -265,7 +265,7 @@ const UserManagement = () => {
     const appUserData = userData ? userData?.data?.map((val) => ({
         userId: val?.parents_id,
         mobileNo: val?.mobile_no,
-        isActive: val?.is_active,
+        isActive: val?.is_active == 1 ? "Yes" : "No",
         activatedTime: val?.active_datetime ? new Date(val?.active_datetime).toLocaleDateString('en-GB') : '', // Format date,
         lastVisitTime: val?.last_visit_on ? new Date(val?.last_visit_on).toLocaleDateString('en-GB') : '', // Format date,,
 

@@ -68,8 +68,8 @@ const FeesMaster = () => {
     const exportToExcel = () => {
         const ws = XLSX.utils.json_to_sheet(importStudenttwo);
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Scholar Data');
-        XLSX.writeFile(wb, 'Scholar_Data.xlsx');
+        XLSX.utils.book_append_sheet(wb, ws, 'Fees Data');
+        XLSX.writeFile(wb, 'Fees_Data.xlsx');
     };
 
     // upload excel data 
@@ -96,8 +96,8 @@ const FeesMaster = () => {
                 const convertedRow = { ...row };
 
                 // Check if a date field exists and convert it to DD/MM/YYYY
-                if (convertedRow.birth_dt) {
-                    const parsedDate = new Date(convertedRow.birth_dt);
+                if (convertedRow.duedate) {
+                    const parsedDate = new Date(convertedRow.duedate);
 
                     if (!isNaN(parsedDate)) {
                         // Format the date to DD/MM/YYYY
@@ -105,7 +105,7 @@ const FeesMaster = () => {
                         const month = String(parsedDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
                         const year = parsedDate.getFullYear();
 
-                        convertedRow.birth_dt = `${day}/${month}/${year}`;
+                        convertedRow.duedate = `${day}/${month}/${year}`;
                     }
                 }
 
@@ -151,6 +151,7 @@ const FeesMaster = () => {
         return <Loding />;
     }
 
+    console.log(excelData)
     return (
         <>
             <div className="container-scroller">

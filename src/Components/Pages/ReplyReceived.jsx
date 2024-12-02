@@ -65,14 +65,23 @@ const ReplyReceived = () => {
         school: val?.schools[0]?.sch_short_nm,
         studentId: val?.student_main_id,
         sent: val?.sendedMessage?.sended_date ? new Date(val?.sendedMessage?.sended_date).toLocaleDateString('en-GB') : '', // Format date
-        replyMsgId: val?.replyBodies?.replied_msg_id,
-        msgBodyId: val?.replyBodies?.msg_body_id,
-        msgType: val?.replyBodies?.msg_type,
-        dataReplyText: val?.replyBodies?.data_reply_text,
-        addedBy: val?.entry_by,
-        addedOn: val?.entry_date ? new Date(val?.entry_date).toLocaleDateString('en-GB') : '', // Format date
-        editBy: val.entry_by,
-        editOn: val?.edit_date ? new Date(val?.edit_date).toLocaleDateString('en-GB') : '', // Format date
+        replyMsgId: val?.replied_msg_id,
+        msgBodyId: val?.replyBodies?.map((val) => `${val?.replied_msg_d_id},`),
+
+        msgType: val?.replyBodies?.map((val) => `${val?.msg_type},`),
+        dataReplyText: val?.replyBodies?.map((reply) => {
+            const parsedData = reply?.data_reply_text ? JSON.parse(reply.data_reply_text) : {};
+            if (parsedData?.text) {
+                return parsedData.text;
+            } else if (parsedData?.imageURIsave) {
+                return parsedData.imageURIsave;
+            } else if (parsedData?.selected) {
+                return Object.values(parsedData.selected).join(", ");
+            }
+            return '';
+        }).join(", "),
+
+      
     })) : [];
 
     if (loading) {
