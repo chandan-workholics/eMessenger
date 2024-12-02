@@ -64,7 +64,7 @@ const NoticeBoard = () => {
             setLoading(true);
             const response = await callAPI.get(`./notice/getAllNoticeBoardDetail?page=${currentPage}&limit=${rowsPerPage}`);
             setNoticeBoardList(response.data.data || []);
-            setTotalPages(Math.ceil(response?.data?.pagination?.totalPages ));
+            setTotalPages(Math.ceil(response?.data?.pagination?.totalPages));
         } catch (error) {
             console.error('Error fetching notice data:', error.message);
         } finally {
@@ -403,10 +403,9 @@ const NoticeBoard = () => {
                                                 required
                                             >
                                                 <option value="" disabled>Please Select</option>
-                                                <option value="jpg">jpg</option>
-                                                <option value="doc">Doc</option>
-                                                <option value="png">png</option>
-                                                <option value="pdf">pdf</option>
+                                                <option value="PDF">PDF</option>
+                                                <option value="YOUTUBE">YOUTUBE</option>
+                                                <option value="IMAGE">IMAGE</option>
                                             </select>
                                         </div>
                                         <div className="form-group">
