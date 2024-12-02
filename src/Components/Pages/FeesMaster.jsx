@@ -88,18 +88,25 @@ const FeesMaster = () => {
             // Convert the sheet data to JSON
             let jsonData = XLSX.utils.sheet_to_json(worksheet, {
                 raw: false, // Parse date as text
-                dateNF: 'yyyy-mm-dd', // Optional: specify a date format
+                dateNF: 'dd-mm-yyyy', // Optional: specify a date format
             });
 
             // Handle date conversion explicitly (if needed)
             jsonData = jsonData.map(row => {
                 const convertedRow = { ...row };
 
-                // Check if a date field exists and convert it
-                if (convertedRow.duedate && !isNaN(convertedRow.duedate)) {
-                    convertedRow.duedate = new Date(Math.round((convertedRow.duedate - 25569) * 86400 * 1000))
-                        .toISOString()
-                        .split('T')[0]; // Convert to yyyy-mm-dd
+                // Check if a date field exists and convert it to DD/MM/YYYY
+                if (convertedRow.birth_dt) {
+                    const parsedDate = new Date(convertedRow.birth_dt);
+
+                    if (!isNaN(parsedDate)) {
+                        // Format the date to DD/MM/YYYY
+                        const day = String(parsedDate.getDate()).padStart(2, '0');
+                        const month = String(parsedDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+                        const year = parsedDate.getFullYear();
+
+                        convertedRow.birth_dt = `${day}/${month}/${year}`;
+                    }
                 }
 
                 return convertedRow;
@@ -110,6 +117,7 @@ const FeesMaster = () => {
 
         reader.readAsBinaryString(file);
     };
+
     // Function to submit data to API
     const handleSubmit = async () => {
         if (excelData.length === 0) {
