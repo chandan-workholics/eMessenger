@@ -54,7 +54,7 @@ const Login = () => {
         <>
             <div className="container-scroller">
                 <div className="container-fluid p-0 full-page-wrapper">
-                    <div className="content-wrapper d-flex align-items-center auth px-0">
+                    <div className="content-wrapper d-flex align-items-center auth px-0 "style={{minHeight:"100vh"}}>
                         <div className="container">
                             <div className="row w-100 mx-0">
                                 <div className="col-lg-7 d-lg-block d-none">
