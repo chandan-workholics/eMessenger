@@ -23,6 +23,7 @@ import WelcomeMsg from './Components/Pages/WelcomeMsg.jsx';
 import AppScrollNews from './Components/Pages/AppScrollNews.jsx';
 import FeesMaster from './Components/Pages/FeesMaster.jsx';
 import EditCreatedMsg from './Components/Pages/EditCreatedMsg.jsx';
+import SupportMaster from './Components/Pages/SupportMaster.jsx';
 
 interceptor();
 
@@ -51,6 +52,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/sub-group" element={<ProtectedRoute element={<SubGroupMaster />} />} />
         <Route path="/user-management" element={<ProtectedRoute element={<UserManagement />} />} />
         <Route path="/school-master" element={<ProtectedRoute element={<SchoolMaster />} />} />
+        <Route path="/support-master" element={<ProtectedRoute element={<SupportMaster />} />} />
         <Route path="/change-password" element={<ProtectedRoute element={<ChangePassword />} />} />
       </Route>
     </Routes>

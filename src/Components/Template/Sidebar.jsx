@@ -88,6 +88,12 @@ const Sidebar = () => {
                             <span className="menu-title mr-3">School</span>
                         </Link>
                     </li>
+                    <li className="nav-item">
+                        <Link className="nav-link" to="/support-master">
+                            <i className="fa-solid fa-graduation-cap menu-icon"></i>
+                            <span className="menu-title mr-3">Support</span>
+                        </Link>
+                    </li>
                     <p className="text-secondary menu-text mt-2 mb-0">
                         <span className=''>SECURITY</span> <i className="fas fa-ellipsis-h"></i>
                     </p>

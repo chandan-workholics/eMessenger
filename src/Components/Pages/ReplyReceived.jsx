@@ -56,33 +56,47 @@ const ReplyReceived = () => {
     ];
 
     // Table data
-    const data = messageList ? messageList.map((val, index) => ({
-        reqId: index + 1,
-        msgId: val?.msg_id,
-        received: val?.reply_date_time ? new Date(val?.reply_date_time).toLocaleDateString('en-GB') : '', // Format date
-        subject: val?.message?.subject_text || '',
-        mobileNo: val?.mobile_no,
-        school: val?.schools[0]?.sch_short_nm,
-        studentId: val?.student_main_id,
-        sent: val?.sendedMessage?.sended_date ? new Date(val?.sendedMessage?.sended_date).toLocaleDateString('en-GB') : '', // Format date
-        replyMsgId: val?.replied_msg_id,
-        msgBodyId: val?.replyBodies?.map((val) => `${val?.replied_msg_d_id},`),
+    const data = messageList
+        ? messageList.map((val, index) => ({
+            reqId: index + 1,
+            msgId: val?.msg_id,
+            received: val?.reply_date_time
+                ? new Date(val.reply_date_time).toLocaleDateString('en-GB')
+                : '', // Format date
+            subject: val?.message?.subject_text || '',
+            mobileNo: val?.mobile_no,
+            school: val?.schools?.[0]?.sch_short_nm || '',
+            studentId: val?.student_main_id,
+            sent: val?.sendedMessage?.sended_date
+                ? new Date(val.sendedMessage.sended_date).toLocaleDateString('en-GB')
+                : '', // Format date
+            replyMsgId: val?.replied_msg_id || '',
+            msgBodyId: val?.replyBodies?.map((body) => body?.replied_msg_d_id || '').join(', '),
+            msgType: val?.replyBodies?.map((body) => body?.msg_type || '').join(', '),
+            dataReplyText: val?.replyBodies
+                ?.map((reply) => {
+                    try {
+                        const rawText = reply?.data_reply_text || '';
+                        // Remove control characters
+                        const sanitizedText = rawText.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+                        const parsedData = sanitizedText ? JSON.parse(sanitizedText) : {};
+                        if (parsedData?.text) {
+                            return parsedData.text;
+                        } else if (parsedData?.imageURIsave) {
+                            return parsedData.imageURIsave;
+                        } else if (parsedData?.selected) {
+                            return Object.values(parsedData.selected).join(', ');
+                        }
+                        return '';
+                    } catch (error) {
+                        console.error('Error parsing JSON:', reply?.data_reply_text, error);
+                        return ''; // Fallback value
+                    }
+                })
+                .join(', '),
+        }))
+        : [];
 
-        msgType: val?.replyBodies?.map((val) => `${val?.msg_type},`),
-        dataReplyText: val?.replyBodies?.map((reply) => {
-            const parsedData = reply?.data_reply_text ? JSON.parse(reply.data_reply_text) : {};
-            if (parsedData?.text) {
-                return parsedData.text;
-            } else if (parsedData?.imageURIsave) {
-                return parsedData.imageURIsave;
-            } else if (parsedData?.selected) {
-                return Object.values(parsedData.selected).join(", ");
-            }
-            return '';
-        }).join(", "),
-
-      
-    })) : [];
 
     if (loading) {
         return <Loding />;
