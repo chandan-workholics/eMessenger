@@ -1,28 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../Template/Navbar';
 import Sidebar from '../Template/Sidebar';
-import SortableTable from '../Template/SortableTable';
+import Loding from '../Template/Loding';
 import callAPI from '../../commonMethod/api.js';
 import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const SendMsg = () => {
-    const location = useLocation()
-    const { id } = location.state
-    const navigate = useNavigate()
+    const location = useLocation();
+    const { id } = location.state;
+    const admin_id = sessionStorage.getItem('admin_id');
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [studentList, setStudentList] = useState([]);
-    const [totalPages, setTotalPages] = useState(0);
     const [selectedIds, setSelectedIds] = useState([]);
-    const rowsPerPage = 10;
+    const [searchQuery, setSearchQuery] = useState(''); // Add state for search query
 
     const fetchListData = async () => {
         try {
             setLoading(true);
-            const response = await callAPI.get(`./scholar/getlist_main_student_detail?page=1&limit=200`);
+            const response = await callAPI.get(`./scholar/getlist_main_student_detail_two`);
             setStudentList(response.data.data || []);
-            setTotalPages(Math.ceil(response?.data?.pagination?.totalRecords / rowsPerPage));
         } catch (error) {
             console.error('Error fetching student data:', error.message);
         } finally {
@@ -57,16 +56,15 @@ const SendMsg = () => {
             toast.error("No students selected!");
             return;
         }
-
         setLoading(true);
         setError(null);
         try {
             const idsString = selectedIds.join(',');
-            const response = await callAPI.get(`./msg/SentMsgToScholarData?new_msg_id=${id}&admin_id=115&selected_ids=${idsString}`);
+            const response = await callAPI.get(`./msg/SentMsgToScholarData?new_msg_id=${id}&admin_id=${admin_id}&selected_ids=${idsString}`);
 
             if (response.status === 201 || response.status === 200) {
                 toast.success("Message Sent Successfully");
-                navigate(-1)
+                navigate(-1);
             } else {
                 setError(response.message || 'Something went wrong');
             }
@@ -77,41 +75,15 @@ const SendMsg = () => {
         }
     };
 
-    // Table columns
-    const columns = [
-        { label: 'Select', key: 'checkbox' },
-        { label: 'Student Data Id', key: 'studentDataId' },
-        { label: 'Mobile No.', key: 'mobileNo' },
-        { label: 'School Short Name', key: 'schoolShortName' },
-        { label: 'Scholar No.', key: 'scholarNo' },
-        { label: 'Sended Id', key: 'sendedId' },
-        { label: 'Sended Date', key: 'sendedDate' },
-        { label: 'Is Seen', key: 'isSeen' },
-        { label: 'Is Reply Done', key: 'isReplyDone' },
-    ];
+    const filteredStudents = studentList.filter((student) =>
+        student.student_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        student.student_number.toString().includes(searchQuery) ||
+        student.student_family_mobile_number.includes(searchQuery)
+    );
 
-    // Table data
-    const data = studentList.map((val) => ({
-        checkbox: (
-            <div className="d-flex justify-content-center align-items-center">
-                <input
-                    type="checkbox"
-                    className="form-check-input"
-                    style={{ width: '18px', height: '18px' }}
-                    checked={selectedIds.includes(val.student_number)}
-                    onChange={() => handleCheckboxChange(val.student_number)}
-                />
-            </div>
-        ),
-        studentDataId: val?.student_main_id,
-        mobileNo: val?.student_family_mobile_number,
-        schoolShortName: 'Na',
-        scholarNo: val?.student_number,
-        sendedId: 'Na',
-        sendedDate: 'Na',
-        isSeen: 'Na',
-        isReplyDone: 'Na',
-    }));
+    if (loading) {
+        return <Loding />;
+    }
 
     return (
         <>
@@ -136,32 +108,87 @@ const SendMsg = () => {
                                 <div className="col-md-12 grid-margin stretch-card">
                                     <div className="card shadow-sm">
                                         <div className="card-body">
-                                            <p className="card-title">Send Message To</p>
+                                            <div className="">
+                                                {/* <p className="card-title">List</p> */}
+                                            </div>
                                             <div className="row">
+                                                <div className="col-12 col-lg-3 col-md-6 ml-auto">
+                                                    {/* Search input */}
+                                                    <input
+                                                        type="text"
+                                                        placeholder="Search..."
+                                                        value={searchQuery}
+                                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                                        className="form-control mb-3"
+                                                    />
+                                                </div>
                                                 <div className="col-12">
                                                     <div className="table-responsive">
-                                                        <SortableTable columns={columns} data={data} />
-                                                        <div className="d-flex justify-content-center align-items-center mt-3">
-                                                            <button
-                                                                className="btn btn-info mr-2"
-                                                                onClick={handleSelectAll}
-                                                            >
-                                                                Select All
-                                                            </button>
-                                                            <button
-                                                                className="btn btn-outline-info mr-2"
-                                                                onClick={handleDeselectAll}
-                                                            >
-                                                                Deselect All
-                                                            </button>
-                                                            <button className="btn btn-light mr-2">Cancel</button>
-                                                            <button
-                                                                type="submit"
-                                                                className="btn btn-success"
-                                                                onClick={handleSubmit}
-                                                            >
-                                                                Send Message
-                                                            </button>
+                                                        <div className="col-md-12 grid-margin stretch-card">
+                                                            <div className="card">
+                                                                {/* <p className="card-title">Student List</p> */}
+                                                                <div className="row">
+                                                                    <div className="col-12">
+                                                                        <div className="table-responsive">
+                                                                            <table className="table expandable-table table-hover" style={{ width: '100%' }}>
+                                                                                <thead>
+                                                                                    <tr>
+                                                                                        <th className='text-center'>Select</th>
+                                                                                        <th>Mobile No.</th>
+                                                                                        <th>Student Name.</th>
+                                                                                        <th>Student Id</th>
+                                                                                    </tr>
+                                                                                </thead>
+                                                                                <tbody>
+                                                                                    {filteredStudents.map((val, index) => (
+                                                                                        <tr key={val?.id}>
+                                                                                            <td>
+                                                                                                <div className="d-flex justify-content-center align-items-center">
+                                                                                                    <input
+                                                                                                        type="checkbox"
+                                                                                                        className="form-check-input"
+                                                                                                        style={{ width: '18px', height: '18px' }}
+                                                                                                        checked={selectedIds.includes(val.student_number)}
+                                                                                                        onChange={() => handleCheckboxChange(val.student_number)}
+                                                                                                    />
+                                                                                                </div>
+                                                                                            </td>
+                                                                                            <td>{val?.student_family_mobile_number}</td>
+                                                                                            <td>{val?.student_name}</td>
+                                                                                            <td>{val?.student_number}</td>
+                                                                                        </tr>
+                                                                                    ))}
+                                                                                </tbody>
+                                                                            </table>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div className="d-flex justify-content-center align-items-center mt-3">
+                                                                    <button
+                                                                        className="btn btn-info mr-2"
+                                                                        onClick={handleSelectAll}
+                                                                    >
+                                                                        Select All
+                                                                    </button>
+                                                                    <button
+                                                                        className="btn btn-outline-info mr-2"
+                                                                        onClick={handleDeselectAll}
+                                                                    >
+                                                                        Deselect All
+                                                                    </button>
+                                                                    <button className="btn btn-light mr-2">Cancel</button>
+                                                                    <button
+                                                                        type="submit"
+                                                                        className="btn btn-success"
+                                                                        onClick={handleSubmit}
+                                                                    >
+                                                                        Send Message
+                                                                    </button>
+                                                                </div>
+
+                                                                {error && <div className="alert alert-danger">{error}</div>}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>

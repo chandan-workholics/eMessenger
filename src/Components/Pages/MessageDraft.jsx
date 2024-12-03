@@ -22,7 +22,7 @@ const MessageDraft = () => {
     const [deleteid, Setdeleteid] = useState('')
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [replyrequired, setReplyrequired] = useState(0);
-
+    const admin_id = sessionStorage.getItem('admin_id');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const rowsPerPage = 10;
@@ -107,7 +107,7 @@ const MessageDraft = () => {
         // Check for specific values and set reply required accordingly
         if (selectedValue === "OPTION" || selectedValue === "CHECKBOX" || selectedValue === "TEXTBOX" || selectedValue === "TEXTAREA" || selectedValue === "CAMERA" || selectedValue === "FILE") {
             setReplyrequired(1);  // Set reply required for specific options
-        } 
+        }
 
         const selectedOptions = [...e.target.selectedOptions].map(option => option.value);
         const newInputFields = selectedOptions.map(option => ({
@@ -217,7 +217,7 @@ const MessageDraft = () => {
                 is_reply_type: datas?.is_reply_type,
                 is_reply_required_any: replyrequired === 1 ? 1 : 0,
                 is_active: datas?.is_active,
-                entry_by: datas?.entry_by,
+                entry_by: admin_id,
                 school_id: school?.map((val) => val?.sch_id),
                 five_mobile_number: parentsnumber,
                 message_body: messageBody
@@ -538,7 +538,7 @@ const MessageDraft = () => {
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
                                                                     <label htmlFor="msgCategory">Add Student <span className="text-danger">(dont select more then 5 numbers)</span> </label>
-                                                                    <Multiselect
+                                                                    {/* <Multiselect
                                                                         className='inputHead'
                                                                         onRemove={(event) => {
                                                                             const updatedParents = parentsnumber.filter(parent =>
@@ -564,7 +564,37 @@ const MessageDraft = () => {
                                                                             student_main_id: parent.student_main_id
                                                                         }))}
                                                                         showCheckbox
+                                                                    /> */}
+
+                                                                    <Multiselect
+                                                                        className='inputHead'
+                                                                        onRemove={(event) => {
+                                                                            const updatedParents = parentsnumber.filter(parent =>
+                                                                                !event.some(removed => removed.student_family_mobile_number === parent.student_family_mobile_number)
+                                                                            );
+                                                                            setParentsNumber(updatedParents);
+                                                                        }}
+                                                                        onSelect={(event) => {
+                                                                            if (event.length <= 5) {
+                                                                                const newParents = event.map(num => ({
+                                                                                    student_main_id: num.student_main_id,
+                                                                                    mobile_no: parseInt(num.student_family_mobile_number, 10)
+                                                                                }));
+                                                                                setParentsNumber(newParents);
+                                                                            } else {
+                                                                                alert("You can only select a maximum of 5 numbers.");
+                                                                                // Prevent state update if more than 5 numbers are selected
+                                                                            }
+                                                                        }}
+                                                                        options={number}
+                                                                        displayValue="student_family_mobile_number"
+                                                                        selectedValues={parentsnumber.map(parent => ({
+                                                                            student_family_mobile_number: parent.mobile_no,
+                                                                            student_main_id: parent.student_main_id
+                                                                        }))}
+                                                                        // showCheckbox
                                                                     />
+
                                                                 </div>
                                                             </div>
 
