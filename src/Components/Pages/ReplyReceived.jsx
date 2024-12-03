@@ -66,7 +66,7 @@ const ReplyReceived = () => {
             subject: val?.message?.subject_text || '',
             mobileNo: val?.mobile_no,
             school: val?.schools?.[0]?.sch_short_nm || '',
-            studentId: val?.student_main_id,
+            studentId: val?.student_number,
             sent: val?.sendedMessage?.sended_date
                 ? new Date(val.sendedMessage.sended_date).toLocaleDateString('en-GB')
                 : '', // Format date
