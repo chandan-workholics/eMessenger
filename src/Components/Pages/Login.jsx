@@ -8,6 +8,7 @@ const Login = () => {
     const [adminuser_name, setadminuser_name] = useState('');
     const [admin_password, setadmin_password] = useState('');
     const [error, setError] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
@@ -54,7 +55,7 @@ const Login = () => {
         <>
             <div className="container-scroller">
                 <div className="container-fluid p-0 full-page-wrapper">
-                    <div className="content-wrapper d-flex align-items-center auth px-0 "style={{minHeight:"100vh"}}>
+                    <div className="content-wrapper d-flex align-items-center auth px-0 " style={{ minHeight: "100vh" }}>
                         <div className="container">
                             <div className="row w-100 mx-0">
                                 <div className="col-lg-7 d-lg-block d-none">
@@ -79,15 +80,24 @@ const Login = () => {
                                                     onChange={(e) => setadminuser_name(e.target.value)}
                                                 />
                                             </div>
-                                            <div className="form-group">
+                                            <div className="form-group position-relative">
                                                 <input
-                                                    type="admin_password"
+                                                    type={showPassword ? "text" : "password"}
                                                     className="form-control form-control-lg"
                                                     id="exampleInputadmin_password1"
                                                     placeholder="Enter password"
                                                     value={admin_password}
                                                     onChange={(e) => setadmin_password(e.target.value)}
+                                                    required
                                                 />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setShowPassword(!showPassword)}
+                                                    className="position-absolute mt-3 mr-3 border-0 bg-white"
+                                                    style={{ top: "0", right: "0" }}
+                                                >
+                                                    {showPassword ? <i className="fa-solid fa-eye-slash text-secondary"></i> : <i className="fa-solid fa-eye text-secondary"></i>}
+                                                </button>
                                             </div>
                                             <div className="mt-3">
                                                 <button type="submit" className="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn">
