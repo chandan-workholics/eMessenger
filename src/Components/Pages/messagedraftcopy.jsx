@@ -8,6 +8,7 @@ import Multiselect from "multiselect-react-dropdown";
 import Loding from '../Template/Loding';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const MessageDraft = () => {
     const [loading, setLoading] = useState(true);
@@ -20,7 +21,8 @@ const MessageDraft = () => {
     const [chattype, setchattype] = useState('');
     const [deleteid, Setdeleteid] = useState('')
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
+    const [replyrequired, setReplyrequired] = useState(0);
+    const admin_id = sessionStorage.getItem('admin_id');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const rowsPerPage = 10;
@@ -88,11 +90,36 @@ const MessageDraft = () => {
         setDatas({ ...datas, [name]: value })
     }
 
-    const [displayFields, setDisplayFields] = useState([]);
+
     const [inputFields, setInputFields] = useState([]);
-    const [chatFields, setChatFields] = useState([]);
-    const [groupchatFields, setGroupChatFields] = useState([]);
-    const [msgCategory, setMsgCategory] = useState('');
+    const [msgCategory, setMsgCategory] = useState();
+
+
+    const handleCategoryChange = (event) => {
+        const { value } = event.target;
+        setchattype(value); // Set the chat type based on selected value
+        setMsgCategory([value]); // Update `msgCategory` to contain only the selected value
+    };
+
+
+    const handleInputOptionsChange = (e) => {
+        const selectedValue = e.target.value;
+        // Check for specific values and set reply required accordingly
+        if (selectedValue === "OPTION" || selectedValue === "CHECKBOX" || selectedValue === "TEXTBOX" || selectedValue === "TEXTAREA" || selectedValue === "CAMERA" || selectedValue === "FILE") {
+            setReplyrequired(1);  // Set reply required for specific options
+        }
+
+        const selectedOptions = [...e.target.selectedOptions].map(option => option.value);
+        const newInputFields = selectedOptions.map(option => ({
+            id: Date.now() + Math.random(),
+            type: option,
+            title: '',
+            options: '',
+            placeholder: '',
+        }));
+        setInputFields([...inputFields, ...newInputFields]);
+        e.target.value = '';
+    };
 
     const handleImageChange = async (e, fieldId) => {
         const formData = new FormData();
@@ -112,10 +139,10 @@ const MessageDraft = () => {
             if (fetchdata.status === 200) {
                 toast.success("Data Uploaded Successfully");
                 const imageUrl = fetchdata.data.url;
-                const updatedFields = displayFields.map((field) =>
+                const updatedFields = inputFields.map((field) =>
                     field.id === fieldId ? { ...field, linkValue: imageUrl } : field
                 );
-                setDisplayFields(updatedFields);
+                setInputFields(updatedFields);
             } else {
                 toast.error("Failed to load");
             }
@@ -125,211 +152,20 @@ const MessageDraft = () => {
         }
     };
 
-
-    // const handleCategoryChange = (event) => {
-    //     const { value, checked } = event.target;
-    //     setchattype(event.target.value)
-    //     if (checked) {
-    //         setMsgCategory(prevCategories => [...prevCategories, value]);
-    //     } else {
-    //         setMsgCategory(prevCategories => prevCategories.filter(category => category !== value));
-    //     }
-    // };
-
-    const handleCategoryChange = (event) => {
-        const { value } = event.target;
-        setchattype(value); // Set the chat type based on selected value
-        setMsgCategory([value]); // Update `msgCategory` to contain only the selected value
+    const deleteField = (id) => {
+        setInputFields(inputFields.filter(field => field.id !== id));
     };
 
 
-    const handleDisplayOptionsChange = (e) => {
-        const selectedOptions = [...e.target.selectedOptions].map(option => option.value);
-        const newDisplayFields = selectedOptions.map(option => ({
-            id: Date.now() + Math.random(),
-            type: option,
-            value: '',
-        }));
-        setDisplayFields([...displayFields, ...newDisplayFields]);
-        e.target.value = '';
-    };
-
-    const handleInputOptionsChange = (e) => {
-        const selectedOptions = [...e.target.selectedOptions].map(option => option.value);
-        const newInputFields = selectedOptions.map(option => ({
-            id: Date.now() + Math.random(),
-            type: option,
-            title: '',
-            options: '',
-            placeholder: '',
-        }));
-        setInputFields([...inputFields, ...newInputFields]);
-        e.target.value = '';
-    };
-
-    const handleChatOptionsChange = (e) => {
-        const selectedOptions = [...e.target.selectedOptions].map(option => option.value);
-        const newChatFields = selectedOptions.map(option => ({
-            id: Date.now() + Math.random(),
-            type: option,
-            title: '',
-            options: '',
-            placeholder: '',
-        }));
-        setChatFields([...chatFields, ...newChatFields]);
-        e.target.value = '';
-    };
-
-    const handleGroupChatOptionsChange = (e) => {
-        const selectedOptions = [...e.target.selectedOptions].map(option => option.value);
-        const newGroupChatFields = selectedOptions.map(option => ({
-            id: Date.now() + Math.random(),
-            type: option,
-            title: '',
-            options: '',
-            placeholder: '',
-        }));
-        setGroupChatFields([...groupchatFields, ...newGroupChatFields]);
-        e.target.value = '';
-    };
-
-    const deleteField = (id, fieldType) => {
-        if (fieldType === 'display') {
-            setDisplayFields(displayFields.filter(field => field.id !== id));
-        } else if (fieldType === 'input') {
-            setInputFields(inputFields.filter(field => field.id !== id));
-        }
-        else if (fieldType === 'chat') {
-            setChatFields(chatFields.filter(field => field.id !== id));
-        }
-        else if (fieldType === 'groupchat') {
-            setGroupChatFields(groupchatFields.filter(field => field.id !== id));
-        }
-    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
         const messageBody = [
-            ...displayFields.map((field, index) => {
-                let dataText = {};
-                switch (field.type) {
-                    case 'TITLE':
-                        dataText = { title: field.value || '' };
-                        break;
-                    case 'TEXT':
-                        dataText = { text: field.value || '' };
-                        break;
-                    case 'LINK':
-                        dataText = { link: field.value || '' };
-                        break;
-                    case 'YOUTUBE':
-                        dataText = { link: field.value || '' };
-                        break;
-                    case 'IMAGE':
-                        dataText = { link: field.value || field.linkValue || '' };
-                        break;
-                    default:
-                        break;
-                }
-                return {
-                    msg_type: `${field.type}-DISPLAY`,
-                    data_text: JSON.stringify(dataText),
-                    order_number: index + 1,
-                    is_reply_required: 0,
-                };
-            }),
             ...inputFields.map((field, index) => {
                 let dataText = {};
                 switch (field.type) {
                     case 'TITLE':
-                        dataText = { title: field.value || '' };
-                        break;
-                    case 'TEXT':
-                        dataText = { text: field.value || '' };
-                        break;
-                    case 'LINK':
-                        dataText = { link: field.value || '' };
-                        break;
-                    case 'YOUTUBE':
-                        dataText = { link: field.value || '' };
-                        break;
-                    case 'IMAGE':
-                        dataText = { link: field.value || field.linkValue || '' };
-                        break;
-                    case 'OPTION':
-                        dataText = { title: field.title || '', options: field.options || '' };
-                        break;
-                    case 'CHECKBOX':
-                        dataText = { title: field.title || '', options: field.options || '' };
-                        break;
-                    case 'TEXTBOX':
-                        dataText = { title: field.title || '', placeholder: field.placeholder || '' };
-                        break;
-                    case 'TEXTAREA':
-                        dataText = { title: field.title || '', placeholder: field.placeholder || '' };
-                        break;
-                    case 'CAMERA':
-                    case 'File':
-                        dataText = { title: field.title || '' };
-                        break;
-                    default:
-                        break;
-                }
-                return {
-                    msg_type: `${field.type}-INPUT`,
-                    data_text: JSON.stringify(dataText),
-                    order_number: displayFields.length + index + 1,
-                    is_reply_required: 1,
-                };
-            }),
-            ...chatFields.map((field, index) => {
-                let dataText = {};
-                switch (field.type) {
-                    case 'TITLE':
-                        dataText = { title: field.title || 'heelo' };
-                        break;
-                    case 'TEXT':
-                        dataText = { text: field.title || '' };
-                        break;
-                    case 'LINK':
-                        dataText = { link: field.title || '' };
-                        break;
-                    case 'YOUTUBE':
-                        dataText = { link: field.title || '' };
-                        break;
-                    case 'IMAGE':
-                        dataText = { link: field.title || field.linkValue || '' };
-                        break;
-                    case 'OPTION':
-                        dataText = { title: field.title || '', options: field.options || '' };
-                        break;
-                    case 'CHECKBOX':
-                        dataText = { title: field.title || '', options: field.options || '' };
-                        break;
-                    case 'TEXTBOX':
-                        dataText = { title: field.title || '', placeholder: field.placeholder || '' };
-                        break;
-                    case 'TEXTAREA':
-                        dataText = { title: field.title || '', placeholder: field.placeholder || '' };
-                        break;
-                    case 'CAMERA':
-                    case 'File':
-                        dataText = { title: field.title || '' };
-                        break;
-                    default:
-                        break;
-                }
-                return {
-                    msg_type: `${field.type}-INDIVIDUALCHAT`,
-                    data_text: JSON.stringify(dataText),
-                    order_number: chatFields.length + index + 1,
-                    is_reply_required: 1,
-                };
-            }),
-            ...groupchatFields.map((field, index) => {
-                let dataText = {};
-                switch (field.type) {
-                    case 'TITLE':
                         dataText = { title: field.title || '' };
                         break;
                     case 'TEXT':
@@ -342,7 +178,7 @@ const MessageDraft = () => {
                         dataText = { link: field.title || '' };
                         break;
                     case 'IMAGE':
-                        dataText = { link: field.title || field.linkValue || '' };
+                        dataText = { link: field.linkValue || '' };
                         break;
                     case 'OPTION':
                         dataText = { title: field.title || '', options: field.options || '' };
@@ -364,9 +200,9 @@ const MessageDraft = () => {
                         break;
                 }
                 return {
-                    msg_type: `${field.type}-GROUPCHAT`,
+                    msg_type: `${field.type}-${msgCategory}`,
                     data_text: JSON.stringify(dataText),
-                    order_number: groupchatFields.length + index + 1,
+                    order_number: inputFields.length + index + 1,
                     is_reply_required: 1,
                 };
             }),
@@ -379,16 +215,16 @@ const MessageDraft = () => {
                 msg_chat_type: chattype,
                 msg_sgroup_id: datas?.msg_sgroup_id,
                 is_reply_type: datas?.is_reply_type,
-                is_reply_required_any: msgCategory.includes('INPUT') ? 1 : 0,
+                is_reply_required_any: replyrequired === 1 ? 1 : 0,
                 is_active: datas?.is_active,
-                entry_by: datas?.entry_by,
+                entry_by: admin_id,
                 school_id: school?.map((val) => val?.sch_id),
                 five_mobile_number: parentsnumber,
                 message_body: messageBody
             });
             if (response.status >= 200 && response.status < 300) {
                 toast.success('Message submitted successfully');
-                setDisplayFields([]);
+
                 setInputFields([]);
                 setDatas('');
                 fetchListData();
@@ -468,7 +304,7 @@ const MessageDraft = () => {
         ),
         action: (
             <div>
-                {val?.is_active === 1 ? <Link to={`/send-message/${val?.msg_id}`}> <i className="fa-solid fa-paper-plane text-success mr-3"></i></Link> : ''}
+                {val?.is_active === 1 ? <Link to={`/send-message`} state={{ id: val?.msg_id }}> <i className="fa-solid fa-paper-plane text-success mr-3"></i></Link> : ''}
                 <Link to={`/edit-created-message`} state={{ id: val?.msg_id }} className="btn p-2">
                     <i className="fa-solid fa-pen-to-square text-warning"></i>
                 </Link>
@@ -518,6 +354,21 @@ const MessageDraft = () => {
         });
     }
 
+
+    // Handle the drag-and-drop action
+    const onDragEnd = (result) => {
+        const { destination, source } = result;
+
+        if (!destination) return;
+
+        const reorderedFields = Array.from(inputFields);
+        const [movedItem] = reorderedFields.splice(source.index, 1);
+        reorderedFields.splice(destination.index, 0, movedItem);
+
+        setInputFields(reorderedFields);
+    };
+
+    console.log(replyrequired)
     return (
         <>
             <div className="container-scroller">
@@ -572,12 +423,12 @@ const MessageDraft = () => {
                                                         <form className="forms-sample" onSubmit={handleSubmit}>
 
                                                             <div className="row">
-                                                                <div className="col-md-4 form-group">
+                                                                <div className="col-md-12 form-group">
                                                                     <label htmlFor="msgCategory">
                                                                         Message Category<span className="text-danger">*</span>
                                                                     </label>
-                                                                    <div className="d-flex justify-content-between form-control border-0">
-                                                                        <div className="custom-control custom-radio">
+                                                                    <div className="d-flex form-control border-0 px-0">
+                                                                        <div className="custom-control custom-radio mr-3">
                                                                             <input
                                                                                 type="radio"
                                                                                 className="custom-control-input"
@@ -590,7 +441,7 @@ const MessageDraft = () => {
                                                                                 Chat
                                                                             </label>
                                                                         </div>
-                                                                        <div className="custom-control custom-radio">
+                                                                        <div className="custom-control custom-radio mr-3">
                                                                             <input
                                                                                 type="radio"
                                                                                 className="custom-control-input"
@@ -603,7 +454,7 @@ const MessageDraft = () => {
                                                                                 Group Chat
                                                                             </label>
                                                                         </div>
-                                                                        <div className="custom-control custom-radio">
+                                                                        <div className="custom-control custom-radio mr-3">
                                                                             <input
                                                                                 type="radio"
                                                                                 className="custom-control-input"
@@ -616,7 +467,7 @@ const MessageDraft = () => {
                                                                                 Display
                                                                             </label>
                                                                         </div>
-                                                                        <div className="custom-control custom-radio">
+                                                                        <div className="custom-control custom-radio mr-3">
                                                                             <input
                                                                                 type="radio"
                                                                                 className="custom-control-input"
@@ -687,7 +538,7 @@ const MessageDraft = () => {
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
                                                                     <label htmlFor="msgCategory">Add Student <span className="text-danger">(dont select more then 5 numbers)</span> </label>
-                                                                    <Multiselect
+                                                                    {/* <Multiselect
                                                                         className='inputHead'
                                                                         onRemove={(event) => {
                                                                             const updatedParents = parentsnumber.filter(parent =>
@@ -698,8 +549,8 @@ const MessageDraft = () => {
                                                                         onSelect={(event) => {
                                                                             if (event.length <= 5) {
                                                                                 const newParents = event.map(num => ({
-                                                                                    student_main_id: num.student_main_id, // Make sure this key exists in your options
-                                                                                    mobile_no: parseInt(num.student_family_mobile_number, 10) // Ensure this key exists
+                                                                                    student_main_id: num.student_main_id,
+                                                                                    mobile_no: parseInt(num.student_family_mobile_number, 10)
                                                                                 }));
                                                                                 setParentsNumber(newParents);
                                                                             } else {
@@ -709,88 +560,52 @@ const MessageDraft = () => {
                                                                         options={number}
                                                                         displayValue="student_family_mobile_number"
                                                                         selectedValues={parentsnumber.map(parent => ({
-                                                                            student_family_mobile_number: parent.mobile_no, // Ensure the display value matches
-                                                                            student_main_id: parent.student_main_id // Include main ID if needed
+                                                                            student_family_mobile_number: parent.mobile_no,
+                                                                            student_main_id: parent.student_main_id
                                                                         }))}
                                                                         showCheckbox
+                                                                    /> */}
+
+                                                                    <Multiselect
+                                                                        className='inputHead'
+                                                                        onRemove={(event) => {
+                                                                            const updatedParents = parentsnumber.filter(parent =>
+                                                                                !event.some(removed => removed.student_family_mobile_number === parent.student_family_mobile_number)
+                                                                            );
+                                                                            setParentsNumber(updatedParents);
+                                                                        }}
+                                                                        onSelect={(event) => {
+                                                                            if (event.length <= 5) {
+                                                                                const newParents = event.map(num => ({
+                                                                                    student_main_id: num.student_main_id,
+                                                                                    mobile_no: parseInt(num.student_family_mobile_number, 10)
+                                                                                }));
+                                                                                setParentsNumber(newParents);
+                                                                            } else {
+                                                                                alert("You can only select a maximum of 5 numbers.");
+                                                                                // Prevent state update if more than 5 numbers are selected
+                                                                            }
+                                                                        }}
+                                                                        options={number}
+                                                                        displayValue="student_family_mobile_number"
+                                                                        selectedValues={parentsnumber.map(parent => ({
+                                                                            student_family_mobile_number: parent.mobile_no,
+                                                                            student_main_id: parent.student_main_id
+                                                                        }))}
+                                                                        // showCheckbox
                                                                     />
+
                                                                 </div>
                                                             </div>
 
                                                             {/* Conditionally render multi-select inputs based on the selected message category */}
 
                                                             <div className="row">
-                                                                {msgCategory.includes('INDIVIDUALCHAT') && (
+                                                                {msgCategory && (
                                                                     <div className="col-md-6 form-group">
                                                                         <label htmlFor="inputOptions">Chat Options</label>
-                                                                        <select className="form-control" id="chatOptions" onChange={handleChatOptionsChange}>
-                                                                            <option value="" selected>Select Input Options</option>
-                                                                            <option value="" disabled></option>
-                                                                            <hr className='py-3' />
-                                                                            <option value="" disabled></option>
-                                                                            <option value="TITLE">Title Display</option>
-                                                                            <option value="TEXT">Text Display</option>
-                                                                            <option value="LINK">Link Display</option>
-                                                                            <option value="YOUTUBE">Youtube Display</option>
-                                                                            <option value="IMAGE">Image Display</option>
-                                                                            <option value="" disabled></option>
-                                                                            <hr className='py-3' />
-                                                                            <option value="" disabled></option>
-                                                                            <option value="OPTION">Option Input</option>
-                                                                            <option value="CHECKBOX">Checkbox Input</option>
-                                                                            <option value="TEXTBOX">Textbox Input</option>
-                                                                            <option value="TEXTAREA">Textarea Input</option>
-                                                                            <option value="CAMERA">Camera Input</option>
-                                                                            <option value="FILE">File Input</option>
-                                                                        </select>
-                                                                    </div>
-                                                                )}
-                                                                {msgCategory.includes('GROUPCHAT') && (
-                                                                    <div className="col-md-6 form-group">
-                                                                        <label htmlFor="inputOptions">Group Chat Options</label>
-                                                                        <select className="form-control" id="groupchatOptions" onChange={handleGroupChatOptionsChange}>
-                                                                            <option value="" selected>Select Input Options</option>
-                                                                            <option value="" disabled></option>
-                                                                            <hr className='py-3' />
-                                                                            <option value="" disabled></option>
-                                                                            <option value="TITLE">Title Display</option>
-                                                                            <option value="TEXT">Text Display</option>
-                                                                            <option value="LINK">Link Display</option>
-                                                                            <option value="YOUTUBE">Youtube Display</option>
-                                                                            <option value="IMAGE">Image Display</option>
-                                                                            <option value="" disabled></option>
-                                                                            <hr className='py-3' />
-                                                                            <option value="" disabled></option>
-                                                                            <option value="OPTION">Option Input</option>
-                                                                            <option value="CHECKBOX">Checkbox Input</option>
-                                                                            <option value="TEXTBOX">Textbox Input</option>
-                                                                            <option value="TEXTAREA">Textarea Input</option>
-                                                                            <option value="CAMERA">Camera Input</option>
-                                                                            <option value="FILE">File Input</option>
-                                                                        </select>
-                                                                    </div>
-                                                                )}
-                                                                {msgCategory.includes('DISPLAY') && (
-                                                                    <div className="col-md-6 form-group">
-                                                                        <label htmlFor="displayOptions">Display Options</label>
-                                                                        <select className="form-control" id="displayOptions" onChange={handleDisplayOptionsChange}>
-                                                                            <option value="" selected>Select Display Options</option>
-                                                                            <option value="" disabled></option>
-                                                                            <hr className='py-3' />
-                                                                            <option value="" disabled></option>
-                                                                            <option value="TITLE">Title Display</option>
-                                                                            <option value="TEXT">Text Display</option>
-                                                                            <option value="LINK">Link Display</option>
-                                                                            <option value="YOUTUBE">Youtube Display</option>
-                                                                            <option value="IMAGE">Image Display</option>
-                                                                        </select>
-                                                                    </div>
-                                                                )}
-                                                                {msgCategory.includes('INPUT') && (
-                                                                    <div className="col-md-6 form-group">
-                                                                        <label htmlFor="inputOptions">Input Options</label>
                                                                         <select className="form-control" id="inputOptions" onChange={handleInputOptionsChange}>
-                                                                            <option value="" selected>Select Input Options</option>
+                                                                            <option value="" selected>Select Options</option>
                                                                             <option value="" disabled></option>
                                                                             <hr className='py-3' />
                                                                             <option value="" disabled></option>
@@ -800,14 +615,18 @@ const MessageDraft = () => {
                                                                             <option value="YOUTUBE">Youtube Display</option>
                                                                             <option value="IMAGE">Image Display</option>
                                                                             <option value="" disabled></option>
-                                                                            <hr className='py-3' />
-                                                                            <option value="" disabled></option>
-                                                                            <option value="OPTION">Option Input</option>
-                                                                            <option value="CHECKBOX">Checkbox Input</option>
-                                                                            <option value="TEXTBOX">Textbox Input</option>
-                                                                            <option value="TEXTAREA">Textarea Input</option>
-                                                                            <option value="CAMERA">Camera Input</option>
-                                                                            <option value="FILE">File Input</option>
+                                                                            {!msgCategory.includes('DISPLAY') && (
+                                                                                <>
+                                                                                    <hr className='py-3' />
+                                                                                    <option value="" disabled></option>
+                                                                                    <option value="OPTION">Option Input</option>
+                                                                                    <option value="CHECKBOX">Checkbox Input</option>
+                                                                                    <option value="TEXTBOX">Textbox Input</option>
+                                                                                    <option value="TEXTAREA">Textarea Input</option>
+                                                                                    <option value="CAMERA">Camera Input</option>
+                                                                                    <option value="FILE">File Input</option>
+                                                                                </>
+                                                                            )}
                                                                         </select>
                                                                     </div>
                                                                 )}
@@ -815,264 +634,120 @@ const MessageDraft = () => {
 
                                                             <div className="row">
                                                                 <div className="col-md-6">
-                                                                    {displayFields.map((field) => (
-                                                                        <div key={field.id} className="col-12 form-group">
-                                                                            <label>{field.type} DISPLAY</label>
-                                                                            <div className="d-flex align-items-end">
-                                                                                <input
-                                                                                    type="text"
-                                                                                    className="form-control"
-                                                                                    placeholder={`Enter ${field.type}`}
-                                                                                    value={field.value || ''}
-                                                                                    onChange={(e) => {
-                                                                                        const updatedFields = displayFields.map((f) =>
-                                                                                            f.id === field.id ? { ...f, value: e.target.value } : f
-                                                                                        );
-                                                                                        setDisplayFields(updatedFields);
-                                                                                    }}
-                                                                                />
 
-                                                                                {(field.type === 'IMAGE') && (
-                                                                                    <input
-                                                                                        type="file"
-                                                                                        className="form-control"
-                                                                                        accept="image/*"
-                                                                                        onChange={(e) => handleImageChange(e, field.id)} // Pass field ID to handleImageChange
-                                                                                    />
-                                                                                )}
-                                                                                <button type="button" className="btn border-0" onClick={() => deleteField(field.id, 'display')}>
-                                                                                    <i className="fa-solid fa-trash-can text-danger"></i>
-                                                                                </button>
-                                                                            </div>
-                                                                        </div>
-                                                                    ))}
-
-                                                                    {inputFields.map((field) => (
-                                                                        <div key={field.id} className="col-12 form-group">
-                                                                            <label>{field.type} INPUT</label>
-                                                                            <div className="d-flex flex-column align-items-end">
-
-                                                                                <input
-                                                                                    type="text"
-                                                                                    className="form-control mb-2"
-                                                                                    placeholder={`Enter title for ${field.type}`}
-                                                                                    value={field.title || ''}
-                                                                                    onChange={(e) => {
-                                                                                        const updatedFields = inputFields.map((f) =>
-                                                                                            f.id === field.id ? { ...f, title: e.target.value } : f
-                                                                                        );
-                                                                                        setInputFields(updatedFields);
-                                                                                    }}
-                                                                                />
-
-
-                                                                                {(field.type === 'OPTION' || field.type === 'CHECKBOX') && (
-                                                                                    <input
-                                                                                        type="text"
-                                                                                        className="form-control mb-2"
-                                                                                        placeholder={`Enter options for ${field.type} (e.g. Option1;Option2)`}
-                                                                                        value={field.options || ''}
-                                                                                        onChange={(e) => {
-                                                                                            const updatedFields = inputFields.map((f) =>
-                                                                                                f.id === field.id ? { ...f, options: e.target.value } : f
-                                                                                            );
-                                                                                            setInputFields(updatedFields);
-                                                                                        }}
-                                                                                    />
-                                                                                )}
-
-                                                                                {field.type === 'TEXTBOX' && (
-                                                                                    <input
-                                                                                        type="text"
-                                                                                        className="form-control mb-2"
-                                                                                        placeholder="Enter placeholder for Textbox"
-                                                                                        value={field.placeholder || ''}
-                                                                                        onChange={(e) => {
-                                                                                            const updatedFields = inputFields.map((f) =>
-                                                                                                f.id === field.id ? { ...f, placeholder: e.target.value } : f
-                                                                                            );
-                                                                                            setInputFields(updatedFields);
-                                                                                        }}
-                                                                                    />
-                                                                                )}
-
-                                                                                {field.type === 'TEXTAREA' && (
-                                                                                    <input
-                                                                                        type="text"
-                                                                                        className="form-control mb-2"
-                                                                                        placeholder="Enter placeholder for Textarea"
-                                                                                        value={field.placeholder || ''}
-                                                                                        onChange={(e) => {
-                                                                                            const updatedFields = inputFields.map((f) =>
-                                                                                                f.id === field.id ? { ...f, placeholder: e.target.value } : f
-                                                                                            );
-                                                                                            setInputFields(updatedFields);
-                                                                                        }}
-                                                                                    />
-                                                                                )}
-
-                                                                                <button
-                                                                                    type="button"
-                                                                                    className="btn border-0 mt-2"
-                                                                                    onClick={() => deleteField(field.id, 'input')}
+                                                                    <DragDropContext onDragEnd={onDragEnd}>
+                                                                        <Droppable droppableId="droppable">
+                                                                            {(provided) => (
+                                                                                <div
+                                                                                    className="row"
+                                                                                    ref={provided.innerRef}
+                                                                                    {...provided.droppableProps}
                                                                                 >
-                                                                                    <i className="fa-solid fa-trash-can text-danger"></i>
-                                                                                </button>
-                                                                            </div>
-                                                                        </div>
-                                                                    ))}
+                                                                                    {inputFields.map((field, index) => (
+                                                                                        <Draggable key={field.id} draggableId={field.id.toString()} index={index}>
+                                                                                            {(provided) => (
+                                                                                                <div
+                                                                                                    ref={provided.innerRef}
+                                                                                                    {...provided.draggableProps}
+                                                                                                    {...provided.dragHandleProps}
+                                                                                                    className="col-12 form-group"
+                                                                                                >
+                                                                                                    <label>{field.type}</label>
+                                                                                                    <div className="d-flex flex-column align-items-start">
+                                                                                                        <input
+                                                                                                            type="text"
+                                                                                                            className="form-control mb-2"
+                                                                                                            placeholder={`Enter title for ${field.type}`}
+                                                                                                            value={field.title || ''}
+                                                                                                            onChange={(e) => {
+                                                                                                                const updatedFields = inputFields.map((f) =>
+                                                                                                                    f.id === field.id ? { ...f, title: e.target.value } : f
+                                                                                                                );
+                                                                                                                setInputFields(updatedFields);
+                                                                                                            }}
+                                                                                                        />
 
-                                                                    {chatFields.map((field) => (
-                                                                        <div key={field.id} className="col-12 form-group">
-                                                                            <label>{field.type} INPUT</label>
-                                                                            <div className="d-flex flex-column align-items-start">
+                                                                                                        {/* Handling 'OPTION' or 'CHECKBOX' input types */}
+                                                                                                        {(field.type === 'OPTION' || field.type === 'CHECKBOX') && (
+                                                                                                            <input
+                                                                                                                type="text"
+                                                                                                                className="form-control mb-2"
+                                                                                                                placeholder={`Enter options for ${field.type} (e.g. Option1;Option2)`}
+                                                                                                                value={field.options || ''}
+                                                                                                                onChange={(e) => {
+                                                                                                                    const updatedFields = inputFields.map((f) =>
+                                                                                                                        f.id === field.id ? { ...f, options: e.target.value } : f
+                                                                                                                    );
+                                                                                                                    setInputFields(updatedFields);
+                                                                                                                }}
+                                                                                                            />
+                                                                                                        )}
 
-                                                                                <input
-                                                                                    type="text"
-                                                                                    className="form-control mb-2"
-                                                                                    placeholder={`Enter title for ${field.type}`}
-                                                                                    value={field.title || ''}
-                                                                                    onChange={(e) => {
-                                                                                        const updatedFields = chatFields.map((f) =>
-                                                                                            f.id === field.id ? { ...f, title: e.target.value } : f
-                                                                                        );
-                                                                                        setChatFields(updatedFields);
-                                                                                    }}
-                                                                                />
+                                                                                                        {/* Handling 'TEXTBOX' input type */}
+                                                                                                        {field.type === 'TEXTBOX' && (
+                                                                                                            <input
+                                                                                                                type="text"
+                                                                                                                className="form-control mb-2"
+                                                                                                                placeholder="Enter placeholder for Textbox"
+                                                                                                                value={field.placeholder || ''}
+                                                                                                                onChange={(e) => {
+                                                                                                                    const updatedFields = inputFields.map((f) =>
+                                                                                                                        f.id === field.id ? { ...f, placeholder: e.target.value } : f
+                                                                                                                    );
+                                                                                                                    setInputFields(updatedFields);
+                                                                                                                }}
+                                                                                                            />
+                                                                                                        )}
 
+                                                                                                        {/* Handling 'TEXTAREA' input type */}
+                                                                                                        {field.type === 'TEXTAREA' && (
+                                                                                                            <input
+                                                                                                                type="text"
+                                                                                                                className="form-control mb-2"
+                                                                                                                placeholder="Enter placeholder for Textarea"
+                                                                                                                value={field.placeholder || ''}
+                                                                                                                onChange={(e) => {
+                                                                                                                    const updatedFields = inputFields.map((f) =>
+                                                                                                                        f.id === field.id ? { ...f, placeholder: e.target.value } : f
+                                                                                                                    );
+                                                                                                                    setInputFields(updatedFields);
+                                                                                                                }}
+                                                                                                            />
+                                                                                                        )}
 
-                                                                                {(field.type === 'OPTION' || field.type === 'CHECKBOX') && (
-                                                                                    <input
-                                                                                        type="text"
-                                                                                        className="form-control mb-2"
-                                                                                        placeholder={`Enter options for ${field.type} (e.g. Option1;Option2)`}
-                                                                                        value={field.options || ''}
-                                                                                        onChange={(e) => {
-                                                                                            const updatedFields = chatFields.map((f) =>
-                                                                                                f.id === field.id ? { ...f, options: e.target.value } : f
-                                                                                            );
-                                                                                            setChatFields(updatedFields);
-                                                                                        }}
-                                                                                    />
-                                                                                )}
+                                                                                                        {/* Handling 'IMAGE' input type */}
+                                                                                                        {field.type === 'IMAGE' && (
+                                                                                                            <input
+                                                                                                                type="file"
+                                                                                                                className="form-control"
+                                                                                                                accept="image/*"
+                                                                                                                onChange={(e) => handleImageChange(e, field.id)}
+                                                                                                            />
+                                                                                                        )}
 
-                                                                                {field.type === 'TEXTBOX' && (
-                                                                                    <input
-                                                                                        type="text"
-                                                                                        className="form-control mb-2"
-                                                                                        placeholder="Enter placeholder for Textbox"
-                                                                                        value={field.placeholder || ''}
-                                                                                        onChange={(e) => {
-                                                                                            const updatedFields = chatFields.map((f) =>
-                                                                                                f.id === field.id ? { ...f, placeholder: e.target.value } : f
-                                                                                            );
-                                                                                            setChatFields(updatedFields);
-                                                                                        }}
-                                                                                    />
-                                                                                )}
+                                                                                                        {/* Delete button */}
+                                                                                                        <button
+                                                                                                            type="button"
+                                                                                                            className="btn border-0 mt-2"
+                                                                                                            onClick={() => deleteField(field.id)}
+                                                                                                        >
+                                                                                                            <i className="fa-solid fa-trash-can text-danger"></i>
+                                                                                                        </button>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            )}
+                                                                                        </Draggable>
+                                                                                    ))}
+                                                                                    {provided.placeholder}
+                                                                                </div>
+                                                                            )}
+                                                                        </Droppable>
+                                                                    </DragDropContext>
 
-                                                                                {field.type === 'TEXTAREA' && (
-                                                                                    <input
-                                                                                        type="text"
-                                                                                        className="form-control mb-2"
-                                                                                        placeholder="Enter placeholder for Textarea"
-                                                                                        value={field.placeholder || ''}
-                                                                                        onChange={(e) => {
-                                                                                            const updatedFields = chatFields.map((f) =>
-                                                                                                f.id === field.id ? { ...f, placeholder: e.target.value } : f
-                                                                                            );
-                                                                                            setChatFields(updatedFields);
-                                                                                        }}
-                                                                                    />
-                                                                                )}
-
-                                                                                <button
-                                                                                    type="button"
-                                                                                    className="btn border-0 mt-2"
-                                                                                    onClick={() => deleteField(field.id, 'chat')}
-                                                                                >
-                                                                                    <i className="fa-solid fa-trash-can text-danger"></i>
-                                                                                </button>
-                                                                            </div>
-                                                                        </div>
-                                                                    ))}
-
-                                                                    {groupchatFields.map((field) => (
-                                                                        <div key={field.id} className="col-12 form-group">
-                                                                            <label>{field.type} INPUT</label>
-                                                                            <div className="d-flex flex-column align-items-start">
-
-                                                                                <input
-                                                                                    type="text"
-                                                                                    className="form-control mb-2"
-                                                                                    placeholder={`Enter title for ${field.type}`}
-                                                                                    value={field.title || ''}
-                                                                                    onChange={(e) => {
-                                                                                        const updatedFields = groupchatFields.map((f) =>
-                                                                                            f.id === field.id ? { ...f, title: e.target.value } : f
-                                                                                        );
-                                                                                        setGroupChatFields(updatedFields);
-                                                                                    }}
-                                                                                />
-
-
-                                                                                {(field.type === 'OPTION' || field.type === 'CHECKBOX') && (
-                                                                                    <input
-                                                                                        type="text"
-                                                                                        className="form-control mb-2"
-                                                                                        placeholder={`Enter options for ${field.type} (e.g. Option1;Option2)`}
-                                                                                        value={field.options || ''}
-                                                                                        onChange={(e) => {
-                                                                                            const updatedFields = groupchatFields.map((f) =>
-                                                                                                f.id === field.id ? { ...f, options: e.target.value } : f
-                                                                                            );
-                                                                                            setGroupChatFields(updatedFields);
-                                                                                        }}
-                                                                                    />
-                                                                                )}
-
-                                                                                {field.type === 'TEXTBOX' && (
-                                                                                    <input
-                                                                                        type="text"
-                                                                                        className="form-control mb-2"
-                                                                                        placeholder="Enter placeholder for Textbox"
-                                                                                        value={field.placeholder || ''}
-                                                                                        onChange={(e) => {
-                                                                                            const updatedFields = groupchatFields.map((f) =>
-                                                                                                f.id === field.id ? { ...f, placeholder: e.target.value } : f
-                                                                                            );
-                                                                                            setGroupChatFields(updatedFields);
-                                                                                        }}
-                                                                                    />
-                                                                                )}
-
-                                                                                {field.type === 'TEXTAREA' && (
-                                                                                    <input
-                                                                                        type="text"
-                                                                                        className="form-control mb-2"
-                                                                                        placeholder="Enter placeholder for Textarea"
-                                                                                        value={field.placeholder || ''}
-                                                                                        onChange={(e) => {
-                                                                                            const updatedFields = groupchatFields.map((f) =>
-                                                                                                f.id === field.id ? { ...f, placeholder: e.target.value } : f
-                                                                                            );
-                                                                                            setGroupChatFields(updatedFields);
-                                                                                        }}
-                                                                                    />
-                                                                                )}
-
-                                                                                <button
-                                                                                    type="button"
-                                                                                    className="btn border-0 mt-2"
-                                                                                    onClick={() => deleteField(field.id, 'groupchat')}
-                                                                                >
-                                                                                    <i className="fa-solid fa-trash-can text-danger"></i>
-                                                                                </button>
-                                                                            </div>
-                                                                        </div>
-                                                                    ))}
                                                                 </div>
                                                             </div>
+
+                                                            {/* Conditionally render multi-select inputs based on the selected message category */}
 
                                                             <button type="submit" className="btn btn-primary mr-2">Submit</button>
 

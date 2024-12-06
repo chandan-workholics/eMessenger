@@ -116,6 +116,7 @@ const MessageDraft = () => {
             title: '',
             options: '',
             placeholder: '',
+            is_reply_required: true, // Default value
         }));
         setInputFields([...inputFields, ...newInputFields]);
         e.target.value = '';
@@ -172,10 +173,10 @@ const MessageDraft = () => {
                         dataText = { text: field.title || '' };
                         break;
                     case 'LINK':
-                        dataText = { link: field.title || '' };
+                        dataText = { title: field.placeholder || '', link: field.title || '' };
                         break;
                     case 'YOUTUBE':
-                        dataText = { link: field.title || '' };
+                        dataText = { title: field.placeholder || '', link: field.title || '' };
                         break;
                     case 'IMAGE':
                         dataText = { link: field.linkValue || '' };
@@ -203,7 +204,7 @@ const MessageDraft = () => {
                     msg_type: `${field.type}-${msgCategory}`,
                     data_text: JSON.stringify(dataText),
                     order_number: inputFields.length + index + 1,
-                    is_reply_required: 1,
+                    is_reply_required: field.is_reply_required ? 1 : 0,
                 };
             }),
         ];
@@ -288,17 +289,35 @@ const MessageDraft = () => {
     // Table data
     const data = messageList ? messageList?.map((val) => ({
         msgId: val?.msg_id,
-        subjectLineSchools: val?.subject_text,
+        subjectLineSchools: (<div style={{ display: 'inline-block' }}>
+            <div>{val?.subject_text}</div>
+            <div style={{ fontSize: 'small', marginTop: '4px', color: 'gray' }}>
+                {val?.schools?.map((school) => school?.sch_short_nm).join(", ")}
+            </div>
+        </div>
+        ),
         priority: val?.msg_priority,
-        showUpto: val?.show_upto ? new Date(val?.show_upto).toLocaleDateString('en-GB') : '', // Format date,
+        showUpto: val?.show_upto
+            ? (() => {
+                const date = new Date(val?.show_upto);
+                const day = String(date.getUTCDate()).padStart(2, '0');
+                const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
+                const year = date.getUTCFullYear();
+                const hours = String(date.getUTCHours()).padStart(2, '0');
+                const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+                return `${day}/${month}/${year} ${hours}:${minutes}`;
+            })()
+            : '',
+
+
         lastPostedBy: val?.entry_by,
         recipients: 'Na',
         seen: 'Na',
         respond: 'Na',
         isActive: (
             <div className="">
-                <button onClick={() => handleToggleStatus(val?.msg_id, val?.is_active)} type="button" className="btn p-2">
-                    {val?.is_active === 1 ? 'Deactivate' : 'Activate'}
+                <button onClick={() => handleToggleStatus(val?.msg_id, val?.is_active)} type="button" className="btn btn-primary p-2">
+                    {val?.is_active === 1 ? 'Yes' : 'No'}
                 </button>
             </div>
         ),
@@ -500,15 +519,16 @@ const MessageDraft = () => {
                                                                 <div className="col-md-4 form-group">
                                                                     <label htmlFor="showUpto">Show Upto Date & Time<span className="text-danger">*</span></label>
                                                                     <input
-                                                                        type="date"
+                                                                        type="datetime-local"
                                                                         className="form-control"
                                                                         id="showUpto"
-                                                                        name='show_upto'
+                                                                        name="show_upto"
                                                                         value={datas?.show_upto}
                                                                         onChange={handleChange}
                                                                         required
                                                                         min={minDate}
                                                                     />
+
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
                                                                     <label htmlFor="schools">Schools<span className="text-danger">*</span></label>
@@ -537,63 +557,44 @@ const MessageDraft = () => {
                                                                     </select>
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
-                                                                    <label htmlFor="msgCategory">Add Student <span className="text-danger">(dont select more then 5 numbers)</span> </label>
-                                                                    {/* <Multiselect
-                                                                        className='inputHead'
-                                                                        onRemove={(event) => {
-                                                                            const updatedParents = parentsnumber.filter(parent =>
-                                                                                !event.some(removed => removed.student_family_mobile_number === parent.mobile_no)
-                                                                            );
-                                                                            setParentsNumber(updatedParents);
-                                                                        }}
-                                                                        onSelect={(event) => {
-                                                                            if (event.length <= 5) {
-                                                                                const newParents = event.map(num => ({
-                                                                                    student_main_id: num.student_main_id,
-                                                                                    mobile_no: parseInt(num.student_family_mobile_number, 10)
-                                                                                }));
-                                                                                setParentsNumber(newParents);
-                                                                            } else {
-                                                                                alert("You can only select a maximum of 5 numbers.");
-                                                                            }
-                                                                        }}
-                                                                        options={number}
-                                                                        displayValue="student_family_mobile_number"
-                                                                        selectedValues={parentsnumber.map(parent => ({
-                                                                            student_family_mobile_number: parent.mobile_no,
-                                                                            student_main_id: parent.student_main_id
-                                                                        }))}
-                                                                        showCheckbox
-                                                                    /> */}
 
-                                                                    <Multiselect
-                                                                        className='inputHead'
-                                                                        onRemove={(event) => {
-                                                                            const updatedParents = parentsnumber.filter(parent =>
-                                                                                !event.some(removed => removed.student_family_mobile_number === parent.student_family_mobile_number)
-                                                                            );
-                                                                            setParentsNumber(updatedParents);
-                                                                        }}
-                                                                        onSelect={(event) => {
-                                                                            if (event.length <= 5) {
-                                                                                const newParents = event.map(num => ({
-                                                                                    student_main_id: num.student_main_id,
-                                                                                    mobile_no: parseInt(num.student_family_mobile_number, 10)
-                                                                                }));
-                                                                                setParentsNumber(newParents);
-                                                                            } else {
-                                                                                alert("You can only select a maximum of 5 numbers.");
-                                                                                // Prevent state update if more than 5 numbers are selected
-                                                                            }
-                                                                        }}
-                                                                        options={number}
-                                                                        displayValue="student_family_mobile_number"
-                                                                        selectedValues={parentsnumber.map(parent => ({
-                                                                            student_family_mobile_number: parent.mobile_no,
-                                                                            student_main_id: parent.student_main_id
-                                                                        }))}
-                                                                        // showCheckbox
-                                                                    />
+
+
+                                                                    {!Array.isArray(msgCategory) || (!msgCategory.includes('DISPLAY') && !msgCategory.includes('INPUT')) && (
+                                                                        <>
+                                                                            <label htmlFor="msgCategory">Add Student <span className="text-danger">(max select 5 numbers)</span> </label>
+                                                                            <Multiselect
+                                                                                className='inputHead'
+                                                                                onRemove={(event) => {
+                                                                                    const updatedParents = parentsnumber.filter(parent =>
+                                                                                        !event.some(removed => removed.student_family_mobile_number === parent.student_family_mobile_number)
+                                                                                    );
+                                                                                    setParentsNumber(updatedParents);
+                                                                                }}
+                                                                                onSelect={(event) => {
+                                                                                    if (event.length <= 5) {
+                                                                                        const newParents = event.map(num => ({
+                                                                                            student_main_id: num.student_main_id,
+                                                                                            mobile_no: parseInt(num.student_family_mobile_number, 10)
+                                                                                        }));
+                                                                                        setParentsNumber(newParents);
+                                                                                    } else {
+                                                                                        alert("You can only select a maximum of 5 numbers.");
+                                                                                        // Prevent state update if more than 5 numbers are selected
+                                                                                    }
+                                                                                }}
+                                                                                options={number}
+                                                                                displayValue="student_family_mobile_number"
+                                                                                selectedValues={parentsnumber.map(parent => ({
+                                                                                    student_family_mobile_number: parent.mobile_no,
+                                                                                    student_main_id: parent.student_main_id
+                                                                                }))}
+
+                                                                            />
+                                                                        </>
+                                                                    )}
+
+
 
                                                                 </div>
                                                             </div>
@@ -603,7 +604,7 @@ const MessageDraft = () => {
                                                             <div className="row">
                                                                 {msgCategory && (
                                                                     <div className="col-md-6 form-group">
-                                                                        <label htmlFor="inputOptions">Chat Options</label>
+                                                                        <label htmlFor="inputOptions">Add Options</label>
                                                                         <select className="form-control" id="inputOptions" onChange={handleInputOptionsChange}>
                                                                             <option value="" selected>Select Options</option>
                                                                             <option value="" disabled></option>
@@ -653,11 +654,44 @@ const MessageDraft = () => {
                                                                                                     className="col-12 form-group"
                                                                                                 >
                                                                                                     <label>{field.type}</label>
+
                                                                                                     <div className="d-flex flex-column align-items-start">
+
+                                                                                                        {field.type === 'LINK' && (
+                                                                                                            <input
+                                                                                                                type="text"
+                                                                                                                className="form-control mb-2"
+                                                                                                                placeholder="Enter Title  For LINK"
+                                                                                                                value={field.placeholder || ''}
+                                                                                                                onChange={(e) => {
+                                                                                                                    const updatedFields = inputFields.map((f) =>
+                                                                                                                        f.id === field.id ? { ...f, placeholder: e.target.value } : f
+                                                                                                                    );
+                                                                                                                    setInputFields(updatedFields);
+                                                                                                                }}
+                                                                                                            />
+                                                                                                        )}
+
+                                                                                                        {field.type === 'YOUTUBE' && (
+                                                                                                            <input
+                                                                                                                type="text"
+                                                                                                                className="form-control mb-2"
+                                                                                                                placeholder="Enter Title  For YOUTUBE"
+                                                                                                                value={field.placeholder || ''}
+                                                                                                                onChange={(e) => {
+                                                                                                                    const updatedFields = inputFields.map((f) =>
+                                                                                                                        f.id === field.id ? { ...f, placeholder: e.target.value } : f
+                                                                                                                    );
+                                                                                                                    setInputFields(updatedFields);
+                                                                                                                }}
+                                                                                                            />
+                                                                                                        )}
+
+
                                                                                                         <input
                                                                                                             type="text"
                                                                                                             className="form-control mb-2"
-                                                                                                            placeholder={`Enter title for ${field.type}`}
+                                                                                                            placeholder={`Enter value for ${field.type}`}
                                                                                                             value={field.title || ''}
                                                                                                             onChange={(e) => {
                                                                                                                 const updatedFields = inputFields.map((f) =>
@@ -666,6 +700,7 @@ const MessageDraft = () => {
                                                                                                                 setInputFields(updatedFields);
                                                                                                             }}
                                                                                                         />
+
 
                                                                                                         {/* Handling 'OPTION' or 'CHECKBOX' input types */}
                                                                                                         {(field.type === 'OPTION' || field.type === 'CHECKBOX') && (
@@ -725,6 +760,23 @@ const MessageDraft = () => {
                                                                                                             />
                                                                                                         )}
 
+
+
+                                                                                                        <div className="form-check">
+                                                                                                            <input
+                                                                                                                type="checkbox"
+                                                                                                                className="form-check-input"
+                                                                                                                checked={field.is_reply_required}
+                                                                                                                onChange={(e) => {
+                                                                                                                    const updatedFields = inputFields.map((f) =>
+                                                                                                                        f.id === field.id ? { ...f, is_reply_required: e.target.checked } : f
+                                                                                                                    );
+                                                                                                                    setInputFields(updatedFields);
+                                                                                                                }}
+                                                                                                            />
+                                                                                                            <label className="form-check-label">Reply Required</label>
+                                                                                                        </div>
+
                                                                                                         {/* Delete button */}
                                                                                                         <button
                                                                                                             type="button"
@@ -738,6 +790,8 @@ const MessageDraft = () => {
                                                                                             )}
                                                                                         </Draggable>
                                                                                     ))}
+
+
                                                                                     {provided.placeholder}
                                                                                 </div>
                                                                             )}
