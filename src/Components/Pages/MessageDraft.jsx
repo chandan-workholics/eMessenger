@@ -173,13 +173,13 @@ const MessageDraft = () => {
                         dataText = { text: field.title || '' };
                         break;
                     case 'LINK':
-                        dataText = { title: field.placeholder || '', link: field.title || '' };
+                        dataText = { title: field.title || '', link: field.link || '' };
                         break;
                     case 'YOUTUBE':
-                        dataText = { title: field.placeholder || '', link: field.title || '' };
+                        dataText = { title: field.title || '', link: field.link || '' };
                         break;
                     case 'IMAGE':
-                        dataText = { link: field.linkValue || '' };
+                        dataText = { title: field.title || '', link: field.linkValue || '', link: field.link || '' };
                         break;
                     case 'OPTION':
                         dataText = { title: field.title || '', options: field.options || '' };
@@ -289,13 +289,30 @@ const MessageDraft = () => {
     // Table data
     const data = messageList ? messageList?.map((val) => ({
         msgId: val?.msg_id,
-        subjectLineSchools: (<div style={{ display: 'inline-block' }}>
-            <div>{val?.subject_text}</div>
-            <div style={{ fontSize: 'small', marginTop: '4px', color: 'gray' }}>
-                {val?.schools?.map((school) => school?.sch_short_nm).join(", ")}
+        subjectLineSchools: (
+            <div style={{ display: 'inline-block' }}>
+                <div>{val?.subject_text}</div>
+                <div style={{ marginTop: '4px', display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+                    {val?.schools?.map((school, index) => (
+                        <div
+                            key={school.sch_id || index}
+                            style={{
+                                display: 'inline-block',
+                                fontSize: 'small',
+                                padding: '4px 8px',
+                                borderRadius: '4px',
+                                color: school.text_color || '#000000',
+                                backgroundColor: school.bg_color || '#f0f0f0',
+                                cursor: 'default',
+                            }}
+                        >
+                            {school.sch_short_nm}
+                        </div>
+                    ))}
+                </div>
             </div>
-        </div>
         ),
+
         priority: val?.msg_priority,
         showUpto: val?.show_upto
             ? (() => {
@@ -657,41 +674,10 @@ const MessageDraft = () => {
 
                                                                                                     <div className="d-flex flex-column align-items-start">
 
-                                                                                                        {field.type === 'LINK' && (
-                                                                                                            <input
-                                                                                                                type="text"
-                                                                                                                className="form-control mb-2"
-                                                                                                                placeholder="Enter Title  For LINK"
-                                                                                                                value={field.placeholder || ''}
-                                                                                                                onChange={(e) => {
-                                                                                                                    const updatedFields = inputFields.map((f) =>
-                                                                                                                        f.id === field.id ? { ...f, placeholder: e.target.value } : f
-                                                                                                                    );
-                                                                                                                    setInputFields(updatedFields);
-                                                                                                                }}
-                                                                                                            />
-                                                                                                        )}
-
-                                                                                                        {field.type === 'YOUTUBE' && (
-                                                                                                            <input
-                                                                                                                type="text"
-                                                                                                                className="form-control mb-2"
-                                                                                                                placeholder="Enter Title  For YOUTUBE"
-                                                                                                                value={field.placeholder || ''}
-                                                                                                                onChange={(e) => {
-                                                                                                                    const updatedFields = inputFields.map((f) =>
-                                                                                                                        f.id === field.id ? { ...f, placeholder: e.target.value } : f
-                                                                                                                    );
-                                                                                                                    setInputFields(updatedFields);
-                                                                                                                }}
-                                                                                                            />
-                                                                                                        )}
-
-
                                                                                                         <input
                                                                                                             type="text"
                                                                                                             className="form-control mb-2"
-                                                                                                            placeholder={`Enter value for ${field.type}`}
+                                                                                                            placeholder={`Enter title for ${field.type}`}
                                                                                                             value={field.title || ''}
                                                                                                             onChange={(e) => {
                                                                                                                 const updatedFields = inputFields.map((f) =>
@@ -700,6 +686,45 @@ const MessageDraft = () => {
                                                                                                                 setInputFields(updatedFields);
                                                                                                             }}
                                                                                                         />
+
+                                                                                                        {field.type === 'LINK' && (
+
+
+                                                                                                            <input
+                                                                                                                type="text"
+                                                                                                                className="form-control mb-2"
+                                                                                                                placeholder={`Enter ${field.type === 'LINK' ? 'Link' : 'YouTube URL'}`}
+                                                                                                                value={field.link || ''}
+                                                                                                                onChange={(e) => {
+                                                                                                                    const updatedFields = inputFields.map((f) =>
+                                                                                                                        f.id === field.id ? { ...f, link: e.target.value } : f
+                                                                                                                    );
+                                                                                                                    setInputFields(updatedFields);
+                                                                                                                }}
+                                                                                                            />
+
+                                                                                                        )}
+
+                                                                                                        {field.type === 'YOUTUBE' && (
+
+
+                                                                                                            <input
+                                                                                                                type="text"
+                                                                                                                className="form-control mb-2"
+                                                                                                                placeholder={`Enter ${field.type === 'LINK' ? 'Link' : 'YouTube URL'}`}
+                                                                                                                value={field.link || ''}
+                                                                                                                onChange={(e) => {
+                                                                                                                    const updatedFields = inputFields.map((f) =>
+                                                                                                                        f.id === field.id ? { ...f, link: e.target.value } : f
+                                                                                                                    );
+                                                                                                                    setInputFields(updatedFields);
+                                                                                                                }}
+                                                                                                            />
+
+                                                                                                        )}
+
+
+
 
 
                                                                                                         {/* Handling 'OPTION' or 'CHECKBOX' input types */}
@@ -752,12 +777,26 @@ const MessageDraft = () => {
 
                                                                                                         {/* Handling 'IMAGE' input type */}
                                                                                                         {field.type === 'IMAGE' && (
-                                                                                                            <input
-                                                                                                                type="file"
-                                                                                                                className="form-control"
-                                                                                                                accept="image/*"
-                                                                                                                onChange={(e) => handleImageChange(e, field.id)}
-                                                                                                            />
+                                                                                                            <>
+                                                                                                                <input
+                                                                                                                    type="text"
+                                                                                                                    className="form-control mb-2"
+                                                                                                                    placeholder={`Enter ${field.type} URL`}
+                                                                                                                    value={field.link || ''}
+                                                                                                                    onChange={(e) => {
+                                                                                                                        const updatedFields = inputFields.map((f) =>
+                                                                                                                            f.id === field.id ? { ...f, link: e.target.value } : f
+                                                                                                                        );
+                                                                                                                        setInputFields(updatedFields);
+                                                                                                                    }}
+                                                                                                                />
+                                                                                                                <input
+                                                                                                                    type="file"
+                                                                                                                    className="form-control"
+                                                                                                                    accept="image/*"
+                                                                                                                    onChange={(e) => handleImageChange(e, field.id)}
+                                                                                                                />
+                                                                                                            </>
                                                                                                         )}
 
 

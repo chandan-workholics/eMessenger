@@ -40,6 +40,7 @@ const EditCreatedMsg = () => {
             const parsedDataText = JSON.parse(msg.data_text);
             // Dynamically set the title or text based on available fields in parsedDataText
             let title = parsedDataText.title || parsedDataText.text || ''; // Fallback to empty string if not available
+            let link = parsedDataText.title || parsedDataText.link || ''; // Fallback to empty string if not available
             let linkValue = parsedDataText.link || ''; // Default to empty if no link
             let placeholder = parsedDataText.placeholder || ''; // Default placeholder if empty
             let options = parsedDataText.options || ''; // Default options if empty
@@ -50,7 +51,8 @@ const EditCreatedMsg = () => {
             // Handle the special cases for LINK, IMAGE, YOUTUBE, CAMERA, and FILE
             if (type === "LINK" || type === "YOUTUBE" || type === "IMAGE") {
                 // Use link as the value for these types, as they may have 'link' in data_text
-                title = parsedDataText.link || ''; // Ensure that it uses link for these types
+                title = parsedDataText.title || ''; // Ensure that it uses link for these types
+                link = parsedDataText.link || ''; // Ensure that it uses link for these types
             } else if (type === "CAMERA" || type === "FILE") {
                 title = parsedDataText.title || '';
             }
@@ -59,11 +61,13 @@ const EditCreatedMsg = () => {
                 id: Date.now() + Math.random(), // Generate a unique ID
                 type: type, // The type is already extracted
                 title: title, // Dynamically set the title or link
+                link: link, // Dynamically set the title or link
                 options: options, // Include `options` if present
                 placeholder: placeholder, // For TEXTBOX and TEXTAREA, include placeholder
                 linkValue: linkValue, // Use `link` for LINK, YOUTUBE, IMAGE, CAMERA, and FILE types
                 isReplyRequired: msg.is_reply_required, // Include `is_reply_required`
                 order: msg.ordersno, // Include `ordersno`
+                is_reply_required: msg.is_reply_required, // Include `ordersno`
             };
         });
 
@@ -99,6 +103,7 @@ const EditCreatedMsg = () => {
             id: Date.now() + Math.random(),
             type: option,
             title: '',
+            link: '',
             options: '',
             placeholder: '',
         }));
@@ -180,13 +185,13 @@ const EditCreatedMsg = () => {
                     dataText = { text: field.title || '' };
                     break;
                 case 'LINK':
-                    dataText = { link: field.title || '' };
+                    dataText = { title: field.title || '', link: field.link || '' };
                     break;
                 case 'YOUTUBE':
-                    dataText = { link: field.title || '' };
+                    dataText = { title: field.title || '', link: field.link || '' };
                     break;
                 case 'IMAGE':
-                    dataText = { link: field.linkValue || '' };
+                    dataText = { title: field.title || '', link: field.linkValue || '', link: field.link || '' };
                     break;
                 case 'OPTION':
                     dataText = { title: field.title || '', options: field.options || '' };
@@ -207,7 +212,7 @@ const EditCreatedMsg = () => {
                 msg_type: `${field.type}-${datas?.msg_chat_type}`,
                 data_text: JSON.stringify(dataText),
                 order_number: index + 1,
-                is_reply_required: 1,
+                is_reply_required: field.is_reply_required ? 1 : 0,
             };
         });
         try {
@@ -458,6 +463,8 @@ const EditCreatedMsg = () => {
                                                                                     >
                                                                                         <label>{field.type}</label>
                                                                                         <div className="d-flex flex-column align-items-start">
+
+
                                                                                             <input
                                                                                                 type="text"
                                                                                                 className="form-control mb-2"
@@ -470,6 +477,42 @@ const EditCreatedMsg = () => {
                                                                                                     setInputFields(updatedFields);
                                                                                                 }}
                                                                                             />
+
+                                                                                            {field.type === 'LINK' && (
+
+                                                                                                <input
+                                                                                                    type="text"
+                                                                                                    className="form-control mb-2"
+                                                                                                    placeholder={`Enter ${field.type === 'LINK' ? 'Link' : 'YouTube URL'}`}
+                                                                                                    value={field.link || ''}
+                                                                                                    onChange={(e) => {
+                                                                                                        const updatedFields = inputFields.map((f) =>
+                                                                                                            f.id === field.id ? { ...f, link: e.target.value } : f
+                                                                                                        );
+                                                                                                        setInputFields(updatedFields);
+                                                                                                    }}
+                                                                                                />
+
+                                                                                            )}
+
+                                                                                            {field.type === 'YOUTUBE' && (
+
+                                                                                                <input
+                                                                                                    type="text"
+                                                                                                    className="form-control mb-2"
+                                                                                                    placeholder={`Enter ${field.type === 'LINK' ? 'Link' : 'YouTube URL'}`}
+                                                                                                    value={field.link || ''}
+                                                                                                    onChange={(e) => {
+                                                                                                        const updatedFields = inputFields.map((f) =>
+                                                                                                            f.id === field.id ? { ...f, link: e.target.value } : f
+                                                                                                        );
+                                                                                                        setInputFields(updatedFields);
+                                                                                                    }}
+                                                                                                />
+
+                                                                                            )}
+
+
 
                                                                                             {(field.type === 'OPTION' || field.type === 'CHECKBOX') && (
                                                                                                 <input
@@ -517,13 +560,42 @@ const EditCreatedMsg = () => {
                                                                                             )}
 
                                                                                             {field.type === 'IMAGE' && (
-                                                                                                <input
-                                                                                                    type="file"
-                                                                                                    className="form-control"
-                                                                                                    accept="image/*"
-                                                                                                    onChange={(e) => handleImageChange(e, field.id)}
-                                                                                                />
+                                                                                                <>
+                                                                                                    <input
+                                                                                                        type="text"
+                                                                                                        className="form-control mb-2"
+                                                                                                        placeholder={`Enter ${field.type} URL`}
+                                                                                                        value={field.link || ''}
+                                                                                                        onChange={(e) => {
+                                                                                                            const updatedFields = inputFields.map((f) =>
+                                                                                                                f.id === field.id ? { ...f, link: e.target.value } : f
+                                                                                                            );
+                                                                                                            setInputFields(updatedFields);
+                                                                                                        }}
+                                                                                                    />
+                                                                                                    <input
+                                                                                                        type="file"
+                                                                                                        className="form-control"
+                                                                                                        accept="image/*"
+                                                                                                        onChange={(e) => handleImageChange(e, field.id)}
+                                                                                                    />
+                                                                                                </>
                                                                                             )}
+
+                                                                                            <div className="form-check">
+                                                                                                <input
+                                                                                                    type="checkbox"
+                                                                                                    className="form-check-input"
+                                                                                                    checked={field.is_reply_required}
+                                                                                                    onChange={(e) => {
+                                                                                                        const updatedFields = inputFields.map((f) =>
+                                                                                                            f.id === field.id ? { ...f, is_reply_required: e.target.checked } : f
+                                                                                                        );
+                                                                                                        setInputFields(updatedFields);
+                                                                                                    }}
+                                                                                                />
+                                                                                                <label className="form-check-label">Reply Required</label>
+                                                                                            </div>
 
                                                                                             <button type="button" className="btn border-0 mt-2" onClick={() => deleteField(field.id)}>
                                                                                                 <i className="fa-solid fa-trash-can text-danger"></i>
