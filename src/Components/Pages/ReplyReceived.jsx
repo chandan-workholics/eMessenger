@@ -87,7 +87,7 @@ const ReplyReceived = () => {
                         } else if (parsedData?.selected) {
                             return Object.values(parsedData.selected).join(', ');
                         }
-                        return '';
+                        return 'NA';
                     } catch (error) {
                         console.error('Error parsing JSON:', reply?.data_reply_text, error);
                         return ''; // Fallback value

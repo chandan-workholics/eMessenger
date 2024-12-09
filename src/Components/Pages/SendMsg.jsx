@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 const SendMsg = () => {
     const location = useLocation();
-    const { id } = location.state;
+    const { id, school_id } = location.state;
     const admin_id = sessionStorage.getItem('admin_id');
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
@@ -20,7 +20,7 @@ const SendMsg = () => {
     const fetchListData = async () => {
         try {
             setLoading(true);
-            const response = await callAPI.get(`./scholar/getlist_main_student_detail_two`);
+            const response = await callAPI.get(`./scholar/getlist_main_student_detail_two?sch_short_nm=${school_id?.map((val) => val?.sch_short_nm)}`);
             setStudentList(response.data.data || []);
         } catch (error) {
             console.error('Error fetching student data:', error.message);
@@ -135,6 +135,7 @@ const SendMsg = () => {
                                                                                     <tr>
                                                                                         <th className='text-center'>Select</th>
                                                                                         <th>Mobile No.</th>
+                                                                                        <th>School.</th>
                                                                                         <th>Student Name.</th>
                                                                                         <th>Student Id</th>
                                                                                     </tr>
@@ -154,6 +155,7 @@ const SendMsg = () => {
                                                                                                 </div>
                                                                                             </td>
                                                                                             <td>{val?.student_family_mobile_number}</td>
+                                                                                            <td>{val?.sch_short_nm}</td>
                                                                                             <td>{val?.student_name}</td>
                                                                                             <td>{val?.student_number}</td>
                                                                                         </tr>
