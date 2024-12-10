@@ -133,7 +133,7 @@ const EditCreatedMsg = () => {
                 toast.success("Image uploaded successfully");
                 const imageUrl = fetchdata.data.url;
                 const updatedFields = inputFields.map((field) =>
-                    field.id === fieldId ? { ...field, linkValue: imageUrl } : field
+                    field.id === fieldId ? { ...field, link: imageUrl } : field
                 );
                 setInputFields(updatedFields);
             } else {
@@ -194,7 +194,7 @@ const EditCreatedMsg = () => {
                     dataText = { title: field.title || '', link: field.link || '' };
                     break;
                 case 'IMAGE':
-                    dataText = { title: field.title || '', link: field.linkValue || '', link: field.link || '' };
+                    dataText = { title: field.title || '', link: field.link || '' };
                     break;
                 case 'OPTION':
                     dataText = { title: field.title || '', options: field.options || '' };
