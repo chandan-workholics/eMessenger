@@ -14,7 +14,7 @@ const NoticeBoard = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const [noticeBoardlList, setNoticeBoardList] = useState([]);
-
+    const URL = process.env.REACT_APP_URL;
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const [error, setError] = useState(null);
@@ -149,7 +149,7 @@ const NoticeBoard = () => {
         };
         try {
             const fetchdata = axios.post(
-                `http://206.189.130.102:3550/api/v1/admin/imageUpload_Use/imageUpload`,
+                `${URL}/v1/admin/imageUpload_Use/imageUpload`,
                 formData,
                 requestOptions
             );
@@ -179,7 +179,7 @@ const NoticeBoard = () => {
         };
         try {
             const fetchdata = axios.post(
-                `http://206.189.130.102:3550/api/v1/admin/pdfUpload_Use/pdfUpload`,
+                `${URL}/v1/admin/pdfUpload_Use/pdfUpload`,
                 formData,
                 requestOptions
             );

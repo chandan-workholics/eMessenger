@@ -188,7 +188,6 @@ const SubGroupMaster = () => {
         });
     }
 
-    console.log(GroupList)
 
     return (
         <>

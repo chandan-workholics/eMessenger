@@ -7,6 +7,7 @@ import callAPI from '../../commonMethod/api.js';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 const SchoolMaster = () => {
+    const URL = process.env.REACT_APP_URL;
     const [datas, setDatas] = useState({
         sch_nm: '',
         sch_short_nm: '',
@@ -57,7 +58,7 @@ const SchoolMaster = () => {
         var requestOptions = { headers: { "Content-Type": "multipart/form-data", }, };
         try {
             const fetchdata = axios.post(
-                `http://206.189.130.102:3550/api/v1/admin/imageUpload_Use/imageUpload`,
+                `${URL}/v1/admin/imageUpload_Use/imageUpload`,
                 formData,
                 requestOptions
             );

@@ -11,6 +11,7 @@ import axios from 'axios';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const MessageDraft = () => {
+    const URL = process.env.REACT_APP_URL;
     const [loading, setLoading] = useState(true);
     const [schoolList, setSchoolList] = useState([]);
     const [subgroup, setSubgroup] = useState([]);
@@ -133,7 +134,7 @@ const MessageDraft = () => {
         };
         try {
             const fetchdata = await axios.post(
-                `http://206.189.130.102:3550/api/v1/admin/imageUpload_Use/imageUpload`,
+                `${URL}/v1/admin/imageUpload_Use/imageUpload`,
                 formData,
                 requestOptions
             );

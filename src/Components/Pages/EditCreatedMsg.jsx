@@ -13,6 +13,7 @@ const EditCreatedMsg = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { id } = location.state;
+    const URL = process.env.REACT_APP_URL;
     const [loading, setLoading] = useState(true);
     const [schoolList, setSchoolList] = useState([]);
     const [subgroup, setSubgroup] = useState([]);
@@ -124,7 +125,7 @@ const EditCreatedMsg = () => {
         };
         try {
             const fetchdata = await axios.post(
-                `http://206.189.130.102:3550/api/v1/admin/imageUpload_Use/imageUpload`,
+                `${URL}/v1/admin/imageUpload_Use/imageUpload`,
                 formData,
                 requestOptions
             );

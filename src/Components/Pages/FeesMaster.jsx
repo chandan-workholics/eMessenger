@@ -126,7 +126,7 @@ const FeesMaster = () => {
         }
 
         try {
-            const response = await axios.post('http://206.189.130.102:3550/api/fees/addfeesDisplay', {
+            const response = await axios.post(`${URL}/fees/addfeesDisplay`, {
                 deleteExisting: action,
                 data: excelData,
             }, {
@@ -151,7 +151,7 @@ const FeesMaster = () => {
         return <Loding />;
     }
 
-    console.log(excelData)
+
     return (
         <>
             <div className="container-scroller">

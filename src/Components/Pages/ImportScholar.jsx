@@ -127,7 +127,7 @@ const ImportScholar = () => {
             return;
         }
         try {
-            const response = await axios.post('http://206.189.130.102:3550/api/scholar/insertScholarRecord', {
+            const response = await axios.post(`${URL}/scholar/insertScholarRecord`, {
                 action: action,
                 data: excelData,
             }, {
