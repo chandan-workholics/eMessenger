@@ -279,6 +279,7 @@ const MessageDraft = () => {
         { label: 'Priority', key: 'priority' },
         { label: 'Show Upto Date & Time', key: 'showUpto' },
         { label: 'Last Posted By', key: 'lastPostedBy' },
+        { label: 'Last Edit By', key: 'lastEditBy' },
         { label: 'No. of Recipients', key: 'recipients' },
         { label: 'Seen', key: 'seen' },
         { label: 'Respond', key: 'respond' },
@@ -327,7 +328,8 @@ const MessageDraft = () => {
             : '',
 
 
-        lastPostedBy: val?.entry_by,
+        lastPostedBy: val?.entryByDetails?.full_name ||'',
+        lastEditBy: val?.editByDetails?.full_name ||'',
         recipients: 'Na',
         seen: 'Na',
         respond: 'Na',

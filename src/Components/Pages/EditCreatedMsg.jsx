@@ -19,7 +19,8 @@ const EditCreatedMsg = () => {
     const [number, setNumber] = useState([]);
     const [parentsnumber, setParentsNumber] = useState([]);
     const [inputFields, setInputFields] = useState([]);
-    const [datas, setDatas] = useState({ msg_id: '', subject_text: '', show_upto: '', msg_priority: '1', msg_chat_type: '', msg_sgroup_id: '', is_reply_type: 0, is_reply_required_any: 0, is_active: 1, entry_by: 1, school_id: [], five_mobile_number: '', message_body: [], })
+    const [datas, setDatas] = useState({ msg_id: '', subject_text: '', show_upto: '', msg_priority: '1', msg_chat_type: '', msg_sgroup_id: '', is_reply_type: 0, is_reply_required_any: 0, is_active: 1, entry_by: 1, edit_by: 1, school_id: [], five_mobile_number: '', message_body: [], })
+    const admin_id = sessionStorage.getItem('admin_id');
 
     useEffect(() => {
         const fetchSendedData = async () => {
@@ -89,6 +90,7 @@ const EditCreatedMsg = () => {
             is_reply_required_any: val.data.is_reply_required_any || 0,
             is_active: val.data.is_active || 1,
             entry_by: val.data.entry_by || 1,
+            edit_by: val.data.edit_by || 1,
             school_id: val.data.schools?.map((val) => val?.sch_id) || [],
             five_mobile_number: parsedParents,
             message_body: val.data.msg_bodies || [],
@@ -227,6 +229,7 @@ const EditCreatedMsg = () => {
                 is_reply_required_any: datas.is_reply_required_any,
                 is_active: datas.is_active,
                 entry_by: datas.entry_by,
+                edit_by: parseInt(admin_id),
                 school_id: datas.school_id,
                 five_mobile_number: parentsnumber,
                 message_body: messageBody
