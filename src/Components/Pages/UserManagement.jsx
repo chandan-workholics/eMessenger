@@ -32,8 +32,9 @@ const UserManagement = () => {
     const [editschool, seteditschool] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const rowsPerPage = 10;
+    const rowsPerPage = 100;
     const [isModalOpen, setIsModalOpen] = useState(false);
+
 
     const [activeFilter, setActiveFilter] = useState('All');
     const [otpVerifiedFilter, setOtpVerifiedFilter] = useState('All');
@@ -109,9 +110,9 @@ const UserManagement = () => {
     const getAppUserList = async () => {
         try {
             setLoading(true);
-            const response = await callAPI.get(`./scholar/get_full_list_app_active_users_list?page=1&limit=${rowsPerPage}&active=${activeFilter !== 'All' ? (activeFilter === 'Active' ? 1 : 0) : ''}&otpVerified=${otpVerifiedFilter !== 'All' ? (otpVerifiedFilter === 'OTP Verified' ? 1 : 0) : ''}`);
+            const response = await callAPI.get(`./scholar/get_full_list_app_active_users_list?page=${currentPage}&limit=${rowsPerPage}&active=${activeFilter !== 'All' ? (activeFilter === 'Active' ? 1 : 0) : ''}&otpVerified=${otpVerifiedFilter !== 'All' ? (otpVerifiedFilter === 'OTP Verified' ? 1 : 0) : ''}`);
             setUserData(response?.data);
-            setTotalPages(Math.ceil(response?.data?.pagination?.totalPages / rowsPerPage));
+            setTotalPages(Math.ceil(response?.pagination?.totalPages));
         } catch (error) {
             console.error('Error fetching data:', error.message);
         } finally {

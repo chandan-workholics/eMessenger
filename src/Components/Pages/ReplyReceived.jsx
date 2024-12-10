@@ -19,7 +19,7 @@ const ReplyReceived = () => {
             setLoading(true);
             const response = await callAPI.get(`/msg/getAllReplyMessages?page=${currentPage}&limit=${rowsPerPage}`);
             setMessageList(response.data.data || []);
-            setTotalPages(Math.ceil(response?.data?.pagination?.totalRecords / rowsPerPage));
+            setTotalPages(Math.ceil(response?.data?.pagination?.total / rowsPerPage));
         } catch (error) {
             console.error('Error fetching school data:', error.message);
         } finally {
@@ -97,6 +97,12 @@ const ReplyReceived = () => {
         }))
         : [];
 
+    const handlePageChange = (page) => {
+        if (page > 0 && page <= totalPages) {
+            setCurrentPage(page);
+        }
+    };
+
 
     if (loading) {
         return <Loding />;
@@ -134,6 +140,31 @@ const ReplyReceived = () => {
                                                 </div>
                                             </div>
                                         </div>
+                                        <nav>
+                                            <ul className="pagination justify-content-end">
+                                                <li className="page-item">
+                                                    <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}
+                                                        disabled={currentPage === 1}>Previous</button>
+                                                </li>
+                                                {Array.from({ length: totalPages }, (_, index) => (
+                                                    <li
+                                                        key={index + 1}
+                                                        className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}
+                                                    >
+                                                        <button
+                                                            className="page-link"
+                                                            onClick={() => handlePageChange(index + 1)}
+                                                        >
+                                                            {index + 1}
+                                                        </button>
+                                                    </li>
+                                                ))}
+                                                <li className="page-item">
+                                                    <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}
+                                                        disabled={currentPage === totalPages}>Next</button>
+                                                </li>
+                                            </ul>
+                                        </nav>
                                     </div>
                                 </div>
                             </div>

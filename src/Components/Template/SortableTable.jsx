@@ -6,7 +6,7 @@ const SortableTable = ({ columns, data }) => {
     const [searchTerm, setSearchTerm] = useState(''); // Search term state
     const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
     const [currentPage, setCurrentPage] = useState(1);
-    const rowsPerPage = 10; // Number of rows per page
+    const rowsPerPage = 100; // Number of rows per page
 
     useEffect(() => {
         setTableData(data); // Update table data when `data` prop changes
