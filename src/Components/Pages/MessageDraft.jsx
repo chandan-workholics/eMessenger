@@ -117,7 +117,7 @@ const MessageDraft = () => {
             title: '',
             options: '',
             placeholder: '',
-            is_reply_required: true, // Default value
+            is_reply_required: false, // Default value
         }));
         setInputFields([...inputFields, ...newInputFields]);
         e.target.value = '';
@@ -280,6 +280,7 @@ const MessageDraft = () => {
         { label: 'Priority', key: 'priority' },
         { label: 'Show Upto Date & Time', key: 'showUpto' },
         { label: 'Last Posted By', key: 'lastPostedBy' },
+        { label: 'Last Posted Date', key: 'lastPostedDate' },
         { label: 'Last Edit By', key: 'lastEditBy' },
         { label: 'No. of Recipients', key: 'recipients' },
         { label: 'Seen', key: 'seen' },
@@ -322,15 +323,33 @@ const MessageDraft = () => {
                 const day = String(date.getUTCDate()).padStart(2, '0');
                 const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
                 const year = date.getUTCFullYear();
+                let hours = date.getUTCHours();
+                const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+
+                // Determine AM/PM
+                const ampm = hours >= 12 ? 'P.M.' : 'A.M.';
+                hours = hours % 12;
+                hours = hours ? String(hours).padStart(2, '0') : '12'; // 12:00 AM or 12:00 PM
+
+                return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
+            })()
+            : '',
+
+
+        lastPostedBy: val?.entryByDetails?.full_name || '',
+        lastPostedDate: val?.createdAt
+            ? (() => {
+                const date = new Date(val?.createdAt);
+                const day = String(date.getUTCDate()).padStart(2, '0');
+                const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
+                const year = date.getUTCFullYear();
                 const hours = String(date.getUTCHours()).padStart(2, '0');
                 const minutes = String(date.getUTCMinutes()).padStart(2, '0');
                 return `${day}/${month}/${year} ${hours}:${minutes}`;
             })()
             : '',
 
-
-        lastPostedBy: val?.entryByDetails?.full_name ||'',
-        lastEditBy: val?.editByDetails?.full_name ||'',
+        lastEditBy: val?.editByDetails?.full_name || '',
         recipients: 'Na',
         seen: 'Na',
         respond: 'Na',
@@ -804,20 +823,22 @@ const MessageDraft = () => {
 
 
 
-                                                                                                        <div className="form-check">
-                                                                                                            <input
-                                                                                                                type="checkbox"
-                                                                                                                className="form-check-input"
-                                                                                                                checked={field.is_reply_required}
-                                                                                                                onChange={(e) => {
-                                                                                                                    const updatedFields = inputFields.map((f) =>
-                                                                                                                        f.id === field.id ? { ...f, is_reply_required: e.target.checked } : f
-                                                                                                                    );
-                                                                                                                    setInputFields(updatedFields);
-                                                                                                                }}
-                                                                                                            />
-                                                                                                            <label className="form-check-label">Reply Required</label>
-                                                                                                        </div>
+                                                                                                        {(field.type === 'OPTION' || field.type === 'CHECKBOX' || field.type === 'TEXTBOX' || field.type === 'TEXTAREA' || field.type === 'CAMERA' || field.type === 'FILE') && (
+                                                                                                            <div className="form-check">
+                                                                                                                <input
+                                                                                                                    type="checkbox"
+                                                                                                                    className="form-check-input"
+                                                                                                                    checked={field.is_reply_required}
+                                                                                                                    onChange={(e) => {
+                                                                                                                        const updatedFields = inputFields.map((f) =>
+                                                                                                                            f.id === field.id ? { ...f, is_reply_required: e.target.checked } : f
+                                                                                                                        );
+                                                                                                                        setInputFields(updatedFields);
+                                                                                                                    }}
+                                                                                                                />
+                                                                                                                <label className="form-check-label">Is required</label>
+                                                                                                            </div>
+                                                                                                        )}
 
                                                                                                         {/* Delete button */}
                                                                                                         <button

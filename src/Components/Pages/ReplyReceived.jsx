@@ -60,16 +60,34 @@ const ReplyReceived = () => {
         ? messageList.map((val, index) => ({
             reqId: index + 1,
             msgId: val?.msg_id,
+          
             received: val?.reply_date_time
-                ? new Date(val.reply_date_time).toLocaleDateString('en-GB')
-                : '', // Format date
+                ? (() => {
+                    const date = new Date(val?.reply_date_time);
+                    const day = String(date.getUTCDate()).padStart(2, '0');
+                    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
+                    const year = date.getUTCFullYear();
+                    const hours = String(date.getUTCHours()).padStart(2, '0');
+                    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+                    return `${day}/${month}/${year} ${hours}:${minutes}`;
+                })()
+                : '',
             subject: val?.message?.subject_text || '',
             mobileNo: val?.mobile_no,
             school: val?.schools?.[0]?.sch_short_nm || '',
             studentId: val?.student_number,
+           
             sent: val?.sendedMessage?.sended_date
-                ? new Date(val.sendedMessage.sended_date).toLocaleDateString('en-GB')
-                : '', // Format date
+                ? (() => {
+                    const date = new Date(val?.sendedMessage?.sended_date);
+                    const day = String(date.getUTCDate()).padStart(2, '0');
+                    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
+                    const year = date.getUTCFullYear();
+                    const hours = String(date.getUTCHours()).padStart(2, '0');
+                    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+                    return `${day}/${month}/${year} ${hours}:${minutes}`;
+                })()
+                : '',
             replyMsgId: val?.replied_msg_id || '',
             msgBodyId: val?.replyBodies?.map((body) => body?.replied_msg_d_id || '').join(', '),
             msgType: val?.replyBodies?.map((body) => body?.msg_type || '').join(', '),

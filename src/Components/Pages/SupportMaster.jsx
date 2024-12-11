@@ -29,6 +29,11 @@ const SupportMaster = () => {
         description: '',
         status: '',
         remark: '',
+        added_date: "",
+        added_user_id: '',
+        edited_date: "",
+        edited_user_id: '',
+        send_by: ""
     });
 
     const openModal = (item) => {
@@ -39,12 +44,16 @@ const SupportMaster = () => {
             description: item.description,
             status: item.status.toString(),
             remark: item.remark,
+            added_date: item.added_date,
+            added_user_id: item.added_user_id,
+            edited_date: item.edited_date,
+            edited_user_id: item.edited_user_id,
         });
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
-        setDatas({ parent_id: '', description: '', status: '', remark: '' });
+        setDatas({ parent_id: '', description: '', status: '', remark: '', added_date: "", added_user_id: '', edited_date: "", edited_user_id: '', });
     };
 
     const handleChange = (e) => {
@@ -160,6 +169,8 @@ const SupportMaster = () => {
                                                                     <th>Send By</th>
                                                                     <th>Description</th>
                                                                     <th>Remark</th>
+                                                                    <th>Issues date</th>
+                                                                    <th>Resolved date</th>
                                                                     <th>Status</th>
                                                                     <th>Action</th>
                                                                 </tr>
@@ -172,6 +183,29 @@ const SupportMaster = () => {
                                                                         <td>{val?.send_by || "Not Available"}</td>
                                                                         <td>{val?.description}</td>
                                                                         <td>{val?.remark || "Not Available"}</td>
+                                                                        <td>
+                                                                            {val?.added_date
+                                                                                ? (() => {
+                                                                                    const date = new Date(val?.added_date);
+                                                                                    const day = String(date.getUTCDate()).padStart(2, '0');
+                                                                                    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
+                                                                                    const year = date.getUTCFullYear();
+                                                                                    return `${day}/${month}/${year}`;
+                                                                                })()
+                                                                                : "Not Available"}
+                                                                        </td>
+                                                                        <td>
+                                                                            {val?.edited_date
+                                                                                ? (() => {
+                                                                                    const date = new Date(val?.edited_date);
+                                                                                    const day = String(date.getUTCDate()).padStart(2, '0');
+                                                                                    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
+                                                                                    const year = date.getUTCFullYear();
+                                                                                    return `${day}/${month}/${year}`;
+                                                                                })()
+                                                                                : "Not Available"}
+                                                                        </td>
+
                                                                         <td
                                                                             style={{
                                                                                 color:
@@ -265,6 +299,18 @@ const SupportMaster = () => {
                                                                 id="remark"
                                                                 name="remark"
                                                                 value={datas.remark}
+                                                                onChange={handleChange}
+                                                                required
+                                                            />
+                                                        </div>
+                                                        <div className="form-group">
+                                                            <label htmlFor="edited_date">Resolved date</label>
+                                                            <input
+                                                                type="date"
+                                                                className="form-control"
+                                                                id="edited_date"
+                                                                name="edited_date"
+                                                                value={datas.edited_date}
                                                                 onChange={handleChange}
                                                                 required
                                                             />

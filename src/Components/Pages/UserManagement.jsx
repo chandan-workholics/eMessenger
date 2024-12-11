@@ -281,8 +281,31 @@ const UserManagement = () => {
         mobileNo: val?.mobile_no,
         School: val?.sch_short_nm,
         isActive: val?.is_active == 1 ? "Yes" : "No",
-        activatedTime: val?.active_datetime ? new Date(val?.active_datetime).toLocaleDateString('en-GB') : '', // Format date,
-        lastVisitTime: val?.last_visit_on ? new Date(val?.last_visit_on).toLocaleDateString('en-GB') : '', // Format date,,
+
+        
+        activatedTime: val?.active_datetime
+            ? (() => {
+                const date = new Date(val?.active_datetime);
+                const day = String(date.getUTCDate()).padStart(2, '0');
+                const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
+                const year = date.getUTCFullYear();
+                const hours = String(date.getUTCHours()).padStart(2, '0');
+                const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+                return `${day}/${month}/${year} ${hours}:${minutes}`;
+            })()
+            : '',
+       
+        lastVisitTime: val?.last_visit_on
+            ? (() => {
+                const date = new Date(val?.last_visit_on);
+                const day = String(date.getUTCDate()).padStart(2, '0');
+                const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
+                const year = date.getUTCFullYear();
+                const hours = String(date.getUTCHours()).padStart(2, '0');
+                const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+                return `${day}/${month}/${year} ${hours}:${minutes}`;
+            })()
+            : '',
 
         mobileType: val?.mobile_platform,
         appVersion: val?.mobile_info,
