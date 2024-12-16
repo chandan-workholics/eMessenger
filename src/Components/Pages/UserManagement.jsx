@@ -6,6 +6,9 @@ import Loding from '../Template/Loding';
 import { toast } from 'react-toastify';
 import callAPI from '../../commonMethod/api';
 import Multiselect from "multiselect-react-dropdown";
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
+
 
 const UserManagement = () => {
 
@@ -56,6 +59,92 @@ const UserManagement = () => {
             setLoading(false);
         }
     };
+    const fetchAllData = async () => {
+        try {
+            setLoading(true);
+            const response = await callAPI.get(`/school/getSchool?limit=0`);
+            return response.data.data || [];
+        } catch (error) {
+            console.error('Error fetching school data:', error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+    const handleExport = async () => {
+        const allData = await fetchAllData();
+        console.log(allData, "allData");
+        const formattedData = admindata.data.map((val) => ({
+            userId: val?.admin_id,
+            fullName: val?.full_name,
+            userName: val?.adminuser_name,
+            userType: val?.admin_type,
+            mobileNo: val?.mobile_no,
+            isActive: val?.is_active === 1 ? "Yes" : "No",
+        }));
+        const ws = XLSX.utils.json_to_sheet(formattedData);
+        console.log("formattedData=", formattedData);
+        const csvContent = XLSX.utils.sheet_to_csv(ws);
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        saveAs(blob, 'User_Management.csv');
+    };
+
+
+    const handlePrint = async () => {
+        try {
+            const allData = await fetchAllData();
+            const formattedData = admindata.data.map((val) => ({
+                userId: val?.admin_id,
+                fullName: val?.full_name,
+                userName: val?.adminuser_name,
+                userType: val?.admin_type,
+                mobileNo: val?.mobile_no,
+                isActive: val?.is_active === 1 ? "Yes" : "No",
+            }));
+            const printWindow = window.open("", "_blank");
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Print Group Master</title>
+                    </head>
+                    <body>
+                        <h1>Group Master List</h1>
+                        <table border="1" style="width:100%; text-align:left; border-collapse:collapse;">
+                            <tr>
+                                <th>User ID</th>
+                                <th>Full Name</th>
+                                <th>User Name</th>
+                                <th>User Type</th>
+                                <th>Mobile No.</th>
+                                <th>Is Active</th>
+                            </tr>
+            `);
+            formattedData.forEach((row) => {
+                printWindow.document.write(`
+                    <tr>
+                        <td>${row.userId}</td>
+                        <td>${row.fullName}</td>
+                        <td>${row.userName}</td>
+                        <td>${row.userType}</td>
+                        <td>${row.mobileNo}</td>
+                        <td>${row.isActive}</td>
+                    </tr>
+                `);
+            });
+            printWindow.document.write(`
+                        </table>
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        } catch (error) {
+            console.error("Error printing data:", error.message);
+            alert("An error occurred while attempting to print data. Please try again.");
+        }
+    };
+
+
+
     useEffect(() => {
         fetchData();
     }, []);// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -282,28 +371,36 @@ const UserManagement = () => {
         School: val?.sch_short_nm,
         isActive: val?.is_active == 1 ? "Yes" : "No",
 
-        
+
         activatedTime: val?.active_datetime
             ? (() => {
                 const date = new Date(val?.active_datetime);
                 const day = String(date.getUTCDate()).padStart(2, '0');
                 const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
                 const year = date.getUTCFullYear();
-                const hours = String(date.getUTCHours()).padStart(2, '0');
+                let hours = String(date.getUTCHours()).padStart(2, '0');
                 const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-                return `${day}/${month}/${year} ${hours}:${minutes}`;
+                const ampm = hours >= 12 ? 'P.M.' : 'A.M.';
+                hours = hours % 12;
+                hours = hours ? String(hours).padStart(2, '0') : '12'; // 12:00 AM or 12:00 PM
+
+                return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
             })()
             : '',
-       
+
         lastVisitTime: val?.last_visit_on
             ? (() => {
                 const date = new Date(val?.last_visit_on);
                 const day = String(date.getUTCDate()).padStart(2, '0');
                 const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
                 const year = date.getUTCFullYear();
-                const hours = String(date.getUTCHours()).padStart(2, '0');
+                let hours = String(date.getUTCHours()).padStart(2, '0');
                 const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-                return `${day}/${month}/${year} ${hours}:${minutes}`;
+                const ampm = hours >= 12 ? 'P.M.' : 'A.M.';
+                hours = hours % 12;
+                hours = hours ? String(hours).padStart(2, '0') : '12'; // 12:00 AM or 12:00 PM
+
+                return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
             })()
             : '',
 
@@ -494,7 +591,17 @@ const UserManagement = () => {
                                             <div className="col-md-12 grid-margin stretch-card">
                                                 <div className="card shadow-sm">
                                                     <div className="card-body">
-                                                        <p className="card-title">User List</p>
+                                                        <div className='d-flex justify-content-between align-items-center'>
+                                                            <p className="card-title mb-0">User List</p>
+                                                            <div className="d-flex justify-content-center mb-3">
+                                                                <button className=" border-0 bg-transparent px-2 mr-2" onClick={handlePrint}><i class="fa-solid fa-print text-primary"></i>
+                                                                    <br /><span className='' style={{ fontSize: "12px" }}>Print</span>
+                                                                </button>
+                                                                <button className=" border-0 bg-transparent px-2" onClick={handleExport}><i class="fa-solid fa-file-export"></i>
+                                                                    <br /><span className='' style={{ fontSize: "12px" }}>Export</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
                                                         <div className="row">
                                                             <div className="col-12">
                                                                 <div className="table-responsive">

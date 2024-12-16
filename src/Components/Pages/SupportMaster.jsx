@@ -4,6 +4,8 @@ import Sidebar from '../Template/Sidebar';
 import Loding from '../Template/Loding';
 import callAPI from '../../commonMethod/api';
 import { toast } from 'react-toastify';
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
 
 const SupportMaster = () => {
     const token = sessionStorage.getItem('token');
@@ -86,6 +88,97 @@ const SupportMaster = () => {
         }
     };
 
+    const fetchAllData = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch(`${URL}/supports/get_all_supports?limit=0`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const result = await response.json();
+            return response.data.data || [];
+
+        } catch (error) {
+            console.error('Error fetching school data:', error.message);
+            return [];
+        } finally {
+            setLoading(false);
+        }
+    };
+    const formatDate = (dateString) => {
+        if (!dateString) return "Not Available";
+        const date = new Date(dateString);
+        const day = String(date.getUTCDate()).padStart(2, '0');
+        const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+        const year = date.getUTCFullYear();
+        return `${day}/${month}/${year}`;
+    };
+
+    const handleExport = async () => {
+        const allData = await fetchAllData();
+        const formattedData = data.map((val, index) => ({
+            index: index + 1,
+            parent_id: val?.parent_id || "Not Available",
+            send_by: val?.send_by || "Not Available",
+            description: val?.description || "Not Available",
+            remark: val?.remark || "Not Available",
+            added_date: formatDate(val?.added_date),
+            edited_date: formatDate(val?.edited_date),
+            status: val?.status === 1 ? "Active" : val?.status === 0 ? "Not Active" : "Not Available"
+        }));
+        const ws = XLSX.utils.json_to_sheet(formattedData);
+        const csvContent = XLSX.utils.sheet_to_csv(ws);
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        saveAs(blob, 'Support_Master.csv');
+    };
+
+    const handlePrint = async () => {
+        const allData = await fetchAllData();
+        const formattedData = data.map((val, index) => ({
+            index: index + 1,
+            parent_id: val?.parent_id || "Not Available",
+            send_by: val?.send_by || "Not Available",
+            description: val?.description || "Not Available",
+            remark: val?.remark || "Not Available",
+            added_date: formatDate(val?.added_date),
+            edited_date: formatDate(val?.edited_date),
+            status: val?.status === 1 ? "Active" : val?.status === 0 ? "Not Active" : "Not Available"
+        }));
+
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write('<html><head><title>Print Support Master</title></head><body>');
+        printWindow.document.write('<h1>Support Master List</h1>');
+        printWindow.document.write('<table border="1" style="width:100%; text-align:left; border-collapse:collapse;">');
+        printWindow.document.write('<tr><th>S.No</th><th>Parent ID</th><th>Send By</th><th>Description</th><th>Remark</th><th>Issue Date</th><th>Resolved Date</th><th>Status</th></tr>');
+
+        formattedData.forEach((row) => {
+            printWindow.document.write(
+                `<tr>
+                    <td>${row.index}</td>
+                    <td>${row.parent_id}</td>
+                    <td>${row.send_by}</td>
+                    <td>${row.description}</td>
+                    <td>${row.remark}</td>
+                    <td>${row.added_date}</td>
+                    <td>${row.edited_date}</td>
+                    <td>${row.status}</td>
+                </tr>`
+            );
+        });
+
+        printWindow.document.write('</table></body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    };
+
+
     useEffect(() => {
         fetchData(); // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage]);
@@ -157,7 +250,17 @@ const SupportMaster = () => {
                                 <div className="col-md-12 grid-margin stretch-card">
                                     <div className="card shadow-sm">
                                         <div className="card-body">
-                                            <p className="card-title">Support List</p>
+                                            <div className='d-flex justify-content-between align-items-center'>
+                                                <p className="card-title mb-0">Support List</p>
+                                                <div className="d-flex justify-content-center mb-3">
+                                                    <button className=" border-0 bg-transparent px-2 mr-2" onClick={handlePrint}><i class="fa-solid fa-print text-primary"></i>
+                                                        <br /><span className='' style={{ fontSize: "12px" }}>Print</span>
+                                                    </button>
+                                                    <button className=" border-0 bg-transparent px-2" onClick={handleExport}><i class="fa-solid fa-file-export"></i>
+                                                        <br /><span className='' style={{ fontSize: "12px" }}>Export</span>
+                                                    </button>
+                                                </div>
+                                            </div>
                                             <div className="row">
                                                 <div className="col-12">
                                                     <div className="table-responsive">

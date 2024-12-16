@@ -5,6 +5,8 @@ import Loding from '../Template/Loding';
 import ExpandRowTable from '../Template/ExpandRowTable';
 import callAPI from '../../commonMethod/api';
 import { toast } from 'react-toastify';
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
 
 const GroupMaster = () => {
 
@@ -73,6 +75,56 @@ const GroupMaster = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    const fetchAllData = async () => {
+        try {
+            setLoading(true);
+            const response = await callAPI.get(`./msg/getGroupDetail?limit=0`);
+            return response.data.data || [];
+        } catch (error) {
+            console.error('Error fetching full data:', error.message);
+            return [];
+        } finally {
+            setLoading(false);
+        }
+    };
+    const handleExport = async () => {
+        const allData = await fetchAllData();
+        const formattedData = allData.map((val, index) => ({
+            groupId: val?.msg_group_id,
+            msg_group_name: val?.msg_group_name,
+            is_active: val?.is_active === 1 ? 'Yes' : 'No',
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(formattedData);
+        const csvContent = XLSX.utils.sheet_to_csv(ws);
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        saveAs(blob, 'Group_Master.csv');
+    };
+
+    const handlePrint = async () => {
+        const allData = await fetchAllData();
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write('<html><head><title>Print Group Master</title></head><body>');
+        printWindow.document.write('<h1>Group Master List</h1>');
+        printWindow.document.write('<table border="1" style="width:100%; text-align:left;">');
+        printWindow.document.write('<tr><th>Group Id</th><th>Group Name</th><th>Is Active</th></tr>');
+        allData.forEach((val, index) => {
+            const groupId = val?.msg_group_id;
+            const msg_group_name = val?.msg_group_name;
+            const is_active = val?.is_active === 1 ? 'Yes' : 'No';
+            printWindow.document.write(
+                `<tr>
+                    <td>${groupId}</td>
+                    <td>${msg_group_name}</td>
+                    <td>${is_active}</td>
+                    </tr>`
+            );
+        });
+        printWindow.document.write('</table></body></html>');
+        printWindow.document.close();
+        printWindow.print();
     };
 
     const handlePageChange = (page) => {
@@ -272,7 +324,17 @@ const GroupMaster = () => {
                                             <div className="col-md-12 grid-margin stretch-card">
                                                 <div className="card shadow-sm">
                                                     <div className="card-body">
-                                                        <p className="card-title">Message Group List</p>
+                                                        <div className='d-flex justify-content-between align-items-center'>
+                                                            <p className="card-title mb-0">Message Group List</p>
+                                                            <div className="d-flex justify-content-center mb-3">
+                                                                <button className=" border-0 bg-transparent px-2 mr-2" onClick={handlePrint}><i class="fa-solid fa-print text-primary"></i>
+                                                                    <br /><span className='' style={{ fontSize: "12px" }}>Print</span>
+                                                                </button>
+                                                                <button className=" border-0 bg-transparent px-2" onClick={handleExport}><i class="fa-solid fa-file-export"></i>
+                                                                    <br /><span className='' style={{ fontSize: "12px" }}>Export</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
                                                         <div className="row">
                                                             <div className="col-12">
                                                                 <div className="table-responsive">

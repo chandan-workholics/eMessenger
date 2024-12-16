@@ -7,7 +7,8 @@ import callAPI from '../../commonMethod/api';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
 const NoticeBoard = () => {
     const [datas, setDatas] = useState({ title: '', document_type: '', document_link: '', thumbnails: '' })
     const [updateNotice, setUpdateNotice] = useState({});
@@ -19,20 +20,17 @@ const NoticeBoard = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [error, setError] = useState(null);
     const rowsPerPage = 5;
-
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => {
         setIsModalOpen(false);
         setDatas({ title: '', document_type: '', document_link: '', thumbnails: '' });
     };
-
     let name, value;
     const handleChange = (e) => {
         name = e.target.name;
         value = e.target.value;
         setDatas({ ...datas, [name]: value })
     }
-
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -53,11 +51,9 @@ const NoticeBoard = () => {
             console.error('Error adding notice:', error.message);
         }
     };
-
     useEffect(() => {
         fetchData();// eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage]);
-
 
     const fetchData = async () => {
         try {
@@ -71,6 +67,69 @@ const NoticeBoard = () => {
             setLoading(false);
         }
     };
+    const fetchAllData = async () => {
+        try {
+            setLoading(true);
+            const response = await callAPI.get(`./notice/getAllNoticeBoardDetail?limit=0`);
+            return response.data.data || [];
+        } catch (error) {
+            console.error('Error fetching full data:', error.message);
+            return [];
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleExport = async () => {
+        const allData = await fetchAllData();
+        const formattedData = allData.map((val, index) => ({
+            sn: val?.id,
+            title: val?.title,
+            documentType: val?.document_type,
+            documentLink: (<Link to={val?.document_link} className='text-info' target='_blank'>{val?.document_link}</Link>),
+            thumbnails: (val?.document_type !== 'pdf' ? <img src={val?.thumbnails} className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} /> : <img src='http://206.189.130.102:3550/Uploads/image/1729838073596-1729838073596.png' className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} />),
+        }));
+        const ws = XLSX.utils.json_to_sheet(formattedData);
+        const csvContent = XLSX.utils.sheet_to_csv(ws);
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        saveAs(blob, 'notice_board.csv');
+    };
+
+    const handlePrint = async () => {
+        const allData = await fetchAllData();
+
+        if (!allData || allData.length === 0) {
+            alert("No data available to print.");
+            return;
+        }
+
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write('<html><head><title>Print Notice Board</title></head><body>');
+        printWindow.document.write('<h1>Notice Board List</h1>');
+        printWindow.document.write('<table border="1" style="width:100%; text-align:left;">');
+        printWindow.document.write('<tr><th>S.No</th><th>Title</th><th>Document Type</th><th>Document Link</th><th>Thumbnails</th></tr>');
+        allData.forEach((val, index) => {
+            const documentLink = val?.document_link ? `<a href="${val?.document_link}" class="text-info" target="_blank">${val?.document_link}</a>` : '#';
+            const documentType = val?.document_type || '#';
+            const thumbnail = val?.document_type !== 'pdf'
+                ? `<img src="${val?.thumbnails}" alt="" style="width:130px; height:80px; object-fit:contain;" />`
+                : `<img src="http://206.189.130.102:3550/Uploads/image/1729838073596-1729838073596.png" alt="" style="width:130px; height:80px; object-fit:contain;" />`;
+
+            printWindow.document.write(`
+                <tr>
+                    <td>${index + 1}</td>
+                    <td>${val?.title || ''}</td>
+                    <td>${documentType}</td>
+                    <td>${documentLink}</td>
+                    <td>${thumbnail}</td>
+                </tr>
+            `);
+        });
+        printWindow.document.write('</table></body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    };
+
 
     const handleUpdate = async (e) => {
         e.preventDefault();
@@ -92,7 +151,6 @@ const NoticeBoard = () => {
             setLoading(false);
         }
     };
-
     const columns = [
         { label: 'S.No.', key: 'sn' },
         { label: 'Title', key: 'title' },
@@ -101,7 +159,6 @@ const NoticeBoard = () => {
         { label: 'Thumbnails', key: 'thumbnails' },
         { label: 'Action', key: 'action' }
     ];
-
     const data = noticeBoardlList ? noticeBoardlList?.map((val) => ({
         sn: val?.id,
         title: val?.title,
@@ -116,7 +173,6 @@ const NoticeBoard = () => {
             </div>
         ),
     })) : [];
-
     const handleUpdateNotice = (val) => {
         setUpdateNotice(val);
         openModal();
@@ -127,17 +183,13 @@ const NoticeBoard = () => {
             thumbnails: val.thumbnails
         });
     };
-
     const handlePageChange = (page) => {
         if (page > 0 && page <= totalPages) {
             setCurrentPage(page);
         }
-    };
-
-    if (loading) {
+    }; if (loading) {
         return <Loding />;
     }
-
     const handleImageChange = async (e) => {
         const formData = new FormData();
         formData.append("file", e.target.files[0]);
@@ -146,8 +198,7 @@ const NoticeBoard = () => {
                 "Content-Type": "multipart/form-data",
 
             },
-        };
-        try {
+        }; try {
             const fetchdata = axios.post(
                 `${URL}/v1/admin/imageUpload_Use/imageUpload`,
                 formData,
@@ -166,7 +217,6 @@ const NoticeBoard = () => {
                 toast.error("Fail To Load");
             }
         } catch (error) {
-
         }
     };
     const handlePdfChange = async (e) => {
@@ -200,7 +250,6 @@ const NoticeBoard = () => {
     };
     console.log(totalPages)
     console.log(error)
-
     return (
         <>
             <div className="container-scroller">
@@ -242,28 +291,13 @@ const NoticeBoard = () => {
                                                         <div className="forms-sample" >
                                                             <h4 className="card-description text-primary font-weight-bolder">Primary Info</h4>
                                                             <div className="row">
-                                                                <div className="col-md-4 form-group">
-                                                                    <label htmlFor="title">Title <span className="text-danger">*</span></label>
-                                                                    <input
-                                                                        type="text"
-                                                                        className="form-control"
-                                                                        id="title"
-                                                                        name="title"
-                                                                        value={datas.title}
-                                                                        onChange={handleChange}
-                                                                        placeholder="Title"
-                                                                        required
-                                                                    />
+                                                                <div className="col-md-4 form-group"><label htmlFor="title">Title <span className="text-danger">*</span></label><input type="text" className="form-control" id="title" name="title" value={datas.title} onChange={handleChange} placeholder="Title" required />
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
                                                                     <label htmlFor="document_type">Document Type <span className="text-danger">*</span></label>
                                                                     <select
                                                                         className="form-control"
-                                                                        id="document_type"
-                                                                        name="document_type"
-                                                                        onChange={handleChange}
-                                                                        required
-                                                                    >
+                                                                        id="document_type" name="document_type" onChange={handleChange} required>
                                                                         <option value="" disabled selected>Please Select</option>
                                                                         <option value="PDF">PDF</option>
                                                                         <option value="YOUTUBE">YOUTUBE</option>
@@ -272,15 +306,7 @@ const NoticeBoard = () => {
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
                                                                     <label htmlFor="document_link">Document Link </label>
-                                                                    <input
-                                                                        type="text"
-                                                                        className="form-control"
-                                                                        id="document_link"
-                                                                        name="document_link"
-                                                                        value={datas.document_link}
-                                                                        onChange={handleChange}
-                                                                        placeholder="Enter Document Link"
-
+                                                                    <input type="text" className="form-control" id="document_link" name="document_link" value={datas.document_link} onChange={handleChange} placeholder="Enter Document Link"
                                                                     />
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
@@ -320,7 +346,17 @@ const NoticeBoard = () => {
                                             <div className="col-md-12 grid-margin stretch-card">
                                                 <div className="card shadow-sm">
                                                     <div className="card-body">
-                                                        <p className="card-title">Welcome Message List</p>
+                                                        <div className='d-flex justify-content-between align-items-center'>
+                                                            <p className="card-title mb-0">Welcome Message List</p>
+                                                            <div className="d-flex justify-content-center mb-3">
+                                                                <button className=" border-0 bg-transparent px-2 mr-2" onClick={handlePrint}><i class="fa-solid fa-print text-primary"></i>
+                                                                    <br /><span className='' style={{ fontSize: "12px" }}>Print</span>
+                                                                </button>
+                                                                <button className=" border-0 bg-transparent px-2" onClick={handleExport}><i class="fa-solid fa-file-export"></i>
+                                                                    <br /><span className='' style={{ fontSize: "12px" }}>Export</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
                                                         <div className="row">
                                                             <div className="col-12">
                                                                 <div className="table-responsive">

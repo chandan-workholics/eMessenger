@@ -59,6 +59,95 @@ const FeesMaster = () => {
         fetchData();// eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage]);
 
+    const handlePrint = () => {
+        if (!importFeeStudent || importFeeStudent.length === 0) {
+            toast.error("No data available to print.");
+            return;
+        }
+
+        try {
+            // Open a new window for printing
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Print Pending Fees List</title>
+                        <style>
+                            table {
+                                width: 100%;
+                                border-collapse: collapse;
+                            }
+                            table, th, td {
+                                border: 1px solid black;
+                            }
+                            th, td {
+                                text-align: left;
+                                padding: 8px;
+                            }
+                            th {
+                                background-color: #f2f2f2;
+                            }
+                            body {
+                                font-family: Arial, sans-serif;
+                                margin: 20px;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>Pending Fees List</h1>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Id</th>
+                                    <th>Scholar No.</th>
+                                    <th>Session</th>
+                                    <th>Term</th>
+                                    <th>Outstanding Fee</th>
+                                    <th>Due Date</th>
+                                    <th>Fees Status</th>
+                                    <th>Created At</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            `);
+
+            // Generate table rows dynamically
+            importFeeStudent.forEach((val) => {
+                printWindow.document.write(`
+                    <tr>
+                        <td>${val.fees_display_id}</td>
+                        <td>${val.scholar_no}</td>
+                        <td>${val.session_detail}</td>
+                        <td>${val.term}</td>
+                        <td>${val.outstandingfees}</td>
+                        <td>${val.duedate}</td>
+                        <td>${val.feesstatus}</td>
+                        <td>${new Date(val.createdAt).toLocaleDateString('en-GB')}</td>
+                    </tr>
+                `);
+            });
+
+            // Close table and add print script
+            printWindow.document.write(`
+                            </tbody>
+                        </table>
+                        <script>
+                            window.onload = function() {
+                                window.print();
+                                window.close();
+                            };
+                        </script>
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+        } catch (error) {
+            console.error("Error during print operation:", error.message);
+            toast.error("An error occurred while trying to print.");
+        }
+    };
+
+
     const handlePageChange = (page) => {
         if (page > 0 && page <= totalPages) {
             setCurrentPage(page);
@@ -201,6 +290,8 @@ const FeesMaster = () => {
                                                         Import
                                                     </button>
                                                     <button type="submit" className="btn btn-success mr-2" onClick={exportToExcel}>Export to Excel</button>
+                                                    <button type="submit" className="btn btn-success mr-2" onClick={handlePrint}>Print</button>
+
                                                 </div>
                                             </div>
                                         </div>

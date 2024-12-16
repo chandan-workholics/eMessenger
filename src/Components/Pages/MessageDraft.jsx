@@ -9,6 +9,8 @@ import Loding from '../Template/Loding';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
 
 const MessageDraft = () => {
     const URL = process.env.REACT_APP_URL;
@@ -40,6 +42,7 @@ const MessageDraft = () => {
             setLoading(false);
         }
     };
+
 
     const fetchSubGroup = async () => {
         try {
@@ -239,10 +242,6 @@ const MessageDraft = () => {
         }
     };
 
-    //geting
-
-
-
     const fetchListData = async () => {
         try {
             setLoading(true);
@@ -315,7 +314,6 @@ const MessageDraft = () => {
                 </div>
             </div>
         ),
-
         priority: val?.msg_priority,
         showUpto: val?.show_upto
             ? (() => {
@@ -339,13 +337,19 @@ const MessageDraft = () => {
         lastPostedBy: val?.entryByDetails?.full_name || '',
         lastPostedDate: val?.createdAt
             ? (() => {
-                const date = new Date(val?.createdAt);
+                const date = new Date(val?.show_upto);
                 const day = String(date.getUTCDate()).padStart(2, '0');
                 const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
                 const year = date.getUTCFullYear();
-                const hours = String(date.getUTCHours()).padStart(2, '0');
+                let hours = date.getUTCHours();
                 const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-                return `${day}/${month}/${year} ${hours}:${minutes}`;
+
+                // Determine AM/PM
+                const ampm = hours >= 12 ? 'P.M.' : 'A.M.';
+                hours = hours % 12;
+                hours = hours ? String(hours).padStart(2, '0') : '12'; // 12:00 AM or 12:00 PM
+
+                return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
             })()
             : '',
 
@@ -373,6 +377,49 @@ const MessageDraft = () => {
         ),
     })) : [];
 
+    const handleExport = async () => {
+        const allData = await fetchData();
+        const formattedData = allData.map((val, index) => ({
+            ReqID: index + 1,
+            MsgID: val?.msg_id,
+            Received: val?.reply_date_time || '',
+            Subject: val?.message?.subject_text || '',
+            MobileNo: val?.mobile_no,
+            School: val?.schools?.[0]?.sch_short_nm || '',
+            StudentID: val?.student_number,
+            Sent: val?.sendedMessage?.sended_date || '',
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(formattedData);
+        const csvContent = XLSX.utils.sheet_to_csv(ws);
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        saveAs(blob, 'message_draft.csv');
+    };
+
+    const handlePrint = async () => {
+        const allData = await fetchData();
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write('<html><head><title>Print Reply Received</title></head><body>');
+        printWindow.document.write('<h1>Reply Received List</h1>');
+        printWindow.document.write('<table border="1" style="width:100%; text-align:left;">');
+        printWindow.document.write('<tr><th>Req ID</th><th>Msg ID</th><th>Received</th><th>Subject</th><th>Mobile No.</th><th>School</th><th>Student ID</th><th>Sent</th></tr>');
+        allData.forEach((val, index) => {
+            printWindow.document.write(
+                `<tr>
+                       <td>${val?.msg_id || ''}</td>
+                       <td>${val?.reply_date_time || ''}</td>
+                       <td>${val?.message?.subject_text || ''}</td>
+                       <td>${val?.mobile_no || ''}</td>
+                       <td>${val?.schools?.[0]?.sch_short_nm || ''}</td>
+                       <td>${val?.student_number || ''}</td>
+                       <td>${val?.sendedMessage?.sended_date || ''}</td>
+                   </tr>`
+            );
+        });
+        printWindow.document.write('</table></body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    };
     //geting
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1); // Set to tomorrow
@@ -442,8 +489,8 @@ const MessageDraft = () => {
                         <div className="content-wrapper">
                             <div className="row">
                                 <div className="col-12 col-md-6 mb-md-4 mb-xl-0">
-                                    <div className="d-flex align-items-center mb-3">
-                                        <h3 className="font-weight-bold mr-2">Create Message</h3>
+                                    <div className="col-12 col-md-6 mb-md-4 mb-xl-0">
+                                        <h3 className="font-weight-bold">Create Message</h3>
                                     </div>
                                 </div>
 
@@ -881,7 +928,17 @@ const MessageDraft = () => {
                                             <div className="col-md-12 grid-margin stretch-card">
                                                 <div className="card shadow-sm">
                                                     <div className="card-body">
-                                                        <p className="card-title">Created Message List</p>
+                                                        <div className='d-flex justify-content-between align-items-center'>
+                                                            <p className="card-title mb-0">Create Message List</p>
+                                                            <div className="d-flex justify-content-center mb-3">
+                                                                <button className=" border-0 bg-transparent px-2 mr-2" onClick={handlePrint}><i class="fa-solid fa-print text-primary"></i>
+                                                                    <br /><span className='' style={{ fontSize: "12px" }}>Print</span>
+                                                                </button>
+                                                                <button className=" border-0 bg-transparent px-2" onClick={handleExport}><i class="fa-solid fa-file-export"></i>
+                                                                    <br /><span className='' style={{ fontSize: "12px" }}>Export</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
                                                         <div className="row">
                                                             <div className="col-12">
                                                                 <div className="table-responsive">

@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import Navbar from '../Template/Navbar';
 import Sidebar from '../Template/Sidebar';
 import Loding from '../Template/Loding';
 import ExpandRowTable from '../Template/ExpandRowTable';
 import callAPI from '../../commonMethod/api.js';
-
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
 
 const ReplyReceived = () => {
-
     const [messageList, setMessageList] = useState([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
@@ -21,15 +21,72 @@ const ReplyReceived = () => {
             setMessageList(response.data.data || []);
             setTotalPages(Math.ceil(response?.data?.pagination?.total / rowsPerPage));
         } catch (error) {
-            console.error('Error fetching school data:', error.message);
+            console.error('Error fetching data:', error.message);
         } finally {
             setLoading(false);
         }
     };
 
+    const fetchAllData = async () => {
+        try {
+            setLoading(true);
+            const response = await callAPI.get('/msg/getAllReplyMessages?limit=0'); // Fetch all data
+            return response.data.data || [];
+        } catch (error) {
+            console.error('Error fetching full data:', error.message);
+            return [];
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleExport = async () => {
+        const allData = await fetchAllData();
+        const formattedData = allData.map((val, index) => ({
+            ReqID: index + 1,
+            MsgID: val?.msg_id,
+            Received: val?.reply_date_time || '',
+            Subject: val?.message?.subject_text || '',
+            MobileNo: val?.mobile_no,
+            School: val?.schools?.[0]?.sch_short_nm || '',
+            StudentID: val?.student_number,
+            Sent: val?.sendedMessage?.sended_date || '',
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(formattedData);
+        const csvContent = XLSX.utils.sheet_to_csv(ws);
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        saveAs(blob, 'Reply_Received.csv');
+    };
+
+    const handlePrint = async () => {
+        const allData = await fetchAllData();
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write('<html><head><title>Print Reply Received</title></head><body>');
+        printWindow.document.write('<h1>Reply Received List</h1>');
+        printWindow.document.write('<table border="1" style="width:100%; text-align:left;">');
+        printWindow.document.write('<tr><th>Req ID</th><th>Msg ID</th><th>Received</th><th>Subject</th><th>Mobile No.</th><th>School</th><th>Student ID</th><th>Sent</th></tr>');
+        allData.forEach((val, index) => {
+            printWindow.document.write(
+                `<tr>
+                    <td>${index + 1}</td>
+                    <td>${val?.msg_id || ''}</td>
+                    <td>${val?.reply_date_time || ''}</td>
+                    <td>${val?.message?.subject_text || ''}</td>
+                    <td>${val?.mobile_no || ''}</td>
+                    <td>${val?.schools?.[0]?.sch_short_nm || ''}</td>
+                    <td>${val?.student_number || ''}</td>
+                    <td>${val?.sendedMessage?.sended_date || ''}</td>
+                </tr>`
+            );
+        });
+        printWindow.document.write('</table></body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    };
 
     useEffect(() => {
-        fetchData();// eslint-disable-next-line react-hooks/exhaustive-deps
+        fetchData(); // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, rowsPerPage]);
 
     // Table columns
@@ -43,7 +100,6 @@ const ReplyReceived = () => {
         { label: 'Student Id', key: 'studentId' },
         { label: 'Sent', key: 'sent' },
     ];
-
     const rows = [
         { label: 'Req ID', key: 'reqId' },
         { label: 'Msg ID', key: 'msgId' },
@@ -55,65 +111,16 @@ const ReplyReceived = () => {
         { label: 'Sent', key: 'sent' },
     ];
 
-    // Table data
-    const data = messageList
-        ? messageList.map((val, index) => ({
-            reqId: index + 1,
-            msgId: val?.msg_id,
-          
-            received: val?.reply_date_time
-                ? (() => {
-                    const date = new Date(val?.reply_date_time);
-                    const day = String(date.getUTCDate()).padStart(2, '0');
-                    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
-                    const year = date.getUTCFullYear();
-                    const hours = String(date.getUTCHours()).padStart(2, '0');
-                    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-                    return `${day}/${month}/${year} ${hours}:${minutes}`;
-                })()
-                : '',
-            subject: val?.message?.subject_text || '',
-            mobileNo: val?.mobile_no,
-            school: val?.schools?.[0]?.sch_short_nm || '',
-            studentId: val?.student_number,
-           
-            sent: val?.sendedMessage?.sended_date
-                ? (() => {
-                    const date = new Date(val?.sendedMessage?.sended_date);
-                    const day = String(date.getUTCDate()).padStart(2, '0');
-                    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
-                    const year = date.getUTCFullYear();
-                    const hours = String(date.getUTCHours()).padStart(2, '0');
-                    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-                    return `${day}/${month}/${year} ${hours}:${minutes}`;
-                })()
-                : '',
-            replyMsgId: val?.replied_msg_id || '',
-            msgBodyId: val?.replyBodies?.map((body) => body?.replied_msg_d_id || '').join(', '),
-            msgType: val?.replyBodies?.map((body) => body?.msg_type || '').join(', '),
-            dataReplyText: val?.replyBodies
-                ?.map((reply) => {
-                    try {
-                        const rawText = reply?.data_reply_text || '';
-                        // Remove control characters
-                        const sanitizedText = rawText.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
-                        const parsedData = sanitizedText ? JSON.parse(sanitizedText) : {};
-                        if (parsedData?.text) {
-                            return parsedData.text;
-                        } else if (parsedData?.imageURIsave) {
-                            return parsedData.imageURIsave;
-                        } else if (parsedData?.selected) {
-                            return Object.values(parsedData.selected).join(', ');
-                        }
-                        return 'NA';
-                    } catch (error) {
-                        console.error('Error parsing JSON:', reply?.data_reply_text, error);
-                        return ''; // Fallback value
-                    }
-                })
-                .join(', '),
-        }))
-        : [];
+    const data = messageList.map((val, index) => ({
+        reqId: index + 1,
+        msgId: val?.msg_id,
+        received: val?.reply_date_time || '',
+        subject: val?.message?.subject_text || '',
+        mobileNo: val?.mobile_no,
+        school: val?.schools?.[0]?.sch_short_nm || '',
+        studentId: val?.student_number,
+        sent: val?.sendedMessage?.sended_date || '',
+    }));
 
     const handlePageChange = (page) => {
         if (page > 0 && page <= totalPages) {
@@ -121,65 +128,52 @@ const ReplyReceived = () => {
         }
     };
 
-
     if (loading) {
         return <Loding />;
     }
 
-    console.log(setCurrentPage)
-    console.log(totalPages)
-
     return (
         <div className="container-scroller">
-            {/*----- Navbar -----*/}
             <Navbar />
-
             <div className="container-fluid page-body-wrapper">
-
-                {/* SideBar */}
                 <Sidebar />
-
                 <div className="main-panel">
                     <div className="content-wrapper">
                         <div className="row">
                             <div className="col-12 col-md-6 mb-md-4 mb-xl-0">
-                                <div className="d-flex align-items-center mb-3">
-                                    <h3 className="font-weight-bold mr-2">Inbox</h3>
-                                </div>
+                                <h3 className="font-weight-bold">Inbox</h3>
                             </div>
                             <div className="col-md-12 grid-margin stretch-card">
                                 <div className="card shadow-sm">
                                     <div className="card-body">
-                                        <p className="card-title">Reply Received List</p>
-                                        <div className="row">
-                                            <div className="col-12">
-                                                <div className="table-responsive">
-                                                    <ExpandRowTable columns={columns} rows={rows} data={data} />
-                                                </div>
+                                        <div className='d-flex justify-content-between align-items-center'>
+                                            <p className="card-title mb-0">Reply Received List</p>
+
+                                            <div className="d-flex justify-content-center mb-3">
+                                                <button className=" border-0 bg-transparent px-2 mr-2" onClick={handlePrint}><i class="fa-solid fa-print text-primary"></i>
+                                                    <br /><span className='' style={{ fontSize: "12px" }}>Print</span>
+                                                </button>
+                                                <button className=" border-0 bg-transparent px-2" onClick={handleExport}><i class="fa-solid fa-file-export"></i>
+                                                    <br /><span className='' style={{ fontSize: "12px" }}>Export</span>
+                                                </button>
                                             </div>
                                         </div>
+                                        <ExpandRowTable columns={columns} rows={rows} data={data} />
+
                                         <nav>
                                             <ul className="pagination justify-content-end">
                                                 <li className="page-item">
-                                                    <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}
-                                                        disabled={currentPage === 1}>Previous</button>
+                                                    <button className="page-link" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>Previous</button>
                                                 </li>
                                                 {Array.from({ length: totalPages }, (_, index) => (
-                                                    <li
-                                                        key={index + 1}
-                                                        className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}
-                                                    >
-                                                        <button
-                                                            className="page-link"
-                                                            onClick={() => handlePageChange(index + 1)}
-                                                        >
+                                                    <li key={index + 1} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+                                                        <button className="page-link" onClick={() => handlePageChange(index + 1)}>
                                                             {index + 1}
                                                         </button>
                                                     </li>
                                                 ))}
                                                 <li className="page-item">
-                                                    <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}
-                                                        disabled={currentPage === totalPages}>Next</button>
+                                                    <button className="page-link" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>Next</button>
                                                 </li>
                                             </ul>
                                         </nav>

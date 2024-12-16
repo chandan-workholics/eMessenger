@@ -6,6 +6,9 @@ import ExpandRowTable from '../Template/ExpandRowTable';
 import callAPI from '../../commonMethod/api.js';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { saveAs } from 'file-saver';
+import * as XLSX from 'xlsx';
+
 const SchoolMaster = () => {
     const URL = process.env.REACT_APP_URL;
     const [datas, setDatas] = useState({
@@ -117,6 +120,68 @@ const SchoolMaster = () => {
             setLoading(false);
         }
     };
+    const fetchAllData = async () => {
+        try {
+            setLoading(true);
+            const response = await callAPI.get(`/school/getSchool?limit=0`);
+            return response.data.data || [];
+        } catch (error) {
+            console.error('Error fetching school data:', error.message);
+            return [];
+        } finally {
+            setLoading(false);
+        }
+    };
+    const handleExport = async () => {
+        const allData = await fetchAllData();
+        const formattedData = schoolList.map((school) => ({
+            schoolId: school?.sch_id,
+            schoolFullName: school?.sch_nm,
+            shortName: school?.sch_short_nm,
+            isActive: school?.is_active === 1 ? true : false,
+            fontColor: school?.text_color,
+            backgroundColor: school?.bg_color,
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(formattedData);
+        const csvContent = XLSX.utils.sheet_to_csv(ws);
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        saveAs(blob, 'School_Master.csv');
+    };
+
+    const handlePrint = async () => {
+        const allData = await fetchAllData();
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write('<html><head><title>Print Group Master</title></head><body>');
+        printWindow.document.write('<h1>Group Master List</h1>');
+        printWindow.document.write('<table border="1" style="width:100%; text-align:left; border-collapse: collapse;">');
+        printWindow.document.write('<tr><th>School ID</th><th>Full Name</th><th>Short Name</th><th>Is Active</th><th>Font Color</th><th>Background Color</th></tr>');
+
+        allData.forEach((val, index) => {
+            const schoolId = val?.sch_id || '';
+            const schoolFullName = val?.sch_nm || '';
+            const shortName = val?.sch_short_nm || '';
+            const isActive = val?.is_active === 1 ? 'Active' : 'Inactive';
+            const fontColor = val?.text_color || '';
+            const backgroundColor = val?.bg_color || '';
+
+            printWindow.document.write(`
+                <tr>
+                    <td>${schoolId}</td>
+                    <td>${schoolFullName}</td>
+                    <td>${shortName}</td>
+                    <td>${isActive}</td>
+                    <td style="color: ${fontColor};">${fontColor}</td>
+                    <td style="background-color: ${backgroundColor};">${backgroundColor}</td>
+                </tr>
+            `);
+        });
+
+        printWindow.document.write('</table></body></html>');
+        printWindow.document.close();
+        printWindow.print();
+    };
+
 
     useEffect(() => {
         fetchData();// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -512,7 +577,17 @@ const SchoolMaster = () => {
                                             <div className="col-md-12 grid-margin stretch-card">
                                                 <div className="card shadow-sm">
                                                     <div className="card-body">
-                                                        <p className="card-title">School List</p>
+                                                        <div className='d-flex justify-content-between align-items-center'>
+                                                            <p className="card-title mb-0">School List</p>
+                                                            <div className="d-flex justify-content-center mb-3">
+                                                                <button className=" border-0 bg-transparent px-2 mr-2" onClick={handlePrint}><i class="fa-solid fa-print text-primary"></i>
+                                                                    <br /><span className='' style={{ fontSize: "12px" }}>Print</span>
+                                                                </button>
+                                                                <button className=" border-0 bg-transparent px-2" onClick={handleExport}><i class="fa-solid fa-file-export"></i>
+                                                                    <br /><span className='' style={{ fontSize: "12px" }}>Export</span>
+                                                                </button>
+                                                            </div>
+                                                        </div>
                                                         <div className="row">
                                                             <div className="col-12">
                                                                 <div className="table-responsive">

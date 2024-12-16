@@ -55,6 +55,121 @@ const ImportScholar = () => {
         }
     };
 
+    const fetchAllData = async () => {
+        setLoading(true);
+        try {
+            const response = await fetch(`${URL}/scholar/getScholarDetail?limit=0`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            const responsetwo = await fetch(`${URL}/scholar/getScholarDetail?limit=0`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const result = await response.json();
+            const resulttwo = await responsetwo.json();
+            // setImportStudent(result.data);
+            // setImportStudenttwo(resulttwo.data);
+            // setTotalPages(Math.ceil(result.totalCount / rowsPerPage));
+
+            return response.data.data || [];
+        } catch (error) {
+            console.error('Error fetching school data:', error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handlePrint = async () => {
+        if (!importStudenttwo || importStudenttwo.length === 0) {
+            toast.error("No data available to print.");
+            return;
+        }
+
+        try {
+            // Open a new window for printing
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Print Scholar Data</title>
+                        <style>
+                            table {
+                                width: 100%;
+                                border-collapse: collapse;
+                            }
+                            table, th, td {
+                                border: 1px solid black;
+                            }
+                            th, td {
+                                text-align: left;
+                                padding: 8px;
+                            }
+                            th {
+                                background-color: #f2f2f2;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <h1>Scholar Data</h1>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Mobile Number</th>
+                                    <th>School Short Name</th>
+                                    <th>Student Name</th>
+                                    <th>Student DOB</th>
+                                    <th>Student Email</th>
+                                    <th>Notice Message</th>
+                                    <th>Student Id</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            `);
+
+            // Generate table rows
+            importStudenttwo.forEach((val, index) => {
+                printWindow.document.write(`
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${val?.mobile_no || "N/A"}</td>
+                        <td>${val?.sch_short_nm || "N/A"}</td>
+                        <td>${val?.student_name || "N/A"}</td>
+                        <td>${val?.scholar_dob || "N/A"}</td>
+                        <td>${val?.scholar_email || "N/A"}</td>
+                        <td>${val?.noticeMsg || "N/A"}</td>
+                        <td>${val?.scholar_no || "N/A"}</td>
+                    </tr>
+                `);
+            });
+
+            // Close the table and HTML
+            printWindow.document.write(`
+                            </tbody>
+                        </table>
+                    </body>
+                </html>
+            `);
+            printWindow.document.close();
+
+            // Trigger the print dialog
+            printWindow.print();
+        } catch (error) {
+            console.error("Error during print operation:", error.message);
+            toast.error("An error occurred while trying to print.");
+        }
+    };
+
     useEffect(() => {
         fetchData();// eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage]);
@@ -197,6 +312,8 @@ const ImportScholar = () => {
                                                     </div>
                                                     <button type="submit" className="btn btn-primary mr-2" onClick={handleSubmit}> Import  </button>
                                                     <button type="submit" className="btn btn-success mr-2" onClick={exportToExcel}>Export to Excel</button>
+                                                    <button type="submit" className="btn btn-primary mr-2" onClick={handlePrint}>Print</button>
+
                                                 </div>
                                             </div>
                                         </div>
