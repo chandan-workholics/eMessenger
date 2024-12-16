@@ -377,19 +377,236 @@ const MessageDraft = () => {
         ),
     })) : [];
 
+    // const handleExport = async () => {
+    //     const allData = await fetchData();
+    //     const formattedData = messageList.map((val, index) => ({
+    //         msgId: val?.msg_id,
+    //         subjectLineSchools: (
+    //             <div style={{ display: 'inline-block' }}>
+    //                 <div>{val?.subject_text}</div>
+    //                 <div style={{ marginTop: '4px', display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+    //                     {val?.schools?.map((school, index) => (
+    //                         <div
+    //                             key={school.sch_id || index}
+    //                             style={{
+    //                                 display: 'inline-block',
+    //                                 fontSize: 'small',
+    //                                 padding: '4px 8px',
+    //                                 borderRadius: '4px',
+    //                                 color: school.text_color || '#000000',
+    //                                 backgroundColor: school.bg_color || '#f0f0f0',
+    //                                 cursor: 'default',
+    //                             }}
+    //                         >
+    //                             {school.sch_short_nm}
+    //                         </div>
+    //                     ))}
+    //                 </div>
+    //             </div>
+    //         ),
+    //         priority: val?.msg_priority,
+    //         showUpto: val?.show_upto
+    //             ? (() => {
+    //                 const date = new Date(val?.show_upto);
+    //                 const day = String(date.getUTCDate()).padStart(2, '0');
+    //                 const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
+    //                 const year = date.getUTCFullYear();
+    //                 let hours = date.getUTCHours();
+    //                 const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+
+    //                 // Determine AM/PM
+    //                 const ampm = hours >= 12 ? 'P.M.' : 'A.M.';
+    //                 hours = hours % 12;
+    //                 hours = hours ? String(hours).padStart(2, '0') : '12'; // 12:00 AM or 12:00 PM
+
+    //                 return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
+    //             })()
+    //             : '',
+
+
+    //         lastPostedBy: val?.entryByDetails?.full_name || '',
+    //         lastPostedDate: val?.createdAt
+    //             ? (() => {
+    //                 const date = new Date(val?.show_upto);
+    //                 const day = String(date.getUTCDate()).padStart(2, '0');
+    //                 const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
+    //                 const year = date.getUTCFullYear();
+    //                 let hours = date.getUTCHours();
+    //                 const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+    //                 const ampm = hours >= 12 ? 'P.M.' : 'A.M.';
+    //                 hours = hours % 12;
+    //                 hours = hours ? String(hours).padStart(2, '0') : '12'; // 12:00 AM or 12:00 PM
+
+    //                 return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
+    //             })()
+    //             : '',
+
+    //         lastEditBy: val?.editByDetails?.full_name || '',
+    //         recipients: 'Na',
+    //         seen: 'Na',
+    //         respond: 'Na',
+    //         isActive: (
+    //             <div className="">
+    //                 <button onClick={() => handleToggleStatus(val?.msg_id, val?.is_active)} type="button" className="btn btn-primary p-2">
+    //                     {val?.is_active === 1 ? 'Yes' : 'No'}
+    //                 </button>
+    //             </div>
+    //         ),
+    //     }))
+    //     const ws = XLSX.utils.json_to_sheet(formattedData);
+    //     const csvContent = XLSX.utils.sheet_to_csv(ws);
+    //     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    //     saveAs(blob, 'message_draft.csv');
+    // };
+
+    // const handlePrint = async () => {
+    //     const allData = await fetchData();
+    //     const formattedData = messageList ? messageList.map((val) => ({
+    //         msgId: val?.msg_id,
+    //         subjectLineSchools: (
+    //             <div style={{ display: 'inline-block' }}>
+    //                 <div>{val?.subject_text}</div>
+    //                 <div style={{ marginTop: '4px', display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+    //                     {val?.schools?.map((school, index) => (
+    //                         <div
+    //                             key={school.sch_id || index}
+    //                             style={{
+    //                                 display: 'inline-block',
+    //                                 fontSize: 'small',
+    //                                 padding: '4px 8px',
+    //                                 borderRadius: '4px',
+    //                                 color: school.text_color || '#000000',
+    //                                 backgroundColor: school.bg_color || '#f0f0f0',
+    //                                 cursor: 'default',
+    //                             }}
+    //                         >
+    //                             {school.sch_short_nm}
+    //                         </div>
+    //                     ))}
+    //                 </div>
+    //             </div>
+    //         ),
+    //         priority: val?.msg_priority,
+    //         showUpto: val?.show_upto
+    //             ? (() => {
+    //                 const date = new Date(val?.show_upto);
+    //                 const day = String(date.getUTCDate()).padStart(2, '0');
+    //                 const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
+    //                 const year = date.getUTCFullYear();
+    //                 let hours = date.getUTCHours();
+    //                 const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+
+    //                 // Determine AM/PM
+    //                 const ampm = hours >= 12 ? 'P.M.' : 'A.M.';
+    //                 hours = hours % 12;
+    //                 hours = hours ? String(hours).padStart(2, '0') : '12'; // 12:00 AM or 12:00 PM
+
+    //                 return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
+    //             })()
+    //             : '',
+    //         lastPostedBy: val?.entryByDetails?.full_name || '',
+    //         lastPostedDate: val?.createdAt
+    //             ? (() => {
+    //                 const date = new Date(val?.createdAt); // Corrected to use `createdAt` instead of `show_upto`
+    //                 const day = String(date.getUTCDate()).padStart(2, '0');
+    //                 const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
+    //                 const year = date.getUTCFullYear();
+    //                 let hours = date.getUTCHours();
+    //                 const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+
+    //                 // Determine AM/PM
+    //                 const ampm = hours >= 12 ? 'P.M.' : 'A.M.';
+    //                 hours = hours % 12;
+    //                 hours = hours ? String(hours).padStart(2, '0') : '12'; // 12:00 AM or 12:00 PM
+
+    //                 return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
+    //             })()
+    //             : '',
+    //         lastEditBy: val?.editByDetails?.full_name || '',
+    //         recipients: 'Na', // This should be replaced by actual value if available
+    //         seen: 'Na', // This should be replaced by actual value if available
+    //         respond: 'Na', // This should be replaced by actual value if available
+    //         isActive: (
+    //             <div className="">
+    //                 <button onClick={() => handleToggleStatus(val?.msg_id, val?.is_active)} type="button" className="btn btn-primary p-2">
+    //                     {val?.is_active === 1 ? 'Yes' : 'No'}
+    //                 </button>
+    //             </div>
+    //         ),
+    //     })) : [];
+
+    //     // Create the print window
+    //     const printWindow = window.open('', '_blank');
+    //     printWindow.document.write('<html><head><title>Print Reply Received</title></head><body>');
+    //     printWindow.document.write('<h1>Reply Received List</h1>');
+    //     printWindow.document.write('<table border="1" style="width:100%; text-align:left;">');
+    //     printWindow.document.write('<tr><th>Req ID</th><th>Msg ID</th><th>Received</th><th>Subject</th><th>School</th><th>Priority</th><th>Show Upto</th><th>Last Posted By</th><th>Last Posted Date</th><th>Is Active</th></tr>');
+
+    //     formattedData.forEach((row) => {
+    //         printWindow.document.write(
+    //             `<tr>
+    //             <td>${row.ReqID || ''}</td>
+    //             <td>${row.msgId || ''}</td>
+    //             <td>${row.lastPostedDate || ''}</td>
+    //             <td>${row.subjectLineSchools || ''}</td>
+    //             <td>${row.priority || ''}</td>
+    //             <td>${row.showUpto || ''}</td>
+    //             <td>${row.lastPostedBy || ''}</td>
+    //             <td>${row.lastPostedDate || ''}</td>
+    //             <td>${row.isActive || ''}</td>
+    //         </tr>`
+    //         );
+    //     });
+
+    //     printWindow.document.write('</table></body></html>');
+    //     printWindow.document.close();
+    //     printWindow.print();
+    // };
+
     const handleExport = async () => {
-        const allData = await fetchData();
-        const formattedData = allData.map((val, index) => ({
-            ReqID: index + 1,
-            MsgID: val?.msg_id,
-            Received: val?.reply_date_time || '',
-            Subject: val?.message?.subject_text || '',
-            MobileNo: val?.mobile_no,
-            School: val?.schools?.[0]?.sch_short_nm || '',
-            StudentID: val?.student_number,
-            Sent: val?.sendedMessage?.sended_date || '',
+        const allData = await fetchData();  // Fetch your data (assuming fetchData is fetching all necessary data)
+
+        const formattedData = messageList.map((val) => ({
+            msgId: val?.msg_id || '',
+            subjectLineSchools: val?.subject_text || '', // Stringify this data
+            priority: val?.msg_priority || '',
+            showUpto: val?.show_upto
+                ? (() => {
+                    const date = new Date(val?.show_upto);
+                    const day = String(date.getUTCDate()).padStart(2, '0');
+                    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+                    const year = date.getUTCFullYear();
+                    let hours = date.getUTCHours();
+                    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+                    const ampm = hours >= 12 ? 'P.M.' : 'A.M.';
+                    hours = hours % 12;
+                    hours = hours ? String(hours).padStart(2, '0') : '12';
+                    return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
+                })()
+                : '',
+            lastPostedBy: val?.entryByDetails?.full_name || '',
+            lastPostedDate: val?.createdAt
+                ? (() => {
+                    const date = new Date(val?.createdAt);
+                    const day = String(date.getUTCDate()).padStart(2, '0');
+                    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+                    const year = date.getUTCFullYear();
+                    let hours = date.getUTCHours();
+                    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+                    const ampm = hours >= 12 ? 'P.M.' : 'A.M.';
+                    hours = hours % 12;
+                    hours = hours ? String(hours).padStart(2, '0') : '12';
+                    return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
+                })()
+                : '',
+            lastEditBy: val?.editByDetails?.full_name || '',
+            recipients: 'Na', // Replace with actual recipients
+            seen: 'Na', // Replace with actual seen status
+            respond: 'Na', // Replace with actual respond status
+            isActive: val?.is_active === 1 ? 'Yes' : 'No', // Convert to string for export
         }));
 
+        // Convert formattedData to a sheet and then to CSV
         const ws = XLSX.utils.json_to_sheet(formattedData);
         const csvContent = XLSX.utils.sheet_to_csv(ws);
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -397,29 +614,76 @@ const MessageDraft = () => {
     };
 
     const handlePrint = async () => {
-        const allData = await fetchData();
+        const allData = await fetchData();  // Fetch your data
+
+        const formattedData = messageList.map((val) => ({
+            msgId: val?.msg_id || '',
+            subjectLineSchools: val?.subject_text || '',
+            priority: val?.msg_priority || '',
+            showUpto: val?.show_upto
+                ? (() => {
+                    const date = new Date(val?.show_upto);
+                    const day = String(date.getUTCDate()).padStart(2, '0');
+                    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+                    const year = date.getUTCFullYear();
+                    let hours = date.getUTCHours();
+                    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+                    const ampm = hours >= 12 ? 'P.M.' : 'A.M.';
+                    hours = hours % 12;
+                    hours = hours ? String(hours).padStart(2, '0') : '12';
+                    return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
+                })()
+                : '',
+            lastPostedBy: val?.entryByDetails?.full_name || '',
+            lastPostedDate: val?.createdAt
+                ? (() => {
+                    const date = new Date(val?.createdAt);
+                    const day = String(date.getUTCDate()).padStart(2, '0');
+                    const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+                    const year = date.getUTCFullYear();
+                    let hours = date.getUTCHours();
+                    const minutes = String(date.getUTCMinutes()).padStart(2, '0');
+                    const ampm = hours >= 12 ? 'P.M.' : 'A.M.';
+                    hours = hours % 12;
+                    hours = hours ? String(hours).padStart(2, '0') : '12';
+                    return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
+                })()
+                : '',
+            lastEditBy: val?.editByDetails?.full_name || '',
+            recipients: 'Na',
+            seen: 'Na',
+            respond: 'Na',
+            isActive: val?.is_active === 1 ? 'Yes' : 'No', // Use string values
+        }));
+
+        // Create the print window
         const printWindow = window.open('', '_blank');
         printWindow.document.write('<html><head><title>Print Reply Received</title></head><body>');
         printWindow.document.write('<h1>Reply Received List</h1>');
         printWindow.document.write('<table border="1" style="width:100%; text-align:left;">');
-        printWindow.document.write('<tr><th>Req ID</th><th>Msg ID</th><th>Received</th><th>Subject</th><th>Mobile No.</th><th>School</th><th>Student ID</th><th>Sent</th></tr>');
-        allData.forEach((val, index) => {
+        printWindow.document.write('<tr><th>Msg ID</th><th>Received</th><th>Subject Line & Schools</th><th>Priority</><th>Show Upto</th><th>Last Posted By</th><th>Last Posted Date</th><th>Is Active</th></tr>');
+
+        formattedData.forEach((row) => {
             printWindow.document.write(
                 `<tr>
-                       <td>${val?.msg_id || ''}</td>
-                       <td>${val?.reply_date_time || ''}</td>
-                       <td>${val?.message?.subject_text || ''}</td>
-                       <td>${val?.mobile_no || ''}</td>
-                       <td>${val?.schools?.[0]?.sch_short_nm || ''}</td>
-                       <td>${val?.student_number || ''}</td>
-                       <td>${val?.sendedMessage?.sended_date || ''}</td>
-                   </tr>`
+                    <td>${row.msgId || ''}</td>
+                    <td>${row.lastPostedDate || ''}</td>
+                    <td>${row.subjectLineSchools || ''}</td>
+                    <td>${row.priority || ''}</td>
+                    <td>${row.showUpto || ''}</td>
+                    <td>${row.lastPostedBy || ''}</td>
+                    <td>${row.lastPostedDate || ''}</td>
+                    <td>${row.isActive || ''}</td>
+                </tr>`
             );
         });
+
         printWindow.document.write('</table></body></html>');
         printWindow.document.close();
         printWindow.print();
     };
+
+
     //geting
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1); // Set to tomorrow
@@ -934,7 +1198,7 @@ const MessageDraft = () => {
                                                                 <button className=" border-0 bg-transparent px-2 mr-2" onClick={handlePrint}><i class="fa-solid fa-print text-primary"></i>
                                                                     <br /><span className='' style={{ fontSize: "12px" }}>Print</span>
                                                                 </button>
-                                                                <button className=" border-0 bg-transparent px-2" onClick={handleExport}><i class="fa-solid fa-file-export"></i>
+                                                                <button className=" border-0 bg-transparent px-2" onClick={handleExport}><i class="fa-solid fa-file-export text-success"></i>
                                                                     <br /><span className='' style={{ fontSize: "12px" }}>Export</span>
                                                                 </button>
                                                             </div>

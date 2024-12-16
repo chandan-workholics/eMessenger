@@ -290,7 +290,7 @@ const FeesMaster = () => {
                                                         Import
                                                     </button>
                                                     <button type="submit" className="btn btn-success mr-2" onClick={exportToExcel}>Export to Excel</button>
-                                                    <button type="submit" className="btn btn-success mr-2" onClick={handlePrint}>Print</button>
+                                                    <button type="submit" className="btn btn-primary mr-2" onClick={handlePrint}>Print</button>
 
                                                 </div>
                                             </div>

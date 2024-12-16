@@ -153,7 +153,7 @@ const ReplyReceived = () => {
                                                 <button className=" border-0 bg-transparent px-2 mr-2" onClick={handlePrint}><i class="fa-solid fa-print text-primary"></i>
                                                     <br /><span className='' style={{ fontSize: "12px" }}>Print</span>
                                                 </button>
-                                                <button className=" border-0 bg-transparent px-2" onClick={handleExport}><i class="fa-solid fa-file-export"></i>
+                                                <button className=" border-0 bg-transparent px-2" onClick={handleExport}><i class="fa-solid fa-file-export text-success"></i>
                                                     <br /><span className='' style={{ fontSize: "12px" }}>Export</span>
                                                 </button>
                                             </div>
