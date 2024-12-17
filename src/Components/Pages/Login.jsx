@@ -39,8 +39,12 @@ const Login = () => {
             if (response.ok) {
                 sessionStorage.setItem('token', data.token);
                 sessionStorage.setItem('admin_id', data.admin_id);
+<<<<<<< HEAD
                 sessionStorage.setItem('admin_type', data?.data.admin_type);
                 // sessionStorage.setItem('userProfileImage', data.schoolDetails[0]?.logo_img);
+=======
+                sessionStorage.setItem('admin_type', data.data?.admin_type);
+>>>>>>> 9abd1018cfe3c2ed60456deda3953b3b5905d989
                 navigate('/dashboard');
             } else {
 

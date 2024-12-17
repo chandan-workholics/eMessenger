@@ -525,6 +525,7 @@ const UserManagement = () => {
                                                                             <label for="userType">User Type <span className="text-danger">*</span></label>
                                                                             <select className="form-control" id="userType" name='admin_type' value={datas.admin_type} onChange={handleChange}>
                                                                                 <option value='' selected disabled>Select Option</option>
+                                                                                <option value='superadmin'>Super Admin</option>
                                                                                 <option value='admin'>Admin</option>
                                                                                 <option value='management'>Management</option>
                                                                                 <option value='user'>User</option>
