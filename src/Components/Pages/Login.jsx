@@ -34,13 +34,14 @@ const Login = () => {
             });
 
             const data = await response.json();
-
+            // console.log('Login Response Data:', data);
 
             if (response.ok) {
                 sessionStorage.setItem('token', data.token);
                 sessionStorage.setItem('admin_id', data.admin_id);
                 sessionStorage.setItem('admin_type', data.data?.admin_type);
                 sessionStorage.setItem('access_id', data.data?.subordinateDetails ? data.data?.subordinateDetails?.map((val) => val?.admin_id) : data.data?.admin_id);
+
                 navigate('/dashboard');
             } else {
 
