@@ -28,6 +28,7 @@ const Sidebar = () => {
                 if (response.ok) {
                     setData(data?.data);
                     setAdminType(data?.data?.admin_type);
+                    sessionStorage.setItem('access_id', data.data?.subordinateDetails ? data.data?.subordinateDetails?.map((val) => val?.admin_id) : data.data?.admin_id);
                 } else {
                     setError(data.message || 'Invalid admin user name or password.');
                 }
