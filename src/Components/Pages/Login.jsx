@@ -34,11 +34,12 @@ const Login = () => {
             });
 
             const data = await response.json();
-
+            // console.log('Login Response Data:', data);
 
             if (response.ok) {
                 sessionStorage.setItem('token', data.token);
                 sessionStorage.setItem('admin_id', data.admin_id);
+                sessionStorage.setItem('admin_type', data?.data.admin_type);
                 // sessionStorage.setItem('userProfileImage', data.schoolDetails[0]?.logo_img);
                 navigate('/dashboard');
             } else {

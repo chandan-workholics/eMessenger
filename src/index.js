@@ -36,25 +36,27 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/register" element={<Register />} />
 
         {/* Protected Routes */}
-        <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
-        <Route path="/import-scholar" element={<ProtectedRoute element={<ImportScholar />} />} />
-        <Route path="/messages" element={<ProtectedRoute element={<Messages />} />} />
-        <Route path="/notice-board" element={<ProtectedRoute element={<NoticeBoard />} />} />
-        <Route path="/message-draft" element={<ProtectedRoute element={<MessageDraft />} />} />
-        <Route path="/edit-created-message" element={<ProtectedRoute element={<EditCreatedMsg />} />} />
-        <Route path="/send-message" element={<ProtectedRoute element={<SendMsg />} />} />
-        <Route path="/welcome-message" element={<ProtectedRoute element={<WelcomeMsg />} />} />
-        <Route path="/app-scroll-news" element={<ProtectedRoute element={<AppScrollNews />} />} />
-        <Route path="/chat" element={<ProtectedRoute element={<Chat />} />} />
-        <Route path="/reply-received" element={<ProtectedRoute element={<ReplyReceived />} />} />
-        <Route path="/fees-master" element={<ProtectedRoute element={<FeesMaster />} />} />
-        <Route path="/group-master" element={<ProtectedRoute element={<GroupMaster />} />} />
-        <Route path="/sub-group" element={<ProtectedRoute element={<SubGroupMaster />} />} />
-        <Route path="/user-management" element={<ProtectedRoute element={<UserManagement />} />} />
-        <Route path="/school-master" element={<ProtectedRoute element={<SchoolMaster />} />} />
-        <Route path="/support-master" element={<ProtectedRoute element={<SupportMaster />} />} />
-        <Route path="/change-password" element={<ProtectedRoute element={<ChangePassword />} />} />
+        <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} requiredRoles={['admin', 'user', 'superadmin', 'management']} />} />
+        <Route path="/import-scholar" element={<ProtectedRoute element={<ImportScholar />} requiredRoles={['admin', 'superadmin']} />} />
+        <Route path="/messages" element={<ProtectedRoute element={<Messages />} requiredRoles={['admin', 'superadmin']} />} />
+        <Route path="/notice-board" element={<ProtectedRoute element={<NoticeBoard />} requiredRoles={['admin', 'superadmin']} />} />
+        <Route path="/message-draft" element={<ProtectedRoute element={<MessageDraft />} requiredRoles={['admin', 'user', 'superadmin', 'management']} />} />
+        <Route path="/edit-created-message" element={<ProtectedRoute element={<EditCreatedMsg />} requiredRoles={['admin', 'superadmin']} />} />
+        <Route path="/send-message" element={<ProtectedRoute element={<SendMsg />} requiredRoles={['admin', 'superadmin']} />} />
+        <Route path="/welcome-message" element={<ProtectedRoute element={<WelcomeMsg />} requiredRoles={['admin', 'superadmin']} />} />
+        <Route path="/app-scroll-news" element={<ProtectedRoute element={<AppScrollNews />} requiredRoles={['admin', 'superadmin']} />} />
+        <Route path="/chat" element={<ProtectedRoute element={<Chat />} requiredRoles={['admin']} />} />
+        <Route path="/reply-received" element={<ProtectedRoute element={<ReplyReceived />} requiredRoles={['admin', 'user', 'superadmin', 'management']} />} />
+        <Route path="/fees-master" element={<ProtectedRoute element={<FeesMaster />} requiredRoles={['admin', 'superadmin']} />} />
+        <Route path="/group-master" element={<ProtectedRoute element={<GroupMaster />} requiredRoles={['admin', 'superadmin', 'management']} />} />
+        <Route path="/sub-group" element={<ProtectedRoute element={<SubGroupMaster />} requiredRoles={['admin', 'superadmin', 'management']} />} />
+        <Route path="/user-management" element={<ProtectedRoute element={<UserManagement />} requiredRoles={['admin', 'superadmin', 'user']} />} />
+        <Route path="/school-master" element={<ProtectedRoute element={<SchoolMaster />} requiredRoles={['admin', 'superadmin', 'management']} />} />
+        <Route path="/support-master" element={<ProtectedRoute element={<SupportMaster />} requiredRoles={['admin', 'superadmin']} />} />
+        <Route path="/change-password" element={<ProtectedRoute element={<ChangePassword />} requiredRoles={['admin', 'user', 'superadmin', 'management']} />} />
+
       </Route>
     </Routes>
+
   </BrowserRouter>
 );
