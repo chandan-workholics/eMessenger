@@ -106,8 +106,8 @@ const GroupMaster = () => {
     const handlePrint = async () => {
         const allData = await fetchAllData();
         const printWindow = window.open('', '_blank');
-        printWindow.document.write('<html><head><title>Print Group Master</title></head><body>');
-        printWindow.document.write('<h1>Group Master List</h1>');
+        printWindow.document.write('<html><head><title>Print Message Group List</title></head><body>');
+        printWindow.document.write('<h1>Message Group List</h1>');
         printWindow.document.write('<table border="1" style="width:100%; text-align:left;">');
         printWindow.document.write('<tr><th>Group Id</th><th>Group Name</th><th>Is Active</th></tr>');
         allData.forEach((val, index) => {

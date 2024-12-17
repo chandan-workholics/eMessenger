@@ -152,8 +152,8 @@ const SchoolMaster = () => {
     const handlePrint = async () => {
         const allData = await fetchAllData();
         const printWindow = window.open('', '_blank');
-        printWindow.document.write('<html><head><title>Print Group Master</title></head><body>');
-        printWindow.document.write('<h1>Group Master List</h1>');
+        printWindow.document.write('<html><head><title>Print School List</title></head><body>');
+        printWindow.document.write('<h1>School List</h1>');
         printWindow.document.write('<table border="1" style="width:100%; text-align:left; border-collapse: collapse;">');
         printWindow.document.write('<tr><th>School ID</th><th>Full Name</th><th>Short Name</th><th>Is Active</th><th>Font Color</th><th>Background Color</th></tr>');
 

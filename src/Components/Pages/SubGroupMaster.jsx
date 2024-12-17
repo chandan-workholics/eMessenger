@@ -94,8 +94,8 @@ const SubGroupMaster = () => {
             is_active: val?.is_active === 1 ? 'Yes' : 'No',
         }));
         const printWindow = window.open('', '_blank');
-        printWindow.document.write('<html><head><title>Print Sub Group Master</title></head><body>');
-        printWindow.document.write('<h1>Sub Group Master List</h1>');
+        printWindow.document.write('<html><head><title>Print Sub Group Message List</title></head><body>');
+        printWindow.document.write('<h1>Sub Group Message List</h1>');
         printWindow.document.write('<table border="1" style="width:100%; text-align:left;">');
         printWindow.document.write('<tr><th>Sub Group Id</th><th>Sub Group Name</th><th> Group Name</th><th>Is Active</th></tr>');
         formattedData.forEach((row) => {

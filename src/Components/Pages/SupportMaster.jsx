@@ -153,8 +153,8 @@ const SupportMaster = () => {
         }));
 
         const printWindow = window.open('', '_blank');
-        printWindow.document.write('<html><head><title>Print Support Master</title></head><body>');
-        printWindow.document.write('<h1>Support Master List</h1>');
+        printWindow.document.write('<html><head><title>Print Support List</title></head><body>');
+        printWindow.document.write('<h1>Support List</h1>');
         printWindow.document.write('<table border="1" style="width:100%; text-align:left; border-collapse:collapse;">');
         printWindow.document.write('<tr><th>S.No</th><th>Parent ID</th><th>Send By</th><th>Description</th><th>Remark</th><th>Issue Date</th><th>Resolved Date</th><th>Status</th></tr>');
 

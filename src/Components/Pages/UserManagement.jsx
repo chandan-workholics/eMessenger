@@ -79,10 +79,12 @@ const UserManagement = () => {
             userName: val?.adminuser_name,
             userType: val?.admin_type,
             mobileNo: val?.mobile_no,
+            school: val?.schoolDetails
+                ? val.schoolDetails.map((school) => school.sch_short_nm).join(", ")
+                : "N/A",
             isActive: val?.is_active === 1 ? "Yes" : "No",
         }));
         const ws = XLSX.utils.json_to_sheet(formattedData);
-        console.log("formattedData=", formattedData);
         const csvContent = XLSX.utils.sheet_to_csv(ws);
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         saveAs(blob, 'User_Management.csv');
@@ -98,16 +100,19 @@ const UserManagement = () => {
                 userName: val?.adminuser_name,
                 userType: val?.admin_type,
                 mobileNo: val?.mobile_no,
+                school: val?.schoolDetails
+                    ? val.schoolDetails.map((school) => school.sch_short_nm).join(", ")
+                    : "N/A",
                 isActive: val?.is_active === 1 ? "Yes" : "No",
             }));
             const printWindow = window.open("", "_blank");
             printWindow.document.write(`
                 <html>
                     <head>
-                        <title>Print Group Master</title>
+                        <title>User Management</title>
                     </head>
                     <body>
-                        <h1>Group Master List</h1>
+                        <h1>User List</h1>
                         <table border="1" style="width:100%; text-align:left; border-collapse:collapse;">
                             <tr>
                                 <th>User ID</th>
@@ -115,6 +120,7 @@ const UserManagement = () => {
                                 <th>User Name</th>
                                 <th>User Type</th>
                                 <th>Mobile No.</th>
+                                <th>School</th>
                                 <th>Is Active</th>
                             </tr>
             `);
@@ -126,6 +132,7 @@ const UserManagement = () => {
                         <td>${row.userName}</td>
                         <td>${row.userType}</td>
                         <td>${row.mobileNo}</td>
+                        <td>${row.school}</td>
                         <td>${row.isActive}</td>
                     </tr>
                 `);
@@ -275,6 +282,7 @@ const UserManagement = () => {
         { label: 'User Name', key: 'userName' },
         { label: 'User Type', key: 'userType' },
         { label: 'Mobile No.', key: 'mobileNo' },
+        { label: 'School', key: 'school' },
         { label: 'Is Active', key: 'isActive' },
         { label: 'Action', key: 'action' }
     ];
@@ -285,6 +293,9 @@ const UserManagement = () => {
         userName: val?.adminuser_name,
         userType: val?.admin_type,
         mobileNo: val?.mobile_no,
+        school: val?.schoolDetails
+            ? val.schoolDetails.map((school) => school.sch_short_nm).join(", ")
+            : "N/A",
         isActive: val?.is_active == 1 ? "Yes" : "No",
         action: (
             <div>
@@ -297,7 +308,6 @@ const UserManagement = () => {
             </div>
         ),
     })) : [];
-
     const handleupdateUser = (val) => {
         setUpdateUserManagement(val);
         openModal();
@@ -306,12 +316,12 @@ const UserManagement = () => {
             adminuser_name: val.adminuser_name,
             admin_password: val.admin_password,
             mobile_no: val.mobile_no,
+            school: val.schoolList,
             admin_type: val.admin_type,
             is_active: val.is_active,
             school_id: editschool?.map((val) => val?.sch_id),
         });
     };
-
     const handleUpdate = async (e) => {
         e.preventDefault();
         setLoading(true);
