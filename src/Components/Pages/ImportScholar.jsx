@@ -55,40 +55,6 @@ const ImportScholar = () => {
         }
     };
 
-    const fetchAllData = async () => {
-        setLoading(true);
-        try {
-            const response = await fetch(`${URL}/scholar/getScholarDetail?limit=0`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            const responsetwo = await fetch(`${URL}/scholar/getScholarDetail?limit=0`, {
-                method: 'GET',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/json'
-                }
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const result = await response.json();
-            const resulttwo = await responsetwo.json();
-            // setImportStudent(result.data);
-            // setImportStudenttwo(resulttwo.data);
-            // setTotalPages(Math.ceil(result.totalCount / rowsPerPage));
-
-            return response.data.data || [];
-        } catch (error) {
-            console.error('Error fetching school data:', error.message);
-        } finally {
-            setLoading(false);
-        }
-    };
-
     const handlePrint = async () => {
         if (!importStudenttwo || importStudenttwo.length === 0) {
             toast.error("No data available to print.");

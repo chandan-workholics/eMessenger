@@ -60,7 +60,7 @@ const FeesMaster = () => {
     }, [currentPage]);
 
     const handlePrint = () => {
-        if (!importFeeStudent || importFeeStudent.length === 0) {
+        if (!importStudenttwo || importStudenttwo.length === 0) {
             toast.error("No data available to print.");
             return;
         }
@@ -112,7 +112,7 @@ const FeesMaster = () => {
             `);
 
             // Generate table rows dynamically
-            importFeeStudent.forEach((val) => {
+            importStudenttwo.forEach((val) => {
                 printWindow.document.write(`
                     <tr>
                         <td>${val.fees_display_id}</td>

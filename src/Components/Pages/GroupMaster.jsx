@@ -80,7 +80,7 @@ const GroupMaster = () => {
     const fetchAllData = async () => {
         try {
             setLoading(true);
-            const response = await callAPI.get(`./msg/getGroupDetail?limit=0`);
+            const response = await callAPI.get(`./msg/getGroupDetail`);
             return response.data.data || [];
         } catch (error) {
             console.error('Error fetching full data:', error.message);
