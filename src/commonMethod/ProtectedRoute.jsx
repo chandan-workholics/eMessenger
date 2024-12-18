@@ -3,12 +3,12 @@ import { Navigate } from 'react-router-dom';
 
 const ProtectedRoute = ({ element, requiredRoles }) => {
     const token = sessionStorage.getItem('token');
-    const adminType = sessionStorage.getItem('admin_type');
+    const admin_type = sessionStorage.getItem('admin_type');
 
     if (!token) {
         return <Navigate to="/" />;
     }
-    if (requiredRoles && !requiredRoles.includes(adminType)) {
+    if (requiredRoles && !requiredRoles.includes(admin_type)) {
         return <Navigate to="/dashboard" />;
     }
 

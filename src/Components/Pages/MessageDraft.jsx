@@ -13,22 +13,23 @@ import { saveAs } from "file-saver";
 import * as XLSX from "xlsx";
 
 const MessageDraft = () => {
-  const URL = process.env.REACT_APP_URL;
-  const [loading, setLoading] = useState(true);
-  const [schoolList, setSchoolList] = useState([]);
-  const [subgroup, setSubgroup] = useState([]);
-  const [school, setschool] = useState([]);
-  const [number, setNumber] = useState([]);
-  const [parentsnumber, setParentsNumber] = useState([]);
-  const [messageList, setMessageList] = useState([]);
-  const [chattype, setchattype] = useState("");
-  const [deleteid, Setdeleteid] = useState("");
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [replyrequired, setReplyrequired] = useState(0);
-  const admin_id = sessionStorage.getItem("admin_id");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
-  const rowsPerPage = 10;
+    const URL = process.env.REACT_APP_URL;
+    const [loading, setLoading] = useState(true);
+    const [schoolList, setSchoolList] = useState([]);
+    const [subgroup, setSubgroup] = useState([]);
+    const [school, setschool] = useState([]);
+    const [number, setNumber] = useState([]);
+    const [parentsnumber, setParentsNumber] = useState([]);
+    const [messageList, setMessageList] = useState([]);
+    const [chattype, setchattype] = useState('');
+    const [deleteid, Setdeleteid] = useState('')
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [replyrequired, setReplyrequired] = useState(0);
+    const admin_id = sessionStorage.getItem('admin_id');
+    const access_id = sessionStorage.getItem('access_id');
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
+    const rowsPerPage = 10;
 
   const fetchData = async () => {
     try {

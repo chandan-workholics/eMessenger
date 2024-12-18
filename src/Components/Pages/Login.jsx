@@ -13,18 +13,12 @@ const Login = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-
-
         setError('');
-
-
         if (!adminuser_name || !admin_password) {
             setError('Please enter both adminuser name and password.');
             return;
         }
-
         try {
-
             const response = await fetch(`${URL}/admin/loginAdmin`, {
                 method: 'POST',
                 headers: {
@@ -32,10 +26,7 @@ const Login = () => {
                 },
                 body: JSON.stringify({ adminuser_name, admin_password }),
             });
-
             const data = await response.json();
-            // console.log('Login Response Data:', data);
-
             if (response.ok) {
                 sessionStorage.setItem('token', data.token);
                 sessionStorage.setItem('admin_id', data.admin_id);
@@ -105,11 +96,9 @@ const Login = () => {
                                                 </button>
                                             </div>
                                             <div className="my-2 d-flex justify-content-between align-items-center">
-                                                {/* <a href="/" className="auth-link text-black">Forgot Password?</a> */}
+
                                             </div>
-                                            {/* <div className="text-center mt-4 font-weight-light">
-                                                Don't have an account? <Link to="/register" className="text-primary">Create</Link>
-                                            </div> */}
+
                                         </form>
                                     </div>
                                 </div>
