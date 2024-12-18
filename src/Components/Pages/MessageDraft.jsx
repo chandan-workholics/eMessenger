@@ -26,6 +26,7 @@ const MessageDraft = () => {
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [replyrequired, setReplyrequired] = useState(0);
     const admin_id = sessionStorage.getItem('admin_id');
+    const access_id = sessionStorage.getItem('access_id');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const rowsPerPage = 10;
