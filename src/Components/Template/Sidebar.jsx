@@ -23,14 +23,23 @@ const Sidebar = () => {
             });
             const data = await response.json();
             if (response.ok) {
-                sessionStorage.setItem('access_id', data.data?.subordinateDetails ? data.data?.subordinateDetails?.map((val) => val?.admin_id) : data.data?.admin_id);
+                // Combine the admin_id with subordinates' admin_ids (if any) into a comma-separated string
+                const combinedAdminIds = [
+                    data.data.admin_id,
+                    ...(data.data?.subordinateDetails?.map((val) => val.admin_id) || [])
+                ].join(','); // Convert the array to a comma-separated string
+
+                // Store the combined admin ids as a string in sessionStorage
+                sessionStorage.setItem('access_id', combinedAdminIds);
             } else {
-                console.log('')
+                console.log('Failed to fetch admin details');
             }
         } catch (error) {
             console.error('Error fetching admin details:', error);
         }
     };
+
+
 
     useEffect(() => {
         fetchAdminDetails();// eslint-disable-next-line react-hooks/exhaustive-deps

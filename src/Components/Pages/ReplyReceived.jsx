@@ -10,9 +10,16 @@ import * as XLSX from 'xlsx';
 const ReplyReceived = () => {
     const [messageList, setMessageList] = useState([]);
     const [loading, setLoading] = useState(true);
+    const URL = process.env.REACT_APP_URL;
+    const admin_id = sessionStorage.getItem("admin_id");
+    const token = sessionStorage.getItem('token');
+    const access_id = sessionStorage.getItem('access_id');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const rowsPerPage = 10;
+
+
+
     const formatDateTimeWithAmPm = (dateTime) => {
         if (!dateTime) return '';
         const date = new Date(dateTime);
@@ -26,11 +33,10 @@ const ReplyReceived = () => {
         return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
     };
 
-
     const fetchData = async () => {
         try {
             setLoading(true);
-            const response = await callAPI.get(`/msg/getAllReplyMessages?page=${currentPage}&limit=${rowsPerPage}`);
+            const response = await callAPI.get(`/msg/getAllReplyMessages?page=${currentPage}&limit=${rowsPerPage}&access_id=${access_id}`);
             setMessageList(response.data.data || []);
             setTotalPages(Math.ceil(response?.data?.pagination?.total / rowsPerPage));
         } catch (error) {
@@ -43,7 +49,7 @@ const ReplyReceived = () => {
     const fetchAllData = async () => {
         try {
             setLoading(true);
-            const response = await callAPI.get('/msg/getAllReplyMessages?limit=0'); // Fetch all data
+            const response = await callAPI.get(`/msg/getAllReplyMessages?limit=0&access_id=${access_id}`); // Fetch all data
             return response.data.data || [];
         } catch (error) {
             console.error('Error fetching full data:', error.message);
@@ -124,7 +130,7 @@ const ReplyReceived = () => {
         { label: 'Sent', key: 'sent' },
     ];
 
-    const data = messageList.map((val, index) => ({
+    const data = messageList?.map((val, index) => ({
         reqId: index + 1,
         msgId: val?.msg_id,
         received: formatDateTimeWithAmPm(val?.reply_date_time || ''),
