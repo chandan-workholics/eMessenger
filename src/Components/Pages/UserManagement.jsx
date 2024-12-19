@@ -561,6 +561,22 @@ const UserManagement = () => {
                                                                                 </select>
                                                                             </div>
                                                                         )}
+                                                                        {datas.admin_type === "management" && (
+                                                                            <div className="col-md-6 form-group">
+                                                                                <label for="userType">Reporting/Incharge <span className="text-danger">*</span></label>
+                                                                                <select className="form-control" id="userType" name='parent_admin_id' value={datas.parent_admin_id} onChange={handleChange}>
+                                                                                    <option value='' selected disabled>Select Option</option>
+                                                                                    {admindata?.data?.map((val) => {
+                                                                                        return (
+                                                                                            <>
+                                                                                                <option value={val?.admin_id}>{val?.full_name}</option>
+                                                                                            </>
+                                                                                        )
+                                                                                    })}
+
+                                                                                </select>
+                                                                            </div>
+                                                                        )}
 
                                                                         <div className="col-md-6 form-group">
                                                                             <label htmlFor="userType">Status</label><br />

@@ -139,6 +139,30 @@ const ReplyReceived = () => {
         school: val?.schools?.[0]?.sch_short_nm || '',
         studentId: val?.student_number,
         sent: formatDateTimeWithAmPm(val?.sendedMessage?.sended_date || ''),
+        replyMsgId: val?.replied_msg_id || '',
+        msgBodyId: val?.replyBodies?.map((body) => body?.replied_msg_d_id || '').join(', '),
+        msgType: val?.replyBodies?.map((body) => body?.msg_type || '').join(', '),
+        dataReplyText: val?.replyBodies
+            ?.map((reply) => {
+                try {
+                    const rawText = reply?.data_reply_text || '';
+                    // Remove control characters
+                    const sanitizedText = rawText.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+                    const parsedData = sanitizedText ? JSON.parse(sanitizedText) : {};
+                    if (parsedData?.text) {
+                        return parsedData.text;
+                    } else if (parsedData?.imageURIsave) {
+                        return parsedData.imageURIsave;
+                    } else if (parsedData?.selected) {
+                        return Object.values(parsedData.selected).join(', ');
+                    }
+                    return 'NA';
+                } catch (error) {
+                    console.error('Error parsing JSON:', reply?.data_reply_text, error);
+                    return ''; // Fallback value
+                }
+            })
+            .join(', '),
     }));
 
     const handlePageChange = (page) => {
