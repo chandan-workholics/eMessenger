@@ -28,9 +28,13 @@ const Sidebar = () => {
                     data.data.admin_id,
                     ...(data.data?.subordinateDetails?.map((val) => val.admin_id) || [])
                 ].join(','); // Convert the array to a comma-separated string
+                const combinedSchool = [
+                    ...(data.data?.schoolDetails?.map((val) => val.sch_short_nm) || [])
+                ].join(','); // Convert the array to a comma-separated string
 
                 // Store the combined admin ids as a string in sessionStorage
                 sessionStorage.setItem('access_id', combinedAdminIds);
+                sessionStorage.setItem('school', combinedSchool);
             } else {
                 console.log('Failed to fetch admin details');
             }

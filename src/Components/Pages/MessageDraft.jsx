@@ -29,6 +29,7 @@ const MessageDraft = () => {
     const admin_id = sessionStorage.getItem("admin_id");
     const token = sessionStorage.getItem('token');
     const access_id = sessionStorage.getItem('access_id');
+    const school_access = sessionStorage.getItem('school');
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const rowsPerPage = 10;
@@ -87,17 +88,42 @@ const MessageDraft = () => {
         }
     };
 
+    // const fetchParentsNo = async () => {
+    //     try {
+    //         setLoading(true);
+    //         const response = await callAPI.get(`/scholar/get_MainList_ScholarDetail`);
+    //         setNumber(response.data.data || []);
+    //     } catch (error) {
+    //         console.error("Error fetching ParentsNo data:", error.message);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+
     const fetchParentsNo = async () => {
         try {
             setLoading(true);
+
+            // Fetch data from API
             const response = await callAPI.get(`/scholar/get_MainList_ScholarDetail`);
-            setNumber(response.data.data || []);
+
+            // Convert school_access into an array of values
+            const allowedSchools = school_access.split(',');
+
+            // Filter data based on school_access
+            const filteredData = (response.data.data || []).filter(item =>
+                allowedSchools.includes(item.sch_short_nm)
+            );
+
+            // Set the filtered data
+            setNumber(filteredData);
         } catch (error) {
             console.error("Error fetching ParentsNo data:", error.message);
         } finally {
             setLoading(false);
         }
     };
+
 
     useEffect(() => {
         fetchUser();
@@ -356,9 +382,9 @@ const MessageDraft = () => {
         })() : "",
 
         lastEditBy: val?.editByDetails?.full_name || "",
-        recipients: "Na",
-        seen: "Na",
-        respond: "Na",
+        recipients: val?.no_of_recipients || "Na",
+        seen: val?.seen || "Na",
+        respond: val?.respond || "Na",
         isActive: (
             <div className="">
                 <button onClick={() => handleToggleStatus(val?.msg_id, val?.is_active)} type="button" className="btn btn-primary p-2">{val?.is_active === 1 ? "Yes" : "No"}</button>
