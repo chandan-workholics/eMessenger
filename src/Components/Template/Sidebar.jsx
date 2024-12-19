@@ -311,7 +311,24 @@ const Sidebar = () => {
                                     <span className="menu-title mr-3">Inbox</span>
                                 </Link>
                             </li>
-
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/group-master">
+                                    <i className="fa-solid fa-user-group menu-icon"></i>
+                                    <span className="menu-title mr-3">Group</span>
+                                </Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/sub-group">
+                                    <i className="fa-solid fa-users-line menu-icon"></i>
+                                    <span className="menu-title mr-3">Sub Group</span>
+                                </Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/user-management">
+                                    <i className="fa-solid fa-users-gear menu-icon"></i>
+                                    <span className="menu-title mr-3">Users Management</span>
+                                </Link>
+                            </li>
 
 
 
