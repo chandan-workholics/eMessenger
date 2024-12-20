@@ -28,9 +28,13 @@ const Sidebar = () => {
                     data.data.admin_id,
                     ...(data.data?.subordinateDetails?.map((val) => val.admin_id) || [])
                 ].join(','); // Convert the array to a comma-separated string
+                const combinedSchool = [
+                    ...(data.data?.schoolDetails?.map((val) => val.sch_short_nm) || [])
+                ].join(','); // Convert the array to a comma-separated string
 
                 // Store the combined admin ids as a string in sessionStorage
                 sessionStorage.setItem('access_id', combinedAdminIds);
+                sessionStorage.setItem('school', combinedSchool);
             } else {
                 console.log('Failed to fetch admin details');
             }
@@ -307,7 +311,24 @@ const Sidebar = () => {
                                     <span className="menu-title mr-3">Inbox</span>
                                 </Link>
                             </li>
-
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/group-master">
+                                    <i className="fa-solid fa-user-group menu-icon"></i>
+                                    <span className="menu-title mr-3">Group</span>
+                                </Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/sub-group">
+                                    <i className="fa-solid fa-users-line menu-icon"></i>
+                                    <span className="menu-title mr-3">Sub Group</span>
+                                </Link>
+                            </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/user-management">
+                                    <i className="fa-solid fa-users-gear menu-icon"></i>
+                                    <span className="menu-title mr-3">Users Management</span>
+                                </Link>
+                            </li>
 
 
 

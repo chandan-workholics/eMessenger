@@ -48,9 +48,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/chat" element={<ProtectedRoute element={<Chat />} requiredRoles={['admin']} />} />
         <Route path="/reply-received" element={<ProtectedRoute element={<ReplyReceived />} requiredRoles={['admin', 'user', 'superadmin', 'management']} />} />
         <Route path="/fees-master" element={<ProtectedRoute element={<FeesMaster />} requiredRoles={['admin', 'superadmin']} />} />
-        <Route path="/group-master" element={<ProtectedRoute element={<GroupMaster />} requiredRoles={['admin', 'superadmin']} />} />
-        <Route path="/sub-group" element={<ProtectedRoute element={<SubGroupMaster />} requiredRoles={['admin', 'superadmin']} />} />
-        <Route path="/user-management" element={<ProtectedRoute element={<UserManagement />} requiredRoles={['admin', 'superadmin']} />} />
+        <Route path="/group-master" element={<ProtectedRoute element={<GroupMaster />} requiredRoles={['admin', 'superadmin', 'management']} />} />
+        <Route path="/sub-group" element={<ProtectedRoute element={<SubGroupMaster />} requiredRoles={['admin', 'superadmin', 'management']} />} />
+        <Route path="/user-management" element={<ProtectedRoute element={<UserManagement />} requiredRoles={['admin', 'superadmin', 'management']} />} />
         <Route path="/school-master" element={<ProtectedRoute element={<SchoolMaster />} requiredRoles={['admin', 'superadmin']} />} />
         <Route path="/support-master" element={<ProtectedRoute element={<SupportMaster />} requiredRoles={['admin', 'superadmin']} />} />
         <Route path="/change-password" element={<ProtectedRoute element={<ChangePassword />} requiredRoles={['admin', 'superadmin']} />} />
