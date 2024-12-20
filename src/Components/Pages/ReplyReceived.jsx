@@ -108,7 +108,6 @@ const ReplyReceived = () => {
         fetchData(); // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, rowsPerPage]);
 
-    // Table columns
     const columns = [
         { label: 'Req ID', key: 'reqId' },
         { label: 'Msg ID', key: 'msgId' },
@@ -145,9 +144,8 @@ const ReplyReceived = () => {
         dataReplyText: val?.replyBodies
             ?.map((reply) => {
                 try {
-                    const rawText = reply?.data_reply_text || '';
-                    // Remove control characters
-                    const sanitizedText = rawText.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+                     const rawText = reply?.data_reply_text || '';
+                     const sanitizedText = rawText.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
                     const parsedData = sanitizedText ? JSON.parse(sanitizedText) : {};
                     if (parsedData?.text) {
                         return parsedData.text;
@@ -159,10 +157,10 @@ const ReplyReceived = () => {
                     return 'NA';
                 } catch (error) {
                     console.error('Error parsing JSON:', reply?.data_reply_text, error);
-                    return ''; // Fallback value
+                    return ''; 
                 }
             })
-            .join(', '),
+             .join(', '),
     }));
 
     const handlePageChange = (page) => {
