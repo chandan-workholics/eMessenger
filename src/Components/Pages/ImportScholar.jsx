@@ -47,7 +47,7 @@ const ImportScholar = () => {
             const resulttwo = await responsetwo.json();
             setImportStudent(result.data);
             setImportStudenttwo(resulttwo.data);
-            setTotalPages(Math.ceil(result.totalCount / rowsPerPage));
+            setTotalPages(Math.ceil(result?.pagination?.totalPages));
         } catch (error) {
             setError(error.message);
         } finally {
@@ -276,16 +276,16 @@ const ImportScholar = () => {
                                                             />
                                                         </div>
                                                     </div>
-                                                    <button type="submit" className="btn btn-primary mr-2" onClick={handleSubmit}> Import  </button>
-                                                    <button type="submit" className="btn btn-success mr-2" onClick={exportToExcel}>Export to Excel</button>
-                                                    <button type="submit" className="btn btn-primary mr-2" onClick={handlePrint}>Print</button>
-
+                                                </div>
+                                                <div className="col-md-12">
+                                                    <button type="submit" className="btn btn-primary mr-2 mb-2" onClick={handleSubmit}> Import  </button>
+                                                    <button type="submit" className="btn btn-success mr-2 mb-2" onClick={exportToExcel}>Export to Excel</button>
+                                                    <button type="submit" className="btn btn-secondary text-white mr-2 mb-2" onClick={handlePrint}>Print</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
 
                                 <div className="col-md-12 grid-margin stretch-card">
                                     <div className="card shadow-sm">

@@ -53,7 +53,7 @@ const Sidebar = () => {
     return (
         <>
             <nav className="sidebar sidebar-offcanvas" id="sidebar">
-                <ul className="nav">
+                <ul className="nav mt-2" style={{ height: '85vh', overflowY: 'scroll' }}>
                     {admin_type === 'superadmin' && (
                         <>
 
@@ -142,7 +142,7 @@ const Sidebar = () => {
                                     <span className="menu-title mr-3">Change Password</span>
                                 </Link>
                             </li>
-                            <li className="nav-item">
+                            <li className="nav-item mb-5">
                                 <Link className="nav-link" onClick={() => logout()} to="/">
                                     <i className="fa-solid fa-arrow-right-from-bracket menu-icon"></i>
                                     <span className="menu-title mr-3">Logout</span>

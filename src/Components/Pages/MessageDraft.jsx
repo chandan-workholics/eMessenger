@@ -647,24 +647,24 @@ const MessageDraft = () => {
                                                                 <div className="col-12 col-lg-6">
                                                                     <div className="row">
 
-                                                                        <div className="col-md-6 form-group">
+                                                                        <div className="col-md-12 form-group">
                                                                             <label htmlFor="subjectLine">Subject Line<span className="text-danger">*</span></label>
                                                                             <input type="text" className="form-control" id="subjectLine" placeholder="Subject Line" required name="subject_text" value={datas?.subject_text} onChange={handleChange} />
                                                                         </div>
 
-                                                                        <div className="col-md-6 form-group">
+                                                                        <div className="col-md-12 form-group">
                                                                             <label htmlFor="priority">Priority (1-High)<span className="text-danger">*</span></label>
                                                                             <select className="form-control" id="priority" name="msg_priority" required value={datas?.msg_priority} onChange={handleChange}>
                                                                                 {[...Array(10).keys()].map((val) => (<option key={val + 1}>{val + 1}</option>))}
                                                                             </select>
                                                                         </div>
 
-                                                                        <div className="col-md-6 form-group">
+                                                                        <div className="col-md-12 form-group">
                                                                             <label htmlFor="showUpto">Show Upto Date & Time<span className="text-danger">*</span></label>
                                                                             <input type="datetime-local" className="form-control" id="showUpto" name="show_upto" value={datas?.show_upto} onChange={handleChange} requiredmin={minDate} />
                                                                         </div>
 
-                                                                        <div className="col-md-6 form-group">
+                                                                        <div className="col-md-12 form-group">
                                                                             <label htmlFor="schools">Schools<span className="text-danger">*</span></label>
                                                                             <Multiselect
                                                                                 className="inputHead"
@@ -681,7 +681,7 @@ const MessageDraft = () => {
                                                                             />
                                                                         </div>
 
-                                                                        <div className="col-md-6 form-group">
+                                                                        <div className="col-md-12 form-group">
                                                                             <label htmlFor="msgCategory">Group/Sub Group<span className="text-danger">*</span>
                                                                             </label>
                                                                             <select className="form-control" id="msgCategory" name="msg_sgroup_id" value={datas?.msg_sgroup_id} onChange={handleChange}>
@@ -696,7 +696,7 @@ const MessageDraft = () => {
                                                                             </select>
                                                                         </div>
 
-                                                                        <div className="col-md-6 form-group">
+                                                                        <div className="col-md-12 form-group">
                                                                             {!Array.isArray(msgCategory) ||
                                                                                 (!msgCategory.includes("DISPLAY") && !msgCategory.includes("INPUT") && (
                                                                                     <>

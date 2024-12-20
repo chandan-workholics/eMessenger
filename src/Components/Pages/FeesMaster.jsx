@@ -286,12 +286,13 @@ const FeesMaster = () => {
                                                             />
                                                         </div>
                                                     </div>
-                                                    <button type="submit" className="btn btn-primary mr-2" onClick={handleSubmit}>
+                                                </div>
+                                                <div className="col-md-12">
+                                                    <button type="submit" className="btn btn-primary mr-2 mb-2" onClick={handleSubmit}>
                                                         Import
                                                     </button>
-                                                    <button type="submit" className="btn btn-success mr-2" onClick={exportToExcel}>Export to Excel</button>
-                                                    <button type="submit" className="btn btn-primary mr-2" onClick={handlePrint}>Print</button>
-
+                                                    <button type="submit" className="btn btn-success mr-2 mb-2" onClick={exportToExcel}>Export to Excel</button>
+                                                    <button type="submit" className="btn btn-secondary text-white mr-2 mb-2" onClick={handlePrint}>Print</button>
                                                 </div>
                                             </div>
                                         </div>

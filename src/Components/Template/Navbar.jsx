@@ -37,19 +37,15 @@ const Navbar = () => {
                         <li className="nav-item nav-search d-none d-lg-block"></li>
                     </ul>
                     <ul className="navbar-nav navbar-nav-right">
-                       
+
                         <li className="nav-item nav-profile dropdown">
                             <Link className="nav-link dropdown-toggle" to="#" data-toggle="dropdown" id="profileDropdown">
                                 <img src="images/faces/face28.jpg" alt="profile" />
                             </Link>
                             <div className="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
                                 <Link to='/register' className="dropdown-item">
-                                    <i className="ti-settings text-primary"></i>
+                                    <i class="fa-solid fa-user-plus text-primary"></i>
                                     SignUp
-                                </Link>
-                                <Link className="dropdown-item">
-                                    <i className="ti-settings text-primary"></i>
-                                    Settings
                                 </Link>
                                 <Link onClick={() => logout()} className="dropdown-item" to="/">
                                     <i className="ti-power-off text-primary"></i>

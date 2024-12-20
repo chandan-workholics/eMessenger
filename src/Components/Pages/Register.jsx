@@ -84,7 +84,7 @@ const Register = () => {
     return (
         <>
             <div className="container-scroller">
-                <div className="container-fluid page-body-wrapper full-page-wrapper">
+                <div className="container-fluid full-page-wrapper">
                     <div className="content-wrapper d-flex align-items-center auth px-0">
                         <div className="container">
                             <div className="row w-100 mx-0">

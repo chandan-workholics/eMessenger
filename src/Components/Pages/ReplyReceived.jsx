@@ -131,22 +131,27 @@ const ReplyReceived = () => {
 
     const data = messageList?.map((val, index) => ({
         reqId: index + 1,
-        msgId: val?.msg_id,
+        msgId: val?.msg_id || 'NA',
         received: formatDateTimeWithAmPm(val?.reply_date_time || ''),
-        subject: val?.message?.subject_text || '',
-        mobileNo: val?.mobile_no,
-        school: val?.schools?.[0]?.sch_short_nm || '',
-        studentId: val?.student_number,
+        subject: val?.message?.subject_text || 'NA',
+        mobileNo: val?.mobile_no || 'NA',
+        school: val?.schools?.[0]?.sch_short_nm || 'NA',
+        studentId: val?.student_number || 'NA',
         sent: formatDateTimeWithAmPm(val?.sendedMessage?.sended_date || ''),
-        replyMsgId: val?.replied_msg_id || '',
-        msgBodyId: val?.replyBodies?.map((body) => body?.replied_msg_d_id || '').join(', '),
-        msgType: val?.replyBodies?.map((body) => body?.msg_type || '').join(', '),
+        replyMsgId: val?.replied_msg_id || 'NA',
+        msgBodyId: val?.replyBodies
+            ?.map((body) => body?.replied_msg_d_id || 'NA')
+            .join(', '),
+        msgType: val?.replyBodies
+            ?.map((body) => body?.msg_type || 'NA')
+            .join(', '),
         dataReplyText: val?.replyBodies
-            ?.map((reply) => {
+            ?.map((reply, index) => {
                 try {
-                     const rawText = reply?.data_reply_text || '';
-                     const sanitizedText = rawText.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
+                    const rawText = reply?.data_reply_text || '';
+                    const sanitizedText = rawText.replace(/[\u0000-\u001F\u007F-\u009F]/g, '');
                     const parsedData = sanitizedText ? JSON.parse(sanitizedText) : {};
+                    console.log(`parsedData at index ${index}:`, parsedData);
                     if (parsedData?.text) {
                         return parsedData.text;
                     } else if (parsedData?.imageURIsave) {
@@ -156,11 +161,11 @@ const ReplyReceived = () => {
                     }
                     return 'NA';
                 } catch (error) {
-                    console.error('Error parsing JSON:', reply?.data_reply_text, error);
-                    return ''; 
+                    console.error(`Error parsing JSON at index ${index}:`, reply?.data_reply_text, error);
+                    return 'NA';
                 }
             })
-             .join(', '),
+            .join(', '),
     }));
 
     const handlePageChange = (page) => {
