@@ -319,7 +319,8 @@ const UserManagement = () => {
             school: val.schoolList,
             admin_type: val.admin_type,
             is_active: val.is_active,
-            school_id: editschool?.map((val) => val?.sch_id),
+            school_id: val.schoolDetails?.map((val) => val?.sch_id) || [],
+            // school_id: editschool?.map((val) => val?.sch_id),
         });
     };
     const handleUpdate = async (e) => {
@@ -761,7 +762,7 @@ const UserManagement = () => {
                             <div className="modal-body p-3">
                                 <form className="forms-sample" onSubmit={handleUpdate}>
                                     <div className="row">
-                                        <div className="col-md-6 form-group">
+                                        <div className="col-md-12 form-group">
                                             <label for="exampleInputName1">Full Name <span className="text-danger">*</span></label>
                                             <input
                                                 type="text"
@@ -774,7 +775,7 @@ const UserManagement = () => {
                                                 required
                                             />
                                         </div>
-                                        <div className="col-md-6 form-group">
+                                        <div className="col-md-12 form-group">
                                             <label for="exampleInputEmail3">User Name <span className="text-danger">*</span></label>
                                             <input
                                                 type="text"
@@ -813,39 +814,71 @@ const UserManagement = () => {
                                                 required
                                             />
                                         </div>
-                                        <div className="col-md-6 form-group">
+                                        <div className="col-md-12 form-group">
                                             <label for="userType">User Type <span className="text-danger">*</span></label>
                                             <select className="form-control" id="userType" name='admin_type' value={datas.admin_type} onChange={handleChange}>
                                                 <option value='' selected disabled>Select Option</option>
+                                                <option value='superadmin'>Super Admin</option>
                                                 <option value='admin'>Admin</option>
                                                 <option value='management'>Management</option>
                                                 <option value='user'>User</option>
                                             </select>
                                         </div>
-                                        <div className="col-md-6 form-group">
+                                        <div className="col-md-12 form-group">
                                             <label htmlFor="schools">Schools<span className="text-danger">*</span></label>
-                                            <Multiselect className='inputHead'
-                                                onRemove={(event) => {
-                                                    console.log(event);
+                                            <Multiselect
+                                                className="inputHead"
+                                                selectedValues={schoolList.filter((school) =>
+                                                    datas.school_id?.includes(school.sch_id)
+                                                )}
+                                                onRemove={(removedItems) => {
+                                                    const updatedSchoolIds = datas.school_id.filter(
+                                                        (id) => !removedItems.some((removed) => removed.sch_id === id)
+                                                    );
+                                                    setDatas((prev) => ({ ...prev, school_id: updatedSchoolIds }));
                                                 }}
-                                                onSelect={(event) => {
-                                                    seteditschool(event);
+                                                onSelect={(selectedItems) => {
+                                                    const selectedSchoolIds = selectedItems.map((item) => item.sch_id);
+                                                    setDatas((prev) => ({ ...prev, school_id: selectedSchoolIds }));
                                                 }}
                                                 required
                                                 options={schoolList}
                                                 displayValue="sch_nm"
-                                                showCheckbox />
+                                                showCheckbox
+                                            />
                                         </div>
-                                        <div className="col-md-6 form-group">
-                                            <label for="userType">Reporting/Incharge <span className="text-danger">*</span></label>
-                                            <select className="form-control" id="userType" name='parent_admin_id' value={datas.parent_admin_id} onChange={handleChange}>
-                                                <option value='' selected disabled>Select Option</option>
-                                                <option value={1}>Admin</option>
-                                                <option value={2}>Management</option>
-                                                <option value={3}>User</option>
-                                                <option value={4}>LBF</option>
-                                            </select>
-                                        </div>
+                                        {datas.admin_type === "user" && (
+                                            <div className="col-md-6 form-group">
+                                                <label for="userType">Reporting/Incharge <span className="text-danger">*</span></label>
+                                                <select className="form-control" id="userType" name='parent_admin_id' value={datas.parent_admin_id} onChange={handleChange}>
+                                                    <option value='' selected disabled>Select Option</option>
+                                                    {admindata?.data?.map((val) => {
+                                                        return (
+                                                            <>
+                                                                <option value={val?.admin_id}>{val?.full_name}</option>
+                                                            </>
+                                                        )
+                                                    })}
+
+                                                </select>
+                                            </div>
+                                        )}
+                                        {datas.admin_type === "management" && (
+                                            <div className="col-md-6 form-group">
+                                                <label for="userType">Reporting/Incharge <span className="text-danger">*</span></label>
+                                                <select className="form-control" id="userType" name='parent_admin_id' value={datas.parent_admin_id} onChange={handleChange}>
+                                                    <option value='' selected disabled>Select Option</option>
+                                                    {admindata?.data?.map((val) => {
+                                                        return (
+                                                            <>
+                                                                <option value={val?.admin_id}>{val?.full_name}</option>
+                                                            </>
+                                                        )
+                                                    })}
+
+                                                </select>
+                                            </div>
+                                        )}
 
                                         <div className="col-md-6 form-group">
                                             <label htmlFor="userType">Status</label><br />
