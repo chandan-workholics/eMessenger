@@ -128,7 +128,7 @@ const Sidebar = () => {
                             </li>
                             <li className="nav-item">
                                 <Link className="nav-link" to="/support-master">
-                                    <i className="fa-solid fa-graduation-cap menu-icon"></i>
+                                    <i className="fa-solid fa-headset menu-icon"></i>
                                     <span className="menu-title mr-3">Support</span>
                                 </Link>
                             </li>
@@ -225,7 +225,7 @@ const Sidebar = () => {
                             </li>
                             <li className="nav-item">
                                 <Link className="nav-link" to="/support-master">
-                                    <i className="fa-solid fa-graduation-cap menu-icon"></i>
+                                    <i className="fa-solid fa-headset menu-icon ml-1"></i>
                                     <span className="menu-title mr-3">Support</span>
                                 </Link>
                             </li>

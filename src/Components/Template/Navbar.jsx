@@ -40,7 +40,7 @@ const Navbar = () => {
 
                         <li className="nav-item nav-profile dropdown">
                             <Link className="nav-link dropdown-toggle" to="#" data-toggle="dropdown" id="profileDropdown">
-                                <img src="images/faces/face28.jpg" alt="profile" />
+                                <h2 className='mb-0'><i class="fa-solid fa-circle-user text-white"></i></h2>
                             </Link>
                             <div className="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
                                 <Link to='/register' className="dropdown-item">
