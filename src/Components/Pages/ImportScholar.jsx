@@ -10,7 +10,7 @@ const ImportScholar = () => {
     const token = sessionStorage.getItem('token');
     const URL = process.env.REACT_APP_URL;
     const [importStudent, setImportStudent] = useState([]);
-    // const [searchTerm, setSearchTerm] = useState('');
+    const [searchTerm, setSearchTerm] = useState('');
     const [importStudenttwo, setImportStudenttwo] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -54,17 +54,17 @@ const ImportScholar = () => {
             setLoading(false);
         }
     };
-    // const handleSearchChange = (e) => {
-    //     const value = e.target.value;
-    //     setSearchTerm(value);
-    //     const lowercasedFilter = value.toLowerCase();
-    //     const filteredResults = importStudenttwo.filter(item =>
-    //         Object.keys(item).some(key =>
-    //             String(item[key]).toLowerCase().includes(lowercasedFilter)
-    //         )
-    //     );
-    //     setImportStudent(filteredResults);
-    // };
+    const handleSearchChange = (e) => {
+        const value = e.target.value;
+        setSearchTerm(value);
+        const lowercasedFilter = value.toLowerCase();
+        const filteredResults = importStudenttwo.filter(item =>
+            Object.keys(item).some(key =>
+                String(item[key]).toLowerCase().includes(lowercasedFilter)
+            )
+        );
+        setImportStudent(filteredResults);
+    };
 
 
     const handlePrint = async () => {
@@ -282,13 +282,13 @@ const ImportScholar = () => {
                                                         </div>
                                                         <div className="col-12 col-md-4 mt-2 mt-xl-0">
                                                             <div className="mb-3 position-relative">
-                                                                {/* <div className="input-group">
+                                                                <div className="input-group">
                                                                     <input type="text"
                                                                         placeholder="Search..."
                                                                         value={searchTerm}
                                                                         onChange={handleSearchChange}
                                                                         className="form-control" />
-                                                                </div> */}
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>

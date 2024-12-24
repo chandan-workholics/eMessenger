@@ -10,8 +10,8 @@ const FeesMaster = () => {
     const token = sessionStorage.getItem('token');
     const URL = process.env.REACT_APP_URL;
     const [importFeeStudent, setImportFeeStudent] = useState([]);
-    // const [originalData, setOriginalData] = useState([]);
-    // const [searchTerm, setSearchTerm] = useState('');
+    const [originalData, setOriginalData] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
     const [importStudenttwo, setImportStudenttwo] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -47,7 +47,7 @@ const FeesMaster = () => {
             }
             const result = await response.json();
             const resulttwo = await responsetwo.json();
-            // setOriginalData(result.data);
+            setOriginalData(result.data);
             setImportFeeStudent(result.data);
             setImportStudenttwo(resulttwo.data);
             setTotalPages(Math.ceil(result?.pagination?.totalPages));
@@ -58,21 +58,21 @@ const FeesMaster = () => {
         }
     };
 
-    // const handleSearchChange = (e) => {
-    //     const value = e.target.value;
-    //     setSearchTerm(value);
-    //     if (value === '') {
-    //         setImportFeeStudent(originalData);
-    //     } else {
-    //         const lowercasedFilter = value.toLowerCase();
-    //         const filteredResults = originalData.filter(item =>
-    //             Object.keys(item).some(key =>
-    //                 String(item[key]).toLowerCase().includes(lowercasedFilter)
-    //             )
-    //         );
-    //         setImportFeeStudent(filteredResults); // Update filtered data
-    //     }
-    // };
+    const handleSearchChange = (e) => {
+        const value = e.target.value;
+        setSearchTerm(value);
+        if (value === '') {
+            setImportFeeStudent(originalData);
+        } else {
+            const lowercasedFilter = value.toLowerCase();
+            const filteredResults = originalData.filter(item =>
+                Object.keys(item).some(key =>
+                    String(item[key]).toLowerCase().includes(lowercasedFilter)
+                )
+            );
+            setImportFeeStudent(filteredResults); // Update filtered data
+        }
+    };
 
     useEffect(() => {
         fetchData();// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -300,7 +300,7 @@ const FeesMaster = () => {
                                                             <button type="submit" className="btn btn-secondary text-white mr-2 mb-2" onClick={handlePrint}>Print</button>
                                                         </div>
                                                         <div className="col-12 col-md-4 mt-2 mt-xl-0">
-                                                            {/* <div className="mb-3 position-relative">
+                                                            <div className="mb-3 position-relative">
                                                                 <div className="input-group">
                                                                     <input type="text"
                                                                         placeholder="Search..."
@@ -309,7 +309,7 @@ const FeesMaster = () => {
                                                                         className="form-control" />
                                                                 </div>
 
-                                                            </div> */}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
