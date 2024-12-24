@@ -6,7 +6,6 @@ const ExpandRowTable = ({ columns, rows, data }) => {
     const [filteredData, setFilteredData] = useState(data || []);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: null });
     const [expandedRows, setExpandedRows] = useState([]);
-    const pageType = window.location.pathname.includes('reply-received') ? 'reply-received' : 'default';
 
     useEffect(() => {
         setTableData(data);
@@ -55,6 +54,7 @@ const ExpandRowTable = ({ columns, rows, data }) => {
             setExpandedRows([...expandedRows, rowIndex]);
         }
     };
+
     return (
         <div>
             <div className="row w-100">
@@ -107,50 +107,13 @@ const ExpandRowTable = ({ columns, rows, data }) => {
                                         <td colSpan={columns.length + 1} style={{ backgroundColor: '#eaeaf1' }} className='rounded-bottom'>
                                             <div className="expanded-content">
                                                 <p><strong>Additional Details:</strong></p>
-                                                {pageType === 'reply-received' ? (
-                                                    <div>
-                                                        {data?.map((item) => (
-                                                            <div key={item.reqId}>
-                                                                <p>reqId: {item.reqId}</p>
-                                                                <p>msgId: {item.msgId}</p>
-                                                                <p>received: {item.received}</p>
-                                                                <p>subject: {item.subject}</p>
-                                                                <p>mobileNo: {item.mobileNo}</p>
-                                                                <p>school: {item.school}</p>
-                                                                <p>studentId: {item.studentId}</p>
-                                                                <p>sent: {item.sent}</p>
-                                                                <p>replyMsgId: {item.replyMsgId}</p>
-                                                                <p>msgBodyId: {item.msgBodyId}</p>
-                                                                <div>
-                                                                    <table border="1">
-                                                                        <thead>
-                                                                            <tr>
-                                                                                <th>msgType</th>
-                                                                                <th>dataReplyText</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            {item.msgType.split(', ').map((type, index) => (
-                                                                                <tr key={index}>
-                                                                                    <td>{type}</td>
-                                                                                    <td>{item.dataReplyText.split(', ')[index + 1] || 'NA'}</td>
-                                                                                </tr>
-                                                                            ))}
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                        ))}
-                                                    </div>
-                                                ) : (
-                                                    <ul>
-                                                        {Object.entries(row).map(([key, value], idx) => (
-                                                            <li key={idx}>
-                                                                <strong>{key}:</strong> {value !== undefined ? value : 'N/A'}
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                )}
+                                                <ul>
+                                                    {Object.entries(row).map(([key, value], idx) => (
+                                                        <li key={idx}>
+                                                            <strong>{key}:</strong> {value !== undefined ? value : 'N/A'}
+                                                        </li>
+                                                    ))}
+                                                </ul>
                                             </div>
                                         </td>
                                     </tr>
@@ -163,4 +126,5 @@ const ExpandRowTable = ({ columns, rows, data }) => {
         </div>
     );
 }
-export default ExpandRowTable;
+
+export default ExpandRowTable;  

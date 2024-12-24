@@ -10,6 +10,8 @@ const FeesMaster = () => {
     const token = sessionStorage.getItem('token');
     const URL = process.env.REACT_APP_URL;
     const [importFeeStudent, setImportFeeStudent] = useState([]);
+    // const [originalData, setOriginalData] = useState([]);
+    // const [searchTerm, setSearchTerm] = useState('');
     const [importStudenttwo, setImportStudenttwo] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -45,6 +47,7 @@ const FeesMaster = () => {
             }
             const result = await response.json();
             const resulttwo = await responsetwo.json();
+            // setOriginalData(result.data);
             setImportFeeStudent(result.data);
             setImportStudenttwo(resulttwo.data);
             setTotalPages(Math.ceil(result?.pagination?.totalPages));
@@ -55,6 +58,22 @@ const FeesMaster = () => {
         }
     };
 
+    // const handleSearchChange = (e) => {
+    //     const value = e.target.value;
+    //     setSearchTerm(value);
+    //     if (value === '') {
+    //         setImportFeeStudent(originalData);
+    //     } else {
+    //         const lowercasedFilter = value.toLowerCase();
+    //         const filteredResults = originalData.filter(item =>
+    //             Object.keys(item).some(key =>
+    //                 String(item[key]).toLowerCase().includes(lowercasedFilter)
+    //             )
+    //         );
+    //         setImportFeeStudent(filteredResults); // Update filtered data
+    //     }
+    // };
+
     useEffect(() => {
         fetchData();// eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage]);
@@ -64,9 +83,7 @@ const FeesMaster = () => {
             toast.error("No data available to print.");
             return;
         }
-
         try {
-            // Open a new window for printing
             const printWindow = window.open('', '_blank');
             printWindow.document.write(`
                 <html>
@@ -110,9 +127,7 @@ const FeesMaster = () => {
                             </thead>
                             <tbody>
             `);
-
-            // Generate table rows dynamically
-            importStudenttwo.forEach((val) => {
+            importFeeStudent.forEach((val) => {
                 printWindow.document.write(`
                     <tr>
                         <td>${val.fees_display_id}</td>
@@ -126,19 +141,17 @@ const FeesMaster = () => {
                     </tr>
                 `);
             });
-
-            // Close table and add print script
             printWindow.document.write(`
-                            </tbody>
-                        </table>
-                        <script>
-                            window.onload = function() {
-                                window.print();
-                                window.close();
-                            };
-                        </script>
-                    </body>
-                </html>
+                        </tbody>
+                    </table>
+                    <script>
+                        window.onload = function() {
+                            window.print();
+                            window.close();
+                        };
+                    </script>
+                </body>
+            </html>
             `);
             printWindow.document.close();
         } catch (error) {
@@ -146,7 +159,6 @@ const FeesMaster = () => {
             toast.error("An error occurred while trying to print.");
         }
     };
-
 
     const handlePageChange = (page) => {
         if (page > 0 && page <= totalPages) {
@@ -161,7 +173,6 @@ const FeesMaster = () => {
         XLSX.writeFile(wb, 'Fees_Data.xlsx');
     };
 
-    // upload excel data 
     const [excelData, setExcelData] = useState([]);
 
     const handleFileUpload = (e) => {
@@ -174,26 +185,20 @@ const FeesMaster = () => {
             const sheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[sheetName];
 
-            // Convert the sheet data to JSON
-            let jsonData = XLSX.utils.sheet_to_json(worksheet, {
-                raw: false, // Parse date as text
-                dateNF: 'dd-mm-yyyy', // Optional: specify a date format
-            });
 
-            // Handle date conversion explicitly (if needed)
+            let jsonData = XLSX.utils.sheet_to_json(worksheet, {
+                raw: false,
+                dateNF: 'dd-mm-yyyy',
+            });
             jsonData = jsonData.map(row => {
                 const convertedRow = { ...row };
-
-                // Check if a date field exists and convert it to DD/MM/YYYY
                 if (convertedRow.duedate) {
                     const parsedDate = new Date(convertedRow.duedate);
 
                     if (!isNaN(parsedDate)) {
-                        // Format the date to DD/MM/YYYY
                         const day = String(parsedDate.getDate()).padStart(2, '0');
-                        const month = String(parsedDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+                        const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
                         const year = parsedDate.getFullYear();
-
                         convertedRow.duedate = `${day}/${month}/${year}`;
                     }
                 }
@@ -287,12 +292,26 @@ const FeesMaster = () => {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="col-md-12">
-                                                    <button type="submit" className="btn btn-primary mr-2 mb-2" onClick={handleSubmit}>
-                                                        Import
-                                                    </button>
-                                                    <button type="submit" className="btn btn-success mr-2 mb-2" onClick={exportToExcel}>Export to Excel</button>
-                                                    <button type="submit" className="btn btn-secondary text-white mr-2 mb-2" onClick={handlePrint}>Print</button>
+                                                <div className='col-12 '>
+                                                    <div className="row">
+                                                        <div className="col-md-8">
+                                                            <button type="submit" className="btn btn-primary mr-2 mb-2" onClick={handleSubmit}> Import  </button>
+                                                            <button type="submit" className="btn btn-success mr-2 mb-2" onClick={exportToExcel}>Export to Excel</button>
+                                                            <button type="submit" className="btn btn-secondary text-white mr-2 mb-2" onClick={handlePrint}>Print</button>
+                                                        </div>
+                                                        <div className="col-12 col-md-4 mt-2 mt-xl-0">
+                                                            {/* <div className="mb-3 position-relative">
+                                                                <div className="input-group">
+                                                                    <input type="text"
+                                                                        placeholder="Search..."
+                                                                        value={searchTerm}
+                                                                        onChange={handleSearchChange}
+                                                                        className="form-control" />
+                                                                </div>
+
+                                                            </div> */}
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -337,8 +356,6 @@ const FeesMaster = () => {
                                                     </div>
                                                 </div>
                                             </div>
-
-                                            {/* Pagination Controls */}
                                             <nav>
                                                 <ul className="pagination justify-content-end">
                                                     <li className="page-item">

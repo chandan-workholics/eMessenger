@@ -137,6 +137,7 @@ const SchoolMaster = () => {
         const formattedData = schoolList.map((school) => ({
             schoolId: school?.sch_id,
             schoolFullName: school?.sch_nm,
+            shortNames: school.scroll_news_text,
             shortName: school?.sch_short_nm,
             isActive: school?.is_active === 1 ? true : false,
             fontColor: school?.text_color,
@@ -155,11 +156,12 @@ const SchoolMaster = () => {
         printWindow.document.write('<html><head><title>Print School List</title></head><body>');
         printWindow.document.write('<h1>School List</h1>');
         printWindow.document.write('<table border="1" style="width:100%; text-align:left; border-collapse: collapse;">');
-        printWindow.document.write('<tr><th>School ID</th><th>Full Name</th><th>Short Name</th><th>Is Active</th><th>Font Color</th><th>Background Color</th></tr>');
+        printWindow.document.write('<tr><th>School ID</th><th>Full Name</th><th>App Scroll News</th><th>Short Name</th><th>Is Active</th><th>Font Color</th><th>Background Color</th></tr>');
 
         allData.forEach((val, index) => {
             const schoolId = val?.sch_id || '';
             const schoolFullName = val?.sch_nm || '';
+            const shortNames = val?.scroll_news_text || '';
             const shortName = val?.sch_short_nm || '';
             const isActive = val?.is_active === 1 ? 'Active' : 'Inactive';
             const fontColor = val?.text_color || '';
@@ -169,6 +171,7 @@ const SchoolMaster = () => {
                 <tr>
                     <td>${schoolId}</td>
                     <td>${schoolFullName}</td>
+                    <td>${shortNames}</td>
                     <td>${shortName}</td>
                     <td>${isActive}</td>
                     <td style="color: ${fontColor};">${fontColor}</td>
@@ -202,6 +205,7 @@ const SchoolMaster = () => {
     const columns = [
         { label: 'School ID', key: 'schoolId' },
         { label: 'School Full Name', key: 'schoolFullName' },
+        { label: 'App Scroll News', key: 'shortNames' },
         { label: 'Short Name', key: 'shortName' },
         { label: 'Is Active', key: 'isActive' },
         { label: 'Font Color', key: 'fontColor' },
@@ -222,6 +226,7 @@ const SchoolMaster = () => {
         schoolId: school?.sch_id,
         schoolFullName: school?.sch_nm,
         shortName: school?.sch_short_nm,
+        shortNames: school.scroll_news_text,
         isActive: school?.is_active === 1 ? true : false,
         fontColor: school?.text_color,
         backgroundColor: school?.bg_color,
@@ -304,7 +309,6 @@ const SchoolMaster = () => {
     return (
         <>
             <div className="container-scroller">
-                {/*----- Navbar -----*/}
                 <Navbar />
 
                 <div className="container-fluid page-body-wrapper">

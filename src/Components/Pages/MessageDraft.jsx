@@ -63,19 +63,6 @@ const MessageDraft = () => {
     };
 
 
-    // const fetchData = async () => {
-    //     try {
-    //         setLoading(true);
-    //         const response = await callAPI.get(`/school/getSchool?page=1&limit=200`);
-    //         setSchoolList(response.data.data || []);
-    //     } catch (error) {
-    //         console.error("Error fetching school data:", error.message);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-
-
     const fetchSubGroup = async () => {
         try {
             setLoading(true);
@@ -88,34 +75,14 @@ const MessageDraft = () => {
         }
     };
 
-    // const fetchParentsNo = async () => {
-    //     try {
-    //         setLoading(true);
-    //         const response = await callAPI.get(`/scholar/get_MainList_ScholarDetail`);
-    //         setNumber(response.data.data || []);
-    //     } catch (error) {
-    //         console.error("Error fetching ParentsNo data:", error.message);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-
     const fetchParentsNo = async () => {
         try {
             setLoading(true);
-
-            // Fetch data from API
             const response = await callAPI.get(`/scholar/get_MainList_ScholarDetail`);
-
-            // Convert school_access into an array of values
             const allowedSchools = school_access.split(',');
-
-            // Filter data based on school_access
             const filteredData = (response.data.data || []).filter(item =>
                 allowedSchools.includes(item.sch_short_nm)
             );
-
-            // Set the filtered data
             setNumber(filteredData);
         } catch (error) {
             console.error("Error fetching ParentsNo data:", error.message);
@@ -127,7 +94,6 @@ const MessageDraft = () => {
 
     useEffect(() => {
         fetchUser();
-        // fetchData();
         fetchSubGroup();
         fetchParentsNo();
     }, []); // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -157,15 +123,14 @@ const MessageDraft = () => {
 
     const handleCategoryChange = (event) => {
         const { value } = event.target;
-        setchattype(value); // Set the chat type based on selected value
-        setMsgCategory([value]); // Update `msgCategory` to contain only the selected value
+        setchattype(value);
+        setMsgCategory([value]);
     };
 
     const handleInputOptionsChange = (e) => {
         const selectedValue = e.target.value;
-        // Check for specific values and set reply required accordingly
         if (selectedValue === "OPTION" || selectedValue === "CHECKBOX" || selectedValue === "TEXTBOX" || selectedValue === "TEXTAREA" || selectedValue === "CAMERA" || selectedValue === "FILE") {
-            setReplyrequired(1); // Set reply required for specific options
+            setReplyrequired(1);
         }
 
         const selectedOptions = [...e.target.selectedOptions].map((option) => option.value);
@@ -175,7 +140,7 @@ const MessageDraft = () => {
             title: "",
             options: "",
             placeholder: "",
-            is_reply_required: false, // Default value
+            is_reply_required: false,
         }));
         setInputFields([...inputFields, ...newInputFields]);
         e.target.value = "";
@@ -351,7 +316,7 @@ const MessageDraft = () => {
         showUpto: val?.show_upto ? (() => {
             const date = new Date(val?.show_upto);
             const day = String(date.getUTCDate()).padStart(2, "0");
-            const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // Months are 0-based
+            const month = String(date.getUTCMonth() + 1).padStart(2, "0");
             const year = date.getUTCFullYear();
             let hours = date.getUTCHours();
             const minutes = String(date.getUTCMinutes()).padStart(2, "0");
@@ -359,7 +324,7 @@ const MessageDraft = () => {
             // Determine AM/PM
             const ampm = hours >= 12 ? "P.M." : "A.M.";
             hours = hours % 12;
-            hours = hours ? String(hours).padStart(2, "0") : "12"; // 12:00 AM or 12:00 PM
+            hours = hours ? String(hours).padStart(2, "0") : "12";
 
             return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
         })() : "",
@@ -368,7 +333,7 @@ const MessageDraft = () => {
         lastPostedDate: val?.createdAt ? (() => {
             const date = new Date(val?.show_upto);
             const day = String(date.getUTCDate()).padStart(2, "0");
-            const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // Months are 0-based
+            const month = String(date.getUTCMonth() + 1).padStart(2, "0");
             const year = date.getUTCFullYear();
             let hours = date.getUTCHours();
             const minutes = String(date.getUTCMinutes()).padStart(2, "0");
@@ -376,7 +341,7 @@ const MessageDraft = () => {
             // Determine AM/PM
             const ampm = hours >= 12 ? "P.M." : "A.M.";
             hours = hours % 12;
-            hours = hours ? String(hours).padStart(2, "0") : "12"; // 12:00 AM or 12:00 PM
+            hours = hours ? String(hours).padStart(2, "0") : "12";
 
             return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
         })() : "",
@@ -400,8 +365,6 @@ const MessageDraft = () => {
     })) : [];
 
     const handleExport = async () => {
-
-
         const formattedData = messageList.map((val) => ({
             msgId: val?.msg_id || "",
             subjectLineSchools: val?.subject_text || "", // Stringify this data
@@ -436,13 +399,11 @@ const MessageDraft = () => {
                 })()
                 : "",
             lastEditBy: val?.editByDetails?.full_name || "",
-            recipients: "Na", // Replace with actual recipients
-            seen: "Na", // Replace with actual seen status
-            respond: "Na", // Replace with actual respond status
-            isActive: val?.is_active === 1 ? "Yes" : "No", // Convert to string for export
+            recipients: val?.no_of_recipients || "Na",
+            seen: val?.seen || "Na",
+            respond: val?.respond || "Na",
+            isActive: val?.is_active === 1 ? "Yes" : "No",
         }));
-
-        // Convert formattedData to a sheet and then to CSV
         const ws = XLSX.utils.json_to_sheet(formattedData);
         const csvContent = XLSX.utils.sheet_to_csv(ws);
         const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
@@ -450,8 +411,6 @@ const MessageDraft = () => {
     };
 
     const handlePrint = async () => {
-
-
         const formattedData = messageList.map((val) => ({
             msgId: val?.msg_id || "",
             subjectLineSchools: val?.subject_text || "",
@@ -486,13 +445,11 @@ const MessageDraft = () => {
                 })()
                 : "",
             lastEditBy: val?.editByDetails?.full_name || "",
-            recipients: "Na",
-            seen: "Na",
-            respond: "Na",
-            isActive: val?.is_active === 1 ? "Yes" : "No", // Use string values
+            recipients: val?.no_of_recipients || "Na",
+            seen: val?.seen || "Na",
+            respond: val?.respond || "Na",
+            isActive: val?.is_active === 1 ? "Yes" : "No",
         }));
-
-        // Create the print window
         const printWindow = window.open("", "_blank");
         printWindow.document.write(
             "<html><head><title>Create Message List</title></head><body>"
@@ -529,11 +486,9 @@ const MessageDraft = () => {
         printWindow.document.close();
         printWindow.print();
     };
-
-    //geting
     const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1); // Set to tomorrow
-    const minDate = tomorrow.toISOString().split("T")[0]; // Get tomorrow's date in YYYY-MM-DD format
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const minDate = tomorrow.toISOString().split("T")[0];
 
     const handlePageChange = (page) => { if (page > 0 && page <= totalPages) { setCurrentPage(page); } };
 
@@ -555,7 +510,6 @@ const MessageDraft = () => {
         });
     }
 
-    // Handle the drag-and-drop action
     const onDragEnd = (result) => {
         const { destination, source } = result;
 
