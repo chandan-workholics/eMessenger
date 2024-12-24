@@ -586,20 +586,22 @@ const EditCreatedMsg = () => {
                                                                                                 </>
                                                                                             )}
 
-                                                                                            <div className="form-check">
-                                                                                                <input
-                                                                                                    type="checkbox"
-                                                                                                    className="form-check-input"
-                                                                                                    checked={field.is_reply_required}
-                                                                                                    onChange={(e) => {
-                                                                                                        const updatedFields = inputFields.map((f) =>
-                                                                                                            f.id === field.id ? { ...f, is_reply_required: e.target.checked } : f
-                                                                                                        );
-                                                                                                        setInputFields(updatedFields);
-                                                                                                    }}
-                                                                                                />
-                                                                                                <label className="form-check-label">Reply Required</label>
-                                                                                            </div>
+                                                                                            {(field.type === "OPTION" || field.type === "CHECKBOX" || field.type === "TEXTBOX" || field.type === "TEXTAREA" || field.type === "CAMERA" || field.type === "FILE") && (
+                                                                                                <div className="form-check">
+                                                                                                    <input
+                                                                                                        type="checkbox"
+                                                                                                        className="form-check-input"
+                                                                                                        checked={field.is_reply_required}
+                                                                                                        onChange={(e) => {
+                                                                                                            const updatedFields = inputFields.map((f) =>
+                                                                                                                f.id === field.id ? { ...f, is_reply_required: e.target.checked } : f
+                                                                                                            );
+                                                                                                            setInputFields(updatedFields);
+                                                                                                        }}
+                                                                                                    />
+                                                                                                    <label className="form-check-label">Reply Required</label>
+                                                                                                </div>
+                                                                                            )}
 
                                                                                             <button type="button" className="btn border-0 mt-2" onClick={() => deleteField(field.id)}>
                                                                                                 <i className="fa-solid fa-trash-can text-danger"></i>
