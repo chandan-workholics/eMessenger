@@ -3,7 +3,7 @@ import Navbar from '../Template/Navbar'
 import Sidebar from '../Template/Sidebar'
 import Loding from '../Template/Loding';
 import SortableTable from '../Template/SortableTable';
-import callAPI from '../../commonMethod/api';
+import callAPI, { interceptor } from '../../commonMethod/api';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
@@ -27,10 +27,25 @@ const NoticeBoard = () => {
     };
     let name, value;
     const handleChange = (e) => {
-        name = e.target.name;
-        value = e.target.value;
-        setDatas({ ...datas, [name]: value })
-    }
+        const name = e.target.name;
+        const value = e.target.value;
+
+        // If the field being changed is 'document_link', update document_type automatically
+        if (name === 'document_link') {
+            const document_type = getDocumentType(value);  // Automatically determine document type
+            setDatas(prevState => ({
+                ...prevState,
+                [name]: value,
+                document_type: document_type  // Update document type based on the URL
+            }));
+        } else {
+            setDatas(prevState => ({
+                ...prevState,
+                [name]: value
+            }));
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -79,6 +94,36 @@ const NoticeBoard = () => {
             setLoading(false);
         }
     };
+
+    const handleDeleteWelcomeMsg = async (id) => {
+        try {
+            setLoading(true);
+            const token = sessionStorage.getItem('token');
+            if (!token) {
+                throw new Error("No token provided");
+            }
+            const headers = {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            };
+
+            // Make DELETE request with headers
+            const response = await axios.delete(`http://206.189.130.102:3550/api/notice/deleteDocument/${id}`, { headers });
+
+            if (response.status === 200 || response.status === 201) {
+                toast.success("Welcome message deleted successfully.");
+                fetchData(); // Refresh data
+            } else {
+                toast.error(response.message || "Failed to delete the welcome message.");
+            }
+        } catch (error) {
+            toast.error(`Error deleting the welcome message: ${error.message}`);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
 
     const handleExport = async () => {
         const allData = await fetchAllData();
@@ -170,6 +215,9 @@ const NoticeBoard = () => {
                 <button onClick={() => handleUpdateNotice(val)} type="button" className="btn">
                     <i className="fa-solid fa-pen-to-square text-warning"></i>
                 </button>
+                <button onClick={() => handleDeleteWelcomeMsg(val.id)} type="button" className="btn p-2">
+                    <i className="fa-solid fa-trash-can text-danger"></i>
+                </button>
             </div>
         ),
     })) : [];
@@ -178,10 +226,21 @@ const NoticeBoard = () => {
         openModal();
         setDatas({
             title: val.title,
-            document_type: val.document_link,
+            document_type: getDocumentType(val.document_link),
             document_link: val.document_link,
             thumbnails: val.thumbnails
         });
+    };
+
+    const getDocumentType = (url) => {
+        if (url.endsWith('.pdf')) {
+            return 'PDF';
+        } else if (url.includes('youtube.com') || url.includes('youtu.be')) {
+            return 'YOUTUBE';
+        } else if (url.match(/\.(jpeg|jpg|gif|png)$/)) {
+            return 'IMAGE';
+        }
+        return '';
     };
     const handlePageChange = (page) => {
         if (page > 0 && page <= totalPages) {
