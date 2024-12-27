@@ -106,13 +106,11 @@ const NoticeBoard = () => {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
             };
-
-            // Make DELETE request with headers
             const response = await axios.delete(`http://206.189.130.102:3550/api/notice/deleteDocument/${id}`, { headers });
 
             if (response.status === 200 || response.status === 201) {
                 toast.success("Welcome message deleted successfully.");
-                fetchData(); // Refresh data
+                fetchData();
             } else {
                 toast.error(response.message || "Failed to delete the welcome message.");
             }
