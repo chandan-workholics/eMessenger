@@ -373,9 +373,12 @@ const EditCreatedMsg = () => {
                                                         </select>
                                                     </div>
 
-                                                    {datas?.msg_chat_type !== "DISPLAY" && (
+
+                                                    {datas?.msg_chat_type !== "INPUT" && datas?.msg_chat_type !== "DISPLAY" && (
                                                         <div className="col-md-4 form-group">
-                                                            <label htmlFor="msgCategory">Add Student <span className="text-danger">(don’t select more than 5 numbers)</span></label>
+                                                            <label htmlFor="msgCategory">
+                                                                Add Student <span className="text-danger">(don’t select more than 5 numbers)</span>
+                                                            </label>
                                                             <Multiselect
                                                                 className="inputHead"
                                                                 onRemove={(event) => {
@@ -404,8 +407,6 @@ const EditCreatedMsg = () => {
                                                             />
                                                         </div>
                                                     )}
-
-
                                                 </div>
 
                                                 {/* ................................................upper div............................................ */}
