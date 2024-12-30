@@ -120,7 +120,7 @@ const Dashboard = () => {
                                     <Calendar />
                                 </div>
 
-                                <div className="col-md-3 stretch-card grid-margin">
+                                {/* <div className="col-md-3 stretch-card grid-margin">
                                     <div className="card shadow-sm">
                                         <div className="card-body">
                                             <div className="d-flex justify-content-between">
@@ -181,7 +181,7 @@ const Dashboard = () => {
                                             </ul>
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                            
                         </div>
