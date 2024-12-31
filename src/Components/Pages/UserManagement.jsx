@@ -442,13 +442,13 @@ const UserManagement = () => {
                                         <div className="btn-group" role="group" aria-label="Basic example">
                                             <ul className="nav nav-tabs" id="myTab" role="tablist">
                                                 <li className="nav-item" role="presentation">
-                                                    <a className="nav-link " id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="true">Add</a>
+                                                    <a className="nav-link px-4" id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="true">Add</a>
                                                 </li>
                                                 <li className="nav-item" role="presentation">
-                                                    <a className="nav-link" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">List</a>
+                                                    <a className="nav-link px-4" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">List</a>
                                                 </li>
                                                 <li className="nav-item" role="presentation">
-                                                    <a className="nav-link active" id="appUsersList-tab" data-toggle="tab" href="#appUsersList" role="tab" aria-controls="appUsersList" aria-selected="false">App Users List</a>
+                                                    <a className="nav-link px-4 active" id="appUsersList-tab" data-toggle="tab" href="#appUsersList" role="tab" aria-controls="appUsersList" aria-selected="false">App Users List</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -632,13 +632,11 @@ const UserManagement = () => {
                                                         </div>
                                                         <div className="row">
                                                             <div className="col-12">
-                                                                <div className="table-responsive">
-                                                                    <SortableTable columns={columns} data={data} />
-                                                                </div>
+                                                                <SortableTable columns={columns} data={data} />
                                                             </div>
                                                         </div>
                                                         <nav>
-                                                            <ul className="pagination justify-content-end">
+                                                            <ul className="pagination justify-content-end mb-0 mt-3">
                                                                 <li className="page-item">
                                                                     <button className="page-link" onClick={() => handlePageChange2(currentPage2 - 1)}
                                                                         disabled={currentPage2 === 1}>Previous</button>
@@ -699,21 +697,18 @@ const UserManagement = () => {
                                                                         </div>
                                                                         <div className="col-md-3 d-flex align-items-center">
                                                                             <div className="">
-                                                                                <button type="submit" onClick={handleFilterSubmit} className="btn btn-primary mr-2">Filter</button>
+                                                                                <button type="submit" onClick={handleFilterSubmit} className="btn btn-primary mr-2 mb-3 mb-md-0">Filter</button>
                                                                             </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div className="col-12">
-                                                                <div className="table-responsive">
-                                                                    <SortableTable columns={appColumns} data={appUserData} />
-                                                                </div>
+                                                                <SortableTable columns={appColumns} data={appUserData} />
                                                             </div>
-
                                                         </div>
                                                         <nav>
-                                                            <ul className="pagination justify-content-end">
+                                                            <ul className="pagination justify-content-end mb-0 mt-3">
                                                                 <li className="page-item">
                                                                     <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}
                                                                         disabled={currentPage === 1}>Previous</button>

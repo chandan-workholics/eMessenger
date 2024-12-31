@@ -416,13 +416,11 @@ const NoticeBoard = () => {
                                                         </div>
                                                         <div className="row">
                                                             <div className="col-12">
-                                                                <div className="table-responsive">
-                                                                    <SortableTable columns={columns} data={data} />
-                                                                </div>
+                                                                <SortableTable columns={columns} data={data} />
                                                             </div>
                                                         </div>
                                                         <nav>
-                                                            <ul className="pagination justify-content-end">
+                                                            <ul className="pagination justify-content-end mb-0 mt-3">
                                                                 <li className="page-item">
                                                                     <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}
                                                                         disabled={currentPage === 1}>Previous</button>

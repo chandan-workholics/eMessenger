@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../Template/Navbar';
 import Sidebar from '../Template/Sidebar';
 import Loding from '../Template/Loding';
+import ExpandRowTable from '../Template/ExpandReplyTable.jsx';
 import callAPI from '../../commonMethod/api.js';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
-import ExpandReplyTable from '../Template/ExpandReplyTable.jsx';
 
 const ReplyReceived = () => {
     const [messageList, setMessageList] = useState([]);
@@ -140,7 +140,7 @@ const ReplyReceived = () => {
         sent: formatDateTimeWithAmPm(val?.sendedMessage?.sended_date || ''),
         replyMsgId: val?.replied_msg_id || '',
         msgBodyId: val?.replyBodies?.map((body) => body?.replied_msg_d_id || '').join(', '),
-        msgType: val?.replyBodies?.map((body) => body?.msg_type || '').join('\n'),
+        msgType: val?.replyBodies?.map((body) => body?.msg_type || '').join(', '),
         dataReplyText: val?.replyBodies
             ?.map((reply) => {
                 try {
@@ -161,7 +161,7 @@ const ReplyReceived = () => {
                     return ''; // Fallback value
                 }
             })
-            .join('\n'),
+            .join(', '),
     }));
 
     const handlePageChange = (page) => {
@@ -200,11 +200,10 @@ const ReplyReceived = () => {
                                                 </button>
                                             </div>
                                         </div>
-                                        <div className="">
-                                            <ExpandReplyTable columns={columns} rows={rows} data={data} />
-                                        </div>
-                                        <nav className='mt-4'>
-                                            <ul className="pagination justify-content-end mb-0">
+                                        <ExpandRowTable columns={columns} rows={rows} data={data} />
+
+                                        <nav>
+                                            <ul className="pagination justify-content-end">
                                                 <li className="page-item">
                                                     <button className="page-link" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>Previous</button>
                                                 </li>

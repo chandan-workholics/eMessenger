@@ -217,9 +217,7 @@ const WelcomeMsg = () => {
                                             <p className="card-title">Welcome Message List</p>
                                             <div className="row">
                                                 <div className="col-12">
-                                                    <div className="table-responsive">
                                                         <SortableTable columns={columns} data={data} />
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
