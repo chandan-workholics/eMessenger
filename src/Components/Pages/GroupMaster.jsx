@@ -147,6 +147,10 @@ const GroupMaster = () => {
     ];
 
     const rows = [
+        { label: 'Group ID', key: 'groupId' },
+        { label: 'Group Name', key: 'msg_group_name' },
+        { label: 'Is Active', key: 'is_active' },
+        { label: 'Action', key: 'action' },
         { label: 'Added By', key: 'addedBy' },
         { label: 'Added On', key: 'addedOn' },
         { label: 'Edit By', key: 'editBy' },
@@ -337,7 +341,7 @@ const GroupMaster = () => {
                                                         </div>
                                                         <div className="row">
                                                             <div className="col-12">
-                                                                    <ExpandRowTable columns={columns} rows={rows} data={data} />
+                                                                <ExpandRowTable columns={columns} rows={rows} data={data} />
                                                             </div>
                                                         </div>
                                                         <nav>
