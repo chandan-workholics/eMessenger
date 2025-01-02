@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const ExpandRowTable = ({ columns, rows, data }) => {
+const ExpandReplyTable = ({ columns, rows, data }) => {
     const [tableData, setTableData] = useState(data || []);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredData, setFilteredData] = useState(data || []);
@@ -55,10 +55,16 @@ const ExpandRowTable = ({ columns, rows, data }) => {
         }
     };
 
+    // Function to get the last two data entries
+    const getLastTwoData = (row) => {
+        const entries = Object.entries(row);
+        return entries.slice(-2); // Get last two entries
+    };
+
     return (
         <div>
             <div className="row">
-                <div className="ml-auto col-md-3 form-group">
+                <div className="ml-auto col-md-6 col-lg-3 form-group float-right">
                     <div className="input-group">
                         <input type="text"
                             placeholder="Search..."
@@ -108,24 +114,38 @@ const ExpandRowTable = ({ columns, rows, data }) => {
                                             <td colSpan={columns.length + 1} style={{ backgroundColor: '#eaeaf1' }} className='rounded-bottom'>
                                                 <div className="expanded-content">
                                                     <p><strong>Additional Details:</strong></p>
-                                                    {/* <ul>
-                                                    {Object.entries(row).map(([key, value], idx) => (
-                                                        <li key={idx}>
-                                                            <strong>{key}:</strong> {value !== undefined ? value : 'N/A'}
-                                                        </li>
-                                                    ))}
-                                                </ul> */}
-                                                    <table className="table table-sm border w-50 bg-white">
+                                                    <table className="table table-sm border w-50 bg-white mb-3">
                                                         <thead>
                                                             {Object.entries(row).map(([key, value], idx) => (
-                                                                (key !== 'action') && (
+                                                                (key !== 'msgType' && key !== 'dataReplyText') && (
                                                                     <tr key={idx}>
-                                                                        <th className='border rounded-0 align-middle'>{key}</th>
+                                                                        <th className='border rounded-0'>{key}</th>
                                                                         <td>{value !== undefined ? value : 'N/A'}</td>
                                                                     </tr>
                                                                 )
                                                             ))}
                                                         </thead>
+                                                    </table>
+
+                                                    <table className="table border table-sm w-50 bg-white">
+                                                        <thead>
+                                                            <tr>
+                                                                {getLastTwoData(row).map(([key], idx) => (
+                                                                    <th className='border-right rounded-0' key={idx}>{key}</th>
+                                                                ))}
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                {getLastTwoData(row).map(([_, value], idx) => (
+                                                                    <td key={idx} className='border p-0'>
+                                                                        {value !== undefined ? value.split('\n').map((line, index) => (
+                                                                            <p className='p-2 mb-0 border-bottom' key={index}>{line}<br /></p>
+                                                                        )) : 'N/A'}
+                                                                    </td>
+                                                                ))}
+                                                            </tr>
+                                                        </tbody>
                                                     </table>
                                                 </div>
                                             </td>
@@ -141,4 +161,4 @@ const ExpandRowTable = ({ columns, rows, data }) => {
     );
 }
 
-export default ExpandRowTable;  
+export default ExpandReplyTable;

@@ -131,6 +131,10 @@
   }
 }
 
+.table, table{
+  min-width: max-content;
+}
+
 
 
 /*================================== Dashboard Page CSS start ==================================*/

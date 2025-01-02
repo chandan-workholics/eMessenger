@@ -344,7 +344,7 @@ const SupportMaster = () => {
                                             </div>
 
                                             <nav>
-                                                <ul className="pagination justify-content-end">
+                                                <ul className="pagination justify-content-end mb-0 mt-3">
                                                     <li className="page-item">
                                                         <button
                                                             className="page-link"

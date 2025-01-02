@@ -535,14 +535,13 @@ const MessageDraft = () => {
 
                     <div className="main-panel">
                         <div className="content-wrapper">
-                            <div className="row">
-                                <div className="col-12 col-md-6 mb-md-4 mb-xl-0">
+                            <div className="row align-items-center">
+                                <div className="col-12 col-md-8 mb-md-4 mb-xl-0">
                                     <div className="col-12 col-md-6 mb-md-4 mb-xl-0">
                                         <h3 className="font-weight-bold">Create Message</h3>
                                     </div>
                                 </div>
-
-                                <div className="col-12 col-md-6 mb-md-4 mb-xl-0">
+                                <div className="col-12 col-md-4 mb-md-4 mb-xl-0">
                                     <div className="d-flex align-items-center justify-content-end mb-3">
                                         <div className="btn-group" role="group" aria-label="Basic example"  >
                                             <ul className="nav nav-tabs" id="myTab" role="tablist">
@@ -867,14 +866,12 @@ const MessageDraft = () => {
                                                         </div>
                                                         <div className="row">
                                                             <div className="col-12">
-                                                                <div className="table-responsive">
-                                                                    <SortableTable columns={columns} data={data} />
-                                                                </div>
+                                                                <SortableTable columns={columns} data={data} />
                                                             </div>
                                                         </div>
 
                                                         <nav>
-                                                            <ul className="pagination justify-content-end">
+                                                            <ul className="pagination justify-content-end mb-0 mt-3">
                                                                 <li className="page-item">
                                                                     <button className="page-link" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
                                                                         Previous

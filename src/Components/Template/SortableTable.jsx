@@ -71,7 +71,7 @@ const SortableTable = ({ columns, data }) => {
     return (
         <div>
             {/* Search Input */}
-            <div className="row w-100">
+            <div className="row">
                 <div className="ml-auto col-md-3 form-group">
                     <div className="input-group">
                         <input type="text"
@@ -86,36 +86,38 @@ const SortableTable = ({ columns, data }) => {
                 </div>
             </div>
 
-            <table id='example' className="display expandable-table table-hover w-100 mb-4">
-                <thead>
-                    <tr>
-                        {columns.map((column) => (
-                            <th key={column.key} onClick={() => handleSort(column.key)}>
-                                {column.label} {getSortIcon(column.key)}
-                            </th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredData.length === 0 ? (
+            <div className="table-responsive">
+                <table id='example' className="display expandable-table table-hover w-100 mb-4">
+                    <thead>
                         <tr>
-                            <td colSpan={columns.length} className="text-center">
-                                <strong>Data Not Found</strong>
-                            </td>
+                            {columns.map((column) => (
+                                <th key={column.key} onClick={() => handleSort(column.key)}>
+                                    {column.label} {getSortIcon(column.key)}
+                                </th>
+                            ))}
                         </tr>
-                    ) : (
-                        paginateData().map((row, rowIndex) => (
-                            <tr key={rowIndex}>
-                                {columns.map((column) => (
-                                    <td key={column.key}>
-                                        {column.key === 'action' ? row[column.key] : row[column.key] !== undefined ? row[column.key] : ''}
-                                    </td>
-                                ))}
+                    </thead>
+                    <tbody>
+                        {filteredData.length === 0 ? (
+                            <tr>
+                                <td colSpan={columns.length} className="text-center">
+                                    <strong>Data Not Found</strong>
+                                </td>
                             </tr>
-                        ))
-                    )}
-                </tbody>
-            </table>
+                        ) : (
+                            paginateData().map((row, rowIndex) => (
+                                <tr key={rowIndex}>
+                                    {columns.map((column) => (
+                                        <td key={column.key}>
+                                            {column.key === 'action' ? row[column.key] : row[column.key] !== undefined ? row[column.key] : ''}
+                                        </td>
+                                    ))}
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
+            </div>
 
             {/* Pagination controls */}
             {/* <nav>

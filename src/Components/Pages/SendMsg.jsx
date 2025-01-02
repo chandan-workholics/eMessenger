@@ -143,11 +143,11 @@ const SendMsg = () => {
                                                                                 <tbody>
                                                                                     {filteredStudents.map((val, index) => (
                                                                                         <tr key={val?.id}>
-                                                                                            <td>
+                                                                                            <td className='bg-white'>
                                                                                                 <div className="d-flex justify-content-center align-items-center">
                                                                                                     <input
                                                                                                         type="checkbox"
-                                                                                                        className="form-check-input"
+                                                                                                        className="form-check-input position-relative"
                                                                                                         style={{ width: '18px', height: '18px' }}
                                                                                                         checked={selectedIds.includes(val.student_number)}
                                                                                                         onChange={() => handleCheckboxChange(val.student_number)}
@@ -166,23 +166,23 @@ const SendMsg = () => {
                                                                     </div>
                                                                 </div>
 
-                                                                <div className="d-flex justify-content-center align-items-center mt-3">
+                                                                <div className="d-block d-md-flex justify-content-center align-items-center mt-3">
                                                                     <button
-                                                                        className="btn btn-info mr-2"
+                                                                        className="btn btn-info mr-2 mb-3 mb-md-0"
                                                                         onClick={handleSelectAll}
                                                                     >
                                                                         Select All
                                                                     </button>
                                                                     <button
-                                                                        className="btn btn-outline-info mr-2"
+                                                                        className="btn btn-outline-info mr-2 mb-3 mb-md-0"
                                                                         onClick={handleDeselectAll}
                                                                     >
                                                                         Deselect All
                                                                     </button>
-                                                                    <button className="btn btn-light mr-2">Cancel</button>
+                                                                    <button className="btn btn-light mr-2 mb-3 mb-md-0">Cancel</button>
                                                                     <button
                                                                         type="submit"
-                                                                        className="btn btn-success"
+                                                                        className="btn btn-success mb-3 mb-md-0"
                                                                         onClick={handleSubmit}
                                                                     >
                                                                         Send Message
