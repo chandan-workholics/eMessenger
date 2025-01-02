@@ -156,7 +156,9 @@ const ReplyReceived = () => {
                         return Object.values(parsedData.selected).join(', ');
                     }
                     return 'NA';
-                } catch (error) {
+                }
+
+                catch (error) {
                     console.error('Error parsing JSON:', reply?.data_reply_text, error);
                     return ''; // Fallback value
                 }
