@@ -119,7 +119,7 @@ const ExpandReplyTable = ({ columns, rows, data }) => {
                                                             {Object.entries(row).map(([key, value], idx) => (
                                                                 (key !== 'msgType' && key !== 'dataReplyText') && (
                                                                     <tr key={idx}>
-                                                                        <th className='border rounded-0'>{key}</th>
+                                                                        <th className='border rounded-0 align-middle'>{rows.find(row => row.key === key)?.label}</th>
                                                                         <td>{value !== undefined ? value : 'N/A'}</td>
                                                                     </tr>
                                                                 )
@@ -131,7 +131,9 @@ const ExpandReplyTable = ({ columns, rows, data }) => {
                                                         <thead>
                                                             <tr>
                                                                 {getLastTwoData(row).map(([key], idx) => (
-                                                                    <th className='border-right rounded-0' key={idx}>{key}</th>
+                                                                    <th className='border-right rounded-0' key={idx}>
+                                                                        {rows.find(r => r.key === key)?.label}
+                                                                    </th>
                                                                 ))}
                                                             </tr>
                                                         </thead>
@@ -140,7 +142,7 @@ const ExpandReplyTable = ({ columns, rows, data }) => {
                                                                 {getLastTwoData(row).map(([_, value], idx) => (
                                                                     <td key={idx} className='border p-0'>
                                                                         {value !== undefined ? value.split('\n').map((line, index) => (
-                                                                            <p className='p-2 mb-0 border-bottom' key={index}>{line}<br /></p>
+                                                                            <p className='p-2 mb-0 border-bottom' key={index}>{line} <br /></p>
                                                                         )) : 'N/A'}
                                                                     </td>
                                                                 ))}

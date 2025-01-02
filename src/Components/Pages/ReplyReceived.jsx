@@ -127,6 +127,11 @@ const ReplyReceived = () => {
         { label: 'School', key: 'school' },
         { label: 'Student Id', key: 'studentId' },
         { label: 'Sent', key: 'sent' },
+        { label: 'Reply Msg Id', key: 'replyMsgId' },
+        { label: 'Message Body Id', key: 'msgBodyId' },
+        { label: 'Message Type', key: 'msgType' },
+        { label: 'Data Reply Text', key: 'dataReplyText' },
+
     ];
 
     const data = messageList?.map((val, index) => ({

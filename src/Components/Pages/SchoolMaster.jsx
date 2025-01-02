@@ -219,6 +219,14 @@ const SchoolMaster = () => {
         { label: 'Added On', key: 'addedOn' },
         { label: 'Edit By', key: 'editBy' },
         { label: 'Edit On', key: 'editOn' },
+        { label: 'School ID', key: 'schoolId' },
+        { label: 'School Full Name', key: 'schoolFullName' },
+        { label: 'App Scroll News', key: 'shortNames' },
+        { label: 'Short Name', key: 'shortName' },
+        { label: 'Is Active', key: 'isActive' },
+        { label: 'Font Color', key: 'fontColor' },
+        { label: 'Background Color', key: 'backgroundColor' },
+        { label: 'Action', key: 'action' },
     ]
 
 

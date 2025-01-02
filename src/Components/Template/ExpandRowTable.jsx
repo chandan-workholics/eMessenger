@@ -105,7 +105,7 @@ const ExpandRowTable = ({ columns, rows, data }) => {
                                     </tr>
                                     {expandedRows.includes(rowIndex) && (
                                         <tr>
-                                            <td colSpan={columns.length + 1} style={{ backgroundColor: '#eaeaf1' }} className='rounded-bottom'>
+                                            <td colSpan={rows.length + 1} style={{ backgroundColor: '#eaeaf1' }} className='rounded-bottom'>
                                                 <div className="expanded-content">
                                                     <p><strong>Additional Details:</strong></p>
                                                     {/* <ul>
@@ -120,7 +120,7 @@ const ExpandRowTable = ({ columns, rows, data }) => {
                                                             {Object.entries(row).map(([key, value], idx) => (
                                                                 (key !== 'action') && (
                                                                     <tr key={idx}>
-                                                                        <th className='border rounded-0 align-middle'>{key}</th>
+                                                                        <th className='border rounded-0 align-middle'>{rows.find(row => row.key === key)?.label}</th>
                                                                         <td>{value !== undefined ? value : 'N/A'}</td>
                                                                     </tr>
                                                                 )

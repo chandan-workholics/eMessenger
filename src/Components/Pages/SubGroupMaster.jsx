@@ -172,6 +172,11 @@ const SubGroupMaster = () => {
     ];
 
     const rows = [
+        { label: 'Sub Group ID', key: 'subGroupId' },
+        { label: 'Sub Group Name', key: 'msg_sgroup_name' },
+        { label: 'Group Name', key: 'msg_group_name' },
+        { label: 'Is Active', key: 'is_active' },
+        { label: 'Action', key: 'action' },
         { label: 'Added By', key: 'addedBy' },
         { label: 'Added On', key: 'addedOn' },
         { label: 'Edit By', key: 'editBy' },
