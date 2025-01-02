@@ -43,12 +43,16 @@ const Sidebar = () => {
         }
     };
 
-
-
     useEffect(() => {
         fetchAdminDetails();// eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const handleNavLinkClick = () => {
+        const sidebar = document.getElementById("sidebar");
+        if (window.innerWidth <= 991) {
+            sidebar.classList.add("close");
+        }
+    };
 
     return (
         <>
@@ -58,7 +62,7 @@ const Sidebar = () => {
                         <>
 
                             <li className="nav-item">
-                                <Link className="nav-link" to="/dashboard">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/dashboard" >
                                     <i className="icon-grid menu-icon"></i>
                                     <span className="menu-title mr-3">Dashboard</span>
                                 </Link>
@@ -68,19 +72,19 @@ const Sidebar = () => {
                             </p>
 
                             <li className="nav-item">
-                                <Link className="nav-link" to="/message-draft">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/message-draft">
                                     <i className="fa-solid fa-envelope menu-icon"></i>
                                     <span className="menu-title mr-3">Create Message</span>
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/reply-received">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/reply-received">
                                     <i className="fa-solid fa-inbox menu-icon"></i>
                                     <span className="menu-title mr-3">Inbox</span>
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/notice-board">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/notice-board">
                                     <i className="fa-solid fa-chalkboard menu-icon"></i>
                                     <span className="menu-title mr-3">Welcome Message</span>
                                 </Link>
@@ -91,43 +95,43 @@ const Sidebar = () => {
                             </p>
 
                             <li className="nav-item">
-                                <Link className="nav-link" to="/import-scholar">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/import-scholar">
                                     <i className="fa-solid fa-file-import menu-icon"></i>
                                     <span className="menu-title mr-3">Import Student</span>
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/fees-master">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/fees-master">
                                     <i className="fa-solid fa-file-import menu-icon"></i>
                                     <span className="menu-title mr-3">Fees Master</span>
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/group-master">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/group-master">
                                     <i className="fa-solid fa-user-group menu-icon"></i>
                                     <span className="menu-title mr-3">Group</span>
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/sub-group">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/sub-group">
                                     <i className="fa-solid fa-users-line menu-icon"></i>
                                     <span className="menu-title mr-3">Sub Group</span>
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/user-management">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/user-management">
                                     <i className="fa-solid fa-users-gear menu-icon"></i>
                                     <span className="menu-title mr-3">Users Management</span>
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/school-master">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/school-master">
                                     <i className="fa-solid fa-graduation-cap menu-icon"></i>
                                     <span className="menu-title mr-3">School</span>
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/support-master">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/support-master">
                                     <i className="fa-solid fa-headset menu-icon"></i>
                                     <span className="menu-title mr-3">Support</span>
                                 </Link>
@@ -137,7 +141,7 @@ const Sidebar = () => {
                                 <span className="">SECURITY</span> <i className="fas fa-ellipsis-h"></i>
                             </p>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/change-password">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/change-password">
                                     <i className="fa-solid fa-key menu-icon"></i>
                                     <span className="menu-title mr-3">Change Password</span>
                                 </Link>
@@ -155,7 +159,7 @@ const Sidebar = () => {
                         <>
 
                             <li className="nav-item">
-                                <Link className="nav-link" to="/dashboard">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/dashboard">
                                     <i className="icon-grid menu-icon"></i>
                                     <span className="menu-title mr-3">Dashboard</span>
                                 </Link>
@@ -165,19 +169,19 @@ const Sidebar = () => {
                             </p>
 
                             <li className="nav-item">
-                                <Link className="nav-link" to="/message-draft">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/message-draft">
                                     <i className="fa-solid fa-envelope menu-icon"></i>
                                     <span className="menu-title mr-3">Create Message</span>
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/reply-received">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/reply-received">
                                     <i className="fa-solid fa-inbox menu-icon"></i>
                                     <span className="menu-title mr-3">Inbox</span>
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/notice-board">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/notice-board">
                                     <i className="fa-solid fa-chalkboard menu-icon"></i>
                                     <span className="menu-title mr-3">Welcome Message</span>
                                 </Link>
@@ -188,43 +192,43 @@ const Sidebar = () => {
                             </p>
 
                             <li className="nav-item">
-                                <Link className="nav-link" to="/import-scholar">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/import-scholar">
                                     <i className="fa-solid fa-file-import menu-icon"></i>
                                     <span className="menu-title mr-3">Import Student</span>
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/fees-master">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/fees-master">
                                     <i className="fa-solid fa-file-import menu-icon"></i>
                                     <span className="menu-title mr-3">Fees Master</span>
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/group-master">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/group-master">
                                     <i className="fa-solid fa-user-group menu-icon"></i>
                                     <span className="menu-title mr-3">Group</span>
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/sub-group">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/sub-group">
                                     <i className="fa-solid fa-users-line menu-icon"></i>
                                     <span className="menu-title mr-3">Sub Group</span>
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/user-management">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/user-management">
                                     <i className="fa-solid fa-users-gear menu-icon"></i>
                                     <span className="menu-title mr-3">Users Management</span>
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/school-master">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/school-master">
                                     <i className="fa-solid fa-graduation-cap menu-icon"></i>
                                     <span className="menu-title mr-3">School</span>
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/support-master">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/support-master">
                                     <i className="fa-solid fa-headset menu-icon ml-1"></i>
                                     <span className="menu-title mr-3">Support</span>
                                 </Link>
@@ -234,7 +238,7 @@ const Sidebar = () => {
                                 <span className="">SECURITY</span> <i className="fas fa-ellipsis-h"></i>
                             </p>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/change-password">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/change-password">
                                     <i className="fa-solid fa-key menu-icon"></i>
                                     <span className="menu-title mr-3">Change Password</span>
                                 </Link>
@@ -252,7 +256,7 @@ const Sidebar = () => {
                         <>
 
                             <li className="nav-item">
-                                <Link className="nav-link" to="/dashboard">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/dashboard">
                                     <i className="icon-grid menu-icon"></i>
                                     <span className="menu-title mr-3">Dashboard</span>
                                 </Link>
@@ -262,13 +266,13 @@ const Sidebar = () => {
                             </p>
 
                             <li className="nav-item">
-                                <Link className="nav-link" to="/message-draft">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/message-draft">
                                     <i className="fa-solid fa-envelope menu-icon"></i>
                                     <span className="menu-title mr-3">Create Message</span>
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/reply-received">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/reply-received">
                                     <i className="fa-solid fa-inbox menu-icon"></i>
                                     <span className="menu-title mr-3">Inbox</span>
                                 </Link>
@@ -290,7 +294,7 @@ const Sidebar = () => {
                         <>
 
                             <li className="nav-item">
-                                <Link className="nav-link" to="/dashboard">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/dashboard">
                                     <i className="icon-grid menu-icon"></i>
                                     <span className="menu-title mr-3">Dashboard</span>
                                 </Link>
@@ -300,31 +304,31 @@ const Sidebar = () => {
                             </p>
 
                             <li className="nav-item">
-                                <Link className="nav-link" to="/message-draft">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/message-draft">
                                     <i className="fa-solid fa-envelope menu-icon"></i>
                                     <span className="menu-title mr-3">Create Message</span>
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/reply-received">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/reply-received">
                                     <i className="fa-solid fa-inbox menu-icon"></i>
                                     <span className="menu-title mr-3">Inbox</span>
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/group-master">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/group-master">
                                     <i className="fa-solid fa-user-group menu-icon"></i>
                                     <span className="menu-title mr-3">Group</span>
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/sub-group">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/sub-group">
                                     <i className="fa-solid fa-users-line menu-icon"></i>
                                     <span className="menu-title mr-3">Sub Group</span>
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/user-management">
+                                <Link className="nav-link" onClick={handleNavLinkClick} to="/user-management">
                                     <i className="fa-solid fa-users-gear menu-icon"></i>
                                     <span className="menu-title mr-3">Users Management</span>
                                 </Link>

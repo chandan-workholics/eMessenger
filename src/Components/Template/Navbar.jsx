@@ -18,6 +18,13 @@ const Navbar = () => {
         sessionStorage.clear();
     }
 
+    const handleNavLinkClick = () => {
+        const sidebar = document.getElementById("sidebar");
+        if (window.innerWidth <= 991) {
+            sidebar.classList.remove("close");
+        }
+    };
+
     return (
         <>
             <nav className="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
@@ -54,7 +61,8 @@ const Navbar = () => {
                             </div>
                         </li>
                     </ul>
-                    <button className="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="minimize">
+                    <button className="navbar-toggler navbar-toggler-right d-lg-none align-self-center" 
+                    type="button" data-toggle="minimize" onClick={handleNavLinkClick}>
                         <span className="icon-menu text-white"></span>
                     </button>
                 </div>
