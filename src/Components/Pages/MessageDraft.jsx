@@ -572,9 +572,9 @@ const MessageDraft = () => {
                                                             <div className="row">
 
                                                                 <div className="col-md-12 form-group mb-3">
-                                                                    <div className="d-flex align-items-center">
+                                                                    <div className="d-block d-md-flex align-items-center mb-4 mb-md-0">
                                                                         <label htmlFor="msgCategory" className="mr-3 mb-0" style={{ width: "180px" }}>Message Category<span className="text-danger">*</span></label>
-                                                                        <div className="d-flex form-control border-0 px-0">
+                                                                        <div className="d-flex flex-wrap form-control border-0 px-0">
                                                                             <div className="custom-control custom-radio mr-3">
                                                                                 <input type="radio" className="custom-control-input" id="Chat" name="msgCategory" value="INDIVIDUALCHAT" onChange={handleCategoryChange} />
                                                                                 <label className="custom-control-label" htmlFor="Chat">Chat</label>
@@ -592,7 +592,6 @@ const MessageDraft = () => {
                                                                                 <input type="radio" className="custom-control-input" id="Input" name="msgCategory" value="INPUT" onChange={handleCategoryChange} />
                                                                                 <label className="custom-control-label" htmlFor="Input">Input</label>
                                                                             </div>
-
                                                                         </div>
                                                                     </div>
                                                                 </div>
