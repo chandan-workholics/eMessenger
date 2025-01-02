@@ -171,6 +171,18 @@ const EditCreatedMsg = () => {
         }));
     };
 
+    const formatDateTime = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${year}-${month}-${day}T${hours}:${minutes}`; // Format as YYYY-MM-DDTHH:mm
+    };
+
+
     const handleUpdate = async (e) => {
         e.preventDefault();
         const messageBody = inputFields.map((field, index) => {
@@ -315,18 +327,21 @@ const EditCreatedMsg = () => {
                                                     </div>
 
                                                     <div className="col-md-4 form-group">
-                                                        <label htmlFor="showUpto">Show Upto Date & Time<span className="text-danger">*</span></label>
+                                                        <label htmlFor="showUpto">
+                                                            Show Upto Date & Time <span className="text-danger">*</span>
+                                                        </label>
                                                         <input
-                                                            type="date"
+                                                            type="datetime-local"
                                                             className="form-control"
                                                             id="showUpto"
                                                             name="show_upto"
-                                                            value={datas?.show_upto ? datas.show_upto.split('T')[0] : ''} // Extract YYYY-MM-DD
+                                                            value={datas?.show_upto ? formatDateTime(datas.show_upto) : ''}
                                                             onChange={handleChange}
                                                             required
                                                             min={minDate}
                                                         />
                                                     </div>
+
 
 
                                                     <div className="col-md-4 form-group">
