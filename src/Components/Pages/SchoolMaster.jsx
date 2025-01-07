@@ -327,8 +327,8 @@ const SchoolMaster = () => {
                     <div className="main-panel">
                         <div className="content-wrapper">
                             <div className="row">
-                                <div className="col-12 col-md-6 mb-4 mb-xl-0">
-                                    <div className="d-flex align-items-center mb-3">
+                                <div className="col-12 col-md-6 mb-0 mb-lg-4 mb-xl-0">
+                                    <div className="d-flex align-items-center mb-0 mb-lg-3">
                                         <h3 className="font-weight-bold mr-2">School</h3>
                                     </div>
                                 </div>

@@ -71,6 +71,10 @@
   .sidebar-icon-only .sidebar-offcanvas {
     left: 0px;
   }
+
+  .sidebar-icon-only .sidebar.close {
+    left: auto !important;
+  }
 }
 
 /* Modal CSS */
@@ -131,7 +135,8 @@
   }
 }
 
-.table, table{
+.table,
+table {
   min-width: max-content;
 }
 
