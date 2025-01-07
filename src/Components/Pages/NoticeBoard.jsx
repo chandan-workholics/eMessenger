@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 const NoticeBoard = () => {
-    const [datas, setDatas] = useState({ title: '', document_type: '', document_link: '', thumbnails: '' })
+    const [datas, setDatas] = useState({ title: '', document_type: '', document_link: '', thumbnails: '', sch_short_nm: '' })
     const [updateNotice, setUpdateNotice] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -23,8 +23,10 @@ const NoticeBoard = () => {
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => {
         setIsModalOpen(false);
-        setDatas({ title: '', document_type: '', document_link: '', thumbnails: '' });
+        setDatas({ title: '', document_type: '', document_link: '', thumbnails: '', sch_short_nm: '' });
     };
+    const [SchoolList, setSchoolList] = useState([]);
+
     let name, value;
     const handleChange = (e) => {
         const name = e.target.name;
@@ -68,6 +70,7 @@ const NoticeBoard = () => {
     };
     useEffect(() => {
         fetchData();// eslint-disable-next-line react-hooks/exhaustive-deps
+        fetchSchoolData();
     }, [currentPage]);
 
     const fetchData = async () => {
@@ -128,6 +131,7 @@ const NoticeBoard = () => {
         const formattedData = allData.map((val, index) => ({
             sn: val?.id,
             title: val?.title,
+            school_id: val?.school_id,
             documentType: val?.document_type,
             documentLink: (<Link to={val?.document_link} className='text-info' target='_blank'>{val?.document_link}</Link>),
             thumbnails: (val?.document_type !== 'pdf' ? <img src={val?.thumbnails} className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} /> : <img src='http://206.189.130.102:3550/Uploads/image/1729838073596-1729838073596.png' className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} />),
@@ -150,7 +154,7 @@ const NoticeBoard = () => {
         printWindow.document.write('<html><head><title>Print Notice Board</title></head><body>');
         printWindow.document.write('<h1>Notice Board List</h1>');
         printWindow.document.write('<table border="1" style="width:100%; text-align:left;">');
-        printWindow.document.write('<tr><th>S.No</th><th>Title</th><th>Document Type</th><th>Document Link</th><th>Thumbnails</th></tr>');
+        printWindow.document.write('<tr><th>S.No</th><th>Title</th><th>School</th><th>Document Type</th><th>Document Link</th><th>Thumbnails</th></tr>');
         allData.forEach((val, index) => {
             const documentLink = val?.document_link ? `<a href="${val?.document_link}" class="text-info" target="_blank">${val?.document_link}</a>` : '#';
             const documentType = val?.document_type || '#';
@@ -162,6 +166,7 @@ const NoticeBoard = () => {
                 <tr>
                     <td>${index + 1}</td>
                     <td>${val?.title || ''}</td>
+                    <td>${val?.school_id || ''}</td>
                     <td>${documentType}</td>
                     <td>${documentLink}</td>
                     <td>${thumbnail}</td>
@@ -197,6 +202,7 @@ const NoticeBoard = () => {
     const columns = [
         { label: 'S.No.', key: 'sn' },
         { label: 'Title', key: 'title' },
+        { label: 'School', key: 'school_id' },
         { label: 'Document Type', key: 'documentType' },
         { label: 'Document Link', key: 'documentLink' },
         { label: 'Thumbnails', key: 'thumbnails' },
@@ -205,6 +211,7 @@ const NoticeBoard = () => {
     const data = noticeBoardlList ? noticeBoardlList?.map((val) => ({
         sn: val?.id,
         title: val?.title,
+        school_id: val?.school_id,
         documentType: val?.document_type,
         documentLink: (<Link to={val?.document_link} className='text-info' target='_blank'>{val?.document_link}</Link>),
         thumbnails: (val?.document_type !== 'pdf' ? <img src={val?.thumbnails} className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} /> : <img src='http://206.189.130.102:3550/Uploads/image/1729838073596-1729838073596.png' className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} />),
@@ -305,6 +312,23 @@ const NoticeBoard = () => {
         } catch (error) {
         }
     };
+
+    const fetchSchoolData = async () => {
+        try {
+            setLoading(true);
+            const response = await callAPI.get(`./school/getSchool?limit=0`);
+            setSchoolList(response.data.data || []);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // useEffect(() => {
+    //     fetchSchoolData(); 
+    // }, []);
+
     console.log(totalPages)
     console.log(error)
     return (
@@ -349,6 +373,16 @@ const NoticeBoard = () => {
                                                             <h4 className="card-description text-primary font-weight-bolder">Primary Info</h4>
                                                             <div className="row">
                                                                 <div className="col-md-4 form-group"><label htmlFor="title">Title <span className="text-danger">*</span></label><input type="text" className="form-control" id="title" name="title" value={datas.title} onChange={handleChange} placeholder="Title" required />
+                                                                </div>
+                                                                <div className="col-md-4 form-group">
+                                                                    <label for="school">School<span className="text-danger">*</span></label>
+                                                                    <select className="form-control" name='school_id' onChange={handleChange}>
+                                                                        {SchoolList?.map((val) => {
+                                                                            return (
+                                                                                <option value={val?.school_id}>{val?.sch_short_nm}</option>
+                                                                            )
+                                                                        })}
+                                                                    </select>
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
                                                                     <label htmlFor="document_type">Document Type <span className="text-danger">*</span></label>
@@ -482,6 +516,16 @@ const NoticeBoard = () => {
                                                 placeholder="Title"
                                                 required
                                             />
+                                        </div>
+                                        <div className="form-group">
+                                            <label for="school">School<span className="text-danger">*</span></label>
+                                            <select className="form-control" name='school_id' onChange={handleChange}>
+                                                {SchoolList?.map((val) => {
+                                                    return (
+                                                        <option value={datas.school_id}>{val?.sch_short_nm}</option>
+                                                    )
+                                                })}
+                                            </select>
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="document_type">Document Type</label>
