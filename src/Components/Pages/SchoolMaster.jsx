@@ -227,6 +227,7 @@ const SchoolMaster = () => {
         { label: 'Font Color', key: 'fontColor' },
         { label: 'Background Color', key: 'backgroundColor' },
         { label: 'Action', key: 'action' },
+        { label: 'School Logo', key: 'schoolLogo' }
     ]
 
 
