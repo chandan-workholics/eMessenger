@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 const NoticeBoard = () => {
-    const [datas, setDatas] = useState({ title: '', document_type: '', document_link: '', thumbnails: '', sch_short_nm: '' })
+    const [datas, setDatas] = useState({ title: '', document_type: '', document_link: '', thumbnails: '', school_id: '' })
     const [updateNotice, setUpdateNotice] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -23,7 +23,7 @@ const NoticeBoard = () => {
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => {
         setIsModalOpen(false);
-        setDatas({ title: '', document_type: '', document_link: '', thumbnails: '', sch_short_nm: '' });
+        setDatas({ title: '', document_type: '', document_link: '', thumbnails: '', school_id: '' });
     };
     const [SchoolList, setSchoolList] = useState([]);
 
@@ -376,7 +376,7 @@ const NoticeBoard = () => {
                                                                 <div className="col-md-4 form-group"><label htmlFor="title">Title <span className="text-danger">*</span></label><input type="text" className="form-control" id="title" name="title" value={datas.title} onChange={handleChange} placeholder="Title" required />
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
-                                                                    <label for="school">School<span className="text-danger">*</span></label>
+                                                                    <label for="school_id">School<span className="text-danger">*</span></label>
                                                                     <select className="form-control" name='school_id' onChange={handleChange}>
                                                                         {SchoolList?.map((val) => {
                                                                             return (
@@ -519,13 +519,18 @@ const NoticeBoard = () => {
                                             />
                                         </div>
                                         <div className="form-group">
-                                            <label for="school">School<span className="text-danger">*</span></label>
-                                            <select className="form-control" name='school_id' onChange={handleChange}>
-                                                {SchoolList?.map((val) => {
-                                                    return (
-                                                        <option value={datas.school_id}>{val?.sch_short_nm}</option>
-                                                    )
-                                                })}
+                                            <label for="school_id">School<span className="text-danger">*</span></label>
+                                            <select
+                                                className="form-control"
+                                                name="school_id"
+                                                value={datas.school_id} // Set the selected value
+                                                onChange={handleChange} // Handle changes
+                                            >
+                                                {SchoolList?.map((val) => (
+                                                    <option key={val.school_id} value={val.school_id}>
+                                                        {val?.sch_short_nm}
+                                                    </option>
+                                                ))}
                                             </select>
                                         </div>
                                         <div className="form-group">
