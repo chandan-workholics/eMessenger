@@ -231,6 +231,7 @@ const NoticeBoard = () => {
         openModal();
         setDatas({
             title: val.title,
+            school_id: val.school_id,
             document_type: getDocumentType(val.document_link),
             document_link: val.document_link,
             thumbnails: val.thumbnails
