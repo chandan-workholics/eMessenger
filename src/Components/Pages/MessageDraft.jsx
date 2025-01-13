@@ -63,19 +63,6 @@ const MessageDraft = () => {
     };
 
 
-    // const fetchData = async () => {
-    //     try {
-    //         setLoading(true);
-    //         const response = await callAPI.get(`/school/getSchool?page=1&limit=200`);
-    //         setSchoolList(response.data.data || []);
-    //     } catch (error) {
-    //         console.error("Error fetching school data:", error.message);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-
-
     const fetchSubGroup = async () => {
         try {
             setLoading(true);
@@ -88,34 +75,14 @@ const MessageDraft = () => {
         }
     };
 
-    // const fetchParentsNo = async () => {
-    //     try {
-    //         setLoading(true);
-    //         const response = await callAPI.get(`/scholar/get_MainList_ScholarDetail`);
-    //         setNumber(response.data.data || []);
-    //     } catch (error) {
-    //         console.error("Error fetching ParentsNo data:", error.message);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-
     const fetchParentsNo = async () => {
         try {
             setLoading(true);
-
-            // Fetch data from API
             const response = await callAPI.get(`/scholar/get_MainList_ScholarDetail`);
-
-            // Convert school_access into an array of values
             const allowedSchools = school_access.split(',');
-
-            // Filter data based on school_access
             const filteredData = (response.data.data || []).filter(item =>
                 allowedSchools.includes(item.sch_short_nm)
             );
-
-            // Set the filtered data
             setNumber(filteredData);
         } catch (error) {
             console.error("Error fetching ParentsNo data:", error.message);
@@ -127,7 +94,6 @@ const MessageDraft = () => {
 
     useEffect(() => {
         fetchUser();
-        // fetchData();
         fetchSubGroup();
         fetchParentsNo();
     }, []); // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -157,15 +123,14 @@ const MessageDraft = () => {
 
     const handleCategoryChange = (event) => {
         const { value } = event.target;
-        setchattype(value); // Set the chat type based on selected value
-        setMsgCategory([value]); // Update `msgCategory` to contain only the selected value
+        setchattype(value);
+        setMsgCategory([value]);
     };
 
     const handleInputOptionsChange = (e) => {
         const selectedValue = e.target.value;
-        // Check for specific values and set reply required accordingly
         if (selectedValue === "OPTION" || selectedValue === "CHECKBOX" || selectedValue === "TEXTBOX" || selectedValue === "TEXTAREA" || selectedValue === "CAMERA" || selectedValue === "FILE") {
-            setReplyrequired(1); // Set reply required for specific options
+            setReplyrequired(1);
         }
 
         const selectedOptions = [...e.target.selectedOptions].map((option) => option.value);
@@ -175,7 +140,7 @@ const MessageDraft = () => {
             title: "",
             options: "",
             placeholder: "",
-            is_reply_required: false, // Default value
+            is_reply_required: false,
         }));
         setInputFields([...inputFields, ...newInputFields]);
         e.target.value = "";
@@ -351,7 +316,7 @@ const MessageDraft = () => {
         showUpto: val?.show_upto ? (() => {
             const date = new Date(val?.show_upto);
             const day = String(date.getUTCDate()).padStart(2, "0");
-            const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // Months are 0-based
+            const month = String(date.getUTCMonth() + 1).padStart(2, "0");
             const year = date.getUTCFullYear();
             let hours = date.getUTCHours();
             const minutes = String(date.getUTCMinutes()).padStart(2, "0");
@@ -359,7 +324,7 @@ const MessageDraft = () => {
             // Determine AM/PM
             const ampm = hours >= 12 ? "P.M." : "A.M.";
             hours = hours % 12;
-            hours = hours ? String(hours).padStart(2, "0") : "12"; // 12:00 AM or 12:00 PM
+            hours = hours ? String(hours).padStart(2, "0") : "12";
 
             return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
         })() : "",
@@ -368,7 +333,7 @@ const MessageDraft = () => {
         lastPostedDate: val?.createdAt ? (() => {
             const date = new Date(val?.show_upto);
             const day = String(date.getUTCDate()).padStart(2, "0");
-            const month = String(date.getUTCMonth() + 1).padStart(2, "0"); // Months are 0-based
+            const month = String(date.getUTCMonth() + 1).padStart(2, "0");
             const year = date.getUTCFullYear();
             let hours = date.getUTCHours();
             const minutes = String(date.getUTCMinutes()).padStart(2, "0");
@@ -376,7 +341,7 @@ const MessageDraft = () => {
             // Determine AM/PM
             const ampm = hours >= 12 ? "P.M." : "A.M.";
             hours = hours % 12;
-            hours = hours ? String(hours).padStart(2, "0") : "12"; // 12:00 AM or 12:00 PM
+            hours = hours ? String(hours).padStart(2, "0") : "12";
 
             return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
         })() : "",
@@ -400,8 +365,6 @@ const MessageDraft = () => {
     })) : [];
 
     const handleExport = async () => {
-
-
         const formattedData = messageList.map((val) => ({
             msgId: val?.msg_id || "",
             subjectLineSchools: val?.subject_text || "", // Stringify this data
@@ -436,13 +399,11 @@ const MessageDraft = () => {
                 })()
                 : "",
             lastEditBy: val?.editByDetails?.full_name || "",
-            recipients: "Na", // Replace with actual recipients
-            seen: "Na", // Replace with actual seen status
-            respond: "Na", // Replace with actual respond status
-            isActive: val?.is_active === 1 ? "Yes" : "No", // Convert to string for export
+            recipients: val?.no_of_recipients || "Na",
+            seen: val?.seen || "Na",
+            respond: val?.respond || "Na",
+            isActive: val?.is_active === 1 ? "Yes" : "No",
         }));
-
-        // Convert formattedData to a sheet and then to CSV
         const ws = XLSX.utils.json_to_sheet(formattedData);
         const csvContent = XLSX.utils.sheet_to_csv(ws);
         const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
@@ -450,8 +411,6 @@ const MessageDraft = () => {
     };
 
     const handlePrint = async () => {
-
-
         const formattedData = messageList.map((val) => ({
             msgId: val?.msg_id || "",
             subjectLineSchools: val?.subject_text || "",
@@ -486,13 +445,11 @@ const MessageDraft = () => {
                 })()
                 : "",
             lastEditBy: val?.editByDetails?.full_name || "",
-            recipients: "Na",
-            seen: "Na",
-            respond: "Na",
-            isActive: val?.is_active === 1 ? "Yes" : "No", // Use string values
+            recipients: val?.no_of_recipients || "Na",
+            seen: val?.seen || "Na",
+            respond: val?.respond || "Na",
+            isActive: val?.is_active === 1 ? "Yes" : "No",
         }));
-
-        // Create the print window
         const printWindow = window.open("", "_blank");
         printWindow.document.write(
             "<html><head><title>Create Message List</title></head><body>"
@@ -529,11 +486,9 @@ const MessageDraft = () => {
         printWindow.document.close();
         printWindow.print();
     };
-
-    //geting
     const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1); // Set to tomorrow
-    const minDate = tomorrow.toISOString().split("T")[0]; // Get tomorrow's date in YYYY-MM-DD format
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const minDate = tomorrow.toISOString().split("T")[0];
 
     const handlePageChange = (page) => { if (page > 0 && page <= totalPages) { setCurrentPage(page); } };
 
@@ -555,7 +510,6 @@ const MessageDraft = () => {
         });
     }
 
-    // Handle the drag-and-drop action
     const onDragEnd = (result) => {
         const { destination, source } = result;
 
@@ -581,14 +535,13 @@ const MessageDraft = () => {
 
                     <div className="main-panel">
                         <div className="content-wrapper">
-                            <div className="row">
-                                <div className="col-12 col-md-6 mb-md-4 mb-xl-0">
+                            <div className="row align-items-center">
+                                <div className="col-12 col-md-8 mb-md-4 mb-xl-0">
                                     <div className="col-12 col-md-6 mb-md-4 mb-xl-0">
                                         <h3 className="font-weight-bold">Create Message</h3>
                                     </div>
                                 </div>
-
-                                <div className="col-12 col-md-6 mb-md-4 mb-xl-0">
+                                <div className="col-12 col-md-4 mb-md-4 mb-xl-0">
                                     <div className="d-flex align-items-center justify-content-end mb-3">
                                         <div className="btn-group" role="group" aria-label="Basic example"  >
                                             <ul className="nav nav-tabs" id="myTab" role="tablist">
@@ -619,9 +572,9 @@ const MessageDraft = () => {
                                                             <div className="row">
 
                                                                 <div className="col-md-12 form-group mb-3">
-                                                                    <div className="d-flex align-items-center">
+                                                                    <div className="d-block d-md-flex align-items-center mb-4 mb-md-0">
                                                                         <label htmlFor="msgCategory" className="mr-3 mb-0" style={{ width: "180px" }}>Message Category<span className="text-danger">*</span></label>
-                                                                        <div className="d-flex form-control border-0 px-0">
+                                                                        <div className="d-flex flex-wrap form-control border-0 px-0">
                                                                             <div className="custom-control custom-radio mr-3">
                                                                                 <input type="radio" className="custom-control-input" id="Chat" name="msgCategory" value="INDIVIDUALCHAT" onChange={handleCategoryChange} />
                                                                                 <label className="custom-control-label" htmlFor="Chat">Chat</label>
@@ -639,7 +592,6 @@ const MessageDraft = () => {
                                                                                 <input type="radio" className="custom-control-input" id="Input" name="msgCategory" value="INPUT" onChange={handleCategoryChange} />
                                                                                 <label className="custom-control-label" htmlFor="Input">Input</label>
                                                                             </div>
-
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -647,24 +599,24 @@ const MessageDraft = () => {
                                                                 <div className="col-12 col-lg-6">
                                                                     <div className="row">
 
-                                                                        <div className="col-md-6 form-group">
+                                                                        <div className="col-md-12 form-group">
                                                                             <label htmlFor="subjectLine">Subject Line<span className="text-danger">*</span></label>
                                                                             <input type="text" className="form-control" id="subjectLine" placeholder="Subject Line" required name="subject_text" value={datas?.subject_text} onChange={handleChange} />
                                                                         </div>
 
-                                                                        <div className="col-md-6 form-group">
+                                                                        <div className="col-md-12 form-group">
                                                                             <label htmlFor="priority">Priority (1-High)<span className="text-danger">*</span></label>
                                                                             <select className="form-control" id="priority" name="msg_priority" required value={datas?.msg_priority} onChange={handleChange}>
                                                                                 {[...Array(10).keys()].map((val) => (<option key={val + 1}>{val + 1}</option>))}
                                                                             </select>
                                                                         </div>
 
-                                                                        <div className="col-md-6 form-group">
+                                                                        <div className="col-md-12 form-group">
                                                                             <label htmlFor="showUpto">Show Upto Date & Time<span className="text-danger">*</span></label>
                                                                             <input type="datetime-local" className="form-control" id="showUpto" name="show_upto" value={datas?.show_upto} onChange={handleChange} requiredmin={minDate} />
                                                                         </div>
 
-                                                                        <div className="col-md-6 form-group">
+                                                                        <div className="col-md-12 form-group">
                                                                             <label htmlFor="schools">Schools<span className="text-danger">*</span></label>
                                                                             <Multiselect
                                                                                 className="inputHead"
@@ -681,7 +633,7 @@ const MessageDraft = () => {
                                                                             />
                                                                         </div>
 
-                                                                        <div className="col-md-6 form-group">
+                                                                        <div className="col-md-12 form-group">
                                                                             <label htmlFor="msgCategory">Group/Sub Group<span className="text-danger">*</span>
                                                                             </label>
                                                                             <select className="form-control" id="msgCategory" name="msg_sgroup_id" value={datas?.msg_sgroup_id} onChange={handleChange}>
@@ -696,7 +648,7 @@ const MessageDraft = () => {
                                                                             </select>
                                                                         </div>
 
-                                                                        <div className="col-md-6 form-group">
+                                                                        <div className="col-md-12 form-group">
                                                                             {!Array.isArray(msgCategory) ||
                                                                                 (!msgCategory.includes("DISPLAY") && !msgCategory.includes("INPUT") && (
                                                                                     <>
@@ -913,14 +865,12 @@ const MessageDraft = () => {
                                                         </div>
                                                         <div className="row">
                                                             <div className="col-12">
-                                                                <div className="table-responsive">
-                                                                    <SortableTable columns={columns} data={data} />
-                                                                </div>
+                                                                <SortableTable columns={columns} data={data} />
                                                             </div>
                                                         </div>
 
                                                         <nav>
-                                                            <ul className="pagination justify-content-end">
+                                                            <ul className="pagination justify-content-end mb-0 mt-3">
                                                                 <li className="page-item">
                                                                     <button className="page-link" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
                                                                         Previous

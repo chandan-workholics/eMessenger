@@ -10,6 +10,7 @@ const ImportScholar = () => {
     const token = sessionStorage.getItem('token');
     const URL = process.env.REACT_APP_URL;
     const [importStudent, setImportStudent] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
     const [importStudenttwo, setImportStudenttwo] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -19,7 +20,6 @@ const ImportScholar = () => {
     const rowsPerPage = 10;
 
     const handleCheckboxChange = (e) => {
-        // Update action state based on whether checkbox is checked or not
         setAction(e.target.checked ? 'delete_and_import' : 'insert_only');
     };
 
@@ -47,13 +47,25 @@ const ImportScholar = () => {
             const resulttwo = await responsetwo.json();
             setImportStudent(result.data);
             setImportStudenttwo(resulttwo.data);
-            setTotalPages(Math.ceil(result.totalCount / rowsPerPage));
+            setTotalPages(Math.ceil(result?.pagination?.totalPages));
         } catch (error) {
             setError(error.message);
         } finally {
             setLoading(false);
         }
     };
+    const handleSearchChange = (e) => {
+        const value = e.target.value;
+        setSearchTerm(value);
+        const lowercasedFilter = value.toLowerCase();
+        const filteredResults = importStudenttwo.filter(item =>
+            Object.keys(item).some(key =>
+                String(item[key]).toLowerCase().includes(lowercasedFilter)
+            )
+        );
+        setImportStudent(filteredResults);
+    };
+
 
     const handlePrint = async () => {
         if (!importStudenttwo || importStudenttwo.length === 0) {
@@ -62,7 +74,6 @@ const ImportScholar = () => {
         }
 
         try {
-            // Open a new window for printing
             const printWindow = window.open('', '_blank');
             printWindow.document.write(`
                 <html>
@@ -86,7 +97,7 @@ const ImportScholar = () => {
                         </style>
                     </head>
                     <body>
-                        <h1>Scholar Data</h1>
+                        <h1>Student List</h1>
                         <table>
                             <thead>
                                 <tr>
@@ -103,7 +114,6 @@ const ImportScholar = () => {
                             <tbody>
             `);
 
-            // Generate table rows
             importStudenttwo.forEach((val, index) => {
                 printWindow.document.write(`
                     <tr>
@@ -118,8 +128,6 @@ const ImportScholar = () => {
                     </tr>
                 `);
             });
-
-            // Close the table and HTML
             printWindow.document.write(`
                             </tbody>
                         </table>
@@ -127,8 +135,6 @@ const ImportScholar = () => {
                 </html>
             `);
             printWindow.document.close();
-
-            // Trigger the print dialog
             printWindow.print();
         } catch (error) {
             console.error("Error during print operation:", error.message);
@@ -151,11 +157,8 @@ const ImportScholar = () => {
         const ws = XLSX.utils.json_to_sheet(importStudenttwo);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Scholar Data');
-        XLSX.writeFile(wb, 'Scholar_Data.xlsx');
+        XLSX.writeFile(wb, 'Student_List.xlsx');
     };
-
-
-    // upload excel data 
     const [excelData, setExcelData] = useState([]);
 
     const handleFileUpload = (e) => {
@@ -167,25 +170,18 @@ const ImportScholar = () => {
             const workbook = XLSX.read(binaryStr, { type: 'binary' });
             const sheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[sheetName];
-
-            // Convert the sheet data to JSON
             let jsonData = XLSX.utils.sheet_to_json(worksheet, {
-                raw: false, // Parse date as text
-                dateNF: 'dd-mm-yyyy', // Optional: specify a date format
+                raw: false,
+                dateNF: 'dd-mm-yyyy',
             });
-
-            // Handle date conversion explicitly (if needed)
             jsonData = jsonData.map(row => {
                 const convertedRow = { ...row };
-
-                // Check if a date field exists and convert it to DD/MM/YYYY
                 if (convertedRow.birth_dt) {
                     const parsedDate = new Date(convertedRow.birth_dt);
 
                     if (!isNaN(parsedDate)) {
-                        // Format the date to DD/MM/YYYY
                         const day = String(parsedDate.getDate()).padStart(2, '0');
-                        const month = String(parsedDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+                        const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
                         const year = parsedDate.getFullYear();
 
                         convertedRow.birth_dt = `${day}/${month}/${year}`;
@@ -276,16 +272,31 @@ const ImportScholar = () => {
                                                             />
                                                         </div>
                                                     </div>
-                                                    <button type="submit" className="btn btn-primary mr-2" onClick={handleSubmit}> Import  </button>
-                                                    <button type="submit" className="btn btn-success mr-2" onClick={exportToExcel}>Export to Excel</button>
-                                                    <button type="submit" className="btn btn-primary mr-2" onClick={handlePrint}>Print</button>
-
+                                                </div>
+                                                <div className='col-12 '>
+                                                    <div className="row">
+                                                        <div className="col-md-8">
+                                                            <button type="submit" className="btn btn-primary mr-2 mb-2" onClick={handleSubmit}> Import  </button>
+                                                            <button type="submit" className="btn btn-success mr-2 mb-2" onClick={exportToExcel}>Export to Excel</button>
+                                                            <button type="submit" className="btn btn-secondary text-white mr-2 mb-2" onClick={handlePrint}>Print</button>
+                                                        </div>
+                                                        <div className="col-12 col-md-4 mt-2 mt-xl-0">
+                                                            <div className="mb-3 position-relative">
+                                                                <div className="input-group">
+                                                                    <input type="text"
+                                                                        placeholder="Search..."
+                                                                        value={searchTerm}
+                                                                        onChange={handleSearchChange}
+                                                                        className="form-control" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-
 
                                 <div className="col-md-12 grid-margin stretch-card">
                                     <div className="card shadow-sm">
@@ -328,7 +339,7 @@ const ImportScholar = () => {
 
 
                                             <nav>
-                                                <ul className="pagination justify-content-end">
+                                                <ul className="pagination justify-content-end mb-0 mt-3">
                                                     <li className="page-item">
                                                         <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}
                                                             disabled={currentPage === 1}>Previous</button>
@@ -355,11 +366,8 @@ const ImportScholar = () => {
 
                                             {error && <div className="alert alert-danger">{error}</div>}
                                         </div>
-
-
                                     </div>
                                 </div>
-
                             </div>
                         </div>
                     </div>

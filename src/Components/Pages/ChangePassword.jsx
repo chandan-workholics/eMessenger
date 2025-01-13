@@ -80,7 +80,7 @@ const ChangePassword = () => {
                                     </div>
                                 </div>
                                 <div className="col-12 grid-margin stretch-card m-auto">
-                                    <div className="container mt-5">
+                                    <div className="container mt-0 mt-lg-5">
                                         <div className="row">
                                             <div className="col-lg-6 d-flex">
                                                 <img

@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import Navbar from '../Template/Navbar';
 import Sidebar from '../Template/Sidebar';
 import Loding from '../Template/Loding';
-import ExpandRowTable from '../Template/ExpandRowTable';
 import callAPI from '../../commonMethod/api.js';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
+import ExpandReplyTable from '../Template/ExpandReplyTable.jsx';
 
 const ReplyReceived = () => {
     const [messageList, setMessageList] = useState([]);
@@ -108,7 +108,6 @@ const ReplyReceived = () => {
         fetchData(); // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentPage, rowsPerPage]);
 
-    // Table columns
     const columns = [
         { label: 'Req ID', key: 'reqId' },
         { label: 'Msg ID', key: 'msgId' },
@@ -128,6 +127,11 @@ const ReplyReceived = () => {
         { label: 'School', key: 'school' },
         { label: 'Student Id', key: 'studentId' },
         { label: 'Sent', key: 'sent' },
+        { label: 'Reply Msg Id', key: 'replyMsgId' },
+        { label: 'Message Body Id', key: 'msgBodyId' },
+        { label: 'Message Type', key: 'msgType' },
+        { label: 'Data Reply Text', key: 'dataReplyText' },
+
     ];
 
     const data = messageList?.map((val, index) => ({
@@ -141,7 +145,7 @@ const ReplyReceived = () => {
         sent: formatDateTimeWithAmPm(val?.sendedMessage?.sended_date || ''),
         replyMsgId: val?.replied_msg_id || '',
         msgBodyId: val?.replyBodies?.map((body) => body?.replied_msg_d_id || '').join(', '),
-        msgType: val?.replyBodies?.map((body) => body?.msg_type || '').join(', '),
+        msgType: val?.replyBodies?.map((body) => body?.msg_type || '').join('\n'),
         dataReplyText: val?.replyBodies
             ?.map((reply) => {
                 try {
@@ -157,12 +161,14 @@ const ReplyReceived = () => {
                         return Object.values(parsedData.selected).join(', ');
                     }
                     return 'NA';
-                } catch (error) {
+                }
+
+                catch (error) {
                     console.error('Error parsing JSON:', reply?.data_reply_text, error);
                     return ''; // Fallback value
                 }
             })
-            .join(', '),
+            .join('\n'),
     }));
 
     const handlePageChange = (page) => {
@@ -201,10 +207,11 @@ const ReplyReceived = () => {
                                                 </button>
                                             </div>
                                         </div>
-                                        <ExpandRowTable columns={columns} rows={rows} data={data} />
-
-                                        <nav>
-                                            <ul className="pagination justify-content-end">
+                                        <div className="">
+                                            <ExpandReplyTable columns={columns} rows={rows} data={data} />
+                                        </div>
+                                        <nav className='mt-4'>
+                                            <ul className="pagination justify-content-end mb-0">
                                                 <li className="page-item">
                                                     <button className="page-link" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>Previous</button>
                                                 </li>

@@ -147,6 +147,10 @@ const GroupMaster = () => {
     ];
 
     const rows = [
+        { label: 'Group ID', key: 'groupId' },
+        { label: 'Group Name', key: 'msg_group_name' },
+        { label: 'Is Active', key: 'is_active' },
+        { label: 'Action', key: 'action' },
         { label: 'Added By', key: 'addedBy' },
         { label: 'Added On', key: 'addedOn' },
         { label: 'Edit By', key: 'editBy' },
@@ -241,14 +245,14 @@ const GroupMaster = () => {
                                     </div>
                                 </div>
                                 <div className="col-12 col-md-6 mb-md-4 mb-xl-0">
-                                    <div className="d-md-flex align-items-center justify-content-end mb-3">
+                                    <div className="d-flex align-items-center justify-content-end mb-3">
                                         <div className="btn-group" role="group" aria-label="Basic example">
                                             <ul className="nav nav-tabs" id="myTab" role="tablist">
                                                 <li className="nav-item" role="presentation">
-                                                    <a className="nav-link " id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="true">Add</a>
+                                                    <a className="nav-link px-4" id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="true">Add</a>
                                                 </li>
                                                 <li className="nav-item" role="presentation">
-                                                    <a className="nav-link active" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">List</a>
+                                                    <a className="nav-link px-4 active" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">List</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -337,13 +341,11 @@ const GroupMaster = () => {
                                                         </div>
                                                         <div className="row">
                                                             <div className="col-12">
-                                                                <div className="table-responsive">
-                                                                    <ExpandRowTable columns={columns} rows={rows} data={data} />
-                                                                </div>
+                                                                <ExpandRowTable columns={columns} rows={rows} data={data} />
                                                             </div>
                                                         </div>
                                                         <nav>
-                                                            <ul className="pagination justify-content-end">
+                                                            <ul className="pagination justify-content-end mb-0 mt-3">
                                                                 <li className="page-item">
                                                                     <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}
                                                                         disabled={currentPage === 1}>Previous</button>

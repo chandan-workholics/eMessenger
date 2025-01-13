@@ -270,6 +270,7 @@ const SupportMaster = () => {
                                                                     <th>S.No</th>
                                                                     <th>Parent ID</th>
                                                                     <th>Send By</th>
+                                                                    <th>Mobile No.</th>
                                                                     <th>Description</th>
                                                                     <th>Remark</th>
                                                                     <th>Issues date</th>
@@ -284,6 +285,7 @@ const SupportMaster = () => {
                                                                         <td>{(currentPage - 1) * rowsPerPage + index + 1}</td>
                                                                         <td>{val?.parent_id}</td>
                                                                         <td>{val?.send_by || "Not Available"}</td>
+                                                                        <td>{val?.send_by_mobile || "Not Available"}</td>
                                                                         <td>{val?.description}</td>
                                                                         <td>{val?.remark || "Not Available"}</td>
                                                                         <td>
@@ -342,7 +344,7 @@ const SupportMaster = () => {
                                             </div>
 
                                             <nav>
-                                                <ul className="pagination justify-content-end">
+                                                <ul className="pagination justify-content-end mb-0 mt-3">
                                                     <li className="page-item">
                                                         <button
                                                             className="page-link"

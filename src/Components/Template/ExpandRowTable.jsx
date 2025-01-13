@@ -57,7 +57,7 @@ const ExpandRowTable = ({ columns, rows, data }) => {
 
     return (
         <div>
-            <div className="row w-100">
+            <div className="row">
                 <div className="ml-auto col-md-3 form-group">
                     <div className="input-group">
                         <input type="text"
@@ -69,62 +69,76 @@ const ExpandRowTable = ({ columns, rows, data }) => {
                 </div>
             </div>
 
-            <table id='example' className="display expandable-table table-hover w-100 mb-4">
-                <thead>
-                    <tr>
-                        {columns.map((column) => (
-                            <th key={column.key} onClick={() => handleSort(column.key)}>
-                                {column.label} {getSortIcon(column.key)}
-                            </th>
-                        ))}
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredData.length === 0 ? (
+            <div className="table-responsive">
+                <table id='example' className="display expandable-table table-hover w-100 mb-4">
+                    <thead>
                         <tr>
-                            <td colSpan={columns.length + 1} className="text-center">
-                                <strong>Data Not Found</strong>
-                            </td>
+                            {columns.map((column) => (
+                                <th key={column.key} onClick={() => handleSort(column.key)}>
+                                    {column.label} {getSortIcon(column.key)}
+                                </th>
+                            ))}
+                            <th></th>
                         </tr>
-                    ) : (
-                        filteredData.map((row, rowIndex) => (
-                            <React.Fragment key={rowIndex}>
-                                <tr>
-                                    {columns.map((column) => (
-                                        <td key={column.key}>
-                                            {column.key === 'action' ? row[column.key] : row[column.key] !== undefined ? row[column.key].toString() : ''}
-                                        </td>
-                                    ))}
-                                    <td className='p-0 px-2'>
-                                        <button className='border-0 bg-transparent w-100' onClick={() => toggleExpandRow(rowIndex)} style={{ height: '40px' }}>
-                                            {expandedRows.includes(rowIndex) ? <i className="fa-solid fa-angle-up"></i> : <i className="fa-solid fa-angle-down"></i>}
-                                        </button>
-                                    </td>
-                                </tr>
-                                {expandedRows.includes(rowIndex) && (
+                    </thead>
+                    <tbody>
+                        {filteredData.length === 0 ? (
+                            <tr>
+                                <td colSpan={columns.length + 1} className="text-center">
+                                    <strong>Data Not Found</strong>
+                                </td>
+                            </tr>
+                        ) : (
+                            filteredData.map((row, rowIndex) => (
+                                <React.Fragment key={rowIndex}>
                                     <tr>
-                                        <td colSpan={columns.length + 1} style={{ backgroundColor: '#eaeaf1' }} className='rounded-bottom'>
-                                            <div className="expanded-content">
-                                                <p><strong>Additional Details:</strong></p>
-                                                <ul>
+                                        {columns.map((column) => (
+                                            <td key={column.key}>
+                                                {column.key === 'action' ? row[column.key] : row[column.key] !== undefined ? row[column.key].toString() : ''}
+                                            </td>
+                                        ))}
+                                        <td className='p-0 px-2'>
+                                            <button className='border-0 bg-transparent w-100' onClick={() => toggleExpandRow(rowIndex)} style={{ height: '40px' }}>
+                                                {expandedRows.includes(rowIndex) ? <i className="fa-solid fa-angle-up"></i> : <i className="fa-solid fa-angle-down"></i>}
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {expandedRows.includes(rowIndex) && (
+                                        <tr>
+                                            <td colSpan={rows.length + 1} style={{ backgroundColor: '#eaeaf1' }} className='rounded-bottom'>
+                                                <div className="expanded-content">
+                                                    <p><strong>Additional Details:</strong></p>
+                                                    {/* <ul>
                                                     {Object.entries(row).map(([key, value], idx) => (
                                                         <li key={idx}>
                                                             <strong>{key}:</strong> {value !== undefined ? value : 'N/A'}
                                                         </li>
                                                     ))}
-                                                </ul>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )}
-                            </React.Fragment>
-                        ))
-                    )}
-                </tbody>
-            </table>
+                                                </ul> */}
+                                                    <table className="table table-sm border w-50 bg-white">
+                                                        <thead>
+                                                            {Object.entries(row).map(([key, value], idx) => (
+                                                                (key !== 'action') && (
+                                                                    <tr key={idx}>
+                                                                        <th className='border rounded-0 align-middle'>{rows.find(row => row.key === key)?.label}</th>
+                                                                        <td>{value !== undefined ? value : 'N/A'}</td>
+                                                                    </tr>
+                                                                )
+                                                            ))}
+                                                        </thead>
+                                                    </table>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )}
+                                </React.Fragment>
+                            ))
+                        )}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }
 
-export default ExpandRowTable;
+export default ExpandRowTable;  

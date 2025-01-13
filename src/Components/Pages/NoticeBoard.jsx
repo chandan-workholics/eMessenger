@@ -3,14 +3,14 @@ import Navbar from '../Template/Navbar'
 import Sidebar from '../Template/Sidebar'
 import Loding from '../Template/Loding';
 import SortableTable from '../Template/SortableTable';
-import callAPI from '../../commonMethod/api';
+import callAPI, { interceptor } from '../../commonMethod/api';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
 const NoticeBoard = () => {
-    const [datas, setDatas] = useState({ title: '', document_type: '', document_link: '', thumbnails: '' })
+    const [datas, setDatas] = useState({ title: '', document_type: '', document_link: '', thumbnails: '', school_id: '' })
     const [updateNotice, setUpdateNotice] = useState({});
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -23,14 +23,31 @@ const NoticeBoard = () => {
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => {
         setIsModalOpen(false);
-        setDatas({ title: '', document_type: '', document_link: '', thumbnails: '' });
+        setDatas({ title: '', document_type: '', document_link: '', thumbnails: '', school_id: '' });
     };
+    const [SchoolList, setSchoolList] = useState([]);
+
     let name, value;
     const handleChange = (e) => {
-        name = e.target.name;
-        value = e.target.value;
-        setDatas({ ...datas, [name]: value })
-    }
+        const name = e.target.name;
+        const value = e.target.value;
+
+        // If the field being changed is 'document_link', update document_type automatically
+        if (name === 'document_link') {
+            const document_type = getDocumentType(value);  // Automatically determine document type
+            setDatas(prevState => ({
+                ...prevState,
+                [name]: value,
+                document_type: document_type  // Update document type based on the URL
+            }));
+        } else {
+            setDatas(prevState => ({
+                ...prevState,
+                [name]: value
+            }));
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -53,6 +70,7 @@ const NoticeBoard = () => {
     };
     useEffect(() => {
         fetchData();// eslint-disable-next-line react-hooks/exhaustive-deps
+        fetchSchoolData();
     }, [currentPage]);
 
     const fetchData = async () => {
@@ -80,11 +98,40 @@ const NoticeBoard = () => {
         }
     };
 
+    const handleDeleteWelcomeMsg = async (id) => {
+        try {
+            setLoading(true);
+            const token = sessionStorage.getItem('token');
+            if (!token) {
+                throw new Error("No token provided");
+            }
+            const headers = {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            };
+            const response = await axios.delete(`http://206.189.130.102:3550/api/notice/deleteDocument/${id}`, { headers });
+
+            if (response.status === 200 || response.status === 201) {
+                toast.success("Welcome message deleted successfully.");
+                fetchData();
+            } else {
+                toast.error(response.message || "Failed to delete the welcome message.");
+            }
+        } catch (error) {
+            toast.error(`Error deleting the welcome message: ${error.message}`);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+
     const handleExport = async () => {
         const allData = await fetchAllData();
         const formattedData = allData.map((val, index) => ({
             sn: val?.id,
             title: val?.title,
+            school_id: val?.school_id,
             documentType: val?.document_type,
             documentLink: (<Link to={val?.document_link} className='text-info' target='_blank'>{val?.document_link}</Link>),
             thumbnails: (val?.document_type !== 'pdf' ? <img src={val?.thumbnails} className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} /> : <img src='http://206.189.130.102:3550/Uploads/image/1729838073596-1729838073596.png' className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} />),
@@ -107,7 +154,7 @@ const NoticeBoard = () => {
         printWindow.document.write('<html><head><title>Print Notice Board</title></head><body>');
         printWindow.document.write('<h1>Notice Board List</h1>');
         printWindow.document.write('<table border="1" style="width:100%; text-align:left;">');
-        printWindow.document.write('<tr><th>S.No</th><th>Title</th><th>Document Type</th><th>Document Link</th><th>Thumbnails</th></tr>');
+        printWindow.document.write('<tr><th>S.No</th><th>Title</th><th>School</th><th>Document Type</th><th>Document Link</th><th>Thumbnails</th></tr>');
         allData.forEach((val, index) => {
             const documentLink = val?.document_link ? `<a href="${val?.document_link}" class="text-info" target="_blank">${val?.document_link}</a>` : '#';
             const documentType = val?.document_type || '#';
@@ -119,6 +166,7 @@ const NoticeBoard = () => {
                 <tr>
                     <td>${index + 1}</td>
                     <td>${val?.title || ''}</td>
+                    <td>${val?.school_id || ''}</td>
                     <td>${documentType}</td>
                     <td>${documentLink}</td>
                     <td>${thumbnail}</td>
@@ -154,6 +202,7 @@ const NoticeBoard = () => {
     const columns = [
         { label: 'S.No.', key: 'sn' },
         { label: 'Title', key: 'title' },
+        { label: 'School', key: 'school_id' },
         { label: 'Document Type', key: 'documentType' },
         { label: 'Document Link', key: 'documentLink' },
         { label: 'Thumbnails', key: 'thumbnails' },
@@ -162,6 +211,7 @@ const NoticeBoard = () => {
     const data = noticeBoardlList ? noticeBoardlList?.map((val) => ({
         sn: val?.id,
         title: val?.title,
+        school_id: val?.school_id,
         documentType: val?.document_type,
         documentLink: (<Link to={val?.document_link} className='text-info' target='_blank'>{val?.document_link}</Link>),
         thumbnails: (val?.document_type !== 'pdf' ? <img src={val?.thumbnails} className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} /> : <img src='http://206.189.130.102:3550/Uploads/image/1729838073596-1729838073596.png' className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} />),
@@ -169,6 +219,9 @@ const NoticeBoard = () => {
             <div>
                 <button onClick={() => handleUpdateNotice(val)} type="button" className="btn">
                     <i className="fa-solid fa-pen-to-square text-warning"></i>
+                </button>
+                <button onClick={() => handleDeleteWelcomeMsg(val.id)} type="button" className="btn p-2">
+                    <i className="fa-solid fa-trash-can text-danger"></i>
                 </button>
             </div>
         ),
@@ -178,10 +231,22 @@ const NoticeBoard = () => {
         openModal();
         setDatas({
             title: val.title,
-            document_type: val.document_link,
+            school_id: val.school_id,
+            document_type: getDocumentType(val.document_link),
             document_link: val.document_link,
             thumbnails: val.thumbnails
         });
+    };
+
+    const getDocumentType = (url) => {
+        if (url.endsWith('.pdf')) {
+            return 'PDF';
+        } else if (url.includes('youtube.com') || url.includes('youtu.be')) {
+            return 'YOUTUBE';
+        } else if (url.match(/\.(jpeg|jpg|gif|png)$/)) {
+            return 'IMAGE';
+        }
+        return '';
     };
     const handlePageChange = (page) => {
         if (page > 0 && page <= totalPages) {
@@ -248,6 +313,23 @@ const NoticeBoard = () => {
         } catch (error) {
         }
     };
+
+    const fetchSchoolData = async () => {
+        try {
+            setLoading(true);
+            const response = await callAPI.get(`./school/getSchool?limit=0`);
+            setSchoolList(response.data.data || []);
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // useEffect(() => {
+    //     fetchSchoolData(); 
+    // }, []);
+
     console.log(totalPages)
     console.log(error)
     return (
@@ -292,6 +374,16 @@ const NoticeBoard = () => {
                                                             <h4 className="card-description text-primary font-weight-bolder">Primary Info</h4>
                                                             <div className="row">
                                                                 <div className="col-md-4 form-group"><label htmlFor="title">Title <span className="text-danger">*</span></label><input type="text" className="form-control" id="title" name="title" value={datas.title} onChange={handleChange} placeholder="Title" required />
+                                                                </div>
+                                                                <div className="col-md-4 form-group">
+                                                                    <label for="school_id">School</label>
+                                                                    <select className="form-control" name='school_id' onChange={handleChange}>
+                                                                        {SchoolList?.map((val) => {
+                                                                            return (
+                                                                                <option value={val?.school_id}>{val?.sch_short_nm}</option>
+                                                                            )
+                                                                        })}
+                                                                    </select>
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
                                                                     <label htmlFor="document_type">Document Type <span className="text-danger">*</span></label>
@@ -359,13 +451,11 @@ const NoticeBoard = () => {
                                                         </div>
                                                         <div className="row">
                                                             <div className="col-12">
-                                                                <div className="table-responsive">
-                                                                    <SortableTable columns={columns} data={data} />
-                                                                </div>
+                                                                <SortableTable columns={columns} data={data} />
                                                             </div>
                                                         </div>
                                                         <nav>
-                                                            <ul className="pagination justify-content-end">
+                                                            <ul className="pagination justify-content-end mb-0 mt-3">
                                                                 <li className="page-item">
                                                                     <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}
                                                                         disabled={currentPage === 1}>Previous</button>
@@ -427,6 +517,21 @@ const NoticeBoard = () => {
                                                 placeholder="Title"
                                                 required
                                             />
+                                        </div>
+                                        <div className="form-group">
+                                            <label for="school_id">School<span className="text-danger">*</span></label>
+                                            <select
+                                                className="form-control"
+                                                name="school_id"
+                                                value={datas.school_id} // Set the selected value
+                                                onChange={handleChange} // Handle changes
+                                            >
+                                                {SchoolList?.map((val) => (
+                                                    <option key={val.school_id} value={val.school_id}>
+                                                        {val?.sch_short_nm}
+                                                    </option>
+                                                ))}
+                                            </select>
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="document_type">Document Type</label>

@@ -137,6 +137,7 @@ const SchoolMaster = () => {
         const formattedData = schoolList.map((school) => ({
             schoolId: school?.sch_id,
             schoolFullName: school?.sch_nm,
+            shortNames: school.scroll_news_text,
             shortName: school?.sch_short_nm,
             isActive: school?.is_active === 1 ? true : false,
             fontColor: school?.text_color,
@@ -155,11 +156,12 @@ const SchoolMaster = () => {
         printWindow.document.write('<html><head><title>Print School List</title></head><body>');
         printWindow.document.write('<h1>School List</h1>');
         printWindow.document.write('<table border="1" style="width:100%; text-align:left; border-collapse: collapse;">');
-        printWindow.document.write('<tr><th>School ID</th><th>Full Name</th><th>Short Name</th><th>Is Active</th><th>Font Color</th><th>Background Color</th></tr>');
+        printWindow.document.write('<tr><th>School ID</th><th>Full Name</th><th>App Scroll News</th><th>Short Name</th><th>Is Active</th><th>Font Color</th><th>Background Color</th></tr>');
 
         allData.forEach((val, index) => {
             const schoolId = val?.sch_id || '';
             const schoolFullName = val?.sch_nm || '';
+            const shortNames = val?.scroll_news_text || '';
             const shortName = val?.sch_short_nm || '';
             const isActive = val?.is_active === 1 ? 'Active' : 'Inactive';
             const fontColor = val?.text_color || '';
@@ -169,6 +171,7 @@ const SchoolMaster = () => {
                 <tr>
                     <td>${schoolId}</td>
                     <td>${schoolFullName}</td>
+                    <td>${shortNames}</td>
                     <td>${shortName}</td>
                     <td>${isActive}</td>
                     <td style="color: ${fontColor};">${fontColor}</td>
@@ -202,6 +205,7 @@ const SchoolMaster = () => {
     const columns = [
         { label: 'School ID', key: 'schoolId' },
         { label: 'School Full Name', key: 'schoolFullName' },
+        { label: 'App Scroll News', key: 'shortNames' },
         { label: 'Short Name', key: 'shortName' },
         { label: 'Is Active', key: 'isActive' },
         { label: 'Font Color', key: 'fontColor' },
@@ -215,6 +219,14 @@ const SchoolMaster = () => {
         { label: 'Added On', key: 'addedOn' },
         { label: 'Edit By', key: 'editBy' },
         { label: 'Edit On', key: 'editOn' },
+        { label: 'School ID', key: 'schoolId' },
+        { label: 'School Full Name', key: 'schoolFullName' },
+        { label: 'App Scroll News', key: 'shortNames' },
+        { label: 'Short Name', key: 'shortName' },
+        { label: 'Is Active', key: 'isActive' },
+        { label: 'Font Color', key: 'fontColor' },
+        { label: 'Background Color', key: 'backgroundColor' },
+        { label: 'Action', key: 'action' },
     ]
 
 
@@ -222,6 +234,7 @@ const SchoolMaster = () => {
         schoolId: school?.sch_id,
         schoolFullName: school?.sch_nm,
         shortName: school?.sch_short_nm,
+        shortNames: school.scroll_news_text,
         isActive: school?.is_active === 1 ? true : false,
         fontColor: school?.text_color,
         backgroundColor: school?.bg_color,
@@ -304,7 +317,6 @@ const SchoolMaster = () => {
     return (
         <>
             <div className="container-scroller">
-                {/*----- Navbar -----*/}
                 <Navbar />
 
                 <div className="container-fluid page-body-wrapper">
@@ -314,8 +326,8 @@ const SchoolMaster = () => {
                     <div className="main-panel">
                         <div className="content-wrapper">
                             <div className="row">
-                                <div className="col-12 col-md-6 mb-4 mb-xl-0">
-                                    <div className="d-flex align-items-center mb-3">
+                                <div className="col-12 col-md-6 mb-0 mb-lg-4 mb-xl-0">
+                                    <div className="d-flex align-items-center mb-0 mb-lg-3">
                                         <h3 className="font-weight-bold mr-2">School</h3>
                                     </div>
                                 </div>
@@ -324,10 +336,10 @@ const SchoolMaster = () => {
                                         <div className="btn-group" role="group" aria-label="Basic example">
                                             <ul className="nav nav-tabs" id="myTab" role="tablist">
                                                 <li className="nav-item" role="presentation">
-                                                    <a className="nav-link " id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="true">Add</a>
+                                                    <a className="nav-link px-3" id="add-tab" data-toggle="tab" href="#add" role="tab" aria-controls="add" aria-selected="true">Add</a>
                                                 </li>
                                                 <li className="nav-item" role="presentation">
-                                                    <a className="nav-link active" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">List</a>
+                                                    <a className="nav-link px-3 active" id="list-tab" data-toggle="tab" href="#list" role="tab" aria-controls="list" aria-selected="false">List</a>
                                                 </li>
                                             </ul>
                                         </div>
@@ -590,13 +602,11 @@ const SchoolMaster = () => {
                                                         </div>
                                                         <div className="row">
                                                             <div className="col-12">
-                                                                <div className="table-responsive">
-                                                                    <ExpandRowTable columns={columns} rows={rows} data={data} />
-                                                                </div>
+                                                                <ExpandRowTable columns={columns} rows={rows} data={data} />
                                                             </div>
                                                         </div>
                                                         <nav>
-                                                            <ul className="pagination justify-content-end">
+                                                            <ul className="pagination justify-content-end mb-0 mt-3">
                                                                 <li className="page-item">
                                                                     <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}
                                                                         disabled={currentPage === 1}>Previous</button>

@@ -60,7 +60,7 @@ const Dashboard = () => {
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="col-md-5 grid-margin stretch-card">
+                                <div className="col-lg-5 grid-margin stretch-card">
                                     <div className="card counter-card">
                                         <div className="card-body">
                                             <p className="card-title mb-1">Counter Report</p>
@@ -116,11 +116,11 @@ const Dashboard = () => {
                                     </div>
                                 </div>
 
-                                <div className="col-md-4 grid-margin stretch-card">
+                                <div className="col-lg-4 grid-margin stretch-card">
                                     <Calendar />
                                 </div>
 
-                                <div className="col-md-3 stretch-card grid-margin">
+                                {/* <div className="col-md-3 stretch-card grid-margin">
                                     <div className="card shadow-sm">
                                         <div className="card-body">
                                             <div className="d-flex justify-content-between">
@@ -181,7 +181,7 @@ const Dashboard = () => {
                                             </ul>
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                            
                         </div>

@@ -18,6 +18,13 @@ const Navbar = () => {
         sessionStorage.clear();
     }
 
+    const handleNavLinkClick = () => {
+        const sidebar = document.getElementById("sidebar");
+        if (window.innerWidth <= 991) {
+            sidebar.classList.remove("close");
+        }
+    };
+
     return (
         <>
             <nav className="navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
@@ -37,19 +44,15 @@ const Navbar = () => {
                         <li className="nav-item nav-search d-none d-lg-block"></li>
                     </ul>
                     <ul className="navbar-nav navbar-nav-right">
-                       
+
                         <li className="nav-item nav-profile dropdown">
                             <Link className="nav-link dropdown-toggle" to="#" data-toggle="dropdown" id="profileDropdown">
-                                <img src="images/faces/face28.jpg" alt="profile" />
+                                <h2 className='mb-0'><i class="fa-solid fa-circle-user text-white"></i></h2>
                             </Link>
                             <div className="dropdown-menu dropdown-menu-right navbar-dropdown" aria-labelledby="profileDropdown">
                                 <Link to='/register' className="dropdown-item">
-                                    <i className="ti-settings text-primary"></i>
+                                    <i class="fa-solid fa-user-plus text-primary"></i>
                                     SignUp
-                                </Link>
-                                <Link className="dropdown-item">
-                                    <i className="ti-settings text-primary"></i>
-                                    Settings
                                 </Link>
                                 <Link onClick={() => logout()} className="dropdown-item" to="/">
                                     <i className="ti-power-off text-primary"></i>
@@ -58,7 +61,8 @@ const Navbar = () => {
                             </div>
                         </li>
                     </ul>
-                    <button className="navbar-toggler navbar-toggler-right d-lg-none align-self-center" type="button" data-toggle="minimize">
+                    <button className="navbar-toggler navbar-toggler-right d-lg-none align-self-center" 
+                    type="button" data-toggle="minimize" onClick={handleNavLinkClick}>
                         <span className="icon-menu text-white"></span>
                     </button>
                 </div>
