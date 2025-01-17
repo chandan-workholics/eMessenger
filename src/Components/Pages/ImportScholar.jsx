@@ -108,6 +108,7 @@ const ImportScholar = () => {
                                     <th>Student DOB</th>
                                     <th>Student Email</th>
                                     <th>Notice Message</th>
+                                    <th>Remark</th>
                                     <th>Student Id</th>
                                 </tr>
                             </thead>
@@ -124,6 +125,7 @@ const ImportScholar = () => {
                         <td>${val?.scholar_dob || "N/A"}</td>
                         <td>${val?.scholar_email || "N/A"}</td>
                         <td>${val?.noticeMsg || "N/A"}</td>
+                        <td>${val?.remark || "N/A"}</td>
                         <td>${val?.scholar_no || "N/A"}</td>
                     </tr>
                 `);
@@ -315,6 +317,7 @@ const ImportScholar = () => {
                                                                     <th>Student DOB</th>
                                                                     <th>Student Email</th>
                                                                     <th>Notice Message</th>
+                                                                    <th>Remark</th>
                                                                     <th>Student Id</th>
                                                                 </tr>
                                                             </thead>
@@ -328,6 +331,7 @@ const ImportScholar = () => {
                                                                         <td>{val?.scholar_dob}</td>
                                                                         <td>{val?.scholar_email}</td>
                                                                         <td>{val?.noticeMsg}</td>
+                                                                        <td>{val?.remark}</td>
                                                                         <td>{val?.scholar_no}</td>
                                                                     </tr>
                                                                 ))}

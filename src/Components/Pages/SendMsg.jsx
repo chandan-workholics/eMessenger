@@ -138,6 +138,8 @@ const SendMsg = () => {
                                                                                         <th>School.</th>
                                                                                         <th>Student Name.</th>
                                                                                         <th>Student Id</th>
+                                                                                        <th>Notice Message</th>
+                                                                                        <th>Remark</th>
                                                                                     </tr>
                                                                                 </thead>
                                                                                 <tbody>
@@ -158,6 +160,8 @@ const SendMsg = () => {
                                                                                             <td>{val?.sch_short_nm}</td>
                                                                                             <td>{val?.student_name}</td>
                                                                                             <td>{val?.student_number}</td>
+                                                                                            <td>{val?.noticeMsg}</td>
+                                                                                            <td>{val?.remark}</td>
                                                                                         </tr>
                                                                                     ))}
                                                                                 </tbody>
