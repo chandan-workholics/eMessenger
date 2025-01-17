@@ -23,6 +23,49 @@ const ImportScholar = () => {
         setAction(e.target.checked ? 'delete_and_import' : 'insert_only');
     };
 
+    // const fetchData = async () => {
+    //     setLoading(true);
+    //     try {
+    //         const response = await fetch(`${URL}/scholar/getScholarDetail?page=${currentPage}&limit=${rowsPerPage}`, {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Authorization': `Bearer ${token}`,
+    //                 'Content-Type': 'application/json'
+    //             }
+    //         });
+    //         const responsetwo = await fetch(`${URL}/scholar/getScholarDetail?page=1&limit=2000`, {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Authorization': `Bearer ${token}`,
+    //                 'Content-Type': 'application/json'
+    //             }
+    //         });
+    //         if (!response.ok) {
+    //             throw new Error(`HTTP error! status: ${response.status}`);
+    //         }
+    //         const result = await response.json();
+    //         const resulttwo = await responsetwo.json();
+    //         setImportStudent(result.data);
+    //         setImportStudenttwo(resulttwo.data);
+    //         setTotalPages(Math.ceil(result?.pagination?.totalPages));
+    //     } catch (error) {
+    //         setError(error.message);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+    // const handleSearchChange = (e) => {
+    //     const value = e.target.value;
+    //     setSearchTerm(value);
+    //     const lowercasedFilter = value.toLowerCase();
+    //     const filteredResults = importStudenttwo.filter(item =>
+    //         Object.keys(item).some(key =>
+    //             String(item[key]).toLowerCase().includes(lowercasedFilter)
+    //         )
+    //     );
+    //     setImportStudent(filteredResults);
+    // };
+
     const fetchData = async () => {
         setLoading(true);
         try {
@@ -40,7 +83,7 @@ const ImportScholar = () => {
                     'Content-Type': 'application/json'
                 }
             });
-            if (!response.ok) {
+            if (!response.ok || !responsetwo.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const result = await response.json();
@@ -54,9 +97,14 @@ const ImportScholar = () => {
             setLoading(false);
         }
     };
+
     const handleSearchChange = (e) => {
         const value = e.target.value;
         setSearchTerm(value);
+        if (!value.trim()) {
+            fetchData();
+            return;
+        }
         const lowercasedFilter = value.toLowerCase();
         const filteredResults = importStudenttwo.filter(item =>
             Object.keys(item).some(key =>
@@ -65,7 +113,6 @@ const ImportScholar = () => {
         );
         setImportStudent(filteredResults);
     };
-
 
     const handlePrint = async () => {
         if (!importStudenttwo || importStudenttwo.length === 0) {
