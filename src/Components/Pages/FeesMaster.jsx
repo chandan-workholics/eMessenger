@@ -334,7 +334,7 @@ const FeesMaster = () => {
                                                                     <th>Term</th>
                                                                     <th>Outstanding Fee</th>
                                                                     <th>Due Date</th>
-                                                                    <th> Fees Status</th>
+                                                                    {/* <th> Fees Status</th> */}
                                                                     <th>Created At</th>
                                                                 </tr>
                                                             </thead>
@@ -347,7 +347,7 @@ const FeesMaster = () => {
                                                                         <td>{val.term}</td>
                                                                         <td>{val.outstandingfees}</td>
                                                                         <td>{val.duedate}</td>
-                                                                        <td>{val.feesstatus}</td>
+                                                                        {/* <td>{val.feesstatus}</td> */}
                                                                         <td>{new Date(val.createdAt).toLocaleDateString('en-GB')}</td>
                                                                     </tr>
                                                                 ))}

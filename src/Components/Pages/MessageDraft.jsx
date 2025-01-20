@@ -331,7 +331,7 @@ const MessageDraft = () => {
 
         lastPostedBy: val?.entryByDetails?.full_name || "",
         lastPostedDate: val?.createdAt ? (() => {
-            const date = new Date(val?.show_upto);
+            const date = new Date(val?.createdAt);
             const day = String(date.getUTCDate()).padStart(2, "0");
             const month = String(date.getUTCMonth() + 1).padStart(2, "0");
             const year = date.getUTCFullYear();

@@ -376,8 +376,9 @@ const NoticeBoard = () => {
                                                                 <div className="col-md-4 form-group"><label htmlFor="title">Title <span className="text-danger">*</span></label><input type="text" className="form-control" id="title" name="title" value={datas.title} onChange={handleChange} placeholder="Title" required />
                                                                 </div>
                                                                 <div className="col-md-4 form-group">
-                                                                    <label for="school_id">School</label>
+                                                                    <label for="school_id">Schools</label>
                                                                     <select className="form-control" name='school_id' onChange={handleChange}>
+                                                                        <option value="null">Common</option>
                                                                         {SchoolList?.map((val) => {
                                                                             return (
                                                                                 <option value={val?.school_id}>{val?.sch_short_nm}</option>
@@ -526,6 +527,7 @@ const NoticeBoard = () => {
                                                 value={datas.school_id} // Set the selected value
                                                 onChange={handleChange} // Handle changes
                                             >
+                                                <option value="null">Common</option>
                                                 {SchoolList?.map((val) => (
                                                     <option key={val.school_id} value={val.school_id}>
                                                         {val?.sch_short_nm}
