@@ -8,7 +8,7 @@ import callAPI from '../../commonMethod/api';
 import Multiselect from "multiselect-react-dropdown";
 import { saveAs } from 'file-saver';
 import * as XLSX from 'xlsx';
-
+import { format } from "date-fns";
 
 const UserManagement = () => {
 
@@ -381,40 +381,8 @@ const UserManagement = () => {
         mobileNo: val?.mobile_no,
         School: val?.sch_short_nm,
         isActive: val?.is_active == 1 ? "Yes" : "No",
-
-
-        activatedTime: val?.active_datetime
-            ? (() => {
-                const date = new Date(val?.active_datetime);
-                const day = String(date.getUTCDate()).padStart(2, '0');
-                const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
-                const year = date.getUTCFullYear();
-                let hours = String(date.getUTCHours()).padStart(2, '0');
-                const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-                const ampm = hours >= 12 ? 'P.M.' : 'A.M.';
-                hours = hours % 12;
-                hours = hours ? String(hours).padStart(2, '0') : '12'; // 12:00 AM or 12:00 PM
-
-                return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
-            })()
-            : '',
-
-        lastVisitTime: val?.last_visit_on
-            ? (() => {
-                const date = new Date(val?.last_visit_on);
-                const day = String(date.getUTCDate()).padStart(2, '0');
-                const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Months are 0-based
-                const year = date.getUTCFullYear();
-                let hours = String(date.getUTCHours()).padStart(2, '0');
-                const minutes = String(date.getUTCMinutes()).padStart(2, '0');
-                const ampm = hours >= 12 ? 'P.M.' : 'A.M.';
-                hours = hours % 12;
-                hours = hours ? String(hours).padStart(2, '0') : '12'; // 12:00 AM or 12:00 PM
-
-                return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
-            })()
-            : '',
-
+        activatedTime: val?.active_datetime ? format(new Date(val?.active_datetime), "dd-MMM-yyyy hh:mm a") : '',
+        lastVisitTime: val?.last_visit_on ? format(new Date(val?.last_visit_on), "dd-MMM-yyyy hh:mm a") : '',
         mobileType: val?.mobile_platform,
         appVersion: val?.mobile_info,
         ipAddress: val?.mobile_uuid,

@@ -157,7 +157,7 @@ const MessageDraft = () => {
             if (fetchdata.status === 200) {
                 toast.success("Data Uploaded Successfully");
                 const imageUrl = fetchdata.data.url;
-                const updatedFields = inputFields.map((field) => field.id === fieldId ? { ...field, linkValue: imageUrl } : field);
+                const updatedFields = inputFields.map((field) => field.id === fieldId ? { ...field, link: imageUrl } : field);
                 setInputFields(updatedFields);
             } else {
                 toast.error("Failed to load");
@@ -315,10 +315,8 @@ const MessageDraft = () => {
         ),
         priority: val?.msg_priority,
         showUpto: val?.show_upto ? format(new Date(val?.show_upto), "dd-MMM-yyyy hh:mm a") : "",
-
         lastPostedBy: val?.entryByDetails?.full_name || "",
         lastPostedDate: val?.createdAt ? format(new Date(val?.createdAt), "dd-MMM-yyyy hh:mm a") : "",
-
         lastEditBy: val?.editByDetails?.full_name || "",
         recipients: val?.no_of_recipients || "Na",
         seen: val?.seen || "Na",
@@ -342,35 +340,9 @@ const MessageDraft = () => {
             msgId: val?.msg_id || "",
             subjectLineSchools: val?.subject_text || "", // Stringify this data
             priority: val?.msg_priority || "",
-            showUpto: val?.show_upto
-                ? (() => {
-                    const date = new Date(val?.show_upto);
-                    const day = String(date.getUTCDate()).padStart(2, "0");
-                    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-                    const year = date.getUTCFullYear();
-                    let hours = date.getUTCHours();
-                    const minutes = String(date.getUTCMinutes()).padStart(2, "0");
-                    const ampm = hours >= 12 ? "P.M." : "A.M.";
-                    hours = hours % 12;
-                    hours = hours ? String(hours).padStart(2, "0") : "12";
-                    return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
-                })()
-                : "",
+            showUpto: val?.show_upto ? format(new Date(val?.show_upto), "dd-MMM-yyyy hh:mm a") : "",
             lastPostedBy: val?.entryByDetails?.full_name || "",
-            lastPostedDate: val?.createdAt
-                ? (() => {
-                    const date = new Date(val?.createdAt);
-                    const day = String(date.getUTCDate()).padStart(2, "0");
-                    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-                    const year = date.getUTCFullYear();
-                    let hours = date.getUTCHours();
-                    const minutes = String(date.getUTCMinutes()).padStart(2, "0");
-                    const ampm = hours >= 12 ? "P.M." : "A.M.";
-                    hours = hours % 12;
-                    hours = hours ? String(hours).padStart(2, "0") : "12";
-                    return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
-                })()
-                : "",
+            lastPostedDate: val?.createdAt ? format(new Date(val?.createdAt), "dd-MMM-yyyy hh:mm a") : "",
             lastEditBy: val?.editByDetails?.full_name || "",
             recipients: val?.no_of_recipients || "Na",
             seen: val?.seen || "Na",
@@ -388,35 +360,9 @@ const MessageDraft = () => {
             msgId: val?.msg_id || "",
             subjectLineSchools: val?.subject_text || "",
             priority: val?.msg_priority || "",
-            showUpto: val?.show_upto
-                ? (() => {
-                    const date = new Date(val?.show_upto);
-                    const day = String(date.getUTCDate()).padStart(2, "0");
-                    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-                    const year = date.getUTCFullYear();
-                    let hours = date.getUTCHours();
-                    const minutes = String(date.getUTCMinutes()).padStart(2, "0");
-                    const ampm = hours >= 12 ? "P.M." : "A.M.";
-                    hours = hours % 12;
-                    hours = hours ? String(hours).padStart(2, "0") : "12";
-                    return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
-                })()
-                : "",
+            showUpto: val?.show_upto ? format(new Date(val?.show_upto), "dd-MMM-yyyy hh:mm a") : "",
             lastPostedBy: val?.entryByDetails?.full_name || "",
-            lastPostedDate: val?.createdAt
-                ? (() => {
-                    const date = new Date(val?.createdAt);
-                    const day = String(date.getUTCDate()).padStart(2, "0");
-                    const month = String(date.getUTCMonth() + 1).padStart(2, "0");
-                    const year = date.getUTCFullYear();
-                    let hours = date.getUTCHours();
-                    const minutes = String(date.getUTCMinutes()).padStart(2, "0");
-                    const ampm = hours >= 12 ? "P.M." : "A.M.";
-                    hours = hours % 12;
-                    hours = hours ? String(hours).padStart(2, "0") : "12";
-                    return `${day}/${month}/${year} ${hours}:${minutes} ${ampm}`;
-                })()
-                : "",
+            lastPostedDate: val?.createdAt ? format(new Date(val?.createdAt), "dd-MMM-yyyy hh:mm a") : "",
             lastEditBy: val?.editByDetails?.full_name || "",
             recipients: val?.no_of_recipients || "Na",
             seen: val?.seen || "Na",
