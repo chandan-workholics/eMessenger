@@ -240,7 +240,8 @@ const EditCreatedMsg = () => {
                 edit_by: parseInt(admin_id),
                 school_id: datas.school_id,
                 five_mobile_number: parentsnumber,
-                message_body: messageBody
+                message_body: messageBody,
+                createdAt:Date.now()
             });
             if (response.status >= 200 && response.status < 300) {
                 toast.success('Message updated successfully');
