@@ -109,7 +109,7 @@ const NoticeBoard = () => {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
             };
-            const response = await axios.delete(`http://206.189.130.102:3550/api/notice/deleteDocument/${id}`, { headers });
+            const response = await axios.delete(`https://apps.actindore.com/api/notice/deleteDocument/${id}`, { headers });
 
             if (response.status === 200 || response.status === 201) {
                 toast.success("Welcome message deleted successfully.");
@@ -134,7 +134,7 @@ const NoticeBoard = () => {
             school_id: val?.school_id,
             documentType: val?.document_type,
             documentLink: (<Link to={val?.document_link} className='text-info' target='_blank'>{val?.document_link}</Link>),
-            thumbnails: (val?.document_type !== 'pdf' ? <img src={val?.thumbnails} className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} /> : <img src='http://206.189.130.102:3550/Uploads/image/1729838073596-1729838073596.png' className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} />),
+            thumbnails: (val?.document_type !== 'pdf' ? <img src={val?.thumbnails} className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} /> : <img src='https://apps.actindore.com/Uploads/image/1729838073596-1729838073596.png' className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} />),
         }));
         const ws = XLSX.utils.json_to_sheet(formattedData);
         const csvContent = XLSX.utils.sheet_to_csv(ws);
@@ -160,7 +160,7 @@ const NoticeBoard = () => {
             const documentType = val?.document_type || '#';
             const thumbnail = val?.document_type !== 'pdf'
                 ? `<img src="${val?.thumbnails}" alt="" style="width:130px; height:80px; object-fit:contain;" />`
-                : `<img src="http://206.189.130.102:3550/Uploads/image/1729838073596-1729838073596.png" alt="" style="width:130px; height:80px; object-fit:contain;" />`;
+                : `<img src="https://apps.actindore.com/Uploads/image/1729838073596-1729838073596.png" alt="" style="width:130px; height:80px; object-fit:contain;" />`;
 
             printWindow.document.write(`
                 <tr>
@@ -214,7 +214,7 @@ const NoticeBoard = () => {
         school_id: val?.school_id,
         documentType: val?.document_type,
         documentLink: (<Link to={val?.document_link} className='text-info' target='_blank'>{val?.document_link}</Link>),
-        thumbnails: (val?.document_type !== 'pdf' ? <img src={val?.thumbnails} className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} /> : <img src='http://206.189.130.102:3550/Uploads/image/1729838073596-1729838073596.png' className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} />),
+        thumbnails: (val?.document_type !== 'pdf' ? <img src={val?.thumbnails} className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} /> : <img src='https://apps.actindore.com/Uploads/image/1729838073596-1729838073596.png' className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} />),
         action: (
             <div>
                 <button onClick={() => handleUpdateNotice(val)} type="button" className="btn">

@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiURL = 'http://206.189.130.102:3550/api';
+const apiURL = 'https://apps.actindore.com/api';
 
 
 
