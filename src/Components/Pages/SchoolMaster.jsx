@@ -215,10 +215,10 @@ const SchoolMaster = () => {
 
     const rows = [
         { label: 'App Scroll News', key: 'appScrollNews' },
-        { label: 'Added By', key: 'addedBy' },
+        // { label: 'Added By', key: 'addedBy' },
         { label: 'Added On', key: 'addedOn' },
-        { label: 'Edit By', key: 'editBy' },
-        { label: 'Edit On', key: 'editOn' },
+        // { label: 'Edit By', key: 'editBy' },
+        // { label: 'Edit On', key: 'editOn' },
         { label: 'School ID', key: 'schoolId' },
         { label: 'School Full Name', key: 'schoolFullName' },
         { label: 'App Scroll News', key: 'shortNames' },
@@ -250,10 +250,10 @@ const SchoolMaster = () => {
             </div>
         ),
         appScrollNews: school.scroll_news_text,
-        addedBy: school.entry_by,
+        // addedBy: school.entry_by,
         addedOn: school.entry_date,
-        editBy: school.entry_by,
-        editOn: school.edit_date,
+        // editBy: school.entry_by,
+        // editOn: school.edit_date,
         schoolLogo: <img src={school.logo_img} className='' alt='' style={{ width: '130px', height: '80px', objectFit: 'contain' }} />,
     })) : [];
 
