@@ -202,12 +202,34 @@ const ImportScholar = () => {
         }
     };
 
+    // const exportToExcel = () => {
+    //     const ws = XLSX.utils.json_to_sheet(importStudenttwo);
+    //     const wb = XLSX.utils.book_new();
+    //     XLSX.utils.book_append_sheet(wb, ws, 'Scholar Data');
+    //     XLSX.writeFile(wb, 'Student_List.xlsx');
+    // };
+
     const exportToExcel = () => {
-        const ws = XLSX.utils.json_to_sheet(importStudenttwo);
+        const filteredData = importStudenttwo.map((val, index) => ({
+
+            "mobile_no": val?.mobile_no || "N/A",
+            "sch_short": val?.sch_short_nm || "N/A",
+            "stdn_nm": val?.student_name || "N/A",
+            "birth_dt": val?.scholar_dob || "N/A",
+            "fth_email": val?.scholar_email || "N/A",
+            "stdn_id": val?.scholar_no || "N/A",
+            "noticeMsg": val?.noticeMsg || "N/A",
+            "remark": val?.remark || "N/A",
+
+        }));
+
+        const ws = XLSX.utils.json_to_sheet(filteredData);
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Scholar Data');
         XLSX.writeFile(wb, 'Student_List.xlsx');
     };
+
+
     const [excelData, setExcelData] = useState([]);
 
     const handleFileUpload = (e) => {

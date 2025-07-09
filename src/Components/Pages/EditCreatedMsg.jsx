@@ -7,6 +7,7 @@ import Loding from '../Template/Loding';
 import { toast } from 'react-toastify';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const EditCreatedMsg = () => {
@@ -14,6 +15,7 @@ const EditCreatedMsg = () => {
     const navigate = useNavigate();
     const { id } = location.state;
     const URL = process.env.REACT_APP_URL;
+    const token = sessionStorage.getItem('token');
     const [loading, setLoading] = useState(true);
     const [schoolList, setSchoolList] = useState([]);
     const [subgroup, setSubgroup] = useState([]);
@@ -35,6 +37,21 @@ const EditCreatedMsg = () => {
         };
         fetchSendedData();
     }, [id]);
+
+    const convertUTCToLocalInput = (utcString) => {
+        const date = new Date(utcString); // parses UTC ISO string
+        const pad = (n) => n.toString().padStart(2, '0');
+
+        const yyyy = date.getFullYear();
+        const mm = pad(date.getMonth() + 1);
+        const dd = pad(date.getDate());
+        const hh = pad(date.getHours());
+        const mi = pad(date.getMinutes());
+
+        return `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
+    };
+
+
 
     const handleUpdateSchool = (val) => {
         const existingFields = val.data.msg_bodies.map((msg) => {
@@ -78,7 +95,7 @@ const EditCreatedMsg = () => {
         setDatas({
             msg_id: val.data.msg_id,
             subject_text: val.data.subject_text || '',
-            show_upto: val.data.show_upto || '',
+            show_upto: convertUTCToLocalInput(val.data.show_upto) || '',
             msg_priority: val.data.msg_priority || 1,
             msg_chat_type: val.data.msg_chat_type || '',
             msg_sgroup_id: val.data.msg_sgroup_id || '',
@@ -144,6 +161,38 @@ const EditCreatedMsg = () => {
         setInputFields(inputFields.filter(field => field.id !== id));
     };
 
+    const fetchUser = async () => {
+        try {
+            const response = await fetch(`${URL}/admin/getSingleAdmin/${admin_id}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            const data = await response.json();
+            if (response.ok) {
+                setSchoolList(data.data.allSchoolDetails || []);
+                // const combinedAdminIds = [
+                //     data.data.admin_id,
+                //     ...(data.data?.subordinateDetails?.map((val) => val.admin_id) || []),
+                // ];
+
+
+                // setUser(combinedAdminIds);
+            } else {
+                console.log('')
+            }
+        } catch (error) {
+            console.error('Error fetching admin details:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchUser();
+    }, []); // eslint-disable-next-line react-hooks/exhaustive-deps
+
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -151,7 +200,7 @@ const EditCreatedMsg = () => {
                 const response = await callAPI.get(`/school/getSchool?page=1&limit=200`);
                 const responsetwo = await callAPI.get(`/msg/getSubGroupDetail?page=1&limit=200`);
                 const responsethree = await callAPI.get(`/scholar/get_MainList_ScholarDetail`);
-                setSchoolList(response.data.data || []);
+                // setSchoolList(response.data.data || []);
                 setSubgroup(responsetwo.data.data || []);
                 setNumber(responsethree.data.data || []);
             } catch (error) {
@@ -163,13 +212,22 @@ const EditCreatedMsg = () => {
         fetchData();
     }, []);// eslint-disable-next-line react-hooks/exhaustive-deps
 
+    // const handleChange = (e) => {
+    //     const { name, value } = e.target;
+    //     setDatas((prev) => ({
+    //         ...prev,
+    //         [name]: name === 'show_upto' ? new Date(value).toISOString() : value,
+    //     }));
+    // };
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setDatas((prev) => ({
             ...prev,
-            [name]: name === 'show_upto' ? new Date(value).toISOString() : value,
+            [name]: value, // ✅ Keep "2025-07-25T12:35" as-is
         }));
     };
+
 
     const formatDateTime = (dateString) => {
         if (!dateString) return '';
@@ -241,7 +299,7 @@ const EditCreatedMsg = () => {
                 school_id: datas.school_id,
                 five_mobile_number: parentsnumber,
                 message_body: messageBody,
-                createdAt:Date.now()
+                createdAt: Date.now()
             });
             if (response.status >= 200 && response.status < 300) {
                 toast.success('Message updated successfully');

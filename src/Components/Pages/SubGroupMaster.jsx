@@ -118,9 +118,9 @@ const SubGroupMaster = () => {
             const response = await callAPI.post(`./msg/addSubGroup`, datas);
             if (response.status >= 200 && response.status < 300) {
                 fetchData();
-                toast.success('Group master added successfully');
+                toast.success('Sub group master added successfully');
             } else {
-                toast.error('Failed to add group master');
+                toast.error('Failed to add Sub group master');
             }
         } catch (error) {
             console.error('Error submitting form:', error);
@@ -313,6 +313,7 @@ const SubGroupMaster = () => {
                                                                         <div className="col-md-3 form-group">
                                                                             <label for="userType">Main Group<span className="text-danger">*</span></label>
                                                                             <select className="form-control" name='msg_group_id' onChange={handleChange}>
+                                                                                <option value='' disabled selected hidden>Select</option>
                                                                                 {GroupList?.map((val) => {
                                                                                     return (
                                                                                         <option value={val?.msg_group_id}>{val?.msg_group_name}</option>
@@ -432,12 +433,13 @@ const SubGroupMaster = () => {
                                         <input
                                             type="text"
                                             className="form-control"
-                                            id="msg_group_name"
-                                            name="msg_group_name"
+                                            id="msg_sgroup_name"
+                                            name="msg_sgroup_name"
                                             value={datas.msg_sgroup_name}
                                             onChange={handleChange}
                                             required
                                         />
+
                                     </div>
                                     <div className="form-group">
                                         <label>Status</label><br />
