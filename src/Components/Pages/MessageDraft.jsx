@@ -567,6 +567,14 @@ const MessageDraft = () => {
                                                                             </select>
                                                                         </div>
 
+                                                                       
+                                                                    </div>
+                                                                </div>
+                                                                <div className="col-12 col-lg-6 border-left">
+                                                                    {/* Conditionally render multi-select inputs based on the selected message category */}
+
+                                                                    <div className="row">
+
                                                                         <div className="col-md-12 form-group">
                                                                             {!Array.isArray(msgCategory) ||
                                                                                 (!msgCategory.includes("DISPLAY") && !msgCategory.includes("INPUT") && (
@@ -597,12 +605,7 @@ const MessageDraft = () => {
                                                                                     </>
                                                                                 ))}
                                                                         </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div className="col-12 col-lg-6 border-left">
-                                                                    {/* Conditionally render multi-select inputs based on the selected message category */}
 
-                                                                    <div className="row">
                                                                         {msgCategory && (
                                                                             <div className="col-12 form-group">
                                                                                 <label htmlFor="inputOptions" className="text-danger fw-bolder" >  Add Options  </label>
@@ -632,6 +635,7 @@ const MessageDraft = () => {
                                                                                 </select>
                                                                             </div>
                                                                         )}
+
                                                                     </div>
 
                                                                     <div className="row" style={{ height: "50vh", overflowY: "scroll", }} >
