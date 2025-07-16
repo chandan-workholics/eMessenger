@@ -208,6 +208,15 @@ const ImportScholar = () => {
     //     XLSX.utils.book_append_sheet(wb, ws, 'Scholar Data');
     //     XLSX.writeFile(wb, 'Student_List.xlsx');
     // };
+    const formatDateToDDMMYYYY = (dateStr) => {
+        const date = new Date(dateStr);
+        if (isNaN(date)) return dateStr; // if already formatted or invalid
+        const dd = String(date.getDate()).padStart(2, '0');
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const yyyy = date.getFullYear();
+        return `${dd}-${mm}-${yyyy}`;
+    };
+
 
     const exportToExcel = () => {
         const filteredData = importStudenttwo.map((val, index) => ({
@@ -215,7 +224,7 @@ const ImportScholar = () => {
             "mobile_no": val?.mobile_no || "N/A",
             "sch_short": val?.sch_short_nm || "N/A",
             "stdn_nm": val?.student_name || "N/A",
-            "birth_dt": val?.scholar_dob || "N/A",
+            "birth_dt": formatDateToDDMMYYYY(val?.scholar_dob) || "N/A",
             "fth_email": val?.scholar_email || "N/A",
             "stdn_id": val?.scholar_no || "N/A",
             "noticeMsg": val?.noticeMsg || "N/A",
@@ -247,20 +256,35 @@ const ImportScholar = () => {
             });
             jsonData = jsonData.map(row => {
                 const convertedRow = { ...row };
-                if (convertedRow.birth_dt) {
-                    const parsedDate = new Date(convertedRow.birth_dt);
+                const rawDate = row.birth_dt;
 
-                    if (!isNaN(parsedDate)) {
-                        const day = String(parsedDate.getDate()).padStart(2, '0');
-                        const month = String(parsedDate.getMonth() + 1).padStart(2, '0');
-                        const year = parsedDate.getFullYear();
+                if (!rawDate) return convertedRow;
 
-                        convertedRow.birth_dt = `${day}/${month}/${year}`;
+                if (!isNaN(rawDate)) {
+                    // If Excel date serial number (number like 45123)
+                    const excelEpoch = new Date(Date.UTC(1899, 11, 30));
+                    const parsedDate = new Date(excelEpoch.getTime() + rawDate * 86400000);
+                    const dd = String(parsedDate.getDate()).padStart(2, '0');
+                    const mm = String(parsedDate.getMonth() + 1).padStart(2, '0');
+                    const yyyy = parsedDate.getFullYear();
+                    convertedRow.birth_dt = `${dd}-${mm}-${yyyy}`;
+                } else if (typeof rawDate === 'string') {
+                    const date = new Date(rawDate);
+                    if (!isNaN(date)) {
+                        const dd = String(date.getDate()).padStart(2, '0');
+                        const mm = String(date.getMonth() + 1).padStart(2, '0');
+                        const yyyy = date.getFullYear();
+                        convertedRow.birth_dt = `${dd}-${mm}-${yyyy}`;
+                    } else {
+                        // Already custom formatted or invalid string
+                        convertedRow.birth_dt = rawDate;
                     }
                 }
 
                 return convertedRow;
             });
+
+
 
             setExcelData(jsonData);
         };
