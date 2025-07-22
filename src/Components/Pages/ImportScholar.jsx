@@ -214,7 +214,7 @@ const ImportScholar = () => {
         const dd = String(date.getDate()).padStart(2, '0');
         const mm = String(date.getMonth() + 1).padStart(2, '0');
         const yyyy = date.getFullYear();
-        return `${dd}-${mm}-${yyyy}`;
+        return `${dd}/${mm}/${yyyy}`;
     };
 
 
@@ -252,7 +252,7 @@ const ImportScholar = () => {
             const worksheet = workbook.Sheets[sheetName];
             let jsonData = XLSX.utils.sheet_to_json(worksheet, {
                 raw: false,
-                dateNF: 'dd-mm-yyyy',
+                dateNF: 'dd/mm/yyyy',
             });
             jsonData = jsonData.map(row => {
                 const convertedRow = { ...row };
@@ -267,14 +267,14 @@ const ImportScholar = () => {
                     const dd = String(parsedDate.getDate()).padStart(2, '0');
                     const mm = String(parsedDate.getMonth() + 1).padStart(2, '0');
                     const yyyy = parsedDate.getFullYear();
-                    convertedRow.birth_dt = `${dd}-${mm}-${yyyy}`;
+                    convertedRow.birth_dt = `${dd}/${mm}/${yyyy}`;
                 } else if (typeof rawDate === 'string') {
                     const date = new Date(rawDate);
                     if (!isNaN(date)) {
                         const dd = String(date.getDate()).padStart(2, '0');
                         const mm = String(date.getMonth() + 1).padStart(2, '0');
                         const yyyy = date.getFullYear();
-                        convertedRow.birth_dt = `${dd}-${mm}-${yyyy}`;
+                        convertedRow.birth_dt = `${dd}/${mm}/${yyyy}`;
                     } else {
                         // Already custom formatted or invalid string
                         convertedRow.birth_dt = rawDate;
