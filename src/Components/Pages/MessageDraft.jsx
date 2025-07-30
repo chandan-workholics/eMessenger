@@ -328,7 +328,7 @@ const MessageDraft = () => {
         ),
         action: (
             <div>
-                {val?.is_active === 1 ? (<Link to={`/send-message`} state={{ id: val?.msg_id, school_id: val?.schools }}>{" "}<i className="fa-solid fa-paper-plane text-success mr-3"></i></Link>) : ("")}
+                {val?.is_active === 1 ? (<Link to={`/send-message`} state={{ id: val?.msg_id, school_id: val?.schools,subject:val?.subject_text }}>{" "}<i className="fa-solid fa-paper-plane text-success mr-3"></i></Link>) : ("")}
                 <Link to={`/edit-created-message`} state={{ id: val?.msg_id }} className="btn p-2"><i className="fa-solid fa-pen-to-square text-warning"></i></Link>
                 <button onClick={() => handleDelete(val?.msg_id)} type="button" className="btn p-2"><i className="fa-solid fa-trash-can text-danger"></i></button>
             </div>
