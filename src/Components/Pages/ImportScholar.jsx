@@ -23,48 +23,6 @@ const ImportScholar = () => {
         setAction(e.target.checked ? 'delete_and_import' : 'insert_only');
     };
 
-    // const fetchData = async () => {
-    //     setLoading(true);
-    //     try {
-    //         const response = await fetch(`${URL}/scholar/getScholarDetail?page=${currentPage}&limit=${rowsPerPage}`, {
-    //             method: 'GET',
-    //             headers: {
-    //                 'Authorization': `Bearer ${token}`,
-    //                 'Content-Type': 'application/json'
-    //             }
-    //         });
-    //         const responsetwo = await fetch(`${URL}/scholar/getScholarDetail?page=1&limit=2000`, {
-    //             method: 'GET',
-    //             headers: {
-    //                 'Authorization': `Bearer ${token}`,
-    //                 'Content-Type': 'application/json'
-    //             }
-    //         });
-    //         if (!response.ok) {
-    //             throw new Error(`HTTP error! status: ${response.status}`);
-    //         }
-    //         const result = await response.json();
-    //         const resulttwo = await responsetwo.json();
-    //         setImportStudent(result.data);
-    //         setImportStudenttwo(resulttwo.data);
-    //         setTotalPages(Math.ceil(result?.pagination?.totalPages));
-    //     } catch (error) {
-    //         setError(error.message);
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-    // const handleSearchChange = (e) => {
-    //     const value = e.target.value;
-    //     setSearchTerm(value);
-    //     const lowercasedFilter = value.toLowerCase();
-    //     const filteredResults = importStudenttwo.filter(item =>
-    //         Object.keys(item).some(key =>
-    //             String(item[key]).toLowerCase().includes(lowercasedFilter)
-    //         )
-    //     );
-    //     setImportStudent(filteredResults);
-    // };
 
     const fetchData = async () => {
         setLoading(true);
@@ -202,12 +160,7 @@ const ImportScholar = () => {
         }
     };
 
-    // const exportToExcel = () => {
-    //     const ws = XLSX.utils.json_to_sheet(importStudenttwo);
-    //     const wb = XLSX.utils.book_new();
-    //     XLSX.utils.book_append_sheet(wb, ws, 'Scholar Data');
-    //     XLSX.writeFile(wb, 'Student_List.xlsx');
-    // };
+
     const formatDateToDDMMYYYY = (dateStr) => {
         const date = new Date(dateStr);
         if (isNaN(date)) return dateStr; // if already formatted or invalid
@@ -311,6 +264,7 @@ const ImportScholar = () => {
             if (response.status === 200) {
                 toast.success('Data imported successfully!');
                 fetchData();
+                window.location.reload()
             } else {
                 toast.error('Failed to import data.');
             }
