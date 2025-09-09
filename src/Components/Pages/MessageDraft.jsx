@@ -241,6 +241,7 @@ const MessageDraft = () => {
                 setInputFields([]);
                 setDatas("");
                 fetchListData();
+                window.location.reload()
             } else {
                 toast.error("Failed to submit the message");
             }
