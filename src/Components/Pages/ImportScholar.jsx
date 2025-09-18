@@ -264,10 +264,13 @@ const ImportScholar = () => {
             if (response.status === 200) {
                 toast.success('Data imported successfully!');
                 fetchData();
-                window.location.reload()
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500); // wait 1.5 sec so toast is visible
             } else {
                 toast.error('Failed to import data.');
             }
+
         } catch (error) {
             toast.error('An error occurred while uploading the data.');
             console.error(error);
