@@ -56,6 +56,8 @@ const EditCreatedMsg = () => {
     const handleUpdateSchool = (val) => {
         const existingFields = val.data.msg_bodies.map((msg) => {
             const parsedDataText = JSON.parse(msg.data_text);
+
+            let msg_body_id = msg.msg_body_id;
             let title = parsedDataText.title || parsedDataText.text || '';
             let link = parsedDataText.title || parsedDataText.link || '';
             let linkValue = parsedDataText.link || '';
@@ -73,6 +75,7 @@ const EditCreatedMsg = () => {
 
             return {
                 id: Date.now() + Math.random(),
+                msg_body_id: msg_body_id,
                 type: type,
                 title: title,
                 link: link,
@@ -125,6 +128,10 @@ const EditCreatedMsg = () => {
         setInputFields([...inputFields, ...newInputFields]);
         e.target.value = '';
     };
+
+
+
+
 
     const handleImageChange = async (e, fieldId) => {
         const formData = new FormData();
@@ -244,6 +251,7 @@ const EditCreatedMsg = () => {
     const handleUpdate = async (e) => {
         e.preventDefault();
         const messageBody = inputFields.map((field, index) => {
+           
             let dataText = {};
             switch (field.type) {
                 case 'TITLE':
@@ -277,6 +285,7 @@ const EditCreatedMsg = () => {
                     break;
             }
             return {
+                msg_body_id: field?.msg_body_id,
                 msg_type: `${field.type}-${datas?.msg_chat_type}`,
                 data_text: JSON.stringify(dataText),
                 order_number: index + 1,
@@ -334,6 +343,8 @@ const EditCreatedMsg = () => {
 
         setInputFields(items);
     };
+
+
 
     return (
         <>
