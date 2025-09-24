@@ -24,6 +24,7 @@ const EditCreatedMsg = () => {
     const [inputFields, setInputFields] = useState([]);
     const [datas, setDatas] = useState({ msg_id: '', subject_text: '', show_upto: '', msg_priority: '1', msg_chat_type: '', msg_sgroup_id: '', is_reply_type: 0, is_reply_required_any: 0, is_active: 1, entry_by: 1, edit_by: 1, school_id: [], five_mobile_number: '', message_body: [], })
     const admin_id = sessionStorage.getItem('admin_id');
+    const [replyrequired, setReplyrequired] = useState(0);
 
     useEffect(() => {
         const fetchSendedData = async () => {
@@ -95,6 +96,7 @@ const EditCreatedMsg = () => {
             }))
             : [];
 
+        setReplyrequired(val.data.is_reply_required_any)
         setDatas({
             msg_id: val.data.msg_id,
             subject_text: val.data.subject_text || '',
@@ -103,7 +105,7 @@ const EditCreatedMsg = () => {
             msg_chat_type: val.data.msg_chat_type || '',
             msg_sgroup_id: val.data.msg_sgroup_id || '',
             is_reply_type: val.data.is_reply_type || 0,
-            is_reply_required_any: val.data.is_reply_required_any || 0,
+            is_reply_required_any: val.data.is_reply_required_any,
             is_active: val.data.is_active || 1,
             entry_by: val.data.entry_by || 1,
             edit_by: val.data.edit_by || 1,
@@ -115,8 +117,33 @@ const EditCreatedMsg = () => {
         setParentsNumber(parsedParents);
     };
 
+    // const handleInputOptionsChange = (e) => {
+    //      const selectedValue = e.target.value;
+    //     if (selectedValue === "OPTION" || selectedValue === "CHECKBOX" || selectedValue === "TEXTBOX" || selectedValue === "TEXTAREA" || selectedValue === "CAMERA" || selectedValue === "FILE") {
+    //         setReplyrequired(1);
+    //     }
+    //     const selectedOptions = [...e.target.selectedOptions].map(option => option.value);
+    //     const newInputFields = selectedOptions.map(option => ({
+    //         id: Date.now() + Math.random(),
+    //         type: option,
+    //         title: '',
+    //         link: '',
+    //         options: '',
+    //         placeholder: '',
+    //     }));
+    //     setInputFields([...inputFields, ...newInputFields]);
+    //     e.target.value = '';
+    // };
+
     const handleInputOptionsChange = (e) => {
         const selectedOptions = [...e.target.selectedOptions].map(option => option.value);
+
+        // If any selected option is one of the special types, set replyrequired
+        if (selectedOptions.some(opt => ["OPTION", "CHECKBOX", "TEXTBOX", "TEXTAREA", "CAMERA", "FILE"].includes(opt))) {
+            setReplyrequired(1);
+        }
+
+        // Create new input fields
         const newInputFields = selectedOptions.map(option => ({
             id: Date.now() + Math.random(),
             type: option,
@@ -125,10 +152,12 @@ const EditCreatedMsg = () => {
             options: '',
             placeholder: '',
         }));
+
         setInputFields([...inputFields, ...newInputFields]);
+
+        // Clear selection (optional)
         e.target.value = '';
     };
-
 
 
 
@@ -251,7 +280,7 @@ const EditCreatedMsg = () => {
     const handleUpdate = async (e) => {
         e.preventDefault();
         const messageBody = inputFields.map((field, index) => {
-           
+
             let dataText = {};
             switch (field.type) {
                 case 'TITLE':
@@ -301,7 +330,7 @@ const EditCreatedMsg = () => {
                 msg_chat_type: datas.msg_chat_type,
                 msg_sgroup_id: datas.msg_sgroup_id,
                 is_reply_type: datas.is_reply_type,
-                is_reply_required_any: datas.is_reply_required_any,
+                is_reply_required_any: replyrequired,
                 is_active: datas.is_active,
                 entry_by: datas.entry_by,
                 edit_by: parseInt(admin_id),
