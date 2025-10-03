@@ -171,9 +171,32 @@ const ImportScholar = () => {
     };
 
 
-    const exportToExcel = () => {
-        const filteredData = importStudenttwo.map((val, index) => ({
+    // const exportToExcel = () => {
+    //     const filteredData = importStudenttwo.map((val, index) => ({
 
+    //         "mobile_no": val?.mobile_no || "N/A",
+    //         "sch_short": val?.sch_short_nm || "N/A",
+    //         "stdn_nm": val?.student_name || "N/A",
+    //         "birth_dt": formatDateToDDMMYYYY(val?.scholar_dob) || "N/A",
+    //         "fth_email": val?.scholar_email || "N/A",
+    //         "stdn_id": val?.scholar_no || "N/A",
+    //         "noticeMsg": val?.noticeMsg || "N/A",
+    //         "remark": val?.remark || "N/A",
+
+    //     }));
+
+    //     const ws = XLSX.utils.json_to_sheet(filteredData);
+    //     const wb = XLSX.utils.book_new();
+    //     XLSX.utils.book_append_sheet(wb, ws, 'Scholar Data');
+    //     XLSX.writeFile(wb, 'Student_List.xlsx');
+    // };
+
+
+    const exportToExcel = () => {
+    let filteredData = [];
+
+    if (importStudenttwo && importStudenttwo.length > 0) {
+        filteredData = importStudenttwo.map((val, index) => ({
             "mobile_no": val?.mobile_no || "N/A",
             "sch_short": val?.sch_short_nm || "N/A",
             "stdn_nm": val?.student_name || "N/A",
@@ -182,14 +205,29 @@ const ImportScholar = () => {
             "stdn_id": val?.scholar_no || "N/A",
             "noticeMsg": val?.noticeMsg || "N/A",
             "remark": val?.remark || "N/A",
-
         }));
+    } else {
+        // No data – export a placeholder row
+        filteredData = [
+            {
+                "mobile_no": "N/A",
+                "sch_short": "N/A",
+                "stdn_nm": "N/A",
+                "birth_dt": "N/A",
+                "fth_email": "N/A",
+                "stdn_id": "N/A",
+                "noticeMsg": "N/A",
+                "remark": "N/A",
+            }
+        ];
+    }
 
-        const ws = XLSX.utils.json_to_sheet(filteredData);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Scholar Data');
-        XLSX.writeFile(wb, 'Student_List.xlsx');
-    };
+    const ws = XLSX.utils.json_to_sheet(filteredData);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Scholar Data');
+    XLSX.writeFile(wb, 'Student_List.xlsx');
+};
+
 
 
     const [excelData, setExcelData] = useState([]);
