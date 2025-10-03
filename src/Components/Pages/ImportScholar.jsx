@@ -285,10 +285,10 @@ const ImportScholar = () => {
 
     // Function to submit data to API
     const handleSubmit = async () => {
-        if (excelData.length === 0) {
-            toast.error('Please upload a valid Excel file.');
-            return;
-        }
+        // if (excelData.length === 0) {
+        //     toast.error('Please upload a valid Excel file.');
+        //     return;
+        // }
         try {
             const response = await axios.post(`${URL}/scholar/insertScholarRecord`, {
                 action: action,
