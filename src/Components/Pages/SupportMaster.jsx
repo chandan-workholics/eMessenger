@@ -42,7 +42,7 @@ const SupportMaster = () => {
         setIsModalOpen(true);
         setDatas({
             id: item.id,
-            parent_id: item.parent_id,
+            parent_id: item.send_by_mobile,
             description: item.description,
             status: item.status.toString(),
             remark: item.remark,
@@ -268,7 +268,7 @@ const SupportMaster = () => {
                                                             <thead>
                                                                 <tr>
                                                                     <th>S.No</th>
-                                                                    <th>Parent ID</th>
+                                                                    <th>Student ID</th>
                                                                     <th>Send By</th>
                                                                     <th>Mobile No.</th>
                                                                     <th>Description</th>
