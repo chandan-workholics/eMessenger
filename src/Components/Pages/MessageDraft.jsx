@@ -329,7 +329,7 @@ const MessageDraft = () => {
         ),
         action: (
             <div>
-                {val?.is_active === 1 ? (<Link to={`/send-message`} state={{ id: val?.msg_id, school_id: val?.schools,subject:val?.subject_text }}>{" "}<i className="fa-solid fa-paper-plane text-success mr-3"></i></Link>) : ("")}
+                {val?.is_active === 1 ? (<Link to={`/send-message`} state={{ id: val?.msg_id, school_id: val?.schools, subject: val?.subject_text }}>{" "}<i className="fa-solid fa-paper-plane text-success mr-3"></i></Link>) : ("")}
                 <Link to={`/edit-created-message`} state={{ id: val?.msg_id }} className="btn p-2"><i className="fa-solid fa-pen-to-square text-warning"></i></Link>
                 <button onClick={() => handleDelete(val?.msg_id)} type="button" className="btn p-2"><i className="fa-solid fa-trash-can text-danger"></i></button>
             </div>
@@ -442,6 +442,7 @@ const MessageDraft = () => {
         setInputFields(reorderedFields);
     };
 
+    console.log(parentsnumber)
 
     return (
         <>
@@ -495,14 +496,7 @@ const MessageDraft = () => {
                                                                     <div className="d-block d-md-flex align-items-center mb-4 mb-md-0">
                                                                         <label htmlFor="msgCategory" className="mr-3 mb-0" style={{ width: "180px" }}>Message Category<span className="text-danger">*</span></label>
                                                                         <div className="d-flex flex-wrap form-control border-0 px-0">
-                                                                            <div className="custom-control custom-radio mr-3">
-                                                                                <input type="radio" className="custom-control-input" id="Chat" name="msgCategory" value="INDIVIDUALCHAT" onChange={handleCategoryChange} />
-                                                                                <label className="custom-control-label" htmlFor="Chat">Chat</label>
-                                                                            </div>
-                                                                            <div className="custom-control custom-radio mr-3">
-                                                                                <input type="radio" className="custom-control-input" id="GroupChat" name="msgCategory" value="GROUPCHAT" onChange={handleCategoryChange} />
-                                                                                <label className="custom-control-label" htmlFor="GroupChat">Group Chat</label>
-                                                                            </div>
+
                                                                             <div className="custom-control custom-radio mr-3">
                                                                                 <input type="radio" className="custom-control-input" id="Display" name="msgCategory" value="DISPLAY" onChange={handleCategoryChange} />
                                                                                 <label className="custom-control-label" htmlFor="Display">Display</label>
@@ -512,6 +506,16 @@ const MessageDraft = () => {
                                                                                 <input type="radio" className="custom-control-input" id="Input" name="msgCategory" value="INPUT" onChange={handleCategoryChange} />
                                                                                 <label className="custom-control-label" htmlFor="Input">Input</label>
                                                                             </div>
+
+                                                                            <div className="custom-control custom-radio mr-3">
+                                                                                <input type="radio" className="custom-control-input" id="Chat" name="msgCategory" value="INDIVIDUALCHAT" onChange={handleCategoryChange} />
+                                                                                <label className="custom-control-label" htmlFor="Chat">Individual Chat</label>
+                                                                            </div>
+                                                                            <div className="custom-control custom-radio mr-3">
+                                                                                <input type="radio" className="custom-control-input" id="GroupChat" name="msgCategory" value="GROUPCHAT" onChange={handleCategoryChange} />
+                                                                                <label className="custom-control-label" htmlFor="GroupChat">Group Chat</label>
+                                                                            </div>
+
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -568,7 +572,7 @@ const MessageDraft = () => {
                                                                             </select>
                                                                         </div>
 
-                                                                       
+
                                                                     </div>
                                                                 </div>
                                                                 <div className="col-12 col-lg-6 border-left">
@@ -580,32 +584,46 @@ const MessageDraft = () => {
                                                                             {!Array.isArray(msgCategory) ||
                                                                                 (!msgCategory.includes("DISPLAY") && !msgCategory.includes("INPUT") && (
                                                                                     <>
-                                                                                        <label htmlFor="msgCategory">Add Student{" "}<span className="text-danger">(max select 5 numbers)</span>{" "}</label>
+                                                                                        <label htmlFor="msgCategory">
+                                                                                            Add Student{" "}
+                                                                                            <span className="text-danger">(max select 5 numbers)</span>{" "}
+                                                                                        </label>
                                                                                         <Multiselect
                                                                                             className="inputHead"
                                                                                             onRemove={(event) => {
-                                                                                                const updatedParents = parentsnumber.filter((parent) => !event.some((removed) => removed.student_family_mobile_number === parent.student_family_mobile_number));
+                                                                                                const updatedParents = parentsnumber.filter(
+                                                                                                    (parent) =>
+                                                                                                        !event.some(
+                                                                                                            (removed) =>
+                                                                                                                removed.student_family_mobile_number ===
+                                                                                                                parent.student_family_mobile_number
+                                                                                                        )
+                                                                                                );
                                                                                                 setParentsNumber(updatedParents);
                                                                                             }}
                                                                                             onSelect={(event) => {
                                                                                                 if (event.length <= 5) {
-                                                                                                    const newParents = event.map((num) => ({ student_main_id: num.student_main_id, mobile_no: parseInt(num.student_family_mobile_number, 10), }));
+                                                                                                    const newParents = event.map((num) => ({
+                                                                                                        student_number: num.student_number,
+                                                                                                        mobile_no: parseInt(num.student_family_mobile_number, 10),
+                                                                                                    }));
                                                                                                     setParentsNumber(newParents);
                                                                                                 } else {
-                                                                                                    alert(
-                                                                                                        "You can only select a maximum of 5 numbers."
-                                                                                                    );
+                                                                                                    alert("You can only select a maximum of 5 numbers.");
                                                                                                     // Prevent state update if more than 5 numbers are selected
                                                                                                 }
                                                                                             }}
                                                                                             options={number}
                                                                                             displayValue="student_family_mobile_number"
-                                                                                            selectedValues={parentsnumber.map((parent) => ({ student_family_mobile_number: parent.mobile_no, student_main_id: parent.student_main_id, })
-                                                                                            )}
+                                                                                            selectedValues={parentsnumber.map((parent) => ({
+                                                                                                student_family_mobile_number: parent.mobile_no,
+                                                                                                student_number: parent.student_number,
+                                                                                            }))}
                                                                                         />
                                                                                     </>
                                                                                 ))}
                                                                         </div>
+
 
                                                                         {msgCategory && (
                                                                             <div className="col-12 form-group">
@@ -691,23 +709,49 @@ const MessageDraft = () => {
 
                                                                                                                     {/* Handling 'TEXTBOX' input type */}
                                                                                                                     {field.type === "TEXTBOX" && (
-                                                                                                                        <input type="text" className="form-control mb-2" placeholder="Enter placeholder for Textbox" value={field.placeholder || ""}
+                                                                                                                        <textarea
+                                                                                                                            className="form-control mb-2"
+                                                                                                                            placeholder="Enter placeholder for Textbox"
+                                                                                                                            value={field.placeholder || ""}
+                                                                                                                            rows={1}
+                                                                                                                            onInput={(e) => {
+                                                                                                                                e.target.style.height = "auto";
+                                                                                                                                e.target.style.height = e.target.scrollHeight + "px";
+                                                                                                                            }}
                                                                                                                             onChange={(e) => {
-                                                                                                                                const updatedFields = inputFields.map((f) => f.id === field.id ? { ...f, placeholder: e.target.value, } : f);
+                                                                                                                                const updatedFields = inputFields.map((f) =>
+                                                                                                                                    f.id === field.id ? { ...f, placeholder: e.target.value } : f
+                                                                                                                                );
                                                                                                                                 setInputFields(updatedFields);
                                                                                                                             }}
+                                                                                                                            style={{ overflow: "hidden", resize: "none" }}
                                                                                                                         />
                                                                                                                     )}
 
+
                                                                                                                     {/* Handling 'TEXTAREA' input type */}
                                                                                                                     {field.type === "TEXTAREA" && (
-                                                                                                                        <input type="text" className="form-control mb-2" placeholder="Enter placeholder for Textarea" value={field.placeholder || ""}
+                                                                                                                        <textarea
+                                                                                                                            className="form-control mb-2"
+                                                                                                                            placeholder="Enter placeholder for Textarea"
+                                                                                                                            value={field.placeholder || ""}
+                                                                                                                            rows={1}
+                                                                                                                            onInput={(e) => {
+                                                                                                                                // Reset height so shrink works too
+                                                                                                                                e.target.style.height = "auto";
+                                                                                                                                // Set new height based on scroll height
+                                                                                                                                e.target.style.height = e.target.scrollHeight + "px";
+                                                                                                                            }}
                                                                                                                             onChange={(e) => {
-                                                                                                                                const updatedFields = inputFields.map((f) => f.id === field.id ? { ...f, placeholder: e.target.value, } : f);
+                                                                                                                                const updatedFields = inputFields.map((f) =>
+                                                                                                                                    f.id === field.id ? { ...f, placeholder: e.target.value } : f
+                                                                                                                                );
                                                                                                                                 setInputFields(updatedFields);
                                                                                                                             }}
+                                                                                                                            style={{ overflow: "hidden", resize: "none" }}
                                                                                                                         />
                                                                                                                     )}
+
 
                                                                                                                     {/* Handling 'IMAGE' input type */}
                                                                                                                     {field.type === "IMAGE" && (

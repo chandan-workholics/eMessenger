@@ -124,14 +124,14 @@ const ImportScholar = () => {
                 printWindow.document.write(`
                     <tr>
                         <td>${index + 1}</td>
-                        <td>${val?.mobile_no || "N/A"}</td>
+                        <td>${val?.student_family_mobile_number || "N/A"}</td>
                         <td>${val?.sch_short_nm || "N/A"}</td>
                         <td>${val?.student_name || "N/A"}</td>
-                        <td>${val?.scholar_dob || "N/A"}</td>
-                        <td>${val?.scholar_email || "N/A"}</td>
+                        <td>${val?.student_dob || "N/A"}</td>
+                        <td>${val?.student_email || "N/A"}</td>
                         <td>${val?.noticeMsg || "N/A"}</td>
                         <td>${val?.remark || "N/A"}</td>
-                        <td>${val?.scholar_no || "N/A"}</td>
+                        <td>${val?.student_number || "N/A"}</td>
                     </tr>
                 `);
             });
@@ -174,12 +174,12 @@ const ImportScholar = () => {
     // const exportToExcel = () => {
     //     const filteredData = importStudenttwo.map((val, index) => ({
 
-    //         "mobile_no": val?.mobile_no || "N/A",
+    //         "mobile_no": val?.student_family_mobile_number || "N/A",
     //         "sch_short": val?.sch_short_nm || "N/A",
     //         "stdn_nm": val?.student_name || "N/A",
-    //         "birth_dt": formatDateToDDMMYYYY(val?.scholar_dob) || "N/A",
-    //         "fth_email": val?.scholar_email || "N/A",
-    //         "stdn_id": val?.scholar_no || "N/A",
+    //         "birth_dt": formatDateToDDMMYYYY(val?.student_dob) || "N/A",
+    //         "fth_email": val?.student_email || "N/A",
+    //         "stdn_id": val?.student_number || "N/A",
     //         "noticeMsg": val?.noticeMsg || "N/A",
     //         "remark": val?.remark || "N/A",
 
@@ -197,12 +197,12 @@ const ImportScholar = () => {
 
     if (importStudenttwo && importStudenttwo.length > 0) {
         filteredData = importStudenttwo.map((val, index) => ({
-            "mobile_no": val?.mobile_no || "N/A",
+            "mobile_no": val?.student_family_mobile_number || "N/A",
             "sch_short": val?.sch_short_nm || "N/A",
             "stdn_nm": val?.student_name || "N/A",
-            "birth_dt": formatDateToDDMMYYYY(val?.scholar_dob) || "N/A",
-            "fth_email": val?.scholar_email || "N/A",
-            "stdn_id": val?.scholar_no || "N/A",
+            "birth_dt": formatDateToDDMMYYYY(val?.student_dob) || "N/A",
+            "fth_email": val?.student_email || "N/A",
+            "stdn_id": val?.student_number || "N/A",
             "noticeMsg": val?.noticeMsg || "N/A",
             "remark": val?.remark || "N/A",
         }));
@@ -413,14 +413,14 @@ const ImportScholar = () => {
                                                                 {importStudent?.map((val, index) => (
                                                                     <tr key={val?.id}>
                                                                         <td>{(currentPage - 1) * rowsPerPage + index + 1}</td>
-                                                                        <td>{val?.mobile_no}</td>
+                                                                        <td>{val?.student_family_mobile_number}</td>
                                                                         <td>{val?.sch_short_nm}</td>
                                                                         <td>{val?.student_name || "Not Available"}</td>
-                                                                        <td>{val?.scholar_dob}</td>
-                                                                        <td>{val?.scholar_email}</td>
+                                                                        <td>{val?.student_dob}</td>
+                                                                        <td>{val?.student_email}</td>
                                                                         <td>{val?.noticeMsg}</td>
                                                                         <td>{val?.remark}</td>
-                                                                        <td>{val?.scholar_no}</td>
+                                                                        <td>{val?.student_number}</td>
                                                                     </tr>
                                                                 ))}
                                                             </tbody>

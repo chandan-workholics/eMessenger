@@ -504,7 +504,7 @@ const EditCreatedMsg = () => {
                                                                 onSelect={(event) => {
                                                                     if (event.length <= 5) {
                                                                         const newParents = event.map(num => ({
-                                                                            student_main_id: num.student_main_id,
+                                                                            student_main_id: num.student_number,
                                                                             mobile_no: parseInt(num.student_family_mobile_number, 10)
                                                                         }));
                                                                         setParentsNumber(newParents);
@@ -645,35 +645,55 @@ const EditCreatedMsg = () => {
                                                                                                 />
                                                                                             )}
 
-                                                                                            {field.type === 'TEXTBOX' && (
-                                                                                                <input
-                                                                                                    type="text"
+                                                                                            {field.type === "TEXTBOX" && (
+                                                                                                <textarea
                                                                                                     className="form-control mb-2"
                                                                                                     placeholder="Enter placeholder for Textbox"
-                                                                                                    value={field.placeholder || ''} // Display previous placeholder
+                                                                                                    value={field.placeholder || ""}
+                                                                                                    rows={1}
+                                                                                                    onInput={(e) => {
+                                                                                                        e.target.style.height = "auto"; // Reset height
+                                                                                                        e.target.style.height = e.target.scrollHeight + "px"; // Adjust dynamically
+                                                                                                    }}
                                                                                                     onChange={(e) => {
                                                                                                         const updatedFields = inputFields.map((f) =>
                                                                                                             f.id === field.id ? { ...f, placeholder: e.target.value } : f
                                                                                                         );
                                                                                                         setInputFields(updatedFields);
+                                                                                                    }}
+                                                                                                    style={{
+                                                                                                        overflow: "hidden",
+                                                                                                        resize: "none",
+                                                                                                        minHeight: "38px", // Matches input field height
                                                                                                     }}
                                                                                                 />
                                                                                             )}
 
-                                                                                            {field.type === 'TEXTAREA' && (
-                                                                                                <input
-                                                                                                    type="text"
+
+                                                                                            {field.type === "TEXTAREA" && (
+                                                                                                <textarea
                                                                                                     className="form-control mb-2"
                                                                                                     placeholder="Enter placeholder for Textarea"
-                                                                                                    value={field.placeholder || ''} // Display previous placeholder
+                                                                                                    value={field.placeholder || ""}
+                                                                                                    rows={1}
+                                                                                                    onInput={(e) => {
+                                                                                                        e.target.style.height = "auto"; // Reset height
+                                                                                                        e.target.style.height = e.target.scrollHeight + "px"; // Expand dynamically
+                                                                                                    }}
                                                                                                     onChange={(e) => {
                                                                                                         const updatedFields = inputFields.map((f) =>
                                                                                                             f.id === field.id ? { ...f, placeholder: e.target.value } : f
                                                                                                         );
                                                                                                         setInputFields(updatedFields);
                                                                                                     }}
+                                                                                                    style={{
+                                                                                                        overflow: "hidden",
+                                                                                                        resize: "none",
+                                                                                                        minHeight: "38px", // Matches normal input height
+                                                                                                    }}
                                                                                                 />
                                                                                             )}
+
 
                                                                                             {field.type === 'IMAGE' && (
                                                                                                 <>
