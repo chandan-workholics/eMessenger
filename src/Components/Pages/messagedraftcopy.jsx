@@ -12,6 +12,8 @@ import { format } from "date-fns";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { saveAs } from "file-saver";
 import * as XLSX from "xlsx";
+import Cropper from "react-easy-crop";
+import { getCroppedImgBlob } from "./cropImage";
 
 const MessageDraft = () => {
     const URL = process.env.REACT_APP_URL;
@@ -147,26 +149,41 @@ const MessageDraft = () => {
         e.target.value = "";
     };
 
-    const handleImageChange = async (e, fieldId) => {
-        const formData = new FormData();
-        formData.append("file", e.target.files[0]);
+    // const handleImageChange = async (e, fieldId) => {
+    //     const formData = new FormData();
+    //     formData.append("file", e.target.files[0]);
 
-        var requestOptions = { headers: { "Content-Type": "multipart/form-data", }, };
-        try {
-            const fetchdata = await axios.post(`${URL}/v1/admin/imageUpload_Use/imageUpload`, formData, requestOptions);
-            if (fetchdata.status === 200) {
-                toast.success("Data Uploaded Successfully");
-                const imageUrl = fetchdata.data.url;
-                const updatedFields = inputFields.map((field) => field.id === fieldId ? { ...field, link: imageUrl } : field);
+    //     var requestOptions = { headers: { "Content-Type": "multipart/form-data", }, };
+    //     try {
+    //         const fetchdata = await axios.post(`${URL}/v1/admin/imageUpload_Use/imageUpload`, formData, requestOptions);
+    //         if (fetchdata.status === 200) {
+    //             toast.success("Data Uploaded Successfully");
+    //             const imageUrl = fetchdata.data.url;
+    //             const updatedFields = inputFields.map((field) => field.id === fieldId ? { ...field, link: imageUrl } : field);
+    //             setInputFields(updatedFields);
+    //         } else {
+    //             toast.error("Failed to load");
+    //         }
+    //     } catch (error) {
+    //         toast.error("An error occurred during the upload.");
+    //         console.error("Error uploading image:", error);
+    //     }
+    // };
+
+    const handleImageChange = (e, fieldId) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = () => {
+                const updatedFields = inputFields.map((f) =>
+                    f.id === fieldId ? { ...f, tempImage: reader.result } : f
+                );
                 setInputFields(updatedFields);
-            } else {
-                toast.error("Failed to load");
-            }
-        } catch (error) {
-            toast.error("An error occurred during the upload.");
-            console.error("Error uploading image:", error);
+            };
+            reader.readAsDataURL(file);
         }
     };
+
 
     const deleteField = (id) => {
         setInputFields(inputFields.filter((field) => field.id !== id));
@@ -241,6 +258,7 @@ const MessageDraft = () => {
                 setInputFields([]);
                 setDatas("");
                 fetchListData();
+                window.location.reload()
             } else {
                 toast.error("Failed to submit the message");
             }
@@ -328,7 +346,7 @@ const MessageDraft = () => {
         ),
         action: (
             <div>
-                {val?.is_active === 1 ? (<Link to={`/send-message`} state={{ id: val?.msg_id, school_id: val?.schools,subject:val?.subject_text }}>{" "}<i className="fa-solid fa-paper-plane text-success mr-3"></i></Link>) : ("")}
+                {val?.is_active === 1 ? (<Link to={`/send-message`} state={{ id: val?.msg_id, school_id: val?.schools, subject: val?.subject_text }}>{" "}<i className="fa-solid fa-paper-plane text-success mr-3"></i></Link>) : ("")}
                 <Link to={`/edit-created-message`} state={{ id: val?.msg_id }} className="btn p-2"><i className="fa-solid fa-pen-to-square text-warning"></i></Link>
                 <button onClick={() => handleDelete(val?.msg_id)} type="button" className="btn p-2"><i className="fa-solid fa-trash-can text-danger"></i></button>
             </div>
@@ -441,6 +459,7 @@ const MessageDraft = () => {
         setInputFields(reorderedFields);
     };
 
+    console.log(parentsnumber)
 
     return (
         <>
@@ -494,14 +513,7 @@ const MessageDraft = () => {
                                                                     <div className="d-block d-md-flex align-items-center mb-4 mb-md-0">
                                                                         <label htmlFor="msgCategory" className="mr-3 mb-0" style={{ width: "180px" }}>Message Category<span className="text-danger">*</span></label>
                                                                         <div className="d-flex flex-wrap form-control border-0 px-0">
-                                                                            <div className="custom-control custom-radio mr-3">
-                                                                                <input type="radio" className="custom-control-input" id="Chat" name="msgCategory" value="INDIVIDUALCHAT" onChange={handleCategoryChange} />
-                                                                                <label className="custom-control-label" htmlFor="Chat">Chat</label>
-                                                                            </div>
-                                                                            <div className="custom-control custom-radio mr-3">
-                                                                                <input type="radio" className="custom-control-input" id="GroupChat" name="msgCategory" value="GROUPCHAT" onChange={handleCategoryChange} />
-                                                                                <label className="custom-control-label" htmlFor="GroupChat">Group Chat</label>
-                                                                            </div>
+
                                                                             <div className="custom-control custom-radio mr-3">
                                                                                 <input type="radio" className="custom-control-input" id="Display" name="msgCategory" value="DISPLAY" onChange={handleCategoryChange} />
                                                                                 <label className="custom-control-label" htmlFor="Display">Display</label>
@@ -511,6 +523,16 @@ const MessageDraft = () => {
                                                                                 <input type="radio" className="custom-control-input" id="Input" name="msgCategory" value="INPUT" onChange={handleCategoryChange} />
                                                                                 <label className="custom-control-label" htmlFor="Input">Input</label>
                                                                             </div>
+
+                                                                            <div className="custom-control custom-radio mr-3">
+                                                                                <input type="radio" className="custom-control-input" id="Chat" name="msgCategory" value="INDIVIDUALCHAT" onChange={handleCategoryChange} />
+                                                                                <label className="custom-control-label" htmlFor="Chat">Individual Chat</label>
+                                                                            </div>
+                                                                            <div className="custom-control custom-radio mr-3">
+                                                                                <input type="radio" className="custom-control-input" id="GroupChat" name="msgCategory" value="GROUPCHAT" onChange={handleCategoryChange} />
+                                                                                <label className="custom-control-label" htmlFor="GroupChat">Group Chat</label>
+                                                                            </div>
+
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -567,7 +589,7 @@ const MessageDraft = () => {
                                                                             </select>
                                                                         </div>
 
-                                                                       
+
                                                                     </div>
                                                                 </div>
                                                                 <div className="col-12 col-lg-6 border-left">
@@ -579,32 +601,46 @@ const MessageDraft = () => {
                                                                             {!Array.isArray(msgCategory) ||
                                                                                 (!msgCategory.includes("DISPLAY") && !msgCategory.includes("INPUT") && (
                                                                                     <>
-                                                                                        <label htmlFor="msgCategory">Add Student{" "}<span className="text-danger">(max select 5 numbers)</span>{" "}</label>
+                                                                                        <label htmlFor="msgCategory">
+                                                                                            Add Student{" "}
+                                                                                            <span className="text-danger">(max select 5 numbers)</span>{" "}
+                                                                                        </label>
                                                                                         <Multiselect
                                                                                             className="inputHead"
                                                                                             onRemove={(event) => {
-                                                                                                const updatedParents = parentsnumber.filter((parent) => !event.some((removed) => removed.student_family_mobile_number === parent.student_family_mobile_number));
+                                                                                                const updatedParents = parentsnumber.filter(
+                                                                                                    (parent) =>
+                                                                                                        !event.some(
+                                                                                                            (removed) =>
+                                                                                                                removed.student_family_mobile_number ===
+                                                                                                                parent.student_family_mobile_number
+                                                                                                        )
+                                                                                                );
                                                                                                 setParentsNumber(updatedParents);
                                                                                             }}
                                                                                             onSelect={(event) => {
                                                                                                 if (event.length <= 5) {
-                                                                                                    const newParents = event.map((num) => ({ student_main_id: num.student_main_id, mobile_no: parseInt(num.student_family_mobile_number, 10), }));
+                                                                                                    const newParents = event.map((num) => ({
+                                                                                                        student_number: num.student_number,
+                                                                                                        mobile_no: parseInt(num.student_family_mobile_number, 10),
+                                                                                                    }));
                                                                                                     setParentsNumber(newParents);
                                                                                                 } else {
-                                                                                                    alert(
-                                                                                                        "You can only select a maximum of 5 numbers."
-                                                                                                    );
+                                                                                                    alert("You can only select a maximum of 5 numbers.");
                                                                                                     // Prevent state update if more than 5 numbers are selected
                                                                                                 }
                                                                                             }}
                                                                                             options={number}
                                                                                             displayValue="student_family_mobile_number"
-                                                                                            selectedValues={parentsnumber.map((parent) => ({ student_family_mobile_number: parent.mobile_no, student_main_id: parent.student_main_id, })
-                                                                                            )}
+                                                                                            selectedValues={parentsnumber.map((parent) => ({
+                                                                                                student_family_mobile_number: parent.mobile_no,
+                                                                                                student_number: parent.student_number,
+                                                                                            }))}
                                                                                         />
                                                                                     </>
                                                                                 ))}
                                                                         </div>
+
 
                                                                         {msgCategory && (
                                                                             <div className="col-12 form-group">
@@ -690,36 +726,182 @@ const MessageDraft = () => {
 
                                                                                                                     {/* Handling 'TEXTBOX' input type */}
                                                                                                                     {field.type === "TEXTBOX" && (
-                                                                                                                        <input type="text" className="form-control mb-2" placeholder="Enter placeholder for Textbox" value={field.placeholder || ""}
+                                                                                                                        <textarea
+                                                                                                                            className="form-control mb-2"
+                                                                                                                            placeholder="Enter placeholder for Textbox"
+                                                                                                                            value={field.placeholder || ""}
+                                                                                                                            rows={1}
+                                                                                                                            onInput={(e) => {
+                                                                                                                                e.target.style.height = "auto";
+                                                                                                                                e.target.style.height = e.target.scrollHeight + "px";
+                                                                                                                            }}
                                                                                                                             onChange={(e) => {
-                                                                                                                                const updatedFields = inputFields.map((f) => f.id === field.id ? { ...f, placeholder: e.target.value, } : f);
+                                                                                                                                const updatedFields = inputFields.map((f) =>
+                                                                                                                                    f.id === field.id ? { ...f, placeholder: e.target.value } : f
+                                                                                                                                );
                                                                                                                                 setInputFields(updatedFields);
                                                                                                                             }}
+                                                                                                                            style={{ overflow: "hidden", resize: "none" }}
                                                                                                                         />
                                                                                                                     )}
 
+
                                                                                                                     {/* Handling 'TEXTAREA' input type */}
                                                                                                                     {field.type === "TEXTAREA" && (
-                                                                                                                        <input type="text" className="form-control mb-2" placeholder="Enter placeholder for Textarea" value={field.placeholder || ""}
+                                                                                                                        <textarea
+                                                                                                                            className="form-control mb-2"
+                                                                                                                            placeholder="Enter placeholder for Textarea"
+                                                                                                                            value={field.placeholder || ""}
+                                                                                                                            rows={1}
+                                                                                                                            onInput={(e) => {
+                                                                                                                                // Reset height so shrink works too
+                                                                                                                                e.target.style.height = "auto";
+                                                                                                                                // Set new height based on scroll height
+                                                                                                                                e.target.style.height = e.target.scrollHeight + "px";
+                                                                                                                            }}
                                                                                                                             onChange={(e) => {
-                                                                                                                                const updatedFields = inputFields.map((f) => f.id === field.id ? { ...f, placeholder: e.target.value, } : f);
+                                                                                                                                const updatedFields = inputFields.map((f) =>
+                                                                                                                                    f.id === field.id ? { ...f, placeholder: e.target.value } : f
+                                                                                                                                );
                                                                                                                                 setInputFields(updatedFields);
                                                                                                                             }}
+                                                                                                                            style={{ overflow: "hidden", resize: "none" }}
                                                                                                                         />
                                                                                                                     )}
+
 
                                                                                                                     {/* Handling 'IMAGE' input type */}
                                                                                                                     {field.type === "IMAGE" && (
                                                                                                                         <>
-                                                                                                                            <input type="text" className="form-control mb-2" placeholder={`Enter ${field.type} URL`} value={field.link || ""}
+                                                                                                                            {/* Text input for manual URL */}
+                                                                                                                            <input
+                                                                                                                                type="text"
+                                                                                                                                className="form-control mb-2"
+                                                                                                                                placeholder={`Enter ${field.type} URL`}
+                                                                                                                                value={field.link || ""}
                                                                                                                                 onChange={(e) => {
-                                                                                                                                    const updatedFields = inputFields.map((f) => f.id === field.id ? { ...f, link: e.target.value, } : f);
+                                                                                                                                    const updatedFields = inputFields.map((f) =>
+                                                                                                                                        f.id === field.id ? { ...f, link: e.target.value } : f
+                                                                                                                                    );
                                                                                                                                     setInputFields(updatedFields);
                                                                                                                                 }}
                                                                                                                             />
-                                                                                                                            <input type="file" className="form-control" accept="image/*" onChange={(e) => handleImageChange(e, field.id)} />
+
+                                                                                                                            {/* File input */}
+                                                                                                                            <input
+                                                                                                                                type="file"
+                                                                                                                                className="form-control mb-2"
+                                                                                                                                accept="image/*"
+                                                                                                                                onChange={(e) => handleImageChange(e, field.id)}
+                                                                                                                            />
+
+                                                                                                                            {/* Show Cropper only if a tempImage exists */}
+                                                                                                                            {field.tempImage && (
+                                                                                                                                <div>
+                                                                                                                                    <div style={{ position: "relative", width: "100%", height: 300, background: "#333" }}>
+                                                                                                                                        <Cropper
+                                                                                                                                            image={field.tempImage}
+                                                                                                                                            crop={field.crop || { x: 0, y: 0 }}
+                                                                                                                                            zoom={field.zoom || 1}
+                                                                                                                                            aspect={4 / 3}
+                                                                                                                                            onCropChange={(crop) => {
+                                                                                                                                                const updatedFields = inputFields.map((f) =>
+                                                                                                                                                    f.id === field.id ? { ...f, crop } : f
+                                                                                                                                                );
+                                                                                                                                                setInputFields(updatedFields);
+                                                                                                                                            }}
+                                                                                                                                            onZoomChange={(zoom) => {
+                                                                                                                                                const updatedFields = inputFields.map((f) =>
+                                                                                                                                                    f.id === field.id ? { ...f, zoom } : f
+                                                                                                                                                );
+                                                                                                                                                setInputFields(updatedFields);
+                                                                                                                                            }}
+                                                                                                                                            onCropComplete={(_, croppedAreaPixels) => {
+                                                                                                                                                const updatedFields = inputFields.map((f) =>
+                                                                                                                                                    f.id === field.id ? { ...f, croppedAreaPixels } : f
+                                                                                                                                                );
+                                                                                                                                                setInputFields(updatedFields);
+                                                                                                                                            }}
+                                                                                                                                        />
+                                                                                                                                    </div>
+
+                                                                                                                                    {/* Zoom control */}
+                                                                                                                                    <label>Zoom:</label>
+                                                                                                                                    <input
+                                                                                                                                        type="range"
+                                                                                                                                        min={1}
+                                                                                                                                        max={3}
+                                                                                                                                        step={0.1}
+                                                                                                                                        value={field.zoom || 1}
+                                                                                                                                        onChange={(e) => {
+                                                                                                                                            const updatedFields = inputFields.map((f) =>
+                                                                                                                                                f.id === field.id ? { ...f, zoom: Number(e.target.value) } : f
+                                                                                                                                            );
+                                                                                                                                            setInputFields(updatedFields);
+                                                                                                                                        }}
+                                                                                                                                    />
+
+                                                                                                                                    {/* Crop & Upload button */}
+                                                                                                                                    <button
+                                                                                                                                        type="button"
+                                                                                                                                         className="btn btn-primary mt-2"
+                                                                                                                                        onClick={async () => {
+                                                                                                                                            // Use 'field' from map, not 'fieldId'
+                                                                                                                                            if (field.tempImage && field.croppedAreaPixels) {
+                                                                                                                                                const blob = await getCroppedImgBlob(field.tempImage, field.croppedAreaPixels);
+
+                                                                                                                                                const formData = new FormData();
+                                                                                                                                                formData.append("file", blob, "cropped.jpg");
+
+                                                                                                                                                try {
+                                                                                                                                                    const fetchdata = await axios.post(
+                                                                                                                                                        `${URL}/v1/admin/imageUpload_Use/imageUpload`,
+                                                                                                                                                        formData,
+                                                                                                                                                        { headers: { "Content-Type": "multipart/form-data" } }
+                                                                                                                                                    );
+
+                                                                                                                                                    if (fetchdata.status === 200) {
+                                                                                                                                                        toast.success("Data Uploaded Successfully");
+                                                                                                                                                        const imageUrl = fetchdata.data.url;
+
+                                                                                                                                                        // Update inputFields
+                                                                                                                                                        const updatedFields = inputFields.map(f =>
+                                                                                                                                                            f.id === field.id
+                                                                                                                                                                ? {
+                                                                                                                                                                    ...f,
+                                                                                                                                                                    link: imageUrl,
+                                                                                                                                                                    tempImage: null,
+                                                                                                                                                                    crop: null,
+                                                                                                                                                                    zoom: 1,
+                                                                                                                                                                    croppedAreaPixels: null,
+                                                                                                                                                                }
+                                                                                                                                                                : f
+                                                                                                                                                        );
+                                                                                                                                                        setInputFields(updatedFields);
+                                                                                                                                                    } else {
+                                                                                                                                                        toast.error("Failed to upload");
+                                                                                                                                                    }
+                                                                                                                                                } catch (error) {
+                                                                                                                                                    toast.error("An error occurred during upload.");
+                                                                                                                                                    console.error(error);
+                                                                                                                                                }
+                                                                                                                                            }
+                                                                                                                                        }}
+                                                                                                                                    >
+                                                                                                                                        Crop & Upload
+                                                                                                                                    </button>
+                                                                                                                                </div>
+                                                                                                                            )}
+
+                                                                                                                            {/* Preview */}
+                                                                                                                            {field.link && !field.tempImage && (
+                                                                                                                                <div style={{ marginTop: 10 }}>
+                                                                                                                                    <img src={field.link} alt="Preview" style={{ width: 200, height: "auto" }} />
+                                                                                                                                </div>
+                                                                                                                            )}
                                                                                                                         </>
                                                                                                                     )}
+
 
                                                                                                                     {(field.type === "OPTION" || field.type === "CHECKBOX" || field.type === "TEXTBOX" || field.type === "TEXTAREA" || field.type === "CAMERA" || field.type === "FILE") && (
                                                                                                                         <div className="form-check">

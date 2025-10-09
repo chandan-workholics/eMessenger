@@ -613,7 +613,7 @@ const MessageDraft = () => {
                                                                                                         !event.some(
                                                                                                             (removed) =>
                                                                                                                 removed.student_family_mobile_number ===
-                                                                                                                parent.student_family_mobile_number
+                                                                                                                String(parent.mobile_no)
                                                                                                         )
                                                                                                 );
                                                                                                 setParentsNumber(updatedParents);
@@ -621,22 +621,22 @@ const MessageDraft = () => {
                                                                                             onSelect={(event) => {
                                                                                                 if (event.length <= 5) {
                                                                                                     const newParents = event.map((num) => ({
-                                                                                                        student_number: num.student_number,
+                                                                                                        student_main_id: num.student_number, // ✅ use student_number value
                                                                                                         mobile_no: parseInt(num.student_family_mobile_number, 10),
                                                                                                     }));
                                                                                                     setParentsNumber(newParents);
                                                                                                 } else {
                                                                                                     alert("You can only select a maximum of 5 numbers.");
-                                                                                                    // Prevent state update if more than 5 numbers are selected
                                                                                                 }
                                                                                             }}
                                                                                             options={number}
                                                                                             displayValue="student_family_mobile_number"
                                                                                             selectedValues={parentsnumber.map((parent) => ({
-                                                                                                student_family_mobile_number: parent.mobile_no,
-                                                                                                student_number: parent.student_number,
+                                                                                                student_family_mobile_number: String(parent.mobile_no),
+                                                                                                student_number: parent.student_main_id, // ✅ map back correctly for pre-selection
                                                                                             }))}
                                                                                         />
+
                                                                                     </>
                                                                                 ))}
                                                                         </div>
@@ -770,6 +770,18 @@ const MessageDraft = () => {
                                                                                                                     )}
 
 
+                                                                                                                    {/* {field.type === "IMAGE" && (
+                                                                                                                        <>
+                                                                                                                            <input type="text" className="form-control mb-2" placeholder={`Enter ${field.type} URL`} value={field.link || ""}
+                                                                                                                                onChange={(e) => {
+                                                                                                                                    const updatedFields = inputFields.map((f) => f.id === field.id ? { ...f, link: e.target.value, } : f);
+                                                                                                                                    setInputFields(updatedFields);
+                                                                                                                                }}
+                                                                                                                            />
+                                                                                                                            <input type="file" className="form-control" accept="image/*" onChange={(e) => handleImageChange(e, field.id)} />
+                                                                                                                        </>
+                                                                                                                    )} */}
+
                                                                                                                     {/* Handling 'IMAGE' input type */}
                                                                                                                     {field.type === "IMAGE" && (
                                                                                                                         <>
@@ -844,7 +856,7 @@ const MessageDraft = () => {
                                                                                                                                     {/* Crop & Upload button */}
                                                                                                                                     <button
                                                                                                                                         type="button"
-                                                                                                                                         className="btn btn-primary mt-2"
+                                                                                                                                        className="btn btn-primary mt-2"
                                                                                                                                         onClick={async () => {
                                                                                                                                             // Use 'field' from map, not 'fieldId'
                                                                                                                                             if (field.tempImage && field.croppedAreaPixels) {

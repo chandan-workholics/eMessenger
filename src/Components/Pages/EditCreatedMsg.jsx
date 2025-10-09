@@ -711,6 +711,30 @@ const EditCreatedMsg = () => {
                                                                                                 />
                                                                                             )}
 
+
+                                                                                              {/* {field.type === 'IMAGE' && (
+                                                                                                <>
+                                                                                                    <input
+                                                                                                        type="text"
+                                                                                                        className="form-control mb-2"
+                                                                                                        placeholder={`Enter ${field.type} URL`}
+                                                                                                        value={field.link || ''}
+                                                                                                        onChange={(e) => {
+                                                                                                            const updatedFields = inputFields.map((f) =>
+                                                                                                                f.id === field.id ? { ...f, link: e.target.value } : f
+                                                                                                            );
+                                                                                                            setInputFields(updatedFields);
+                                                                                                        }}
+                                                                                                    />
+                                                                                                    <input
+                                                                                                        type="file"
+                                                                                                        className="form-control"
+                                                                                                        accept="image/*"
+                                                                                                        onChange={(e) => handleImageChange(e, field.id)}
+                                                                                                    />
+                                                                                                </>
+                                                                                            )} */}
+
                                                                                             {field.type === "IMAGE" && (
                                                                                                 <>
                                                                                                     {/* Text input for manual URL */}
