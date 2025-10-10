@@ -366,11 +366,9 @@ const UserManagement = () => {
     const appColumns = [
         { label: 'User ID', key: 'userId' },
         { label: 'Mobile No.', key: 'mobileNo' },
-        { label: 'School.', key: 'School' },
         { label: 'Is Active', key: 'isActive' },
         { label: 'Activated Time', key: 'activatedTime' },
         { label: 'Last Visit Time', key: 'lastVisitTime' },
-
         { label: 'Mobile Type', key: 'mobileType' },
         { label: 'App Version', key: 'appVersion' },
         { label: 'Ip Address', key: 'ipAddress' }
@@ -379,7 +377,6 @@ const UserManagement = () => {
     const appUserData = userData ? userData?.data?.map((val) => ({
         userId: val?.parents_id,
         mobileNo: val?.mobile_no,
-        School: val?.sch_short_nm,
         isActive: val?.is_active == 1 ? "Yes" : "No",
         activatedTime: val?.active_datetime ? format(new Date(val?.active_datetime), "dd-MMM-yyyy hh:mm a") : '',
         lastVisitTime: val?.last_visit_on ? format(new Date(val?.last_visit_on), "dd-MMM-yyyy hh:mm a") : '',

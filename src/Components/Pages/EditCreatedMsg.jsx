@@ -712,7 +712,7 @@ const EditCreatedMsg = () => {
                                                                                             )}
 
 
-                                                                                              {/* {field.type === 'IMAGE' && (
+                                                                                            {/* {field.type === 'IMAGE' && (
                                                                                                 <>
                                                                                                     <input
                                                                                                         type="text"
@@ -775,6 +775,7 @@ const EditCreatedMsg = () => {
                                                                                                                     image={field.tempImage}
                                                                                                                     crop={field.crop || { x: 0, y: 0 }}
                                                                                                                     zoom={field.zoom || 1}
+                                                                                                                    rotation={field.rotation || 0}
                                                                                                                     aspect={4 / 3}
                                                                                                                     onCropChange={(crop) => {
                                                                                                                         const updatedFields = inputFields.map((f) =>
@@ -788,6 +789,12 @@ const EditCreatedMsg = () => {
                                                                                                                         );
                                                                                                                         setInputFields(updatedFields);
                                                                                                                     }}
+                                                                                                                    onRotationChange={(rotation) => {
+                                                                                                                        const updatedFields = inputFields.map((f) =>
+                                                                                                                            f.id === field.id ? { ...f, rotation } : f
+                                                                                                                        );
+                                                                                                                        setInputFields(updatedFields);
+                                                                                                                    }}
                                                                                                                     onCropComplete={(_, croppedAreaPixels) => {
                                                                                                                         const updatedFields = inputFields.map((f) =>
                                                                                                                             f.id === field.id ? { ...f, croppedAreaPixels } : f
@@ -797,7 +804,7 @@ const EditCreatedMsg = () => {
                                                                                                                 />
                                                                                                             </div>
 
-                                                                                                            {/* Zoom control */}
+
                                                                                                             <label>Zoom:</label>
                                                                                                             <input
                                                                                                                 type="range"
@@ -807,19 +814,46 @@ const EditCreatedMsg = () => {
                                                                                                                 value={field.zoom || 1}
                                                                                                                 onChange={(e) => {
                                                                                                                     const updatedFields = inputFields.map((f) =>
-                                                                                                                        f.id === field.id ? { ...f, zoom: Number(e.target.value) } : f
+                                                                                                                        f.id === field.id
+                                                                                                                            ? { ...f, zoom: Number(e.target.value) }
+                                                                                                                            : f
                                                                                                                     );
                                                                                                                     setInputFields(updatedFields);
                                                                                                                 }}
                                                                                                             />
 
-                                                                                                            {/* Crop & Upload button */}
+
+                                                                                                            <div className="mt-2">
+                                                                                                                <label>Rotate:</label>
+                                                                                                                <input
+                                                                                                                    type="range"
+                                                                                                                    min={0}
+                                                                                                                    max={360}
+                                                                                                                    step={1}
+                                                                                                                    value={field.rotation || 0}
+                                                                                                                    onChange={(e) => {
+                                                                                                                        const updatedFields = inputFields.map((f) =>
+                                                                                                                            f.id === field.id
+                                                                                                                                ? { ...f, rotation: Number(e.target.value) }
+                                                                                                                                : f
+                                                                                                                        );
+                                                                                                                        setInputFields(updatedFields);
+                                                                                                                    }}
+                                                                                                                />
+                                                                                                                <span className="ms-2">{field.rotation || 0}°</span>
+                                                                                                            </div>
+
+
                                                                                                             <button
                                                                                                                 type="button"
-                                                                                                                 className="btn btn-primary mt-2"
+                                                                                                                className="btn btn-primary mt-2"
                                                                                                                 onClick={async () => {
                                                                                                                     if (field.tempImage && field.croppedAreaPixels) {
-                                                                                                                        const blob = await getCroppedImgBlob(field.tempImage, field.croppedAreaPixels);
+                                                                                                                        const blob = await getCroppedImgBlob(
+                                                                                                                            field.tempImage,
+                                                                                                                            field.croppedAreaPixels,
+                                                                                                                            field.rotation || 0
+                                                                                                                        );
 
                                                                                                                         const formData = new FormData();
                                                                                                                         formData.append("file", blob, "cropped.jpg");
@@ -834,9 +868,17 @@ const EditCreatedMsg = () => {
                                                                                                                             if (fetchdata.status === 200) {
                                                                                                                                 const imageUrl = fetchdata.data.url;
 
-                                                                                                                                const updatedFields = inputFields.map(f =>
+                                                                                                                                const updatedFields = inputFields.map((f) =>
                                                                                                                                     f.id === field.id
-                                                                                                                                        ? { ...f, link: imageUrl, tempImage: null, crop: null, zoom: 1, croppedAreaPixels: null }
+                                                                                                                                        ? {
+                                                                                                                                            ...f,
+                                                                                                                                            link: imageUrl,
+                                                                                                                                            tempImage: null,
+                                                                                                                                            crop: null,
+                                                                                                                                            zoom: 1,
+                                                                                                                                            rotation: 0,
+                                                                                                                                            croppedAreaPixels: null,
+                                                                                                                                        }
                                                                                                                                         : f
                                                                                                                                 );
                                                                                                                                 setInputFields(updatedFields);
@@ -859,7 +901,11 @@ const EditCreatedMsg = () => {
                                                                                                     {/* Show preview if URL exists and no tempImage */}
                                                                                                     {field.link && !field.tempImage && (
                                                                                                         <div style={{ marginTop: 10 }}>
-                                                                                                            <img src={field.link} alt="Preview" style={{ width: 200, height: "auto" }} />
+                                                                                                            <img
+                                                                                                                src={field.link}
+                                                                                                                alt="Preview"
+                                                                                                                style={{ width: 200, height: "auto" }}
+                                                                                                            />
                                                                                                         </div>
                                                                                                     )}
                                                                                                 </>

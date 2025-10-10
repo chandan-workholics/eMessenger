@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/static/css/main.54cf39e6.css",
-    "main.js": "/static/js/main.f1e13cd7.js",
+    "main.js": "/static/js/main.6e14da3f.js",
     "static/media/counterCard-bg.svg": "/static/media/counterCard-bg.37261bc181b877250155.svg",
     "static/media/calenderBg.png": "/static/media/calenderBg.5ff08851e863d063e5f2.png",
     "index.html": "/index.html",
     "main.54cf39e6.css.map": "/static/css/main.54cf39e6.css.map",
-    "main.f1e13cd7.js.map": "/static/js/main.f1e13cd7.js.map"
+    "main.6e14da3f.js.map": "/static/js/main.6e14da3f.js.map"
   },
   "entrypoints": [
     "static/css/main.54cf39e6.css",
-    "static/js/main.f1e13cd7.js"
+    "static/js/main.6e14da3f.js"
   ]
 }
