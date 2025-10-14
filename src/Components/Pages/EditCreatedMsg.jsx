@@ -163,51 +163,51 @@ const EditCreatedMsg = () => {
 
 
 
-    // const handleImageChange = async (e, fieldId) => {
-    //     const formData = new FormData();
-    //     formData.append("file", e.target.files[0]);
+    const handleImageChange = async (e, fieldId) => {
+        const formData = new FormData();
+        formData.append("file", e.target.files[0]);
 
-    //     var requestOptions = {
-    //         headers: {
-    //             "Content-Type": "multipart/form-data",
-    //         },
-    //     };
-    //     try {
-    //         const fetchdata = await axios.post(
-    //             `${URL}/v1/admin/imageUpload_Use/imageUpload`,
-    //             formData,
-    //             requestOptions
-    //         );
-    //         if (fetchdata.status === 200) {
-    //             toast.success("Image uploaded successfully");
-    //             const imageUrl = fetchdata.data.url;
-    //             const updatedFields = inputFields.map((field) =>
-    //                 field.id === fieldId ? { ...field, link: imageUrl } : field
-    //             );
-    //             setInputFields(updatedFields);
-    //         } else {
-    //             toast.error("Failed to upload image");
-    //         }
-    //     } catch (error) {
-    //         toast.error("An error occurred during the upload.");
-    //         console.error("Error uploading image:", error);
-    //     }
-    // };
-
-
-    const handleImageChange = (e, fieldId) => {
-        if (e.target.files && e.target.files.length > 0) {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            reader.onload = () => {
-                const updatedFields = inputFields.map((f) =>
-                    f.id === fieldId ? { ...f, tempImage: reader.result } : f
+        var requestOptions = {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        };
+        try {
+            const fetchdata = await axios.post(
+                `${URL}/v1/admin/imageUpload_Use/imageUpload`,
+                formData,
+                requestOptions
+            );
+            if (fetchdata.status === 200) {
+                toast.success("Image uploaded successfully");
+                const imageUrl = fetchdata.data.url;
+                const updatedFields = inputFields.map((field) =>
+                    field.id === fieldId ? { ...field, link: imageUrl } : field
                 );
                 setInputFields(updatedFields);
-            };
-            reader.readAsDataURL(file);
+            } else {
+                toast.error("Failed to upload image");
+            }
+        } catch (error) {
+            toast.error("An error occurred during the upload.");
+            console.error("Error uploading image:", error);
         }
     };
+
+
+    // const handleImageChange = (e, fieldId) => {
+    //     if (e.target.files && e.target.files.length > 0) {
+    //         const file = e.target.files[0];
+    //         const reader = new FileReader();
+    //         reader.onload = () => {
+    //             const updatedFields = inputFields.map((f) =>
+    //                 f.id === fieldId ? { ...f, tempImage: reader.result } : f
+    //             );
+    //             setInputFields(updatedFields);
+    //         };
+    //         reader.readAsDataURL(file);
+    //     }
+    // };
 
 
     const deleteField = (id) => {
@@ -712,7 +712,7 @@ const EditCreatedMsg = () => {
                                                                                             )}
 
 
-                                                                                            {/* {field.type === 'IMAGE' && (
+                                                                                            {field.type === 'IMAGE' && (
                                                                                                 <>
                                                                                                     <input
                                                                                                         type="text"
@@ -733,183 +733,9 @@ const EditCreatedMsg = () => {
                                                                                                         onChange={(e) => handleImageChange(e, field.id)}
                                                                                                     />
                                                                                                 </>
-                                                                                            )} */}
-
-                                                                                            {field.type === "IMAGE" && (
-                                                                                                <>
-                                                                                                    {/* Text input for manual URL */}
-                                                                                                    <input
-                                                                                                        type="text"
-                                                                                                        className="form-control mb-2"
-                                                                                                        placeholder={`Enter ${field.type} URL`}
-                                                                                                        value={field.link || ""}
-                                                                                                        onChange={(e) => {
-                                                                                                            const updatedFields = inputFields.map((f) =>
-                                                                                                                f.id === field.id ? { ...f, link: e.target.value } : f
-                                                                                                            );
-                                                                                                            setInputFields(updatedFields);
-                                                                                                        }}
-                                                                                                    />
-
-                                                                                                    {/* File input for new image */}
-                                                                                                    <input
-                                                                                                        type="file"
-                                                                                                        className="form-control mb-2"
-                                                                                                        accept="image/*"
-                                                                                                        onChange={(e) => handleImageChange(e, field.id)}
-                                                                                                    />
-
-                                                                                                    {/* Show Cropper if a new tempImage is selected */}
-                                                                                                    {field.tempImage && (
-                                                                                                        <div>
-                                                                                                            <div
-                                                                                                                style={{
-                                                                                                                    position: "relative",
-                                                                                                                    width: "100%",
-                                                                                                                    height: 300,
-                                                                                                                    background: "#333",
-                                                                                                                    marginBottom: 10,
-                                                                                                                }}
-                                                                                                            >
-                                                                                                                <Cropper
-                                                                                                                    image={field.tempImage}
-                                                                                                                    crop={field.crop || { x: 0, y: 0 }}
-                                                                                                                    zoom={field.zoom || 1}
-                                                                                                                    rotation={field.rotation || 0}
-                                                                                                                    aspect={4 / 3}
-                                                                                                                    onCropChange={(crop) => {
-                                                                                                                        const updatedFields = inputFields.map((f) =>
-                                                                                                                            f.id === field.id ? { ...f, crop } : f
-                                                                                                                        );
-                                                                                                                        setInputFields(updatedFields);
-                                                                                                                    }}
-                                                                                                                    onZoomChange={(zoom) => {
-                                                                                                                        const updatedFields = inputFields.map((f) =>
-                                                                                                                            f.id === field.id ? { ...f, zoom } : f
-                                                                                                                        );
-                                                                                                                        setInputFields(updatedFields);
-                                                                                                                    }}
-                                                                                                                    onRotationChange={(rotation) => {
-                                                                                                                        const updatedFields = inputFields.map((f) =>
-                                                                                                                            f.id === field.id ? { ...f, rotation } : f
-                                                                                                                        );
-                                                                                                                        setInputFields(updatedFields);
-                                                                                                                    }}
-                                                                                                                    onCropComplete={(_, croppedAreaPixels) => {
-                                                                                                                        const updatedFields = inputFields.map((f) =>
-                                                                                                                            f.id === field.id ? { ...f, croppedAreaPixels } : f
-                                                                                                                        );
-                                                                                                                        setInputFields(updatedFields);
-                                                                                                                    }}
-                                                                                                                />
-                                                                                                            </div>
-
-
-                                                                                                            <label>Zoom:</label>
-                                                                                                            <input
-                                                                                                                type="range"
-                                                                                                                min={1}
-                                                                                                                max={3}
-                                                                                                                step={0.1}
-                                                                                                                value={field.zoom || 1}
-                                                                                                                onChange={(e) => {
-                                                                                                                    const updatedFields = inputFields.map((f) =>
-                                                                                                                        f.id === field.id
-                                                                                                                            ? { ...f, zoom: Number(e.target.value) }
-                                                                                                                            : f
-                                                                                                                    );
-                                                                                                                    setInputFields(updatedFields);
-                                                                                                                }}
-                                                                                                            />
-
-
-                                                                                                            <div className="mt-2">
-                                                                                                                <label>Rotate:</label>
-                                                                                                                <input
-                                                                                                                    type="range"
-                                                                                                                    min={0}
-                                                                                                                    max={360}
-                                                                                                                    step={1}
-                                                                                                                    value={field.rotation || 0}
-                                                                                                                    onChange={(e) => {
-                                                                                                                        const updatedFields = inputFields.map((f) =>
-                                                                                                                            f.id === field.id
-                                                                                                                                ? { ...f, rotation: Number(e.target.value) }
-                                                                                                                                : f
-                                                                                                                        );
-                                                                                                                        setInputFields(updatedFields);
-                                                                                                                    }}
-                                                                                                                />
-                                                                                                                <span className="ms-2">{field.rotation || 0}°</span>
-                                                                                                            </div>
-
-
-                                                                                                            <button
-                                                                                                                type="button"
-                                                                                                                className="btn btn-primary mt-2"
-                                                                                                                onClick={async () => {
-                                                                                                                    if (field.tempImage && field.croppedAreaPixels) {
-                                                                                                                        const blob = await getCroppedImgBlob(
-                                                                                                                            field.tempImage,
-                                                                                                                            field.croppedAreaPixels,
-                                                                                                                            field.rotation || 0
-                                                                                                                        );
-
-                                                                                                                        const formData = new FormData();
-                                                                                                                        formData.append("file", blob, "cropped.jpg");
-
-                                                                                                                        try {
-                                                                                                                            const fetchdata = await axios.post(
-                                                                                                                                `${URL}/v1/admin/imageUpload_Use/imageUpload`,
-                                                                                                                                formData,
-                                                                                                                                { headers: { "Content-Type": "multipart/form-data" } }
-                                                                                                                            );
-
-                                                                                                                            if (fetchdata.status === 200) {
-                                                                                                                                const imageUrl = fetchdata.data.url;
-
-                                                                                                                                const updatedFields = inputFields.map((f) =>
-                                                                                                                                    f.id === field.id
-                                                                                                                                        ? {
-                                                                                                                                            ...f,
-                                                                                                                                            link: imageUrl,
-                                                                                                                                            tempImage: null,
-                                                                                                                                            crop: null,
-                                                                                                                                            zoom: 1,
-                                                                                                                                            rotation: 0,
-                                                                                                                                            croppedAreaPixels: null,
-                                                                                                                                        }
-                                                                                                                                        : f
-                                                                                                                                );
-                                                                                                                                setInputFields(updatedFields);
-                                                                                                                                toast.success("Image uploaded successfully");
-                                                                                                                            } else {
-                                                                                                                                toast.error("Failed to upload image");
-                                                                                                                            }
-                                                                                                                        } catch (error) {
-                                                                                                                            toast.error("An error occurred during the upload.");
-                                                                                                                            console.error(error);
-                                                                                                                        }
-                                                                                                                    }
-                                                                                                                }}
-                                                                                                            >
-                                                                                                                Crop & Upload
-                                                                                                            </button>
-                                                                                                        </div>
-                                                                                                    )}
-
-                                                                                                    {/* Show preview if URL exists and no tempImage */}
-                                                                                                    {field.link && !field.tempImage && (
-                                                                                                        <div style={{ marginTop: 10 }}>
-                                                                                                            <img
-                                                                                                                src={field.link}
-                                                                                                                alt="Preview"
-                                                                                                                style={{ width: 200, height: "auto" }}
-                                                                                                            />
-                                                                                                        </div>
-                                                                                                    )}
-                                                                                                </>
                                                                                             )}
+
+                                                                                          
 
 
                                                                                             {(field.type === "OPTION" || field.type === "CHECKBOX" || field.type === "TEXTBOX" || field.type === "TEXTAREA" || field.type === "CAMERA" || field.type === "FILE") && (

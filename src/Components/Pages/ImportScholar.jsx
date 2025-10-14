@@ -415,7 +415,7 @@ const ImportScholar = () => {
                                                                         <td>{(currentPage - 1) * rowsPerPage + index + 1}</td>
                                                                         <td>{val?.student_family_mobile_number}</td>
                                                                         <td>{val?.sch_short_nm}</td>
-                                                                        <td>{val?.student_name || "Not Available"}</td>
+                                                                        <td>{val?.student_name || ""}</td>
                                                                         <td>{val?.student_dob}</td>
                                                                         <td>{val?.student_email}</td>
                                                                         <td>{val?.noticeMsg}</td>
