@@ -69,7 +69,7 @@ const MessageDraft = () => {
     const fetchSubGroup = async () => {
         try {
             setLoading(true);
-            const response = await callAPI.get(`/msg/getSubGroupDetail?page=1&limit=200`);
+            const response = await callAPI.get(`/msg/getSubGroupDetail?page=1&limit=2000`);
             setSubgroup(response.data.data || []);
         } catch (error) {
             console.error("Error fetching SubGroupDetail data:", error.message);

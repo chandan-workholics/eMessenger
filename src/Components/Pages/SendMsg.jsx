@@ -79,13 +79,30 @@ const SendMsg = () => {
     };
 
     // Updated filtering logic with school name and remark
-    const filteredStudents = fullStudentList.filter((student) =>
-        student.student_name.toLowerCase().includes(searchQuery.toLowerCase()) || // Filter by student name
-        student.student_number.toString().includes(searchQuery) || // Filter by student number
-        student.student_family_mobile_number.includes(searchQuery) || // Filter by family mobile number
-        student.sch_short_nm.toLowerCase().includes(searchQuery.toLowerCase()) || // Filter by school name
-        student.remark.toLowerCase().includes(searchQuery.toLowerCase()) // Filter by remark
-    );
+    // const filteredStudents = fullStudentList.filter((student) =>
+    //     student.student_name.toLowerCase().includes(searchQuery.toLowerCase()) || // Filter by student name
+    //     student.student_number.toString().includes(searchQuery) || // Filter by student number
+    //     student.student_family_mobile_number.includes(searchQuery) || // Filter by family mobile number
+    //     student.sch_short_nm.toLowerCase().includes(searchQuery.toLowerCase()) || // Filter by school name
+    //     student.remark.toLowerCase().includes(searchQuery.toLowerCase()) // Filter by remark
+    // );
+
+    const filteredStudents = fullStudentList.filter((student) => {
+  const name = student.student_name?.toLowerCase() || "";
+  const school = student.sch_short_nm?.toLowerCase() || "";
+  const remark = student.remark?.toLowerCase() || "";
+  const number = student.student_number?.toString() || "";
+  const familyMobile = student.student_family_mobile_number || "";
+
+  return (
+    name.includes(searchQuery.toLowerCase()) ||
+    number.includes(searchQuery) ||
+    familyMobile.includes(searchQuery) ||
+    school.includes(searchQuery.toLowerCase()) ||
+    remark.includes(searchQuery.toLowerCase())
+  );
+});
+
 
     if (loading) {
         return <Loding />;

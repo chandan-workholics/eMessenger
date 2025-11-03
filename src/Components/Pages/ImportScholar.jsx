@@ -34,7 +34,7 @@ const ImportScholar = () => {
                     'Content-Type': 'application/json'
                 }
             });
-            const responsetwo = await fetch(`${URL}/scholar/getScholarDetail?page=1&limit=2000`, {
+            const responsetwo = await fetch(`${URL}/scholar/getScholarDetail?page=1&limit=20000`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -193,40 +193,40 @@ const ImportScholar = () => {
 
 
     const exportToExcel = () => {
-    let filteredData = [];
+        let filteredData = [];
 
-    if (importStudenttwo && importStudenttwo.length > 0) {
-        filteredData = importStudenttwo.map((val, index) => ({
-            "mobile_no": val?.student_family_mobile_number || "N/A",
-            "sch_short": val?.sch_short_nm || "N/A",
-            "stdn_nm": val?.student_name || "N/A",
-            "birth_dt": formatDateToDDMMYYYY(val?.student_dob) || "N/A",
-            "fth_email": val?.student_email || "N/A",
-            "stdn_id": val?.student_number || "N/A",
-            "noticeMsg": val?.noticeMsg || "N/A",
-            "remark": val?.remark || "N/A",
-        }));
-    } else {
-        // No data – export a placeholder row
-        filteredData = [
-            {
-                "mobile_no": "N/A",
-                "sch_short": "N/A",
-                "stdn_nm": "N/A",
-                "birth_dt": "N/A",
-                "fth_email": "N/A",
-                "stdn_id": "N/A",
-                "noticeMsg": "N/A",
-                "remark": "N/A",
-            }
-        ];
-    }
+        if (importStudenttwo && importStudenttwo.length > 0) {
+            filteredData = importStudenttwo.map((val, index) => ({
+                "mobile_no": val?.student_family_mobile_number || "N/A",
+                "sch_short": val?.sch_short_nm || "N/A",
+                "stdn_nm": val?.student_name || "N/A",
+                "birth_dt": formatDateToDDMMYYYY(val?.student_dob) || "N/A",
+                "fth_email": val?.student_email || "N/A",
+                "stdn_id": val?.student_number || "N/A",
+                "noticeMsg": val?.noticeMsg || "N/A",
+                "remark": val?.remark || "N/A",
+            }));
+        } else {
+            // No data – export a placeholder row
+            filteredData = [
+                {
+                    "mobile_no": "N/A",
+                    "sch_short": "N/A",
+                    "stdn_nm": "N/A",
+                    "birth_dt": "N/A",
+                    "fth_email": "N/A",
+                    "stdn_id": "N/A",
+                    "noticeMsg": "N/A",
+                    "remark": "N/A",
+                }
+            ];
+        }
 
-    const ws = XLSX.utils.json_to_sheet(filteredData);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, 'Scholar Data');
-    XLSX.writeFile(wb, 'Student_List.xlsx');
-};
+        const ws = XLSX.utils.json_to_sheet(filteredData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Scholar Data');
+        XLSX.writeFile(wb, 'Student_List.xlsx');
+    };
 
 
 
@@ -430,7 +430,7 @@ const ImportScholar = () => {
                                             </div>
 
 
-                                            <nav>
+                                            {/* <nav>
                                                 <ul className="pagination justify-content-end mb-0 mt-3">
                                                     <li className="page-item">
                                                         <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}
@@ -454,7 +454,66 @@ const ImportScholar = () => {
                                                             disabled={currentPage === totalPages}>Next</button>
                                                     </li>
                                                 </ul>
+                                            </nav> */}
+
+
+                                            <nav>
+                                                <ul className="pagination justify-content-end mb-0 mt-3">
+                                                    {/* Previous Button */}
+                                                    <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                                                        <button
+                                                            className="page-link"
+                                                            onClick={() => handlePageChange(currentPage - 1)}
+                                                            disabled={currentPage === 1}
+                                                        >
+                                                            Previous
+                                                        </button>
+                                                    </li>
+
+                                                    {/* Dynamic Page Numbers */}
+                                                    {Array.from({ length: totalPages }, (_, index) => index + 1)
+                                                        .filter(
+                                                            (page) =>
+                                                                page === 1 ||
+                                                                page === totalPages ||
+                                                                (page >= currentPage - 2 && page <= currentPage + 2)
+                                                        )
+                                                        .map((page, index, array) => {
+                                                            const prevPage = array[index - 1];
+                                                            const showDots = prevPage && page - prevPage > 1;
+
+                                                            return (
+                                                                <React.Fragment key={page}>
+                                                                    {showDots && (
+                                                                        <li className="page-item disabled">
+                                                                            <span className="page-link">...</span>
+                                                                        </li>
+                                                                    )}
+                                                                    <li className={`page-item ${currentPage === page ? 'active' : ''}`}>
+                                                                        <button
+                                                                            className="page-link"
+                                                                            onClick={() => handlePageChange(page)}
+                                                                        >
+                                                                            {page}
+                                                                        </button>
+                                                                    </li>
+                                                                </React.Fragment>
+                                                            );
+                                                        })}
+
+                                                    {/* Next Button */}
+                                                    <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                                                        <button
+                                                            className="page-link"
+                                                            onClick={() => handlePageChange(currentPage + 1)}
+                                                            disabled={currentPage === totalPages}
+                                                        >
+                                                            Next
+                                                        </button>
+                                                    </li>
+                                                </ul>
                                             </nav>
+
 
                                             {error && <div className="alert alert-danger">{error}</div>}
                                         </div>

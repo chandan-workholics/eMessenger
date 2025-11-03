@@ -616,7 +616,7 @@ const UserManagement = () => {
                                                                 <SortableTable columns={columns} data={data} />
                                                             </div>
                                                         </div>
-                                                        <nav>
+                                                        {/* <nav>
                                                             <ul className="pagination justify-content-end mb-0 mt-3">
                                                                 <li className="page-item">
                                                                     <button className="page-link" onClick={() => handlePageChange2(currentPage2 - 1)}
@@ -640,7 +640,65 @@ const UserManagement = () => {
                                                                         disabled={currentPage2 === totalPages2}>Next</button>
                                                                 </li>
                                                             </ul>
-                                                        </nav>
+                                                        </nav> */}
+
+                                                        <nav>
+  <ul className="pagination justify-content-end mb-0 mt-3">
+    {/* Previous Button */}
+    <li className={`page-item ${currentPage2 === 1 ? 'disabled' : ''}`}>
+      <button
+        className="page-link"
+        onClick={() => handlePageChange2(currentPage2 - 1)}
+        disabled={currentPage2 === 1}
+      >
+        Previous
+      </button>
+    </li>
+
+    {/* Dynamic Page Buttons */}
+    {Array.from({ length: totalPages2 }, (_, index) => index + 1)
+      .filter(
+        (page) =>
+          page === 1 || // Always show first page
+          page === totalPages2 || // Always show last page
+          (page >= currentPage2 - 2 && page <= currentPage2 + 2) // Show nearby pages
+      )
+      .map((page, index, array) => {
+        const prevPage = array[index - 1];
+        const showDots = prevPage && page - prevPage > 1;
+
+        return (
+          <React.Fragment key={page}>
+            {showDots && (
+              <li className="page-item disabled">
+                <span className="page-link">...</span>
+              </li>
+            )}
+            <li className={`page-item ${currentPage2 === page ? 'active' : ''}`}>
+              <button
+                className="page-link"
+                onClick={() => handlePageChange2(page)}
+              >
+                {page}
+              </button>
+            </li>
+          </React.Fragment>
+        );
+      })}
+
+    {/* Next Button */}
+    <li className={`page-item ${currentPage2 === totalPages2 ? 'disabled' : ''}`}>
+      <button
+        className="page-link"
+        onClick={() => handlePageChange2(currentPage2 + 1)}
+        disabled={currentPage2 === totalPages2}
+      >
+        Next
+      </button>
+    </li>
+  </ul>
+</nav>
+
                                                     </div>
                                                 </div>
                                             </div>
@@ -688,7 +746,7 @@ const UserManagement = () => {
                                                                 <SortableTable columns={appColumns} data={appUserData} />
                                                             </div>
                                                         </div>
-                                                        <nav>
+                                                        {/* <nav>
                                                             <ul className="pagination justify-content-end mb-0 mt-3">
                                                                 <li className="page-item">
                                                                     <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}
@@ -712,7 +770,65 @@ const UserManagement = () => {
                                                                         disabled={currentPage === totalPages}>Next</button>
                                                                 </li>
                                                             </ul>
-                                                        </nav>
+                                                        </nav> */}
+
+                                                        <nav>
+  <ul className="pagination justify-content-end mb-0 mt-3">
+    {/* Previous Button */}
+    <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+      <button
+        className="page-link"
+        onClick={() => handlePageChange(currentPage - 1)}
+        disabled={currentPage === 1}
+      >
+        Previous
+      </button>
+    </li>
+
+    {/* Dynamic Page Buttons */}
+    {Array.from({ length: totalPages }, (_, index) => index + 1)
+      .filter(
+        (page) =>
+          page === 1 || // Always show first
+          page === totalPages || // Always show last
+          (page >= currentPage - 2 && page <= currentPage + 2) // Nearby pages
+      )
+      .map((page, index, array) => {
+        const prevPage = array[index - 1];
+        const showDots = prevPage && page - prevPage > 1;
+
+        return (
+          <React.Fragment key={page}>
+            {showDots && (
+              <li className="page-item disabled">
+                <span className="page-link">...</span>
+              </li>
+            )}
+            <li className={`page-item ${currentPage === page ? 'active' : ''}`}>
+              <button
+                className="page-link"
+                onClick={() => handlePageChange(page)}
+              >
+                {page}
+              </button>
+            </li>
+          </React.Fragment>
+        );
+      })}
+
+    {/* Next Button */}
+    <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+      <button
+        className="page-link"
+        onClick={() => handlePageChange(currentPage + 1)}
+        disabled={currentPage === totalPages}
+      >
+        Next
+      </button>
+    </li>
+  </ul>
+</nav>
+
                                                     </div>
                                                 </div>
                                             </div>

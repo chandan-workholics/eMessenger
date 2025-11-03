@@ -48,7 +48,7 @@ const SubGroupMaster = () => {
     const fetchGroupData = async () => {
         try {
             setLoading(true);
-            const response = await callAPI.get(`./msg/getGroupDetail?page=1&limit=100`);
+            const response = await callAPI.get(`./msg/getGroupDetail?page=1&limit=1000`);
             setGroupList(response.data.data || []);
         } catch (error) {
             setError(error.message);

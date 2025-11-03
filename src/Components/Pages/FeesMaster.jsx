@@ -35,7 +35,7 @@ const FeesMaster = () => {
                     'Content-Type': 'application/json'
                 }
             });
-            const responsetwo = await fetch(`${URL}/scholar/getScholarDetail?page=1&limit=2000`, {
+            const responsetwo = await fetch(`${URL}/scholar/getScholarDetail?page=1&limit=20000`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
