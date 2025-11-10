@@ -306,7 +306,7 @@ const MessageDraft = () => {
     const fetchListData = async () => {
         try {
             setLoading(true);
-            const response = await callAPI.get(`./msg/getMsgDetail?page=${currentPage}&limit=${rowsPerPage}&access_id=${access_id}`);
+            const response = await callAPI.get(`./msg/getMsgDetail?access_id=${access_id}`);
             setMessageList(response.data.data || []);
             setTotalPages(Math.ceil(response?.data?.pagination?.totalPages));
         } catch (error) {
@@ -891,7 +891,7 @@ const MessageDraft = () => {
                                                             </div>
                                                         </div>
 
-                                                        <nav>
+                                                        {/* <nav>
                                                             <ul className="pagination justify-content-end mb-0 mt-3">
                                                                 <li className="page-item">
                                                                     <button className="page-link" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 1}>
@@ -908,7 +908,7 @@ const MessageDraft = () => {
                                                                     <button className="page-link" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages}>Next</button>
                                                                 </li>
                                                             </ul>
-                                                        </nav>
+                                                        </nav> */}
 
                                                     </div>
                                                 </div>

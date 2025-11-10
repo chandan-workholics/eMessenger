@@ -76,7 +76,7 @@ const NoticeBoard = () => {
     const fetchData = async () => {
         try {
             setLoading(true);
-            const response = await callAPI.get(`./notice/getAllNoticeBoardDetail?page=${currentPage}&limit=${rowsPerPage}`);
+            const response = await callAPI.get(`./notice/getAllNoticeBoardDetail`);
             setNoticeBoardList(response.data.data || []);
             setTotalPages(Math.ceil(response?.data?.pagination?.totalPages));
         } catch (error) {
@@ -455,7 +455,7 @@ const NoticeBoard = () => {
                                                                 <SortableTable columns={columns} data={data} />
                                                             </div>
                                                         </div>
-                                                        <nav>
+                                                        {/* <nav>
                                                             <ul className="pagination justify-content-end mb-0 mt-3">
                                                                 <li className="page-item">
                                                                     <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}
@@ -479,7 +479,7 @@ const NoticeBoard = () => {
                                                                         disabled={currentPage === totalPages}>Next</button>
                                                                 </li>
                                                             </ul>
-                                                        </nav>
+                                                        </nav> */}
                                                     </div>
                                                 </div>
                                             </div>
