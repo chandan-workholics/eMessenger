@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Navbar from '../Template/Navbar'
 import Sidebar from '../Template/Sidebar'
 import SortableTable from '../Template/SortableTable';
+import SortableTableTwo from '../Template/SortableTableTwo';
 import Loding from '../Template/Loding';
 import { toast } from 'react-toastify';
 import callAPI from '../../commonMethod/api';
@@ -212,7 +213,7 @@ const UserManagement = () => {
     const getAppUserList = async () => {
         try {
             setLoading(true);
-            const response = await callAPI.get(`./scholar/get_full_list_app_active_users_list?page=${currentPage}&limit=${rowsPerPage}&active=${activeFilter !== 'All' ? (activeFilter === 'Active' ? 1 : 0) : ''}&otpVerified=${otpVerifiedFilter !== 'All' ? (otpVerifiedFilter === 'OTP Verified' ? 1 : 0) : ''}`);
+            const response = await callAPI.get(`./scholar/get_full_list_app_active_users_list?active=${activeFilter !== 'All' ? (activeFilter === 'Active' ? 1 : 0) : ''}&otpVerified=${otpVerifiedFilter !== 'All' ? (otpVerifiedFilter === 'OTP Verified' ? 1 : 0) : ''}`);
             setUserData(response?.data);
             setTotalPages(Math.ceil(response?.data?.pagination?.totalPages));
         } catch (error) {
@@ -643,61 +644,61 @@ const UserManagement = () => {
                                                         </nav> */}
 
                                                         <nav>
-  <ul className="pagination justify-content-end mb-0 mt-3">
-    {/* Previous Button */}
-    <li className={`page-item ${currentPage2 === 1 ? 'disabled' : ''}`}>
-      <button
-        className="page-link"
-        onClick={() => handlePageChange2(currentPage2 - 1)}
-        disabled={currentPage2 === 1}
-      >
-        Previous
-      </button>
-    </li>
+                                                            <ul className="pagination justify-content-end mb-0 mt-3">
+                                                                {/* Previous Button */}
+                                                                <li className={`page-item ${currentPage2 === 1 ? 'disabled' : ''}`}>
+                                                                    <button
+                                                                        className="page-link"
+                                                                        onClick={() => handlePageChange2(currentPage2 - 1)}
+                                                                        disabled={currentPage2 === 1}
+                                                                    >
+                                                                        Previous
+                                                                    </button>
+                                                                </li>
 
-    {/* Dynamic Page Buttons */}
-    {Array.from({ length: totalPages2 }, (_, index) => index + 1)
-      .filter(
-        (page) =>
-          page === 1 || // Always show first page
-          page === totalPages2 || // Always show last page
-          (page >= currentPage2 - 2 && page <= currentPage2 + 2) // Show nearby pages
-      )
-      .map((page, index, array) => {
-        const prevPage = array[index - 1];
-        const showDots = prevPage && page - prevPage > 1;
+                                                                {/* Dynamic Page Buttons */}
+                                                                {Array.from({ length: totalPages2 }, (_, index) => index + 1)
+                                                                    .filter(
+                                                                        (page) =>
+                                                                            page === 1 || // Always show first page
+                                                                            page === totalPages2 || // Always show last page
+                                                                            (page >= currentPage2 - 2 && page <= currentPage2 + 2) // Show nearby pages
+                                                                    )
+                                                                    .map((page, index, array) => {
+                                                                        const prevPage = array[index - 1];
+                                                                        const showDots = prevPage && page - prevPage > 1;
 
-        return (
-          <React.Fragment key={page}>
-            {showDots && (
-              <li className="page-item disabled">
-                <span className="page-link">...</span>
-              </li>
-            )}
-            <li className={`page-item ${currentPage2 === page ? 'active' : ''}`}>
-              <button
-                className="page-link"
-                onClick={() => handlePageChange2(page)}
-              >
-                {page}
-              </button>
-            </li>
-          </React.Fragment>
-        );
-      })}
+                                                                        return (
+                                                                            <React.Fragment key={page}>
+                                                                                {showDots && (
+                                                                                    <li className="page-item disabled">
+                                                                                        <span className="page-link">...</span>
+                                                                                    </li>
+                                                                                )}
+                                                                                <li className={`page-item ${currentPage2 === page ? 'active' : ''}`}>
+                                                                                    <button
+                                                                                        className="page-link"
+                                                                                        onClick={() => handlePageChange2(page)}
+                                                                                    >
+                                                                                        {page}
+                                                                                    </button>
+                                                                                </li>
+                                                                            </React.Fragment>
+                                                                        );
+                                                                    })}
 
-    {/* Next Button */}
-    <li className={`page-item ${currentPage2 === totalPages2 ? 'disabled' : ''}`}>
-      <button
-        className="page-link"
-        onClick={() => handlePageChange2(currentPage2 + 1)}
-        disabled={currentPage2 === totalPages2}
-      >
-        Next
-      </button>
-    </li>
-  </ul>
-</nav>
+                                                                {/* Next Button */}
+                                                                <li className={`page-item ${currentPage2 === totalPages2 ? 'disabled' : ''}`}>
+                                                                    <button
+                                                                        className="page-link"
+                                                                        onClick={() => handlePageChange2(currentPage2 + 1)}
+                                                                        disabled={currentPage2 === totalPages2}
+                                                                    >
+                                                                        Next
+                                                                    </button>
+                                                                </li>
+                                                            </ul>
+                                                        </nav>
 
                                                     </div>
                                                 </div>
@@ -743,7 +744,7 @@ const UserManagement = () => {
                                                                 </div>
                                                             </div>
                                                             <div className="col-12">
-                                                                <SortableTable columns={appColumns} data={appUserData} />
+                                                                <SortableTableTwo columns={appColumns} data={appUserData} />
                                                             </div>
                                                         </div>
                                                         {/* <nav>
@@ -771,63 +772,63 @@ const UserManagement = () => {
                                                                 </li>
                                                             </ul>
                                                         </nav> */}
-
+                                                        {/* 
                                                         <nav>
-  <ul className="pagination justify-content-end mb-0 mt-3">
-    {/* Previous Button */}
-    <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-      <button
-        className="page-link"
-        onClick={() => handlePageChange(currentPage - 1)}
-        disabled={currentPage === 1}
-      >
-        Previous
-      </button>
-    </li>
+                                                            <ul className="pagination justify-content-end mb-0 mt-3">
+                                                               
+                                                                <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                                                                    <button
+                                                                        className="page-link"
+                                                                        onClick={() => handlePageChange(currentPage - 1)}
+                                                                        disabled={currentPage === 1}
+                                                                    >
+                                                                        Previous
+                                                                    </button>
+                                                                </li>
 
-    {/* Dynamic Page Buttons */}
-    {Array.from({ length: totalPages }, (_, index) => index + 1)
-      .filter(
-        (page) =>
-          page === 1 || // Always show first
-          page === totalPages || // Always show last
-          (page >= currentPage - 2 && page <= currentPage + 2) // Nearby pages
-      )
-      .map((page, index, array) => {
-        const prevPage = array[index - 1];
-        const showDots = prevPage && page - prevPage > 1;
+                                                               
+                                                                {Array.from({ length: totalPages }, (_, index) => index + 1)
+                                                                    .filter(
+                                                                        (page) =>
+                                                                            page === 1 || // Always show first
+                                                                            page === totalPages || // Always show last
+                                                                            (page >= currentPage - 2 && page <= currentPage + 2) // Nearby pages
+                                                                    )
+                                                                    .map((page, index, array) => {
+                                                                        const prevPage = array[index - 1];
+                                                                        const showDots = prevPage && page - prevPage > 1;
 
-        return (
-          <React.Fragment key={page}>
-            {showDots && (
-              <li className="page-item disabled">
-                <span className="page-link">...</span>
-              </li>
-            )}
-            <li className={`page-item ${currentPage === page ? 'active' : ''}`}>
-              <button
-                className="page-link"
-                onClick={() => handlePageChange(page)}
-              >
-                {page}
-              </button>
-            </li>
-          </React.Fragment>
-        );
-      })}
+                                                                        return (
+                                                                            <React.Fragment key={page}>
+                                                                                {showDots && (
+                                                                                    <li className="page-item disabled">
+                                                                                        <span className="page-link">...</span>
+                                                                                    </li>
+                                                                                )}
+                                                                                <li className={`page-item ${currentPage === page ? 'active' : ''}`}>
+                                                                                    <button
+                                                                                        className="page-link"
+                                                                                        onClick={() => handlePageChange(page)}
+                                                                                    >
+                                                                                        {page}
+                                                                                    </button>
+                                                                                </li>
+                                                                            </React.Fragment>
+                                                                        );
+                                                                    })}
 
-    {/* Next Button */}
-    <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-      <button
-        className="page-link"
-        onClick={() => handlePageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-      >
-        Next
-      </button>
-    </li>
-  </ul>
-</nav>
+                                                                
+                                                                <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                                                                    <button
+                                                                        className="page-link"
+                                                                        onClick={() => handlePageChange(currentPage + 1)}
+                                                                        disabled={currentPage === totalPages}
+                                                                    >
+                                                                        Next
+                                                                    </button>
+                                                                </li>
+                                                            </ul>
+                                                        </nav> */}
 
                                                     </div>
                                                 </div>
