@@ -365,6 +365,7 @@ const UserManagement = () => {
 
     // Table columns
     const appColumns = [
+        { label: 'S No', key: 'sno' },
         { label: 'User ID', key: 'userId' },
         { label: 'Mobile No.', key: 'mobileNo' },
         { label: 'Is Active', key: 'isActive' },
@@ -375,7 +376,8 @@ const UserManagement = () => {
         { label: 'Ip Address', key: 'ipAddress' }
     ];
 
-    const appUserData = userData ? userData?.data?.map((val) => ({
+    const appUserData = userData ? userData?.data?.map((val,index) => ({
+        sno: index+1,
         userId: val?.parents_id,
         mobileNo: val?.mobile_no,
         isActive: val?.is_active == 1 ? "Yes" : "No",
